@@ -1,0 +1,29 @@
+﻿<Window x:Class="VisualGGPK.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
+    <Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="auto" MinWidth="128"/>
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+		
+		<TreeView Grid.Column="0" Name="treeView1" SelectedItemChanged="treeView1_SelectedItemChanged">
+			<TreeView.ContextMenu>
+				<ContextMenu Name="treeView1ContextMenu">
+					<MenuItem Name="menuItemExport" Header="Export" Click="menuItemExport_Click" IsEnabled="False">
+						
+					</MenuItem>
+				</ContextMenu>
+			</TreeView.ContextMenu>
+		</TreeView>
+		<GridSplitter Grid.Column="0"  Name="gridSplitter1"  Width="3" Visibility="Visible"  />
+
+		<TextBox Grid.Column="1" Name="textBoxOutput" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Visibility="Visible" FontFamily="Consolas" FontSize="13"/>
+		<Image Grid.Column="1"  Name="imageOutput" Stretch="None" Visibility="Hidden" />
+		<RichTextBox Grid.Column="1"  Name="richTextOutput" Visibility="Hidden" VerticalScrollBarVisibility="Auto" />
+		<DataGrid Grid.Column="1" AutoGenerateColumns="False" Name="dataGridOutput" Visibility="Hidden" />
+		<MediaElement Grid.Column="1" Name="mediaElementOutput" Visibility="Hidden" LoadedBehavior="Manual"/>
+		
+	</Grid>
+</Window>
