@@ -6,19 +6,41 @@ using System.IO;
 
 namespace LibGGPK
 {
+	/// <summary>
+	/// Represents a directory in the pack file. Each directory contains a list of records of Files and Directories that
+	/// exist in this directory.
+	/// </summary>
 	public class DirectoryRecord : BaseRecord
 	{
 		public const string Tag = "PDIR";
 
 		public struct DirectoryEntry
 		{
+			/// <summary>
+			/// Unknown.
+			/// </summary>
 			public int Unknown;
+			/// <summary>
+			/// Offset in pack file where the record begins
+			/// </summary>
 			public long Offset;
 		}
 
+		/// <summary>
+		/// SHA256 hash of ... something
+		/// </summary>
 		public byte[] Hash;
+		/// <summary>
+		/// Name of directory
+		/// </summary>
 		public string Name;
+		/// <summary>
+		/// Records this directory contains. Each entry is an offset in the pack file of the record.
+		/// </summary>
 		public DirectoryEntry[] Entries;
+		/// <summary>
+		/// Offset in pack file where entries list begins. This is only here because it makes rewriting the entries list easier.
+		/// </summary>
 		public long EntriesBegin;
 
 		public DirectoryRecord(uint length, BinaryReader br)
@@ -28,6 +50,10 @@ namespace LibGGPK
 			Read(br);
 		}
 
+		/// <summary>
+		/// Reads the PDIR record entry from the specified stream
+		/// </summary>
+		/// <param name="br">Stream pointing at a PDIR record</param>
 		public override void Read(BinaryReader br)
 		{
 			int nameLength = br.ReadInt32();
@@ -49,11 +75,12 @@ namespace LibGGPK
 			}
 		}
 
-		public override string ToString()
-		{
-			return Name;
-		}
-
+		/// <summary>
+		/// Updates the location of an entry in this directory.
+		/// </summary>
+		/// <param name="ggpkPath">Path of pack file that contains this record</param>
+		/// <param name="previousEntryOffset">Previous offset of entry</param>
+		/// <param name="newEntryOffset">New offset of entry</param>
 		public void UpdateOffset(string ggpkPath, long previousEntryOffset, long newEntryOffset)
 		{
 			int entryIndex = -1;
@@ -77,6 +104,11 @@ namespace LibGGPK
 				BinaryWriter bw = new BinaryWriter(ggpkFileStream);
 				bw.Write(newEntryOffset);
 			}
+		}
+
+		public override string ToString()
+		{
+			return Name;
 		}
 	}
 }
