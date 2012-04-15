@@ -14,6 +14,7 @@ namespace LibGGPK
 
 		public FreeRecord(uint length, BinaryReader br)
 		{
+			RecordBegin = br.BaseStream.Position - 8;
 			Length = length;
 			Read(br);
 		}

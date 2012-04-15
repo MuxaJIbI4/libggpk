@@ -9,6 +9,7 @@ namespace LibGGPK
 	public class BaseRecord
 	{
 		public uint Length;
+		public long RecordBegin;
 
 		public BaseRecord()
 		{

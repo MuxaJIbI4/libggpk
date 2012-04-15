@@ -53,18 +53,8 @@ namespace VisualGGPK
 				}
 				else
 				{
-					Thread worker = new Thread(new ThreadStart(() =>
-					{
-						ggpkPath = ofd.FileName;
-
-						content = new GGPK();
-						content.Read(ggpkPath, Output);
-
-						Output("Traversing tree....\n");
-						OnReadComplete();
-					}));
-
-					worker.Start();
+					ggpkPath = ofd.FileName;
+					ReloadGGPK();
 				}
 			}
 			else
@@ -72,6 +62,26 @@ namespace VisualGGPK
 				this.Close();
 				return;
 			}
+		}
+
+		private void ReloadGGPK()
+		{
+			treeView1.Items.Clear();
+			ResetViewer();
+			textBoxOutput.Visibility = System.Windows.Visibility.Visible;
+			textBoxOutput.Text = string.Empty;
+			content = null;
+
+			Thread worker = new Thread(new ThreadStart(() =>
+			{
+				content = new GGPK();
+				content.Read(ggpkPath, Output);
+
+				Output("Traversing tree....\n");
+				OnReadComplete();
+			}));
+
+			worker.Start();
 		}
 
 		private void OnReadComplete()
@@ -114,25 +124,38 @@ namespace VisualGGPK
 			imageOutput.Visibility = System.Windows.Visibility.Hidden;
 			richTextOutput.Visibility = System.Windows.Visibility.Hidden;
 			dataGridOutput.Visibility = System.Windows.Visibility.Hidden;
-			mediaElementOutput.Visibility = System.Windows.Visibility.Hidden;
 
 			textBoxOutput.Clear();
 			imageOutput.Source = null;
 			richTextOutput.Document.Blocks.Clear();
 			dataGridOutput.ItemsSource = null;
-			mediaElementOutput.Source = null;
+			textBoxOffset.Text = String.Empty;
 		}
 
 		private void UpdateDisplayPanel()
 		{
+			ResetViewer();
+
 			if (treeView1.SelectedItem == null)
+			{
 				return;
-			if (!(treeView1.SelectedItem is FileRecord))
+			}
+
+			if (treeView1.SelectedItem is TreeViewItem && (treeView1.SelectedItem as TreeViewItem).Header is DirectoryTreeNode)
+			{
+				DirectoryTreeNode selectedDirectory = (treeView1.SelectedItem as TreeViewItem).Header as DirectoryTreeNode;
+				if (selectedDirectory.Record == null)
+					return;
+
+				textBoxOffset.Text = selectedDirectory.Record.RecordBegin.ToString("X");
 				return;
+			}
 
 			FileRecord selectedRecord = treeView1.SelectedItem as FileRecord;
+			if (selectedRecord == null)
+				return;
 
-			ResetViewer();
+			textBoxOffset.Text = selectedRecord.RecordBegin.ToString("X");
 
 			try
 			{
@@ -221,8 +244,6 @@ namespace VisualGGPK
 			}
 		}
 
-
-
 		private void ExportSelectedItem(object selectedItem)
 		{
 			if (selectedItem == null)
@@ -252,9 +273,42 @@ namespace VisualGGPK
 			}
 		}
 
+		private void ExportAllItemsInDirectory(DirectoryTreeNode selectedDirectoryNode)
+		{
+			List<FileRecord> recordsToExport = new List<FileRecord>();
+
+			Action<FileRecord> fileAction = new Action<FileRecord>(record =>
+			{
+				recordsToExport.Add(record);
+			});
+
+			DirectoryTreeNode.TraverseTreePreorder(selectedDirectoryNode, null, fileAction);
+
+			try
+			{
+				SaveFileDialog saveFileDialog = new SaveFileDialog();
+				saveFileDialog.FileName = "selectedRecord.Name";
+				if (saveFileDialog.ShowDialog() == true)
+				{
+					string exportDirectory = Path.GetDirectoryName(saveFileDialog.FileName) + "/";
+					foreach (var item in recordsToExport)
+					{
+						item.ExtractFileWithDirectoryStructure(ggpkPath, exportDirectory);
+					}
+					MessageBox.Show(string.Format("Exported {0} files", recordsToExport.Count));
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Failed to export item: " + ex.Message);
+			}
+		}
+
 		private void treeView1_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
 		{
 			UpdateDisplayPanel();
+
+			menuItemReplace.IsEnabled = treeView1.SelectedItem is FileRecord;
 
 			if (treeView1.SelectedItem is FileRecord)
 			{
@@ -285,37 +339,37 @@ namespace VisualGGPK
 			}
 		}
 
-		private void ExportAllItemsInDirectory(DirectoryTreeNode selectedDirectoryNode)
+
+		private void menuItemReplace_Click(object sender, RoutedEventArgs e)
 		{
-			List<FileRecord> recordsToExport = new List<FileRecord>();
-
-			Action<FileRecord> fileAction = new Action<FileRecord>(record =>
-			{
-				recordsToExport.Add(record);
-			});
-
-			DirectoryTreeNode.TraverseTreePreorder(selectedDirectoryNode, null, fileAction);
+			FileRecord recordToReplace = treeView1.SelectedItem as FileRecord;
+			if (recordToReplace == null)
+				return;
 
 			try
 			{
-				SaveFileDialog saveFileDialog = new SaveFileDialog();
-				saveFileDialog.FileName = "selectedRecord.Name";
-				if (saveFileDialog.ShowDialog() == true)
+				OpenFileDialog openFileDialog = new OpenFileDialog();
+				openFileDialog.FileName = "";
+				openFileDialog.CheckFileExists = true;
+				openFileDialog.CheckPathExists = true;
+
+				if (openFileDialog.ShowDialog() == true)
 				{
-					string exportDirectory = Path.GetDirectoryName(saveFileDialog.FileName) + "/";
-					foreach (var item in recordsToExport)
-					{
-						item.ExtractFileWithDirectoryStructure(ggpkPath, exportDirectory);
-					}
-					MessageBox.Show(string.Format("Exported {0} files", recordsToExport.Count));
+					long previousOffset = recordToReplace.RecordBegin;
+
+					recordToReplace.ReplaceContents(ggpkPath, openFileDialog.FileName);
+					MessageBox.Show(String.Format("Record {0} updated and relocated to offset {1}", recordToReplace.Name, recordToReplace.RecordBegin.ToString("X")));
 				}
-				
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show("Failed to export item: " + ex.Message);
 			}
+
+			ReloadGGPK();
 		}
+
+
 
 
 	}

@@ -18,6 +18,7 @@ namespace LibGGPK
 				Files = new List<FileRecord>(),
 				Name = "ROOT",
 				Parent = null,
+				Record = null,
 			};
 
 			foreach (var item in currentDirectory.RecordOffsets)

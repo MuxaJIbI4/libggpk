@@ -14,16 +14,26 @@
 					<MenuItem Name="menuItemExport" Header="Export" Click="menuItemExport_Click" IsEnabled="False">
 						
 					</MenuItem>
+					<MenuItem Name="menuItemReplace" Header="Replace" Click="menuItemReplace_Click" IsEnabled="False"/>
 				</ContextMenu>
 			</TreeView.ContextMenu>
 		</TreeView>
 		<GridSplitter Grid.Column="0"  Name="gridSplitter1"  Width="3" Visibility="Visible"  />
 
-		<TextBox Grid.Column="1" Name="textBoxOutput" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Visibility="Visible" FontFamily="Consolas" FontSize="13"/>
-		<Image Grid.Column="1"  Name="imageOutput" Stretch="None" Visibility="Hidden" />
-		<RichTextBox Grid.Column="1"  Name="richTextOutput" Visibility="Hidden" VerticalScrollBarVisibility="Auto" />
-		<DataGrid Grid.Column="1" AutoGenerateColumns="False" Name="dataGridOutput" Visibility="Hidden" />
-		<MediaElement Grid.Column="1" Name="mediaElementOutput" Visibility="Hidden" LoadedBehavior="Manual"/>
-		
+		<Grid Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="auto"/>
+			</Grid.RowDefinitions>
+			<TextBox  Name="textBoxOutput" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Visibility="Visible" FontFamily="Consolas" FontSize="13" IsReadOnly="True"/>
+			<Image  Name="imageOutput" Stretch="None" Visibility="Hidden" />
+			<RichTextBox   Name="richTextOutput" Visibility="Hidden" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
+			<DataGrid AutoGenerateColumns="False" Name="dataGridOutput" Visibility="Hidden" IsReadOnly="True"/>
+			<StackPanel Grid.Row="1" Orientation="Horizontal">
+				<Label>File Offset:</Label>
+				<TextBox Name="textBoxOffset" Width="100" IsReadOnly="True"/>
+			</StackPanel>
+		</Grid>
+
 	</Grid>
 </Window>

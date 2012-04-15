@@ -18,6 +18,7 @@ namespace LibGGPK
 
 		public FileRecord(uint length, BinaryReader br)
 		{
+			RecordBegin = br.BaseStream.Position - 8;
 			Length = length;
 			Read(br);
 		}
@@ -182,6 +183,44 @@ namespace LibGGPK
 
 			directoryPath = sb.ToString();
 			return directoryPath;
+		}
+
+		public void ReplaceContents(string ggpkPath, string replacmentPath)
+		{
+			byte[] replacmentData = File.ReadAllBytes(replacmentPath);
+			long previousRecordBegin = RecordBegin;
+
+			using (FileStream ggpkFileStream = File.Open(ggpkPath, FileMode.Open))
+			{
+				byte[] freeRecordTag = ASCIIEncoding.ASCII.GetBytes("FREE");
+				byte[] previousDataHeader = new byte[Length - DataLength];
+
+
+				// Backup the previous record header
+				ggpkFileStream.Seek(RecordBegin, SeekOrigin.Begin);
+				ggpkFileStream.Read(previousDataHeader, 0, previousDataHeader.Length);
+
+				// Mark previous data as FREE
+				ggpkFileStream.Seek(RecordBegin+4, SeekOrigin.Begin);
+				ggpkFileStream.Write(freeRecordTag, 0, 4);
+
+				// Write our new file length to the header
+				using (MemoryStream ms = new MemoryStream(previousDataHeader))
+				{
+					using (BinaryWriter bw = new BinaryWriter(ms))
+					{
+						bw.Write((UInt32)((Length - DataLength) + replacmentData.Length));
+					}
+				}
+
+				// Append header to the bottom of the GGPK file, followed by the new file contents
+				ggpkFileStream.Seek(0, SeekOrigin.End);
+				RecordBegin = ggpkFileStream.Position;
+				ggpkFileStream.Write(previousDataHeader, 0, previousDataHeader.Length);
+				ggpkFileStream.Write(replacmentData, 0, replacmentData.Length);
+			}
+
+			ContainingDirectory.Record.UpdateOffset(ggpkPath, previousRecordBegin, RecordBegin);
 		}
 	}
 }

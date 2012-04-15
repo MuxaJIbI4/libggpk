@@ -19,9 +19,11 @@ namespace LibGGPK
 		public byte[] Hash;
 		public string Name;
 		public DirectoryEntry[] Entries;
+		public long EntriesBegin;
 
 		public DirectoryRecord(uint length, BinaryReader br)
 		{
+			RecordBegin = br.BaseStream.Position - 8;
 			Length = length;
 			Read(br);
 		}
@@ -35,6 +37,7 @@ namespace LibGGPK
 			Name = ASCIIEncoding.Unicode.GetString(br.ReadBytes(2 * (nameLength - 1)));
 			br.ReadBytes(2); // Null terminator
 
+			EntriesBegin = br.BaseStream.Position;
 			Entries = new DirectoryEntry[totalEntries];
 			for (int i = 0; i < totalEntries; i++)
 			{
@@ -49,6 +52,31 @@ namespace LibGGPK
 		public override string ToString()
 		{
 			return Name;
+		}
+
+		public void UpdateOffset(string ggpkPath, long previousEntryOffset, long newEntryOffset)
+		{
+			int entryIndex = -1;
+
+			for (int i = 0; i < Entries.Length; i++)
+			{
+				if (Entries[i].Offset == previousEntryOffset)
+				{
+					entryIndex = i;
+					break;
+				}
+			}
+
+			if (entryIndex == -1)
+				throw new Exception("Entry not found!");
+
+			using (FileStream ggpkFileStream = File.Open(ggpkPath, FileMode.Open))
+			{
+				// See DirectoryEntry struct, seeks the offset portion of the specified entry
+				ggpkFileStream.Seek(EntriesBegin + 12*entryIndex + 4, SeekOrigin.Begin);
+				BinaryWriter bw = new BinaryWriter(ggpkFileStream);
+				bw.Write(newEntryOffset);
+			}
 		}
 	}
 }
