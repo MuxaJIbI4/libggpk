@@ -6,8 +6,16 @@ using System.IO;
 
 namespace LibGGPK
 {
+	/// <summary>
+	/// Simplifies the task of creating records from data read in from the pack file
+	/// </summary>
 	internal static class RecordFactory
 	{
+		/// <summary>
+		/// Reads a single record from the specified stream and creates the appropriate record type.
+		/// </summary>
+		/// <param name="br">Stream pointing at a record</param>
+		/// <returns></returns>
 		public static BaseRecord ReadRecord(BinaryReader br)
 		{
 			uint Length = br.ReadUInt32();

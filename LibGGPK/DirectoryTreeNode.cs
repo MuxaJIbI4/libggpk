@@ -5,25 +5,38 @@ using System.Text;
 
 namespace LibGGPK
 {
+	/// <summary>
+	/// Node for building directory trees
+	/// </summary>
 	public class DirectoryTreeNode
 	{
+		/// <summary>
+		/// Parent directory tree node
+		/// </summary>
 		public DirectoryTreeNode Parent;
+		/// <summary>
+		/// Child directory tree nodes
+		/// </summary>
 		public List<DirectoryTreeNode> Children;
+		/// <summary>
+		/// File records contained in this directory
+		/// </summary>
 		public List<FileRecord> Files;
+		/// <summary>
+		/// Directory name
+		/// </summary>
 		public string Name;
+		/// <summary>
+		/// PDIR record this directory tree node is for
+		/// </summary>
 		public DirectoryRecord Record;
 
-		public override string ToString()
-		{
-			return Name;
-		}
-
-		enum TraversalOrder
-		{
-			Preorder,
-			Postorder,
-		}
-
+		/// <summary>
+		/// Traverses a directory tree in PostOrder (Preform directory action, then traverse children) and preforms actions on the files and directories
+		/// </summary>
+		/// <param name="root">Root of directory tree</param>
+		/// <param name="directoryAction">Action to preform on each directory</param>
+		/// <param name="fileAction">Action to preform on each file</param>
 		public static void TraverseTreePreorder(DirectoryTreeNode root, Action<DirectoryTreeNode> directoryAction, Action<FileRecord> fileAction)
 		{
 			foreach (var childDirectory in root.Children)
@@ -44,6 +57,12 @@ namespace LibGGPK
 			}
 		}
 
+		/// <summary>
+		/// Traverses a directory tree in PostOrder (Traverse children, then preform directory action) and preforms actions on the files and directories
+		/// </summary>
+		/// <param name="root">Root of directory tree</param>
+		/// <param name="directoryAction">Action to preform on each directory</param>
+		/// <param name="fileAction">Action to preform on each file</param>
 		public static void TraverseTreePostorder(DirectoryTreeNode root, Action<DirectoryTreeNode> directoryAction, Action<FileRecord> fileAction)
 		{
 			foreach (var childDirectory in root.Children)
@@ -63,6 +82,12 @@ namespace LibGGPK
 				}
 			}
 		}
+
+		public override string ToString()
+		{
+			return Name;
+		}
+
 	};
 
 
