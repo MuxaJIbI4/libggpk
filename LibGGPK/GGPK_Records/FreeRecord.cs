@@ -23,6 +23,10 @@ namespace LibGGPK
 		/// Length of the raw data
 		/// </summary>
 		public long DataLength;
+		/// <summary>
+		/// Offset of next FREE record
+		/// </summary>
+		public long NextFreeOffset;
 
 		public FreeRecord(uint length, BinaryReader br)
 		{
@@ -39,9 +43,11 @@ namespace LibGGPK
 		{
 			base.Read(br);
 
+			NextFreeOffset = br.ReadInt64();
+
 			DataBegin = br.BaseStream.Position;
-			DataLength = Length - 8;
-			br.BaseStream.Seek(Length - 8, SeekOrigin.Current);
+			DataLength = Length - 16;
+			br.BaseStream.Seek(Length - 16, SeekOrigin.Current);
 		}
 
 		/// <summary>

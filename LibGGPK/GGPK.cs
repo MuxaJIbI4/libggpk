@@ -20,6 +20,10 @@ namespace LibGGPK
 		/// </summary>
 		public DirectoryTreeNode DirectoryRoot;
 		/// <summary>
+		/// Root of the Free record list
+		/// </summary>
+		public LinkedList<FreeRecord> FreeRoot;
+		/// <summary>
 		/// An estimation of the number of records in the Contents.GGPK file. This is only
 		/// used to inform the users of the parsing progress.
 		/// </summary>
@@ -62,6 +66,7 @@ namespace LibGGPK
 		private void CreateDirectoryTree(Action<string> output)
 		{
 			DirectoryRoot = DirectoryTreeMaker.BuildDirectoryTree(RecordOffsets);
+			FreeRoot = FreeListMaker.BuildFreeList(RecordOffsets);
 		}
 
 		/// <summary>

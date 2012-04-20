@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="DirectoryTreeMaker.cs" />
     <Compile Include="DirectoryTreeNode.cs" />
+    <Compile Include="FreeListMaker.cs" />
     <Compile Include="GGPK_Records\BaseRecord.cs" />
     <Compile Include="GGPK.cs" />
     <Compile Include="GGPK_Records\DirectoryRecord.cs" />

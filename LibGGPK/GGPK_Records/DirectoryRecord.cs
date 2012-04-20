@@ -17,9 +17,9 @@ namespace LibGGPK
 		public struct DirectoryEntry
 		{
 			/// <summary>
-			/// Unknown.
+			/// Murmur2 hash of lowercase entry name
 			/// </summary>
-			public int Unknown;
+			public int EntryNameHash;
 			/// <summary>
 			/// Offset in pack file where the record begins
 			/// </summary>
@@ -69,7 +69,7 @@ namespace LibGGPK
 			{
 				Entries[i] = new DirectoryEntry()
 				{
-					Unknown = br.ReadInt32(),
+					EntryNameHash = br.ReadInt32(),
 					Offset = br.ReadInt64(),
 				};
 			}
