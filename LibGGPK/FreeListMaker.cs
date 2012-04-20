@@ -42,7 +42,7 @@ namespace LibGGPK
 					break;
 				}
 
-				if (recordOffsets.ContainsKey(nextFreeOFfset))
+				if (!recordOffsets.ContainsKey(nextFreeOFfset))
 					throw new Exception("Failed to find next FREE record in map of record offsets");
 
 				currentFreeRecord = recordOffsets[currentFreeRecord.NextFreeOffset] as FreeRecord;

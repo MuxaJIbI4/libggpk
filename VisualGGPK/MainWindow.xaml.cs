@@ -357,7 +357,7 @@ namespace VisualGGPK
 				{
 					long previousOffset = recordToReplace.RecordBegin;
 
-					recordToReplace.ReplaceContents(ggpkPath, openFileDialog.FileName);
+					recordToReplace.ReplaceContents(ggpkPath, openFileDialog.FileName, content.FreeRoot);
 					MessageBox.Show(String.Format("Record {0} updated and relocated to offset {1}", recordToReplace.Name, recordToReplace.RecordBegin.ToString("X")));
 				}
 			}

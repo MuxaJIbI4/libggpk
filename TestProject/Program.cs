@@ -18,6 +18,8 @@ namespace TestProject
 		
 		static void Main(string[] args)
 		{
+			var foo = UnicodeEncoding.Unicode.GetBytes("Hello\0");
+
 			// TESTING PURPOSES ONLY
 
 			//HashSet<string> extentions = new HashSet<string>();
