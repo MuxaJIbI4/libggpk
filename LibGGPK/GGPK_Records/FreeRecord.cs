@@ -11,7 +11,7 @@ namespace LibGGPK
 	/// mark areas as free and append data to the end of the pack file than it is to rebuild the entire pack file just
 	/// to remove a piece of data.
 	/// </summary>
-	public class FreeRecord : BaseRecord
+	public sealed class FreeRecord : BaseRecord
 	{
 		public const string Tag = "FREE";
 

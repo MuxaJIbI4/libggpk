@@ -18,19 +18,19 @@ namespace LibGGPK
 		/// <returns></returns>
 		public static BaseRecord ReadRecord(BinaryReader br)
 		{
-			uint Length = br.ReadUInt32();
-			string Tag = ASCIIEncoding.ASCII.GetString(br.ReadBytes(4));
+			uint length = br.ReadUInt32();
+			string tag = Encoding.ASCII.GetString(br.ReadBytes(4));
 
-			switch (Tag)
+			switch (tag)
 			{
 				case FileRecord.Tag:
-					return new FileRecord(Length, br);
+					return new FileRecord(length, br);
 				case GGPKRecord.Tag:
-					return new GGPKRecord(Length, br);
+					return new GGPKRecord(length, br);
 				case FreeRecord.Tag:
-					return new FreeRecord(Length, br);
+					return new FreeRecord(length, br);
 				case DirectoryRecord.Tag:
-					return new DirectoryRecord(Length, br);
+					return new DirectoryRecord(length, br);
 			}
 
 			throw new Exception("Invalid tag");

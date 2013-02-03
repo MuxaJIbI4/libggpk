@@ -10,7 +10,7 @@ namespace LibGGPK
 	/// GGPK record is the very first record and exists at the very beginning of the pack file.
 	/// It must have excatly 2 entries - One goes to the root directory and the other to a FREE record.
 	/// </summary>
-	public class GGPKRecord : BaseRecord
+	public sealed class GGPKRecord : BaseRecord
 	{
 		/// <summary>
 		/// List record offsets this record contains. It must have exactly 2 entries.

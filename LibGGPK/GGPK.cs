@@ -27,7 +27,7 @@ namespace LibGGPK
 		/// An estimation of the number of records in the Contents.GGPK file. This is only
 		/// used to inform the users of the parsing progress.
 		/// </summary>
-		private const int EstimatedFileCount = 66000;
+		private const int EstimatedFileCount = 175000;
 
 		public GGPK()
 		{
@@ -41,6 +41,8 @@ namespace LibGGPK
 		/// <param name="output">Output function</param>
 		private void ReadRecordOfsets(string pathToGgpk, Action<string> output)
 		{
+			float previousPercentComplete = 0.0f;
+
 			using (FileStream fs = File.Open(pathToGgpk, FileMode.Open))
 			{
 				BinaryReader br = new BinaryReader(fs);
@@ -51,12 +53,17 @@ namespace LibGGPK
 					BaseRecord record = RecordFactory.ReadRecord(br);
 					RecordOffsets.Add(currentOffset, record);
 
-					if (RecordOffsets.Count % (EstimatedFileCount / 10) == 0)
+					float percentComplete = br.BaseStream.Position / (float)br.BaseStream.Length;
+					if (percentComplete - previousPercentComplete >= 0.10f)
 					{
-						output( String.Format("{0:00.00}%\n", (100*RecordOffsets.Count) / (float)EstimatedFileCount));
+						output(String.Format("{0:00.00}%\n", 100.0 * percentComplete));
+						previousPercentComplete = percentComplete;
 					}
 				}
+				output(String.Format("{0:00.00}%\n", 100.0f*br.BaseStream.Position / (float)br.BaseStream.Length));
 			}
+
+
 		}
 
 		/// <summary>

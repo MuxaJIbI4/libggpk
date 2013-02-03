@@ -9,7 +9,7 @@ namespace LibGGPK
 	/// <summary>
 	/// A file record represents a file entry in the pack file.
 	/// </summary>
-	public class FileRecord : BaseRecord
+	public sealed class FileRecord : BaseRecord
 	{
 		public const string Tag = "FILE";
 
@@ -68,7 +68,7 @@ namespace LibGGPK
 			int nameLength = br.ReadInt32();
 			Hash = br.ReadBytes(32);
 
-			Name = ASCIIEncoding.Unicode.GetString(br.ReadBytes(2 * (nameLength - 1)));
+			Name = Encoding.Unicode.GetString(br.ReadBytes(2 * (nameLength - 1)));
 			br.ReadBytes(2); // Null terminator
 			DataBegin = br.BaseStream.Position;
 			DataLength = Length - (8 + nameLength * 2 + 32 + 4);
@@ -83,11 +83,13 @@ namespace LibGGPK
 		/// <returns>Path of temporary file containing extracted data</returns>
 		public string ExtractTempFile(string ggpkPath)
 		{
-			string tempFileName = Path.GetTempFileName();
+			string tempFileName = Path.GetTempFileName() ;
+			string modifiedTempFileName = tempFileName + Path.GetExtension(Name);
 
-			ExtractFile(ggpkPath, tempFileName);
+			File.Move(tempFileName, modifiedTempFileName);
+			ExtractFile(ggpkPath, modifiedTempFileName);
 
-			return tempFileName;
+			return modifiedTempFileName;
 		}
 
 		/// <summary>
@@ -140,7 +142,7 @@ namespace LibGGPK
 		{
 			get
 			{
-				return knownFileFormats[Path.GetExtension(Name).ToLower()];
+				return KnownFileFormats[Path.GetExtension(Name).ToLower()];
 			}
 		}
 
@@ -182,7 +184,7 @@ namespace LibGGPK
 		private void MarkAsFree(FileStream ggpkFileStream, LinkedList<FreeRecord> freeRecordRoot)
 		{
 			byte[] nextFreeRecordOffset = BitConverter.GetBytes((long)0);
-			byte[] freeRecordTag = ASCIIEncoding.ASCII.GetBytes("FREE");
+			byte[] freeRecordTag = Encoding.ASCII.GetBytes("FREE");
 
 			// Mark previous data as FREE
 			ggpkFileStream.Seek(RecordBegin + 4, SeekOrigin.Begin);
@@ -199,6 +201,7 @@ namespace LibGGPK
 		/// </summary>
 		/// <param name="ggpkPath">Path of pack file that contains this record</param>
 		/// <param name="replacmentPath">Path to file containing replacement data</param>
+		/// <param name="freeRecordRoot">Root of the Free record list</param>
 		public void ReplaceContents(string ggpkPath, string replacmentPath, LinkedList<FreeRecord> freeRecordRoot)
 		{
 			byte[] replacmentData = File.ReadAllBytes(replacmentPath);
@@ -219,7 +222,7 @@ namespace LibGGPK
 				bw.Write(Tag.ToCharArray(0, 4));
 				bw.Write(Name.Length + 1);
 				bw.Write(Hash);
-				bw.Write(UnicodeEncoding.Unicode.GetBytes(Name + "\0"));
+				bw.Write(Encoding.Unicode.GetBytes(Name + "\0"));
 
 				DataBegin = bw.BaseStream.Position;
 				DataLength = replacmentData.Length;
@@ -235,7 +238,7 @@ namespace LibGGPK
 		/// <summary>
 		/// A quick and dirty mapping of what type of data is contained in each file type
 		/// </summary>
-		private static Dictionary<string, DataFormat> knownFileFormats = new Dictionary<string, DataFormat>()
+		private static readonly Dictionary<string, DataFormat> KnownFileFormats = new Dictionary<string, DataFormat>()
 		{
 			{".act", DataFormat.Unicode},
 			{".amd", DataFormat.Unicode},
@@ -291,7 +294,7 @@ namespace LibGGPK
 			{".tsi", DataFormat.Unicode},
 			{".tst", DataFormat.Unicode},
 			{".ttf", DataFormat.Unknown},
-			{".txt", DataFormat.Unknown},
+			{".txt", DataFormat.Unicode},
 			{".ui", DataFormat.Unicode},
 			{".xls", DataFormat.Unknown},
 			{".xlsx", DataFormat.Unknown},

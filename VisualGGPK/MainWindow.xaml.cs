@@ -15,6 +15,7 @@ using System.IO;
 using System.Data;
 using Microsoft.Win32;
 using System.Threading;
+using System.Diagnostics;
 
 namespace VisualGGPK
 {
@@ -24,7 +25,7 @@ namespace VisualGGPK
 	public partial class MainWindow : Window
 	{
 		private string ggpkPath = String.Empty;
-		GGPK content = null;
+		private GGPK content = null;
 
 		public MainWindow()
 		{
@@ -95,7 +96,7 @@ namespace VisualGGPK
 
 		private void AddDirectoryTreeToControl(DirectoryTreeNode directoryTreeNode, TreeViewItem parentControl)
 		{
-			TreeViewItem rootItem = new TreeViewItem(); ;
+			TreeViewItem rootItem = new TreeViewItem();
 			rootItem.Header = directoryTreeNode;
 
 			if (parentControl == null)
@@ -217,7 +218,7 @@ namespace VisualGGPK
 			byte[] buffer = selectedRecord.ReadData(ggpkPath);
 			textBoxOutput.Visibility = System.Windows.Visibility.Visible;
 
-			textBoxOutput.Text = ASCIIEncoding.Unicode.GetString(buffer);
+			textBoxOutput.Text = Encoding.Unicode.GetString(buffer);
 		}
 
 		private void DisplayAscii(FileRecord selectedRecord)
@@ -225,7 +226,7 @@ namespace VisualGGPK
 			byte[] buffer = selectedRecord.ReadData(ggpkPath);
 			textBoxOutput.Visibility = System.Windows.Visibility.Visible;
 
-			textBoxOutput.Text = ASCIIEncoding.ASCII.GetString(buffer);
+			textBoxOutput.Text = Encoding.ASCII.GetString(buffer);
 		}
 
 		private void DisplayImage(FileRecord selectedRecord)
@@ -273,14 +274,54 @@ namespace VisualGGPK
 			}
 		}
 
+		private void ViewSelectedItem(object selectedItem)
+		{
+			if (selectedItem == null)
+				return;
+
+			FileRecord selectedRecord = selectedItem as FileRecord;
+			if (selectedRecord == null)
+				return;
+
+			string extractedFileName;
+			try
+			{
+				extractedFileName = selectedRecord.ExtractTempFile(ggpkPath);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Failed to extract file for viewing: " + ex.Message);
+				return;
+			}
+
+			Process fileViewerProcess = new Process();
+			fileViewerProcess.StartInfo = new ProcessStartInfo(extractedFileName);
+			fileViewerProcess.EnableRaisingEvents = true;
+			fileViewerProcess.Exited += fileViewerProcess_Exited;
+			fileViewerProcess.Start();
+		}
+
+		private void fileViewerProcess_Exited(object sender, EventArgs e)
+		{
+			Process sourceProcess = sender as Process;
+			if (sourceProcess == null)
+				throw new Exception("fileViewerProcess_Exited handled event with invalid sender?");
+
+			try
+			{
+				File.Delete(sourceProcess.StartInfo.FileName);
+			}
+			catch (Exception /*ex*/)
+			{
+				//MessageBox.Show(String.Format("Failed to delete temporary file '{0}': {1}", sourceProcess.StartInfo.FileName, ex.Message)); 
+			}
+		}
+
 		private void ExportAllItemsInDirectory(DirectoryTreeNode selectedDirectoryNode)
 		{
 			List<FileRecord> recordsToExport = new List<FileRecord>();
 
-			Action<FileRecord> fileAction = new Action<FileRecord>(record =>
-			{
-				recordsToExport.Add(record);
-			});
+			Action<FileRecord> fileAction = new Action<FileRecord>(recordsToExport.Add);
 
 			DirectoryTreeNode.TraverseTreePreorder(selectedDirectoryNode, null, fileAction);
 
@@ -309,14 +350,21 @@ namespace VisualGGPK
 			UpdateDisplayPanel();
 
 			menuItemReplace.IsEnabled = treeView1.SelectedItem is FileRecord;
+			menuItemView.IsEnabled = treeView1.SelectedItem is FileRecord;
 
 			if (treeView1.SelectedItem is FileRecord)
 			{
+				// Exporting file
 				menuItemExport.IsEnabled = true;
 			}
 			else if (treeView1.SelectedItem is TreeViewItem && (treeView1.SelectedItem as TreeViewItem).Header is DirectoryTreeNode)
 			{
+				// Exporting entire directory
 				menuItemExport.IsEnabled = true;
+			}
+			else
+			{
+				menuItemExport.IsEnabled = false;
 			}
 		}
 
@@ -369,8 +417,31 @@ namespace VisualGGPK
 			ReloadGGPK();
 		}
 
+		private void menuItemView_Click(object sender, RoutedEventArgs e)
+		{
+			ViewSelectedItem(treeView1.SelectedItem);
+		}
 
+		private void treeView1_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
+		{
+			TreeView source = sender as TreeView;
 
+			Point hitPoint = e.GetPosition(source);
+			DependencyObject hitElement = (DependencyObject)source.InputHitTest(hitPoint);
+			while (hitElement != null && !(hitElement is TreeViewItem))
+			{
+				hitElement = VisualTreeHelper.GetParent((DependencyObject)hitElement);
+			}
 
+			if (hitElement != null)
+			{
+				ViewSelectedItem((hitElement as TreeViewItem).DataContext);
+			}
+		}
+
+		private void menuItemExit_Click(object sender, RoutedEventArgs e)
+		{
+			this.Close();
+		}
 	}
 }

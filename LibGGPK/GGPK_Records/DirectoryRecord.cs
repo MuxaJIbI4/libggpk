@@ -10,7 +10,7 @@ namespace LibGGPK
 	/// Represents a directory in the pack file. Each directory contains a list of records of Files and Directories that
 	/// exist in this directory.
 	/// </summary>
-	public class DirectoryRecord : BaseRecord
+	public sealed class DirectoryRecord : BaseRecord
 	{
 		public const string Tag = "PDIR";
 
@@ -60,7 +60,7 @@ namespace LibGGPK
 			int totalEntries = br.ReadInt32();
 
 			Hash = br.ReadBytes(32);
-			Name = ASCIIEncoding.Unicode.GetString(br.ReadBytes(2 * (nameLength - 1)));
+			Name = Encoding.Unicode.GetString(br.ReadBytes(2 * (nameLength - 1)));
 			br.ReadBytes(2); // Null terminator
 
 			EntriesBegin = br.BaseStream.Position;
