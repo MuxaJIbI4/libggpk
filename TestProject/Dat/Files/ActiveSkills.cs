@@ -9,15 +9,15 @@ namespace TestProject.Dat.Files
 	class ActiveSkills : BaseDat
 	{
 		[StringIndex]
-		public int Index0;
+		public int NameIndex;
 		[StringIndex]
-		public int Index1;
+		public int DisplayedName;
 		[StringIndex]
-		public int Index2;
+		public int Description;
 		[StringIndex]
 		public int Index3;
 		[StringIndex]
-		public int Index4;
+		public int IconPath;
 		public int Unkown0;
 		[DataIndex]
 		public int Data0;
@@ -29,9 +29,9 @@ namespace TestProject.Dat.Files
 		[DataIndex]
 		public int Data2;
 		[StringIndex]
-		public int Index5;
+		public int ExtraDescription;
 		[StringIndex]
-		public int Index6;
+		public int ExamplePath;
 		public bool Flag0;
 		public int Unknown4;
 		public bool Flag1;
@@ -41,11 +41,11 @@ namespace TestProject.Dat.Files
 
 		public ActiveSkills(BinaryReader inStream)
 		{
-			Index0 = inStream.ReadInt32();
-			Index1 = inStream.ReadInt32();
-			Index2 = inStream.ReadInt32();
+			NameIndex = inStream.ReadInt32();
+			DisplayedName = inStream.ReadInt32();
+			Description = inStream.ReadInt32();
 			Index3 = inStream.ReadInt32();
-			Index4 = inStream.ReadInt32();
+			IconPath = inStream.ReadInt32();
 			Unkown0 = inStream.ReadInt32();
 			Data0 = inStream.ReadInt32();
 			Unknown1 = inStream.ReadInt32();
@@ -53,8 +53,8 @@ namespace TestProject.Dat.Files
 			Data1 = inStream.ReadInt32();
 			Unknown3 = inStream.ReadInt32();
 			Data2 = inStream.ReadInt32();
-			Index5 = inStream.ReadInt32();
-			Index6 = inStream.ReadInt32();
+			ExtraDescription = inStream.ReadInt32();
+			ExamplePath = inStream.ReadInt32();
 			Flag0 = inStream.ReadBoolean();
 			Unknown4 = inStream.ReadInt32();
 			Flag1 = inStream.ReadBoolean();
@@ -64,11 +64,11 @@ namespace TestProject.Dat.Files
 
 		public override void Save(BinaryWriter outStream)
 		{
-			outStream.Write(Index0);
-			outStream.Write(Index1);
-			outStream.Write(Index2);
+			outStream.Write(NameIndex);
+			outStream.Write(DisplayedName);
+			outStream.Write(Description);
 			outStream.Write(Index3);
-			outStream.Write(Index4);
+			outStream.Write(IconPath);
 			outStream.Write(Unkown0);
 			outStream.Write(Data0);
 			outStream.Write(Unknown1);
@@ -76,8 +76,8 @@ namespace TestProject.Dat.Files
 			outStream.Write(Data1);
 			outStream.Write(Unknown3);
 			outStream.Write(Data2);
-			outStream.Write(Index5);
-			outStream.Write(Index6);
+			outStream.Write(ExtraDescription);
+			outStream.Write(ExamplePath);
 			outStream.Write(Flag0);
 			outStream.Write(Unknown4);
 			outStream.Write(Flag1);

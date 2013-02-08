@@ -14,9 +14,9 @@ namespace TestProject.Dat.Files
 		public int Unknown1;
 		public int Unknown2;
 		[StringIndex]
-		public int Index1;
+		public int Name;
 		[StringIndex]
-		public int Index2;
+		public int InheritsFrom;
 		public int Unknown3;
 		public Int64 Unknown4;
 		public int Unknown5;
@@ -53,8 +53,8 @@ namespace TestProject.Dat.Files
 			Unknown0 = inStream.ReadInt32();
 			Unknown1 = inStream.ReadInt32();
 			Unknown2 = inStream.ReadInt32();
-			Index1 = inStream.ReadInt32();
-			Index2 = inStream.ReadInt32();
+			Name = inStream.ReadInt32();
+			InheritsFrom = inStream.ReadInt32();
 			Unknown3 = inStream.ReadInt32();
 			Unknown4 = inStream.ReadInt64();
 			Unknown5 = inStream.ReadInt32();
@@ -85,8 +85,8 @@ namespace TestProject.Dat.Files
 			outStream.Write(Unknown0);
 			outStream.Write(Unknown1);
 			outStream.Write(Unknown2);
-			outStream.Write(Index1);
-			outStream.Write(Index2);
+			outStream.Write(Name);
+			outStream.Write(InheritsFrom);
 			outStream.Write(Unknown3);
 			outStream.Write(Unknown4);
 			outStream.Write(Unknown5);

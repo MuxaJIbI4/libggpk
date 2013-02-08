@@ -32,20 +32,20 @@ namespace TestProject
 
 			string[] datFiles = 
 			{
-				@"ActiveSkills.dat", // done
+				@"ActiveSkills.dat", // done (Needs translation)
 				@"ArmourTypes.dat", // done
-				@"BackendErrors.dat", // done
+				@"BackendErrors.dat", // done (Needs translation)
 				@"BaseItemTypes.dat", // done
 				@"BloodTypes.dat", // done
-				@"BuffDefinitions.dat", // done
+				@"BuffDefinitions.dat", // done (Needs translation)
 				@"CharacterAudioEvents.dat", // done
-				@"Characters.dat", // done
+				@"Characters.dat", // done (can skip translation)
 				@"ChestClusters.dat", // done
 				@"Chests.dat",
 				@"ComponentArmour.dat",
 				@"ComponentAttributeRequirements.dat",
 				@"ComponentCharges.dat",
-				@"CurrencyItems.dat",
+				@"CurrencyItems.dat", // done (Needs translation?)
 				@"Dances.dat",
 				@"DefaultMonsterStats.dat",
 				@"Difficulties.dat",
@@ -67,7 +67,7 @@ namespace TestProject
 				@"Maps.dat",
 				@"MiscAnimated.dat",
 				@"MiscObjects.dat",
-				@"Mods.dat",
+				@"Mods.dat", // done
 				@"ModSellPrices.dat",
 				@"MonsterPackEntries.dat",
 				@"MonsterPacks.dat",
@@ -76,37 +76,53 @@ namespace TestProject
 				@"Music.dat",
 				@"NPCs.dat",
 				@"NPCTalk.dat",
-				@"NPCTextAudio.dat",
+				@"NPCTextAudio.dat", // done (Need translation)
 				@"PassiveSkills.dat",
 				@"Pet.dat",
 				@"Projectiles.dat",
 				@"Quest.dat",
 				@"QuestRewards.dat",
-				@"QuestStates.dat",
+				@"QuestStates.dat", // done (Needs translation)
 				@"QuestStaticRewards.dat",
 				@"Realms.dat",
 				@"ShieldTypes.dat",
 				@"ShopItem.dat",
 				@"ShopPaymentPackage.dat",
-				@"Shrines.dat",
+				@"Shrines.dat", // done
 				@"SkillGems.dat",
 				@"SoundEffects.dat",
 				@"Stats.dat",
 				@"Tags.dat",
 				@"Topologies.dat",
-				@"VoteState.dat",
-				@"VoteType.dat",
+				@"VoteState.dat", // done (Need translation)
+				@"VoteType.dat", // done (Need translation)
 				@"WeaponTypes.dat",
 				@"Words.dat",
 				@"WorldAreas.dat",
 			};
 
-			var container = new DatContainer<ArmourTypes>(datFiles[1]);
-			DumpContainer(container);
+
+			for (int i = 0; i < datFiles.Length; i++)
+			{
+				try
+				{
+					var container = new DatContainer(datFiles[i]);
+					string dump = DumpContainer(container, '\t');
+					File.WriteAllText(datFiles[i] + ".csv", dump);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine("Failed: {0}", ex.Message);
+				}
+
+			}
+
+		}
 
 
-
-
+		private static string DumpContainer(DatContainer container, char seperator)
+		{
+			StringBuilder sb = new StringBuilder();
 
 			bool displayedHeader = false;
 			foreach (var item in container.Entries)
@@ -115,34 +131,30 @@ namespace TestProject
 
 				if (!displayedHeader)
 				{
-					StringBuilder sb = new StringBuilder();
-
 					foreach (var fieldInfo in fields)
 					{
-						sb.AppendFormat("{0},", fieldInfo.Name);
+						sb.AppendFormat("{0}{1}", fieldInfo.Name, seperator);
 					}
 					sb.Remove(sb.Length - 1, 1);
-					Console.WriteLine(sb.ToString());
+					sb.AppendLine();
 					displayedHeader = true;
 				}
 				{
-					StringBuilder sb = new StringBuilder();
 					foreach (var fieldInfo in fields)
 					{
 						object fieldValue = fieldInfo.GetValue(item);
 
 						if (fieldInfo.GetCustomAttributes(false).Length > 0)
-							sb.AppendFormat("{0},", container.DataEntries[(int)fieldValue]);
+							sb.AppendFormat("{0}{1}", container.DataEntries[(int)fieldValue].ToString().Replace("\r\n", " ").Replace('\t', ' '), seperator);
 						else
-							sb.AppendFormat("{0},", fieldValue);
+							sb.AppendFormat("{0}{1}", fieldValue, seperator);
 					}
 					sb.Remove(sb.Length - 1, 1);
-
-					Console.WriteLine(sb.ToString());
+					sb.AppendLine();
 				}
 			}
+
+			return sb.ToString();
 		}
-
-
 	}
 }

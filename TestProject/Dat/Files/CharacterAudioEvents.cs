@@ -9,37 +9,37 @@ namespace TestProject.Dat.Files
 	class CharacterAudioEvents : BaseDat
 	{
 		[StringIndex]
-		public int Index0;
+		public int Id;
 		[StringIndex]
-		public int Index1;
+		public int SoundMaruader;
 		[StringIndex]
-		public int Index2;
+		public int SoundRanger;
 		[StringIndex]
-		public int Index3;
+		public int SoundWitch;
 		[StringIndex]
-		public int Index4;
+		public int SoundDualist;
 		[StringIndex]
-		public int Index5;
+		public int SoundShadow;
 		[StringIndex]
-		public int Index6;
+		public int SoundTemplar;
 		[StringIndex]
-		public int Index7;
+		public int Index7; // Sound file for the next class?
 		public int Unknown0;
 		public int Unknown1;
 		public int Unknown2;
 		[StringIndex]
-		public int Index8;
+		public int Index8; // Sound for all classes?
 
 
 		public CharacterAudioEvents(BinaryReader inStream)
 		{
-			Index0 = inStream.ReadInt32();
-			Index1 = inStream.ReadInt32();
-			Index2 = inStream.ReadInt32();
-			Index3 = inStream.ReadInt32();
-			Index4 = inStream.ReadInt32();
-			Index5 = inStream.ReadInt32();
-			Index6 = inStream.ReadInt32();
+			Id = inStream.ReadInt32();
+			SoundMaruader = inStream.ReadInt32();
+			SoundRanger = inStream.ReadInt32();
+			SoundWitch = inStream.ReadInt32();
+			SoundDualist = inStream.ReadInt32();
+			SoundShadow = inStream.ReadInt32();
+			SoundTemplar = inStream.ReadInt32();
 			Index7 = inStream.ReadInt32();
 			Unknown0 = inStream.ReadInt32();
 			Unknown1 = inStream.ReadInt32();
@@ -49,13 +49,13 @@ namespace TestProject.Dat.Files
 
 		public override void Save(BinaryWriter outStream)
 		{
-			outStream.Write(Index0);
-			outStream.Write(Index1);
-			outStream.Write(Index2);
-			outStream.Write(Index3);
-			outStream.Write(Index4);
-			outStream.Write(Index5);
-			outStream.Write(Index6);
+			outStream.Write(Id);
+			outStream.Write(SoundMaruader);
+			outStream.Write(SoundRanger);
+			outStream.Write(SoundWitch);
+			outStream.Write(SoundDualist);
+			outStream.Write(SoundShadow);
+			outStream.Write(SoundTemplar);
 			outStream.Write(Index7);
 			outStream.Write(Unknown0);
 			outStream.Write(Unknown1);

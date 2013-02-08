@@ -9,7 +9,7 @@ namespace TestProject.Dat.Files
 	class BloodTypes : BaseDat
 	{
 		[StringIndex]
-		public int Index0;
+		public int Id;
 		[StringIndex]
 		public int Index1;
 		[StringIndex]
@@ -34,7 +34,7 @@ namespace TestProject.Dat.Files
 
 		public BloodTypes(BinaryReader inStream)
 		{
-			Index0 = inStream.ReadInt32();
+			Id = inStream.ReadInt32();
 			Index1 = inStream.ReadInt32();
 			Index2 = inStream.ReadInt32();
 			Index3 = inStream.ReadInt32();
@@ -49,7 +49,7 @@ namespace TestProject.Dat.Files
 
 		public override void Save(BinaryWriter outStream)
 		{
-			outStream.Write(Index0);
+			outStream.Write(Id);
 			outStream.Write(Index1);
 			outStream.Write(Index2);
 			outStream.Write(Index3);

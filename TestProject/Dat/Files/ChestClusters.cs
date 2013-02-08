@@ -9,7 +9,7 @@ namespace TestProject.Dat.Files
 	class ChestClusters : BaseDat
 	{
 		[StringIndex]
-		public int Index0;
+		public int Id;
 		public int Unknown0;
 		[DataIndex]
 		public int Data0;
@@ -21,7 +21,7 @@ namespace TestProject.Dat.Files
 
 		public ChestClusters(BinaryReader inStream)
 		{
-			Index0 = inStream.ReadInt32();
+			Id = inStream.ReadInt32();
 			Unknown0 = inStream.ReadInt32();
 			Data0 = inStream.ReadInt32();
 			Unknown1 = inStream.ReadInt32();
@@ -32,7 +32,7 @@ namespace TestProject.Dat.Files
 		}
 		public override void Save(System.IO.BinaryWriter outStream)
 		{
-			outStream.Write(Index0);
+			outStream.Write(Id);
 			outStream.Write(Unknown0);
 			outStream.Write(Data0);
 			outStream.Write(Unknown1);

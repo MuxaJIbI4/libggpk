@@ -5,14 +5,20 @@ using System.Linq;
 
 namespace TestProject.Dat
 {
-	class DatContainer<T> where T : BaseDat
+	class DatContainer
 	{
 		public Dictionary<int, BaseData> DataEntries = new Dictionary<int, BaseData>();
-		public List<T> Entries;
+		public List<BaseDat> Entries;
 		public int DataTableBegin;
+		private readonly Type datTypeInUse;
 
 		public DatContainer(string fileName)
 		{
+			datTypeInUse = Type.GetType(string.Format("{0}.Files.{1}", this.GetType().Namespace, Path.GetFileNameWithoutExtension(fileName)));
+			if (datTypeInUse == null)
+			{
+				throw new Exception("No handler for file " + fileName);
+			}
 			byte[] fileBytes = File.ReadAllBytes(fileName);
 
 			using (MemoryStream ms = new MemoryStream(fileBytes))
@@ -24,9 +30,9 @@ namespace TestProject.Dat
 			}
 		}
 
-		private void AddDataToTable(T entry, BinaryReader inStream)
+		private void AddDataToTable(BaseDat entry, BinaryReader inStream)
 		{
-			var properties = typeof(T).GetFields();
+			var properties = entry.GetType().GetFields();
 			foreach (var prop in properties)
 			{
 				object[] customAttributes = prop.GetCustomAttributes(false);
@@ -53,9 +59,9 @@ namespace TestProject.Dat
 			}
 		}
 
-		private void UpdateDataOffsets(T entry, Dictionary<int, int> updatedOffsets)
+		private void UpdateDataOffsets(BaseDat entry, Dictionary<int, int> updatedOffsets)
 		{
-			var properties = typeof(T).GetFields();
+			var properties = entry.GetType().GetFields();
 			foreach (var prop in properties)
 			{
 				object[] customAttributes = prop.GetCustomAttributes(false);
@@ -71,12 +77,13 @@ namespace TestProject.Dat
 		private void Read(BinaryReader inStream)
 		{
 			int numberOfEntries = inStream.ReadInt32();
-			Entries = new List<T>(numberOfEntries);
+			Entries = new List<BaseDat>(numberOfEntries);
 
 			for (int i = 0; i < numberOfEntries; i++)
 			{
-				// TODO: Skip reflection if it's running slow (compiled lambda?)
-				T newEntry = (T)Activator.CreateInstance(typeof(T), new object[] { inStream });
+				// TODO: Skip reflection if it's running slow (compiled lambda or factory (newInstance = theOneInstance.Clone(args)))
+				BaseDat newEntry = (BaseDat)Activator.CreateInstance(datTypeInUse, new object[] { inStream });
+
 				Entries.Add(newEntry);
 			}
 
@@ -104,6 +111,9 @@ namespace TestProject.Dat
 
 		public void Save(BinaryWriter outStream)
 		{
+
+			// TODO: Just append any modified strings to the end just update the offsets, keep the rest of the data the same
+
 			// Mapping of the new string and data offsets
 			Dictionary<int, int> changedOffsets = new Dictionary<int, int>();
 

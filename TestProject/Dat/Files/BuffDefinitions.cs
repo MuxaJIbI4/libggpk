@@ -9,15 +9,15 @@ namespace TestProject.Dat.Files
 	class BuffDefinitions : BaseDat
 	{
 		[StringIndex]
-		public int Index0;
+		public int Id;
 		[StringIndex]
-		public int Index1;
-		public bool Flag0;
-		public bool Flag1;
+		public int Description;
+		public bool Invisible;
+		public bool Removable;
 		[StringIndex]
-		public int Index2;
+		public int Name;
 		[StringIndex]
-		public int Index3;
+		public int Icon;
 		public int Unknown0;
 		[DataIndex]
 		public int Data0;
@@ -42,12 +42,12 @@ namespace TestProject.Dat.Files
 
 		public BuffDefinitions(BinaryReader inStream)
 		{
-			Index0 = inStream.ReadInt32();
-			Index1 = inStream.ReadInt32();
-			Flag0 = inStream.ReadBoolean();
-			Flag1 = inStream.ReadBoolean();
-			Index2 = inStream.ReadInt32();
-			Index3 = inStream.ReadInt32();
+			Id = inStream.ReadInt32();
+			Description = inStream.ReadInt32();
+			Invisible = inStream.ReadBoolean();
+			Removable = inStream.ReadBoolean();
+			Name = inStream.ReadInt32();
+			Icon = inStream.ReadInt32();
 			Unknown0 = inStream.ReadInt32();
 			Data0 = inStream.ReadInt32();
 			Index4 = inStream.ReadInt32();
@@ -70,12 +70,12 @@ namespace TestProject.Dat.Files
 
 		public override void Save(BinaryWriter outStream)
 		{
-			outStream.Write(Index0);
-			outStream.Write(Index1);
-			outStream.Write(Flag0);
-			outStream.Write(Flag1);
-			outStream.Write(Index2);
-			outStream.Write(Index3);
+			outStream.Write(Id);
+			outStream.Write(Description);
+			outStream.Write(Invisible);
+			outStream.Write(Removable);
+			outStream.Write(Name);
+			outStream.Write(Icon);
 			outStream.Write(Unknown0);
 			outStream.Write(Data0);
 			outStream.Write(Index4);
