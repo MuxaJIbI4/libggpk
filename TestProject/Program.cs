@@ -37,10 +37,10 @@ namespace TestProject
 				@"BackendErrors.dat", // done
 				@"BaseItemTypes.dat", // done
 				@"BloodTypes.dat", // done
-				@"BuffDefinitions.dat",
-				@"CharacterAudioEvents.dat",
-				@"Characters.dat",
-				@"ChestClusters.dat",
+				@"BuffDefinitions.dat", // done
+				@"CharacterAudioEvents.dat", // done
+				@"Characters.dat", // done
+				@"ChestClusters.dat", // done
 				@"Chests.dat",
 				@"ComponentArmour.dat",
 				@"ComponentAttributeRequirements.dat",
@@ -101,12 +101,46 @@ namespace TestProject
 				@"WorldAreas.dat",
 			};
 
-			var container = new DatContainer<BloodTypes>(datFiles[4]);
+			var container = new DatContainer<ArmourTypes>(datFiles[1]);
+			DumpContainer(container);
 
-			//foreach (var item in container.Entries)
-			//{
-			//	Console.WriteLine(item);
-			//}
+
+
+
+
+			bool displayedHeader = false;
+			foreach (var item in container.Entries)
+			{
+				var fields = item.GetType().GetFields();
+
+				if (!displayedHeader)
+				{
+					StringBuilder sb = new StringBuilder();
+
+					foreach (var fieldInfo in fields)
+					{
+						sb.AppendFormat("{0},", fieldInfo.Name);
+					}
+					sb.Remove(sb.Length - 1, 1);
+					Console.WriteLine(sb.ToString());
+					displayedHeader = true;
+				}
+				{
+					StringBuilder sb = new StringBuilder();
+					foreach (var fieldInfo in fields)
+					{
+						object fieldValue = fieldInfo.GetValue(item);
+
+						if (fieldInfo.GetCustomAttributes(false).Length > 0)
+							sb.AppendFormat("{0},", container.DataEntries[(int)fieldValue]);
+						else
+							sb.AppendFormat("{0},", fieldValue);
+					}
+					sb.Remove(sb.Length - 1, 1);
+
+					Console.WriteLine(sb.ToString());
+				}
+			}
 		}
 
 

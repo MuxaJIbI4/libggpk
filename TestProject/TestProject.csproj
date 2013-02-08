@@ -47,6 +47,10 @@
     <Compile Include="Dat\Files\ArmourTypes.cs" />
     <Compile Include="Dat\Files\BaseItemTypes.cs" />
     <Compile Include="Dat\Files\BloodTypes.cs" />
+    <Compile Include="Dat\Files\BuffDefinitions.cs" />
+    <Compile Include="Dat\Files\CharacterAudioEvents.cs" />
+    <Compile Include="Dat\Files\Characters.cs" />
+    <Compile Include="Dat\Files\ChestClusters.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Dat\BaseData.cs" />
