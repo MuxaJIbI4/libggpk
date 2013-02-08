@@ -43,8 +43,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dat\Files\ActiveSkills.cs" />
+    <Compile Include="Dat\Files\ArmourTypes.cs" />
+    <Compile Include="Dat\Files\BaseItemTypes.cs" />
+    <Compile Include="Dat\Files\BloodTypes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Dat\BaseData.cs" />
+    <Compile Include="Dat\RecordContainer.cs" />
+    <Compile Include="Dat\Files\BackendErrors.cs" />
+    <Compile Include="Dat\BaseRecord.cs" />
+    <Compile Include="Dat\Files\MonsterVarieties.cs" />
+    <Compile Include="Dat\UnicodeString.cs" />
+    <Compile Include="Dat\UnkownData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibGGPK\LibGGPK.csproj">
