@@ -2,7 +2,13 @@
 
 namespace LibDat
 {
+	/// <summary>
+	/// Property or field represents an offset to a unicode string in the data section of the .dat file
+	/// </summary>
 	public class StringIndex : System.Attribute { }
+	/// <summary>
+	/// Property or field represents an offset to unknown data in the data section of the .dat file. These entries are not yet explored and are probably incorrect.
+	/// </summary>
 	public class DataIndex : System.Attribute { }
 
 	public abstract class BaseDat

@@ -2,9 +2,18 @@ using System.IO;
 
 namespace LibDat
 {
+	/// <summary>
+	/// Represents unknown data  found in the data section of a .dat file. None of this is tested and is probably incorrect.
+	/// </summary>
 	public class UnkownData : BaseData
 	{
+		/// <summary>
+		/// Offset in the dat file with respect to the beginning of the data section
+		/// </summary>
 		public int Offset { get; set; }
+		/// <summary>
+		/// The unknown data
+		/// </summary>
 		public int Data { get; set; }
 
 		public UnkownData(BinaryReader inStream, int offset, int dataTableOffset)
@@ -15,11 +24,19 @@ namespace LibDat
 			ReadData(inStream);
 		}
 
+		/// <summary>
+		/// Reads the data directly from the specified stream. Stream position is not preserved and will be at the end of the data upon successful read.
+		/// </summary>
+		/// <param name="inStream">Stream containing the unicode string</param>
 		private void ReadData(BinaryReader inStream)
 		{
 			this.Data = inStream.ReadInt32();
 		}
 
+		/// <summary>
+		/// Saves the data to the specified stream.
+		/// </summary>
+		/// <param name="outStream"></param>
 		public override void Save(BinaryWriter outStream)
 		{
 			outStream.Write(Data);
