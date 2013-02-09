@@ -432,7 +432,7 @@ namespace VisualGGPK
 				MessageBox.Show("Failed to export item: " + ex.Message);
 			}
 
-			ReloadGGPK();
+			//ReloadGGPK();
 		}
 
 		private void menuItemView_Click(object sender, RoutedEventArgs e)
