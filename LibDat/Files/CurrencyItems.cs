@@ -3,18 +3,18 @@ using System.IO;
 
 namespace LibDat.Files
 {
-	class CurrencyItems : BaseDat
+	public class CurrencyItems : BaseDat
 	{
-		public Int64 Unknown0;
-		public int Unknown1;
-		public int Unknown2;
+		public Int64 Unknown0 { get; set; }
+		public int Unknown1 { get; set; }
+		public int Unknown2 { get; set; }
 		[StringIndex]
-		public int Action;
+		public int Action { get; set; }
 		[StringIndex]
-		public int Directions;
-		public Int64 Unknown3;
+		public int Directions { get; set; }
+		public Int64 Unknown3 { get; set; }
 		[StringIndex]
-		public int Description;
+		public int Description { get; set; }
 
 		public CurrencyItems(BinaryReader inStream)
 		{

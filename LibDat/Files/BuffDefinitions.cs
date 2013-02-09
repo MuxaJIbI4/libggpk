@@ -3,39 +3,39 @@ using System.IO;
 
 namespace LibDat.Files
 {
-	class BuffDefinitions : BaseDat
+	public class BuffDefinitions : BaseDat
 	{
 		[StringIndex]
-		public int Id;
+		public int Id { get; set; }
 		[StringIndex]
-		public int Description;
-		public bool Invisible;
-		public bool Removable;
+		public int Description { get; set; }
+		public bool Invisible { get; set; }
+		public bool Removable { get; set; }
 		[StringIndex]
-		public int Name;
+		public int Name { get; set; }
 		[StringIndex]
-		public int Icon;
-		public int Unknown0;
+		public int Icon { get; set; }
+		public int Unknown0 { get; set; }
 		[DataIndex]
-		public int Data0;
+		public int Data0 { get; set; }
 		[StringIndex]
-		public int Index4;
-		public int Unknown4;
-		public bool Flag2;
-		public bool Flag3;
-		public bool Flag4;
-		public Int64 Unkown5;
-		public Int64 Unkown6;
-		public bool Flag5;
-		public Int64 Unknown7;
+		public int Index4 { get; set; }
+		public int Unknown4 { get; set; }
+		public bool Flag2 { get; set; }
+		public bool Flag3 { get; set; }
+		public bool Flag4 { get; set; }
+		public Int64 Unkown5 { get; set; }
+		public Int64 Unkown6 { get; set; }
+		public bool Flag5 { get; set; }
+		public Int64 Unknown7 { get; set; }
 		[StringIndex]
-		public int Index5;
-		public bool Flag6;
-		public bool Flag7;
-		public bool Flag8;
-		public bool Flag9;
-		public bool Flag10;
-		public int Unknown8;
+		public int Index5 { get; set; }
+		public bool Flag6 { get; set; }
+		public bool Flag7 { get; set; }
+		public bool Flag8 { get; set; }
+		public bool Flag9 { get; set; }
+		public bool Flag10 { get; set; }
+		public int Unknown8 { get; set; }
 
 		public BuffDefinitions(BinaryReader inStream)
 		{

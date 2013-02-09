@@ -2,17 +2,17 @@
 
 namespace LibDat.Files
 {
-	class VoteType : BaseDat
+	public class VoteType : BaseDat
 	{
 		[StringIndex]
-		public int Id;
+		public int Id { get; set; }
 		[StringIndex]
-		public int Text;
+		public int Text { get; set; }
 		[StringIndex]
-		public int AcceptText;
+		public int AcceptText { get; set; }
 		[StringIndex]
-		public int RejectText;
-		public int Unknown0;
+		public int RejectText { get; set; }
+		public int Unknown0 { get; set; }
 
 		public VoteType(BinaryReader inStream)
 		{

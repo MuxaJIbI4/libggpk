@@ -3,9 +3,9 @@ using System.IO;
 
 namespace LibDat.Files
 {
-	class ArmourTypes : BaseDat
+	public class ArmourTypes : BaseDat
 	{
-		public Int64 Unkown0;
+		public Int64 Unkown0 { get; set; }
 
 		public ArmourTypes(BinaryReader inStream)
 		{

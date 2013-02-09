@@ -2,30 +2,30 @@
 
 namespace LibDat.Files
 {
-	class BloodTypes : BaseDat
+	public class BloodTypes : BaseDat
 	{
 		[StringIndex]
-		public int Id;
+		public int Id { get; set; }
 		[StringIndex]
-		public int Index1;
+		public int Index1 { get; set; }
 		[StringIndex]
-		public int Index2;
+		public int Index2 { get; set; }
 		[StringIndex]
-		public int Index3;
+		public int Index3 { get; set; }
 		[StringIndex]
-		public int Index4;
+		public int Index4 { get; set; }
 		[StringIndex]
-		public int Index5;
+		public int Index5 { get; set; }
 		[StringIndex]
-		public int Index6;
+		public int Index6 { get; set; }
 		[StringIndex]
-		public int Index7;
+		public int Index7 { get; set; }
 		[StringIndex]
-		public int Index8;
+		public int Index8 { get; set; }
 		[StringIndex]
-		public int Index9;
+		public int Index9 { get; set; }
 		[StringIndex]
-		public int Index10;
+		public int Index10 { get; set; }
 
 
 		public BloodTypes(BinaryReader inStream)

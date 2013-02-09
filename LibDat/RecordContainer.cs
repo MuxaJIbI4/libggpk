@@ -5,26 +5,22 @@ using System.Linq;
 
 namespace LibDat
 {
-	public class DatContainer
+	public class DatContainer<T> where T : BaseDat
 	{
 		public Dictionary<int, BaseData> DataEntries = new Dictionary<int, BaseData>();
-		public List<BaseDat> Entries;
+		public List<T> Entries;
 		public int DataTableBegin;
-		private readonly Type datTypeInUse;
 
-		public DatContainer(Type datType, BinaryReader inStream)
+		private byte[] originalDataTable;
+
+
+		public DatContainer(BinaryReader inStream)
 		{
-			this.datTypeInUse = datType;
 			Read(inStream);
 		}
 
 		public DatContainer(string fileName)
 		{
-			datTypeInUse = Type.GetType(string.Format("{0}.Files.{1}", this.GetType().Namespace, Path.GetFileNameWithoutExtension(fileName)));
-			if (datTypeInUse == null)
-			{
-				throw new Exception("No handler for file " + fileName);
-			}
 			byte[] fileBytes = File.ReadAllBytes(fileName);
 
 			using (MemoryStream ms = new MemoryStream(fileBytes))
@@ -36,9 +32,9 @@ namespace LibDat
 			}
 		}
 
-		private void AddDataToTable(BaseDat entry, BinaryReader inStream)
+		private void AddDataToTable(T entry, BinaryReader inStream)
 		{
-			var properties = entry.GetType().GetFields();
+			var properties = typeof(T).GetProperties();
 			foreach (var prop in properties)
 			{
 				object[] customAttributes = prop.GetCustomAttributes(false);
@@ -46,7 +42,7 @@ namespace LibDat
 				if (customAttributes.Length == 0)
 					continue;
 
-				int offset = (int)prop.GetValue(entry);
+				int offset = (int)prop.GetValue(entry, null);
 				if (DataEntries.ContainsKey(offset))
 				{
 					continue;
@@ -54,18 +50,18 @@ namespace LibDat
 
 				if (customAttributes[0] is StringIndex)
 				{
-					DataEntries[offset] = new UnicodeString(inStream, offset + DataTableBegin);
+					DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin);
 				}
 				else if (customAttributes[0] is DataIndex)
 				{
-					DataEntries[offset] = new UnkownData(inStream, offset + DataTableBegin);
+					DataEntries[offset] = new UnkownData(inStream, offset, DataTableBegin);
 				}
 			}
 		}
 
-		private void UpdateDataOffsets(BaseDat entry, Dictionary<int, int> updatedOffsets)
+		private void UpdateDataOffsets(T entry, Dictionary<int, int> updatedOffsets)
 		{
-			var properties = entry.GetType().GetFields();
+			var properties = typeof(T).GetProperties();
 			foreach (var prop in properties)
 			{
 				object[] customAttributes = prop.GetCustomAttributes(false);
@@ -73,21 +69,24 @@ namespace LibDat
 				if (customAttributes.Length == 0)
 					continue;
 
-				int offset = (int)prop.GetValue(entry);
-				prop.SetValue(entry, updatedOffsets[offset]);
+				int offset = (int)prop.GetValue(entry, null);
+				if (updatedOffsets.ContainsKey(offset))
+				{
+					Console.WriteLine("Updating offset {0} for {1} (now {2})", offset, prop.Name, updatedOffsets[offset]);
+					prop.SetValue(entry, updatedOffsets[offset], null);
+				}
 			}
 		}
 
 		private void Read(BinaryReader inStream)
 		{
 			int numberOfEntries = inStream.ReadInt32();
-			Entries = new List<BaseDat>(numberOfEntries);
+			Entries = new List<T>(numberOfEntries);
 
 			for (int i = 0; i < numberOfEntries; i++)
 			{
-				// TODO: Skip reflection if it's running slow (compiled lambda or factory (newInstance = theOneInstance.Clone(args)))
-				BaseDat newEntry = (BaseDat)Activator.CreateInstance(datTypeInUse, new object[] { inStream });
-
+				// TODO: Skip reflection if it's running slow (compiled lambda?)
+				T newEntry = (T)Activator.CreateInstance(typeof(T), new object[] { inStream });
 				Entries.Add(newEntry);
 			}
 
@@ -97,6 +96,8 @@ namespace LibDat
 			}
 
 			DataTableBegin = (int)(inStream.BaseStream.Position - 8);
+			inStream.BaseStream.Seek(-8, SeekOrigin.Current);
+			originalDataTable = inStream.ReadBytes((int)(inStream.BaseStream.Length - inStream.BaseStream.Position));
 
 			// Read all referenced string and data entries from the data following the entries (starting at magic number)
 			foreach (var item in Entries)
@@ -107,17 +108,26 @@ namespace LibDat
 
 		public void Save(string fileName)
 		{
-			using (BinaryWriter outStream = new BinaryWriter(File.Open(fileName, FileMode.Create)))
+			using (MemoryStream ms = new MemoryStream())
 			{
-				Save(outStream);
+				try
+				{
+					using (BinaryWriter outStream = new BinaryWriter(ms))
+					{
+						Save(outStream);
+					}
+				}
+				catch (Exception)
+				{
+					throw;
+				}
+
+				File.WriteAllBytes(fileName, ms.GetBuffer());
 			}
 		}
 
 		public void Save(BinaryWriter outStream)
 		{
-
-			// TODO: Just append any modified strings to the end just update the offsets, keep the rest of the data the same
-
 			// Mapping of the new string and data offsets
 			Dictionary<int, int> changedOffsets = new Dictionary<int, int>();
 
@@ -129,20 +139,23 @@ namespace LibDat
 				outStream.Write(new byte[(Entries[0] as BaseDat).GetSize() * Entries.Count]);
 			}
 
-
 			int newStartOfDataSection = (int)outStream.BaseStream.Position;
-			outStream.Write(0xBBbbBBbbBBbbBBbb);
+			outStream.Write(originalDataTable);
 
-			var sortedDataEntries = DataEntries.ToList();
-			sortedDataEntries.Sort((left, right) => left.Key.CompareTo(right.Key));
-
-			// Write each referenced piece of data to data section
-			foreach (var item in sortedDataEntries)
+			foreach (var item in DataEntries)
 			{
-				changedOffsets[item.Key] = (int)(outStream.BaseStream.Position - newStartOfDataSection);
-				item.Value.Save(outStream);
+				if (!(item.Value is UnicodeString))
+					continue;
+
+				UnicodeString str = item.Value as UnicodeString;
+				if (!string.IsNullOrWhiteSpace(str.NewData))
+				{
+					str.Save(outStream);
+					changedOffsets[str.Offset] = str.NewOffset;
+				}
 			}
 
+			// Go back to the beginning and write the real entries
 			outStream.BaseStream.Seek(4, SeekOrigin.Begin);
 
 			// Now we must go through each StringIndex and DataIndex and update the index then save it

@@ -2,38 +2,38 @@
 
 namespace LibDat.Files
 {
-	class ActiveSkills : BaseDat
+	public class ActiveSkills : BaseDat
 	{
 		[StringIndex]
-		public int NameIndex;
+		public int NameIndex { get; set; }
 		[StringIndex]
-		public int DisplayedName;
+		public int DisplayedName { get; set; }
 		[StringIndex]
-		public int Description;
+		public int Description { get; set; }
 		[StringIndex]
-		public int Index3;
+		public int Index3 { get; set; }
 		[StringIndex]
-		public int IconPath;
-		public int Unkown0;
+		public int IconPath { get; set; }
+		public int Unkown0 { get; set; }
 		[DataIndex]
-		public int Data0;
-		public int Unknown1;
-		public int Unknown2;
+		public int Data0 { get; set; }
+		public int Unknown1 { get; set; }
+		public int Unknown2 { get; set; }
 		[DataIndex]
-		public int Data1;
-		public int Unknown3;
+		public int Data1 { get; set; }
+		public int Unknown3 { get; set; }
 		[DataIndex]
-		public int Data2;
+		public int Data2 { get; set; }
 		[StringIndex]
-		public int ExtraDescription;
+		public int ExtraDescription { get; set; }
 		[StringIndex]
-		public int ExamplePath;
-		public bool Flag0;
-		public int Unknown4;
-		public bool Flag1;
-		public int Unknown5;
-		[DataIndex] 
-		public int Data3;
+		public int ExamplePath { get; set; }
+		public bool Flag0 { get; set; }
+		public int Unknown4 { get; set; }
+		public bool Flag1 { get; set; }
+		public int Unknown5 { get; set; }
+		[DataIndex]
+		public int Data3 { get; set; }
 
 		public ActiveSkills(BinaryReader inStream)
 		{

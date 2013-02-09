@@ -3,53 +3,53 @@ using System.IO;
 
 namespace LibDat.Files
 {
-	class Mods : BaseDat
+	public class Mods : BaseDat
 	{
 		[StringIndex]
-		public int Id;
-		public int Unknown0;
+		public int Id { get; set; }
+		public int Unknown0 { get; set; }
 		// Generalized mod group
 		//		group 45 = increased attack speed
 		//		group 80 = local increased attack speed
-		public int Group;
-		public int Level;
-		public int Stat1Min;
-		public int Stat1Max;
-		public int Stat2Min;
-		public int Stat2Max;
-		public int Stat3Min;
-		public int Stat3Max;
-		public int Stat4Min;
-		public int Stat4Max;
-		public Int64 Stat1Group;
-		public Int64 Stat2Group;
-		public Int64 Stat3Group;
-		public Int64 Stat4Group;
+		public int Group { get; set; }
+		public int Level { get; set; }
+		public int Stat1Min { get; set; }
+		public int Stat1Max { get; set; }
+		public int Stat2Min { get; set; }
+		public int Stat2Max { get; set; }
+		public int Stat3Min { get; set; }
+		public int Stat3Max { get; set; }
+		public int Stat4Min { get; set; }
+		public int Stat4Max { get; set; }
+		public Int64 Stat1Group { get; set; }
+		public Int64 Stat2Group { get; set; }
+		public Int64 Stat3Group { get; set; }
+		public Int64 Stat4Group { get; set; }
 		// 1 - Item
 		// 2 - Flask
 		// 3 - Monster
 		// 4 - Chest
 		// 5 - Map
-		public int Domain;
+		public int Domain { get; set; }
 		[StringIndex]
-		public int Name;
+		public int Name { get; set; }
 		// 1 - Prefix
 		// 2 - Suffix
 		// 3 - Cannot be generated
-		public int GenerationType;
+		public int GenerationType { get; set; }
 		[StringIndex]
-		public int CorrectGroup;
-		public int Unknown18;
+		public int CorrectGroup { get; set; }
+		public int Unknown18 { get; set; }
 		// possibly [StringIndex] ?
-		public int Unknown19;
-		public int Unknown20;
-		public int Unknown21;
-		public Int64 Unknown22;
-		public int Unknown23;
-		public int Unknown24;
+		public int Unknown19 { get; set; }
+		public int Unknown20 { get; set; }
+		public int Unknown21 { get; set; }
+		public Int64 Unknown22 { get; set; }
+		public int Unknown23 { get; set; }
+		public int Unknown24 { get; set; }
 		// possibly [StringIndex] if previous is 0?
-		public int Unknown25;
-		public Int64 Unknown26;
+		public int Unknown25 { get; set; }
+		public Int64 Unknown26 { get; set; }
 
 		public Mods(BinaryReader inStream)
 		{

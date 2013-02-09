@@ -3,15 +3,15 @@ using System.IO;
 
 namespace LibDat.Files
 {
-	class NPCTextAudio : BaseDat
+	public class NPCTextAudio : BaseDat
 	{
 		[StringIndex]
-		public int Id;
-		public Int64 Unknown0;
+		public int Id { get; set; }
+		public Int64 Unknown0 { get; set; }
 		[StringIndex]
-		public int Text;
+		public int Text { get; set; }
 		[StringIndex]
-		public int AudioPath;
+		public int AudioPath { get; set; }
 
 		public NPCTextAudio(BinaryReader inStream)
 		{

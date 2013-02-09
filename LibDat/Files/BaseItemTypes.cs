@@ -3,45 +3,45 @@ using System.IO;
 
 namespace LibDat.Files 
 {
-	class BaseItemTypes : BaseDat
+	public class BaseItemTypes : BaseDat
 	{
 		[StringIndex]
-		public int Index0;
-		public int Unknown0;
-		public int Unknown1;
-		public int Unknown2;
+		public int Index0 { get; set; }
+		public int Unknown0 { get; set; }
+		public int Unknown1 { get; set; }
+		public int Unknown2 { get; set; }
 		[StringIndex]
-		public int Name;
+		public int Name { get; set; }
 		[StringIndex]
-		public int InheritsFrom;
-		public int Unknown3;
-		public Int64 Unknown4;
-		public int Unknown5;
+		public int InheritsFrom { get; set; }
+		public int Unknown3 { get; set; }
+		public Int64 Unknown4 { get; set; }
+		public int Unknown5 { get; set; }
 		[DataIndex]
-		public int Data0;
-		public int Unknown6;
-		public int Unknown7;
-		public int Unknown8;
-		public Int64 Unknown9;
-		public Int64 Unknown10;
-		public int Unknown11;
+		public int Data0 { get; set; }
+		public int Unknown6 { get; set; }
+		public int Unknown7 { get; set; }
+		public int Unknown8 { get; set; }
+		public Int64 Unknown9 { get; set; }
+		public Int64 Unknown10 { get; set; }
+		public int Unknown11 { get; set; }
 		[DataIndex]
-		public int Data1;
-		public int Unknown12;
+		public int Data1 { get; set; }
+		public int Unknown12 { get; set; }
 		[DataIndex]
-		public int Data2;
-		public int Unknown13;
+		public int Data2 { get; set; }
+		public int Unknown13 { get; set; }
 		[DataIndex]
-		public int Data3;
-		public int Unknown14;
+		public int Data3 { get; set; }
+		public int Unknown14 { get; set; }
 		[DataIndex]
-		public int Data4;
-		public int Unknown15;
+		public int Data4 { get; set; }
+		public int Unknown15 { get; set; }
 		[DataIndex]
-		public int Data5;
-		public int Unknown16;
-		public Int64 Unknown17;
-		public int Unknown18;
+		public int Data5 { get; set; }
+		public int Unknown16 { get; set; }
+		public Int64 Unknown17 { get; set; }
+		public int Unknown18 { get; set; }
 
 
 		public BaseItemTypes(BinaryReader inStream)

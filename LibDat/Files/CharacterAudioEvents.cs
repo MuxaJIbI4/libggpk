@@ -2,29 +2,29 @@
 
 namespace LibDat.Files
 {
-	class CharacterAudioEvents : BaseDat
+	public class CharacterAudioEvents : BaseDat
 	{
 		[StringIndex]
-		public int Id;
+		public int Id { get; set; }
 		[StringIndex]
-		public int SoundMaruader;
+		public int SoundMaruader { get; set; }
 		[StringIndex]
-		public int SoundRanger;
+		public int SoundRanger { get; set; }
 		[StringIndex]
-		public int SoundWitch;
+		public int SoundWitch { get; set; }
 		[StringIndex]
-		public int SoundDualist;
+		public int SoundDualist { get; set; }
 		[StringIndex]
-		public int SoundShadow;
+		public int SoundShadow { get; set; }
 		[StringIndex]
-		public int SoundTemplar;
+		public int SoundTemplar { get; set; }
 		[StringIndex]
-		public int Index7; // Sound file for the next class?
-		public int Unknown0;
-		public int Unknown1;
-		public int Unknown2;
+		public int Index7 { get; set; } // Sound file for the next class?
+		public int Unknown0 { get; set; }
+		public int Unknown1 { get; set; }
+		public int Unknown2 { get; set; }
 		[StringIndex]
-		public int Index8; // Sound for all classes?
+		public int Index8 { get; set; } // Sound for all classes?
 
 
 		public CharacterAudioEvents(BinaryReader inStream)

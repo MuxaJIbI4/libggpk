@@ -50,6 +50,7 @@ namespace LibGGPK
 			CommaSeperatedValue,
 			RichText,
 			Sound,
+			Dat,
 		}
 
 		public FileRecord(uint length, BinaryReader br)
@@ -252,7 +253,7 @@ namespace LibGGPK
 			{".cht", DataFormat.Unicode},
 			{".clt", DataFormat.Unicode},
 			{".csv", DataFormat.CommaSeperatedValue},
-			{".dat", DataFormat.Unknown},
+			{".dat", DataFormat.Dat},
 			{".dct", DataFormat.Unicode},
 			{".dds", DataFormat.Unknown},
 			{".ddt", DataFormat.Unicode},

@@ -125,6 +125,7 @@ namespace VisualGGPK
 			imageOutput.Visibility = System.Windows.Visibility.Hidden;
 			richTextOutput.Visibility = System.Windows.Visibility.Hidden;
 			dataGridOutput.Visibility = System.Windows.Visibility.Hidden;
+			datViewerOutput.Visibility = System.Windows.Visibility.Hidden;
 
 			textBoxOutput.Clear();
 			imageOutput.Source = null;
@@ -177,17 +178,34 @@ namespace VisualGGPK
 					case FileRecord.DataFormat.RichText:
 						DisplayRichText(selectedRecord);
 						break;
+					case FileRecord.DataFormat.Dat:
+						DisplayDat(selectedRecord);
+						break;
 					default:
 						break;
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 				ResetViewer();
 				textBoxOutput.Visibility = System.Windows.Visibility.Visible;
-				textBoxOutput.Text = " * Unable to view item, export it if you want to view it *";
+				textBoxOutput.Text = " * Unable to view item, export it if you want to view it *\r\n\r\nDetails: " + ex.Message;
 			}
 
+		}
+
+		private void DisplayDat(FileRecord selectedRecord)
+		{
+			byte[] data = selectedRecord.ReadData(ggpkPath);
+			datViewerOutput.Visibility = System.Windows.Visibility.Visible;
+
+			using (MemoryStream ms = new MemoryStream(data))
+			{
+				using (BinaryReader br = new BinaryReader(ms))
+				{
+					datViewerOutput.Reset(selectedRecord.Name, br);
+				}
+			}
 		}
 
 		private void DisplayCSV(FileRecord selectedRecord)

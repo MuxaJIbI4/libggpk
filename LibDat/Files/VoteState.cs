@@ -2,12 +2,12 @@
 
 namespace LibDat.Files
 {
-	class VoteState : BaseDat
+	public class VoteState : BaseDat
 	{
 		[StringIndex]
-		public int Id;
+		public int Id { get; set; }
 		[StringIndex]
-		public int Text;
+		public int Text { get; set; }
 
 		public VoteState(BinaryReader inStream)
 		{

@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 
@@ -5,20 +6,20 @@ namespace LibDat
 {
 	public class UnicodeString : BaseData
 	{
-		public string Data { get; set; }
+		public int Offset { get; private set; }
+		public string Data { get; private set; }
+		public string NewData { get; set; }
+		public int NewOffset;
+		private readonly int dataTableOffset;
 
+		
+		public UnicodeString(BinaryReader inStream, int offset, int dataTableOffset)
+		{
+			this.dataTableOffset = dataTableOffset;
+			this.Offset = offset;
+			this.NewData = null;
 
-		public UnicodeString(string data)
-		{
-			this.Data = data;
-		}
-		public UnicodeString(BinaryReader inStream)
-		{
-			ReadData(inStream);
-		}
-		public UnicodeString(BinaryReader inStream, int offset)
-		{
-			inStream.BaseStream.Seek(offset, SeekOrigin.Begin);
+			inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
 			ReadData(inStream);
 		}
 
@@ -39,12 +40,15 @@ namespace LibDat
 				sb.Append(ch);
 			}
 
-			Data = sb.ToString();
+			this.Data = sb.ToString();
 		}
 
 		public override void Save(BinaryWriter outStream)
 		{
-			foreach (char ch in Data)
+			this.NewOffset = (int)(outStream.BaseStream.Position - dataTableOffset);
+			string dataToWrite = NewData ?? Data;
+
+			foreach (char ch in dataToWrite)
 			{
 				outStream.Write(ch);
 				outStream.Write((byte)0);

@@ -106,8 +106,8 @@ namespace TestProject
 			{
 				try
 				{
-					var container = new DatContainer(datFiles[i]);
-					string dump = DumpContainer(container, '\t');
+					//var container = new DatContainer(datFiles[i]);
+					//string dump = DumpContainer(container, '\t');
 					//File.WriteAllText(datFiles[i] + ".csv", dump);
 					//Console.WriteLine(dump);
 				}
@@ -118,7 +118,7 @@ namespace TestProject
 			}
 		}
 
-
+		/*
 		private static string DumpContainer(DatContainer container, char seperator)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -154,6 +154,6 @@ namespace TestProject
 			}
 
 			return sb.ToString();
-		}
+		}*/
 	}
 }

@@ -4,25 +4,20 @@ namespace LibDat
 {
 	public class UnkownData : BaseData
 	{
+		public int Offset { get; set; }
 		public int Data { get; set; }
 
-		public UnkownData(int data)
+		public UnkownData(BinaryReader inStream, int offset, int dataTableOffset)
 		{
-			this.Data = data;
-		}
-		public UnkownData(BinaryReader inStream)
-		{
-			ReadData(inStream);
-		}
-		public UnkownData(BinaryReader inStream, int offset)
-		{
-			inStream.BaseStream.Seek(offset, SeekOrigin.Begin);
+			this.Offset = offset;
+
+			inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
 			ReadData(inStream);
 		}
 
 		private void ReadData(BinaryReader inStream)
 		{
-			Data = inStream.ReadInt32();
+			this.Data = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)

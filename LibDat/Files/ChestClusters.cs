@@ -2,18 +2,18 @@
 
 namespace LibDat.Files
 {
-	class ChestClusters : BaseDat
+	public class ChestClusters : BaseDat
 	{
 		[StringIndex]
-		public int Id;
-		public int Unknown0;
+		public int Id { get; set; }
+		public int Unknown0 { get; set; }
 		[DataIndex]
-		public int Data0;
-		public int Unknown1;
-		public int Unknown2;
-		public int Unknown3;
-		public int Unknown4;
-		public int Unknown5;
+		public int Data0 { get; set; }
+		public int Unknown1 { get; set; }
+		public int Unknown2 { get; set; }
+		public int Unknown3 { get; set; }
+		public int Unknown4 { get; set; }
+		public int Unknown5 { get; set; }
 
 		public ChestClusters(BinaryReader inStream)
 		{

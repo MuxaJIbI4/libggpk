@@ -6,71 +6,71 @@ namespace LibDat.Files
 	public class MonsterVarieties : BaseDat
 	{
 		[StringIndex]
-		public int MonsterTypeIndex;
-		public Int64 Unknown0;
-		public int Unknown1;
-		public int ObjectSize; // ?
-		public int MinimumAttackDistance;
-		public int MaximumAttackDistance;
+		public int MonsterTypeIndex { get; set; }
+		public Int64 Unknown0 { get; set; }
+		public int Unknown1 { get; set; }
+		public int ObjectSize { get; set; } // ?
+		public int MinimumAttackDistance { get; set; }
+		public int MaximumAttackDistance { get; set; }
 		[StringIndex]
-		public int ActorIndex;
-		public int AnimatedObjectIndex;
-		public int BaseMonsterTypeIndex;
-		public int Unknown2;
+		public int ActorIndex { get; set; }
+		public int AnimatedObjectIndex { get; set; }
+		public int BaseMonsterTypeIndex { get; set; }
+		public int Unknown2 { get; set; }
 		[DataIndex]
-		public int UnknownDataIndex0;
-		public int Unkown3; // rarity_bias ?
+		public int UnknownDataIndex0 { get; set; }
+		public int Unkown3 { get; set; } // rarity_bias ?
 		[DataIndex]
-		public int UnknownDataIndex1;
+		public int UnknownDataIndex1 { get; set; }
 		[DataIndex]
-		public int UnknownDataIndex2;
+		public int UnknownDataIndex2 { get; set; }
 		[StringIndex]
-		public int SegmentsIndex;
-		public int Unknown4; // scale ?
-		public int Unknown5;
-		public int Unknown6;
-		public int Unknown7;
-		public int Unknown8;
+		public int SegmentsIndex { get; set; }
+		public int Unknown4 { get; set; } // scale ?
+		public int Unknown5 { get; set; }
+		public int Unknown6 { get; set; }
+		public int Unknown7 { get; set; }
+		public int Unknown8 { get; set; }
 		[StringIndex]
-		public int UnknownStringIndex0;
-		public Int64 Unknown9;
+		public int UnknownStringIndex0 { get; set; }
+		public Int64 Unknown9 { get; set; }
 		[DataIndex]
-		public int UnknownDataIndex3;
-		public int Unknown10;
+		public int UnknownDataIndex3 { get; set; }
+		public int Unknown10 { get; set; }
 		[DataIndex]
-		public int UnknownDataIndex4;
-		public int Unknown11;
+		public int UnknownDataIndex4 { get; set; }
+		public int Unknown11 { get; set; }
 		[DataIndex]
-		public int UnknownDataIndex5;
-		public int Unknown12; // scale ?
-		public int Unknown13;
+		public int UnknownDataIndex5 { get; set; }
+		public int Unknown12 { get; set; } // scale ?
+		public int Unknown13 { get; set; }
 		[DataIndex]
-		public int UnknownDataIndex6;
-		public int Unknown14;
-		public int Unknown15;
-		public int Unknown16;
-		public Int64 Unknown17;
-		public int Unknown18;
+		public int UnknownDataIndex6 { get; set; }
+		public int Unknown14 { get; set; }
+		public int Unknown15 { get; set; }
+		public int Unknown16 { get; set; }
+		public Int64 Unknown17 { get; set; }
+		public int Unknown18 { get; set; }
 		[DataIndex]
-		public int UnknownDataIndex7;
+		public int UnknownDataIndex7 { get; set; }
 		[StringIndex]
-		public int AisIndex;
-		public int Unknown19;
+		public int AisIndex { get; set; }
+		public int Unknown19 { get; set; }
 		[DataIndex]
-		public int UnknownDataIndex8;
+		public int UnknownDataIndex8 { get; set; }
 		[DataIndex]
-		public int UnknownDataIndex9;
-		public Int64 Unknown20;
+		public int UnknownDataIndex9 { get; set; }
+		public Int64 Unknown20 { get; set; }
 		[StringIndex]
-		public int ActorNameIndex;
-		public int Unknown21;
-		public int Unknown22;
-		public int WeaponSpeed;
-		public Int64 Unknown23;
-		public Int64 Unknown24;
-		public Int64 Unknown25;
-		public int Unknown26;
-		public int Unknown27;
+		public int ActorNameIndex { get; set; }
+		public int Unknown21 { get; set; }
+		public int Unknown22 { get; set; }
+		public int WeaponSpeed { get; set; }
+		public Int64 Unknown23 { get; set; }
+		public Int64 Unknown24 { get; set; }
+		public Int64 Unknown25 { get; set; }
+		public int Unknown26 { get; set; }
+		public int Unknown27 { get; set; }
 
 		public MonsterVarieties(BinaryReader inStream)
 		{

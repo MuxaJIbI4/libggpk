@@ -3,6 +3,13 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		Title="MainWindow" Height="350" Width="525">
 	<Grid>
-		<DataGrid Name="dataGridMain" AutoGenerateColumns="True" />
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
+		<DataGrid Grid.Row="0" Name="dataGridEntries" AutoGenerateColumns="True" ItemsSource="{Binding Entries}" />
+		<DataGrid Grid.Row="1" Name="dataGridData" AutoGenerateColumns="True" ItemsSource="{Binding DataStrings}" />
+		<Button Grid.Row="2" HorizontalAlignment="Center" Click="Button_Click_1">Save</Button>
 	</Grid>
 </Window>

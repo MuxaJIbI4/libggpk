@@ -2,26 +2,26 @@
 
 namespace LibDat.Files
 {
-	class Shrines : BaseDat
+	public class Shrines : BaseDat
 	{
 		[StringIndex]
-		public int Id;
-		public int Charges;
-		public bool ChargesShared;
-		public int RegenTime;
-		public int Unknown2;
-		public int Unknown3;
+		public int Id { get; set; }
+		public int Charges { get; set; }
+		public bool ChargesShared { get; set; }
+		public int RegenTime { get; set; }
+		public int Unknown2 { get; set; }
+		public int Unknown3 { get; set; }
 		[StringIndex]
-		public int Name;
+		public int Name { get; set; }
 		[StringIndex]
-		public int Message;
+		public int Message { get; set; }
 		[StringIndex]
-		public int AoFile;
-		public int Magnitude1;
-		public int Magnitude2;
-		public int Magnitude3;
-		public int Magnitude4;
-		public int Unknown4;
+		public int AoFile { get; set; }
+		public int Magnitude1 { get; set; }
+		public int Magnitude2 { get; set; }
+		public int Magnitude3 { get; set; }
+		public int Magnitude4 { get; set; }
+		public int Unknown4 { get; set; }
 
 		public Shrines(BinaryReader inStream)
 		{

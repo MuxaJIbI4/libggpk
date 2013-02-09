@@ -5,10 +5,14 @@ namespace LibDat.Files
 	public class BackendErrors : BaseDat
 	{
 		[StringIndex]
-		public int Id;
+		public int Id { get; set; }
 		[StringIndex]
-		public int Text;
+		public int Text { get; set; }
 
+		public BackendErrors()
+		{
+			
+		}
 		public BackendErrors(BinaryReader inStream)
 		{
 			Id = inStream.ReadInt32();

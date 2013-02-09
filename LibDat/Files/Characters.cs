@@ -3,40 +3,40 @@ using System.IO;
 
 namespace LibDat.Files
 {
-	class Characters : BaseDat
+	public class Characters : BaseDat
 	{
 		[StringIndex]
-		public int OtFile;
+		public int OtFile { get; set; }
 		[StringIndex]
-		public int Name;
+		public int Name { get; set; }
 		[StringIndex]
-		public int AnimatedObject;
+		public int AnimatedObject { get; set; }
 		[StringIndex]
-		public int Actor;
-		public int BaseMaxLife;
-		public int BaseMaxMana;
-		public int WeaponSpeed;
-		public int MinDamage;
-		public int MaxDamage;
-		public int MaxAttackDistance; // possibly wrong
+		public int Actor { get; set; }
+		public int BaseMaxLife { get; set; }
+		public int BaseMaxMana { get; set; }
+		public int WeaponSpeed { get; set; }
+		public int MinDamage { get; set; }
+		public int MaxDamage { get; set; }
+		public int MaxAttackDistance { get; set; } // possibly wrong
 		[StringIndex]
-		public int Icon;
-		public int Unknown6;
-		public int BaseStrength;
-		public int BaseDexterity;
-		public int BaseIntelligence;
-		public int Unknown10;
+		public int Icon { get; set; }
+		public int Unknown6 { get; set; }
+		public int BaseStrength { get; set; }
+		public int BaseDexterity { get; set; }
+		public int BaseIntelligence { get; set; }
+		public int Unknown10 { get; set; }
 		[DataIndex]
-		public int Data0;
+		public int Data0 { get; set; }
 		[StringIndex]
-		public int Description;
-		public int Unknown11;
-		public int Unknown12;
-		public int Unknown13;
-		public int Unknown14;
-		public int Unknown15;
-		public int Unknown16;
-		public int Unknown17;
+		public int Description { get; set; }
+		public int Unknown11 { get; set; }
+		public int Unknown12 { get; set; }
+		public int Unknown13 { get; set; }
+		public int Unknown14 { get; set; }
+		public int Unknown15 { get; set; }
+		public int Unknown16 { get; set; }
+		public int Unknown17 { get; set; }
 
 		public Characters(BinaryReader inStream)
 		{
@@ -99,7 +99,7 @@ namespace LibDat.Files
 
 		public override int GetSize()
 		{
-			throw new NotImplementedException();
+			return 0x64;
 		}
 	}
 }
