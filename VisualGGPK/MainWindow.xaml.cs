@@ -172,9 +172,6 @@ namespace VisualGGPK
 					case FileRecord.DataFormat.Unicode:
 						DisplayUnicode(selectedRecord);
 						break;
-					case FileRecord.DataFormat.CommaSeperatedValue:
-						DisplayCSV(selectedRecord);
-						break;
 					case FileRecord.DataFormat.RichText:
 						DisplayRichText(selectedRecord);
 						break;
@@ -206,18 +203,6 @@ namespace VisualGGPK
 					datViewerOutput.Reset(selectedRecord.Name, br);
 				}
 			}
-		}
-
-		private void DisplayCSV(FileRecord selectedRecord)
-		{
-			string tempFile = selectedRecord.ExtractTempFile(ggpkPath);
-
-			dataGridOutput.Visibility = System.Windows.Visibility.Visible;
-			DataTable csvData = FileHelpers.CsvEngine.CsvToDataTable(tempFile, ',');
-
-			dataGridOutput.AutoGenerateColumns = true;
-			dataGridOutput.ItemsSource = csvData.DefaultView;
-			File.Delete(tempFile);
 		}
 
 		private void DisplayRichText(FileRecord selectedRecord)
