@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace TestProject.Dat.Files
+namespace LibDat.Files
 {
 	public class MonsterVarieties : BaseDat
 	{

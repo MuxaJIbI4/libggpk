@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
-namespace TestProject.Dat.Files
+namespace LibDat.Files
 {
 	class Characters : BaseDat
 	{

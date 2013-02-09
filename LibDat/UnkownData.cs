@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace TestProject.Dat
+namespace LibDat
 {
 	public class UnkownData : BaseData
 	{

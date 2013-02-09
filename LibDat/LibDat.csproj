@@ -1,21 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{65A32E6A-4D2F-4BB0-AAD5-956615110F47}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8F9FC78E-6181-4447-AC45-56173C16A0FA}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestProject</RootNamespace>
-    <AssemblyName>TestProject</AssemblyName>
+    <RootNamespace>LibDat</RootNamespace>
+    <AssemblyName>LibDat</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,8 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,18 +40,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="BaseData.cs" />
+    <Compile Include="BaseRecord.cs" />
+    <Compile Include="Files\ActiveSkills.cs" />
+    <Compile Include="Files\ArmourTypes.cs" />
+    <Compile Include="Files\BackendErrors.cs" />
+    <Compile Include="Files\BaseItemTypes.cs" />
+    <Compile Include="Files\BloodTypes.cs" />
+    <Compile Include="Files\BuffDefinitions.cs" />
+    <Compile Include="Files\CharacterAudioEvents.cs" />
+    <Compile Include="Files\Characters.cs" />
+    <Compile Include="Files\ChestClusters.cs" />
+    <Compile Include="Files\CurrencyItems.cs" />
+    <Compile Include="Files\Mods.cs" />
+    <Compile Include="Files\MonsterVarieties.cs" />
+    <Compile Include="Files\NPCTextAudio.cs" />
+    <Compile Include="Files\QuestStates.cs" />
+    <Compile Include="Files\Shrines.cs" />
+    <Compile Include="Files\VoteState.cs" />
+    <Compile Include="Files\VoteType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LibDat\LibDat.csproj">
-      <Project>{8f9fc78e-6181-4447-ac45-56173c16a0fa}</Project>
-      <Name>LibDat</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LibGGPK\LibGGPK.csproj">
-      <Project>{6D97AF87-4B0A-4F43-A209-801CC72ABE75}</Project>
-      <Name>LibGGPK</Name>
-    </ProjectReference>
+    <Compile Include="RecordContainer.cs" />
+    <Compile Include="UnicodeString.cs" />
+    <Compile Include="UnkownData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

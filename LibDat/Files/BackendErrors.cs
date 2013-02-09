@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace TestProject.Dat.Files
+namespace LibDat.Files
 {
 	public class BackendErrors : BaseDat
 	{

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace TestProject.Dat
+namespace LibDat
 {
 	public class StringIndex : System.Attribute { }
 	public class DataIndex : System.Attribute { }

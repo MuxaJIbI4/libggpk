@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
 
-namespace TestProject.Dat
+namespace LibDat
 {
 	public class UnicodeString : BaseData
 	{

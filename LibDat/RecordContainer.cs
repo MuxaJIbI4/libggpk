@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace TestProject.Dat
+namespace LibDat
 {
-	class DatContainer
+	public class DatContainer
 	{
 		public Dictionary<int, BaseData> DataEntries = new Dictionary<int, BaseData>();
 		public List<BaseDat> Entries;
 		public int DataTableBegin;
 		private readonly Type datTypeInUse;
+
+		public DatContainer(Type datType, BinaryReader inStream)
+		{
+			this.datTypeInUse = datType;
+			Read(inStream);
+		}
 
 		public DatContainer(string fileName)
 		{
@@ -54,8 +60,6 @@ namespace TestProject.Dat
 				{
 					DataEntries[offset] = new UnkownData(inStream, offset + DataTableBegin);
 				}
-
-					Console.WriteLine("{0} -> {1}", offset, DataEntries[offset]);
 			}
 		}
 

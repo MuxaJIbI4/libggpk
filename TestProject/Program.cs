@@ -5,8 +5,8 @@ using System.Text;
 using LibGGPK;
 using System.IO;
 using System.Linq.Expressions;
-using TestProject.Dat;
-using TestProject.Dat.Files;
+using LibDat;
+
 //4 bytes - Number of entries
 //Entry 1
 //Entry 2
@@ -108,15 +108,14 @@ namespace TestProject
 				{
 					var container = new DatContainer(datFiles[i]);
 					string dump = DumpContainer(container, '\t');
-					File.WriteAllText(datFiles[i] + ".csv", dump);
+					//File.WriteAllText(datFiles[i] + ".csv", dump);
+					//Console.WriteLine(dump);
 				}
 				catch (Exception ex)
 				{
 					Console.WriteLine("Failed: {0}", ex.Message);
 				}
-
 			}
-
 		}
 
 

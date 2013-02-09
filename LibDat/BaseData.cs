@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace TestProject.Dat
+namespace LibDat
 {
 	public abstract class BaseData
 	{
