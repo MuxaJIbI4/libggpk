@@ -76,7 +76,15 @@ namespace VisualGGPK
 			Thread worker = new Thread(new ThreadStart(() =>
 			{
 				content = new GGPK();
-				content.Read(ggpkPath, Output);
+				try
+				{
+					content.Read(ggpkPath, Output);
+				}
+				catch (Exception ex)
+				{
+					Output("Failed to read file: " + ex.Message);
+					return;
+				}
 
 				Output("Traversing tree....\n");
 				OnReadComplete();
@@ -89,7 +97,15 @@ namespace VisualGGPK
 		{
 			treeView1.Dispatcher.BeginInvoke(new Action(() =>
 			{
-				AddDirectoryTreeToControl(content.DirectoryRoot, null);
+				try
+				{
+					AddDirectoryTreeToControl(content.DirectoryRoot, null);
+				}
+				catch (Exception ex)
+				{
+					Output("Failed to read directory tree: " + ex.Message);
+					return;
+				}
 			}), null);
 			Output("All done!\n");
 		}
