@@ -84,6 +84,8 @@ namespace LibDat
 				{
 					DataEntries[offset] = new UnkownData(inStream, offset, DataTableBegin);
 				}
+				// TODO: Debug purposes only
+				Console.WriteLine("{0} -> {1}", offset, DataEntries[offset]);
 			}
 		}
 

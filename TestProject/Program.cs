@@ -6,6 +6,7 @@ using LibGGPK;
 using System.IO;
 using System.Linq.Expressions;
 using LibDat;
+using LibDat.Files;
 
 //4 bytes - Number of entries
 //Entry 1
@@ -41,39 +42,39 @@ namespace TestProject
 				@"CharacterAudioEvents.dat", // done
 				@"Characters.dat", // done (can skip translation)
 				@"ChestClusters.dat", // done
-				@"Chests.dat",
-				@"ComponentArmour.dat",
-				@"ComponentAttributeRequirements.dat",
-				@"ComponentCharges.dat",
+				@"Chests.dat", // done
+				@"ComponentArmour.dat", // done
+				@"ComponentAttributeRequirements.dat", // done
+				@"ComponentCharges.dat", // done
 				@"CurrencyItems.dat", // done (Needs translation?)
-				@"Dances.dat",
-				@"DefaultMonsterStats.dat",
-				@"Difficulties.dat",
-				@"DropPool.dat",
-				@"Environments.dat",
-				@"ExperienceLevels.dat",
-				@"Flasks.dat",
-				@"FlavourText.dat",
-				@"GameConstants.dat",
-				@"GemTags.dat",
-				@"GrantedEffects.dat",
-				@"GrantedEffectsPerLevel.dat",
-				@"ItemExperiencePerLevel.dat",
-				@"ItemisedVisualEffect.dat",
-				@"ItemVisualEffect.dat",
-				@"ItemVisualIdentity.dat",
-				@"MapConnections.dat",
-				@"MapPins.dat",
-				@"Maps.dat",
-				@"MiscAnimated.dat",
-				@"MiscObjects.dat",
+				@"Dances.dat", // done
+				@"DefaultMonsterStats.dat", // done
+				@"Difficulties.dat", // done
+				@"DropPool.dat", // done
+				@"Environments.dat", // done
+				@"ExperienceLevels.dat", // done
+				@"Flasks.dat", // done
+				@"FlavourText.dat", // done
+				@"GameConstants.dat", // done
+				@"GemTags.dat", // done
+				@"GrantedEffects.dat", // done
+				@"GrantedEffectsPerLevel.dat", // done
+				@"ItemExperiencePerLevel.dat", // done
+				@"ItemisedVisualEffect.dat", // done
+				@"ItemVisualEffect.dat", // done
+				@"ItemVisualIdentity.dat", // done
+				@"MapConnections.dat", // done
+				@"MapPins.dat", // done
+				@"Maps.dat", // done
+				@"MiscAnimated.dat", // done
+				@"MiscObjects.dat", // done
 				@"Mods.dat", // done
-				@"ModSellPrices.dat",
-				@"MonsterPackEntries.dat",
-				@"MonsterPacks.dat",
-				@"MonsterTypes.dat",
+				@"ModSellPrices.dat", // done
+				@"MonsterPackEntries.dat", // done
+				@"MonsterPacks.dat", // done
+				@"MonsterTypes.dat", // done
 				@"MonsterVarieties.dat", // done
-				@"Music.dat",
+				@"Music.dat", // done
 				@"NPCs.dat",
 				@"NPCTalk.dat",
 				@"NPCTextAudio.dat", // done (Need translation)
@@ -102,11 +103,14 @@ namespace TestProject
 			};
 
 
-			for (int i = 0; i < datFiles.Length; i++)
+			//ReadAndDumpStruct();
+			//return;
+
+			//for (int i = 0; i < datFiles.Length; i++)
 			{
 				try
 				{
-					//var container = new DatContainer(datFiles[i]);
+					var container = new DatContainer<MonsterPackEntries>("MonsterPackEntries.dat");
 					//string dump = DumpContainer(container, '\t');
 					//File.WriteAllText(datFiles[i] + ".csv", dump);
 					//Console.WriteLine(dump);
@@ -116,6 +120,56 @@ namespace TestProject
 					Console.WriteLine("Failed: {0}", ex.Message);
 				}
 			}
+		}
+
+		private static void DumpDat(string filePath)
+		{
+			byte[] fileBytes = File.ReadAllBytes(filePath);
+			StringBuilder sb = new StringBuilder();
+			using (MemoryStream ms = new MemoryStream(fileBytes))
+			{
+				using (BinaryReader br = new BinaryReader(ms))
+				{
+					int entryCount = br.ReadInt32();
+					int dataTableStart = -1;
+
+					while (true)
+					{
+						if (br.ReadByte() == 0xbb &&
+							br.ReadByte() == 0xbb &&
+							br.ReadByte() == 0xbb &&
+							br.ReadByte() == 0xbb &&
+							br.ReadByte() == 0xbb &&
+							br.ReadByte() == 0xbb &&
+							br.ReadByte() == 0xbb &&
+							br.ReadByte() == 0xbb)
+						{
+							dataTableStart = (int)(br.BaseStream.Position - 8);
+							break;
+						}
+					}
+					br.BaseStream.Seek(4, SeekOrigin.Begin);
+
+					int entrySize = dataTableStart / entryCount;
+
+
+					sb.AppendLine(Path.GetFileNameWithoutExtension(filePath));
+					for (int i = 0; i < entryCount; i++)
+					{
+						byte[] data = br.ReadBytes(entrySize);
+						for (int j = 0; j < data.Length; j++)
+						{
+							sb.AppendFormat("{0:X2} ", data[j]);
+						}
+						sb.AppendLine();
+					}
+
+					br.BaseStream.Seek(dataTableStart, SeekOrigin.Begin);
+					File.WriteAllBytes(filePath + "_data.bin", br.ReadBytes((int)(br.BaseStream.Length - br.BaseStream.Position)));
+				}
+			}
+
+			File.WriteAllText(filePath + "_bytes.txt", sb.ToString());
 		}
 
 		/*
@@ -155,5 +209,113 @@ namespace TestProject
 
 			return sb.ToString();
 		}*/
+
+		private static void DumpProps(string[] vars)
+		{
+			foreach (var @var in vars)
+			{
+				string lowerVar = var.ToLower();
+
+				if (lowerVar.Contains("flag"))
+					Console.WriteLine("		public bool {0} {{ get; set; }}", var);
+				else if (lowerVar.Contains("64"))
+					Console.WriteLine("		public Int64 {0} {{ get; set; }}", var);
+				else
+				{
+					if(lowerVar.Contains("index"))
+						Console.WriteLine("		[StringIndex]");
+					else if(lowerVar.Contains("data"))
+						Console.WriteLine("		[DataIndex]");
+
+					Console.WriteLine("		public int {0} {{ get; set; }}", var);
+				}
+			}
+		}
+
+		private static void DumpRead(string[] vars, string className)
+		{
+			Console.WriteLine();
+			Console.WriteLine("		public {0}(BinaryReader inStream)", className);
+			Console.WriteLine("		{");
+			foreach (var @var in vars)
+			{
+				string lowerVar = var.ToLower();
+
+				if (lowerVar.Contains("flag"))
+					Console.WriteLine("			{0} = inStream.ReadBoolean();", var);
+				else if (lowerVar.Contains("64"))
+					Console.WriteLine("			{0} = inStream.ReadInt64();", var);
+				else
+					Console.WriteLine("			{0} = inStream.ReadInt32();", var);
+			}
+			Console.WriteLine("		}");
+		}
+
+		private static void DumpWrite(string[] vars)
+		{
+			Console.WriteLine();
+			Console.WriteLine("		public override void Save(BinaryWriter outStream)");
+			Console.WriteLine("		{");
+			foreach (var @var in vars)
+			{
+				string lowerVar = var.ToLower();
+
+				Console.WriteLine("			outStream.Write({0});", var);
+			}
+			Console.WriteLine("		}");
+		}
+
+		private static void DumpSize(string[] vars)
+		{
+			int size = 0;
+
+			foreach (var @var in vars)
+			{
+				string lowerVar = var.ToLower();
+
+				if (lowerVar.Contains("flag"))
+					size += 1;
+				else if (lowerVar.Contains("64"))
+					size += 8;
+				else
+					size += 4;
+			}
+
+			Console.WriteLine();
+			Console.WriteLine("		public override int GetSize()");
+			Console.WriteLine("		{");
+			Console.WriteLine("			return 0x{0:X};", size);
+			Console.WriteLine("		}");
+		}
+
+		private static void ReadAndDumpStruct()
+		{
+			string className = Console.ReadLine().Trim();
+			string input = Console.ReadLine();
+			string previousInput = input;
+			Console.Clear();
+			do
+			{
+				previousInput = input;
+				input = input.Replace("\t\t", "\t");
+			} while (previousInput != input);
+
+			string[] varNames = input.Split(new char[] { '\t' });
+
+			Console.WriteLine("using System.IO;");
+			Console.WriteLine();
+			Console.WriteLine("namespace LibDat.Files");
+			Console.WriteLine("{");
+			Console.WriteLine("	public class {0} : BaseDat", className);
+			Console.WriteLine("	{");
+			DumpProps(varNames);
+			DumpRead(varNames, className);
+			DumpWrite(varNames);
+			DumpSize(varNames);
+			Console.WriteLine("	}");
+			Console.WriteLine("}");
+
+			Console.ReadKey();
+		}
 	}
 }
