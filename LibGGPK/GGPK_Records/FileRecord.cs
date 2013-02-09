@@ -9,7 +9,7 @@ namespace LibGGPK
 	/// <summary>
 	/// A file record represents a file entry in the pack file.
 	/// </summary>
-	public sealed class FileRecord : BaseRecord
+	public sealed class FileRecord : BaseRecord, IComparable
 	{
 		public const string Tag = "FILE";
 
@@ -306,6 +306,14 @@ namespace LibGGPK
 		public override string ToString()
 		{
 			return Name;
+		}
+
+		public int CompareTo(object obj)
+		{
+			if (!(obj is FileRecord))
+				throw new NotImplementedException("Can only compare FileRecords");
+
+			return Name.CompareTo((obj as FileRecord).Name);
 		}
 	}
 }

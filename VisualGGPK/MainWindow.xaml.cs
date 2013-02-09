@@ -124,11 +124,13 @@ namespace VisualGGPK
 				parentControl.Items.Add(rootItem);
 			}
 
+			directoryTreeNode.Children.Sort();
 			foreach (var item in directoryTreeNode.Children)
 			{
 				AddDirectoryTreeToControl(item, rootItem);
 			}
 
+			directoryTreeNode.Files.Sort();
 			foreach (var item in directoryTreeNode.Files)
 			{
 				rootItem.Items.Add(item);

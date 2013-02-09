@@ -8,7 +8,7 @@ namespace LibGGPK
 	/// <summary>
 	/// Node for building directory trees
 	/// </summary>
-	public class DirectoryTreeNode
+	public class DirectoryTreeNode : IComparable
 	{
 		/// <summary>
 		/// Parent directory tree node
@@ -88,6 +88,14 @@ namespace LibGGPK
 			return Name;
 		}
 
+
+		public int CompareTo(object obj)
+		{
+			if (!(obj is DirectoryTreeNode))
+				throw new NotImplementedException("Can only compare DirectoryTreeNodes");
+
+			return Name.CompareTo((obj as DirectoryTreeNode).Name);
+		}
 	};
 
 
