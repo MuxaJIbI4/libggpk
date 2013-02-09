@@ -21,10 +21,5 @@ namespace LibDat.Files
 		{
 			return 8;
 		}
-
-		public override string ToString()
-		{
-			return Unkown0.ToString();
-		}
 	}
 }

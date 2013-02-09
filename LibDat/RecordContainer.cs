@@ -149,21 +149,9 @@ namespace LibDat
 		/// <param name="fileName">Path to write contents to</param>
 		public void Save(string fileName)
 		{
-			using (MemoryStream ms = new MemoryStream())
+			using (BinaryWriter outStream = new BinaryWriter(File.Open(fileName, FileMode.Create)))
 			{
-				try
-				{
-					using (BinaryWriter outStream = new BinaryWriter(ms))
-					{
-						Save(outStream);
-					}
-				}
-				catch (Exception)
-				{
-					throw;
-				}
-
-				File.WriteAllBytes(fileName, ms.GetBuffer());
+				Save(outStream);
 			}
 		}
 

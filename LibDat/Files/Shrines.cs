@@ -60,7 +60,7 @@ namespace LibDat.Files
 
 		public override int GetSize()
 		{
-			return 0x19;
+			return 0x35;
 		}
 	}
 }
