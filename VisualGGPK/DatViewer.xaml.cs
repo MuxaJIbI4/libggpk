@@ -64,8 +64,6 @@ namespace VisualGGPK
 			}
 		}
 
-
-
 		private void Button_Click_1(object sender, RoutedEventArgs e)
 		{
 			SaveFileDialog sfd = new SaveFileDialog();
@@ -75,6 +73,27 @@ namespace VisualGGPK
 			if (sfd.ShowDialog() == true)
 			{
 				data.Save(sfd.FileName);
+			}
+		}
+
+		private void Button_Click_2(object sender, RoutedEventArgs e)
+		{
+			SaveFileDialog sfd = new SaveFileDialog();
+			sfd.FileName = Path.GetFileNameWithoutExtension(FileName) + ".csv";
+
+			if (sfd.ShowDialog() == true)
+			{
+				try
+				{
+					File.WriteAllText(sfd.FileName, data.GetCSV());
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show("Failed to save CSV file: " + ex.Message);
+					return;
+				}
+
+				MessageBox.Show("Saved CSV file to " + sfd.FileName);
 			}
 		}
 	}
@@ -87,6 +106,8 @@ namespace VisualGGPK
 		private readonly List<UnicodeString> _dataStrings = new List<UnicodeString>();
 
 		public System.Collections.IEnumerable Entries { get; private set; }
+		public Dictionary<int, BaseData> DataEntries { get; private set; }
+
 		public List<UnicodeString> Strings
 		{
 			get
@@ -131,8 +152,8 @@ namespace VisualGGPK
 
 			try
 			{
-				Dictionary<int, BaseData> dataEntries = (Dictionary<int, BaseData>)datContainerType.GetField("DataEntries").GetValue(datContainer);
-				var containerData = dataEntries.ToList();
+				DataEntries = (Dictionary<int, BaseData>)datContainerType.GetField("DataEntries").GetValue(datContainer);
+				var containerData = DataEntries.ToList();
 
 				foreach (var keyValuePair in containerData)
 				{
@@ -172,6 +193,59 @@ namespace VisualGGPK
 			}
 
 			MessageBox.Show("Saved '" + savePath + "'", "Saved", MessageBoxButton.OK, MessageBoxImage.Information);
+		}
+
+		/// <summary>
+		/// Returns a CSV table with the contents of this dat container.
+		/// </summary>
+		/// <returns></returns>
+		public string GetCSV()
+		{
+			char seperator = ',';
+			StringBuilder sb = new StringBuilder();
+
+			bool displayedHeader = false;
+			foreach (var item in Entries)
+			{
+				var properties = item.GetType().GetProperties();
+
+				if (!displayedHeader)
+				{
+					foreach (var propertyInfo in properties)
+					{
+						sb.AppendFormat("{0}{1}", propertyInfo.Name, seperator);
+					}
+					sb.Remove(sb.Length - 1, 1);
+					sb.AppendLine();
+					displayedHeader = true;
+				}
+
+				foreach (var propertyInfo in properties)
+				{
+					object fieldValue = propertyInfo.GetValue(item, null);
+					object[] customAttributes = propertyInfo.GetCustomAttributes(false);
+
+					if (customAttributes.Length > 0)
+					{
+						if (customAttributes.Any(n => n is StringIndex))
+						{
+							sb.AppendFormat("\"{0}\"{1}",  DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""), seperator);
+						}
+						else
+						{
+							sb.AppendFormat("{0}{1}", DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""), seperator);
+						}
+					}
+					else
+					{
+						sb.AppendFormat("{0}{1}", fieldValue, seperator);
+					}
+				}
+				sb.Remove(sb.Length - 1, 1);
+				sb.AppendLine();
+			}
+
+			return sb.ToString();
 		}
 	}
 }
