@@ -32,6 +32,11 @@ namespace VisualGGPK
 			InitializeComponent();
 		}
 
+		private void OutputLine(string msg)
+		{
+			Output(msg + Environment.NewLine);
+		}
+
 		void Output(string msg)
 		{
 			textBoxOutput.Dispatcher.BeginInvoke(new Action(() =>
@@ -44,7 +49,7 @@ namespace VisualGGPK
 		{
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.CheckFileExists = true;
-			ofd.Filter = Properties.Resources.Load_GGPK_Filter;
+			ofd.Filter = Settings.Strings["Load_GGPK_Filter"];
 			if (ofd.ShowDialog() == true)
 			{
 				if (!File.Exists(ofd.FileName))
@@ -63,6 +68,11 @@ namespace VisualGGPK
 				this.Close();
 				return;
 			}
+
+			menuItemExport.Header = Settings.Strings["MainWindow_Menu_Export"];
+			menuItemReplace.Header = Settings.Strings["MainWindow_Menu_Replace"];
+			menuItemView.Header = Settings.Strings["MainWindow_Menu_View"];
+			labelFileOffset.Content = Settings.Strings["MainWindow_Label_FileOffset"];
 		}
 
 		private void ReloadGGPK()
@@ -82,11 +92,11 @@ namespace VisualGGPK
 				}
 				catch (Exception ex)
 				{
-					Output(string.Format(Properties.Resources.ReloadGGPK_Failed, ex.Message));
+					Output(string.Format(Settings.Strings["ReloadGGPK_Failed"], ex.Message));
 					return;
 				}
 
-				Output(Properties.Resources.ReloadGGPK_Traversing_Tree);
+				OutputLine(Settings.Strings["ReloadGGPK_Traversing_Tree"]);
 
 				treeView1.Dispatcher.BeginInvoke(new Action(() =>
 				{
@@ -96,12 +106,12 @@ namespace VisualGGPK
 					}
 					catch (Exception ex)
 					{
-						Output(string.Format(Properties.Resources.Error_Read_Directory_Tree, ex.Message));
+						Output(string.Format(Settings.Strings["Error_Read_Directory_Tree"], ex.Message));
 						return;
 					}
 				}), null);
 
-				Output(Properties.Resources.ReloadGGPK_Successful);
+				OutputLine(Settings.Strings["ReloadGGPK_Successful"]);
 			}));
 
 			worker.Start();
@@ -209,7 +219,7 @@ namespace VisualGGPK
 					ex = ex.InnerException;
 				} 
 
-				textBoxOutput.Text = string.Format(Properties.Resources.UpdateDisplayPanel_Failed, sb.ToString());
+				textBoxOutput.Text = string.Format(Settings.Strings["UpdateDisplayPanel_Failed"], sb.ToString());
 			}
 
 		}
@@ -290,12 +300,12 @@ namespace VisualGGPK
 				if (saveFileDialog.ShowDialog() == true)
 				{
 					selectedRecord.ExtractFile(ggpkPath, saveFileDialog.FileName);
-					MessageBox.Show(string.Format(Properties.Resources.ExportSelectedItem_Successful, selectedRecord.DataLength), Properties.Resources.ExportAllItemsInDirectory_Successful_Caption, MessageBoxButton.OK, MessageBoxImage.Information);
+					MessageBox.Show(string.Format(Settings.Strings["ExportSelectedItem_Successful"], selectedRecord.DataLength), Settings.Strings["ExportAllItemsInDirectory_Successful_Caption"], MessageBoxButton.OK, MessageBoxImage.Information);
 				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(string.Format(Properties.Resources.ExportSelectedItem_Failed, ex.Message), Properties.Resources.Error_Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(string.Format(Settings.Strings["ExportSelectedItem_Failed"], ex.Message), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
 		}
@@ -334,7 +344,7 @@ namespace VisualGGPK
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(string.Format(Properties.Resources.ViewSelectedItem_Failed, ex.Message), Properties.Resources.Error_Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(string.Format(Settings.Strings["ViewSelectedItem_Failed"], ex.Message), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
 
@@ -375,7 +385,7 @@ namespace VisualGGPK
 			try
 			{
 				SaveFileDialog saveFileDialog = new SaveFileDialog();
-				saveFileDialog.FileName = Properties.Resources.ExportAllItemsInDirectory_Default_FileName;
+				saveFileDialog.FileName = Settings.Strings["ExportAllItemsInDirectory_Default_FileName"];
 				if (saveFileDialog.ShowDialog() == true)
 				{
 					string exportDirectory = Path.GetDirectoryName(saveFileDialog.FileName) + "/";
@@ -383,12 +393,12 @@ namespace VisualGGPK
 					{
 						item.ExtractFileWithDirectoryStructure(ggpkPath, exportDirectory);
 					}
-					MessageBox.Show(string.Format(Properties.Resources.ExportAllItemsInDirectory_Successful, recordsToExport.Count), Properties.Resources.ExportAllItemsInDirectory_Successful_Caption, MessageBoxButton.OK, MessageBoxImage.Information);
+					MessageBox.Show(string.Format(Settings.Strings["ExportAllItemsInDirectory_Successful"], recordsToExport.Count), Settings.Strings["ExportAllItemsInDirectory_Successful_Caption"], MessageBoxButton.OK, MessageBoxImage.Information);
 				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(string.Format(Properties.Resources.ExportAllItemsInDirectory_Failed, ex.Message), Properties.Resources.Error_Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(string.Format(Settings.Strings["ExportAllItemsInDirectory_Failed"], ex.Message), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 
@@ -406,7 +416,7 @@ namespace VisualGGPK
 					long previousOffset = recordToReplace.RecordBegin;
 
 					recordToReplace.ReplaceContents(ggpkPath, openFileDialog.FileName, content.FreeRoot);
-					MessageBox.Show(String.Format(Properties.Resources.ReplaceItem_Successful, recordToReplace.Name, recordToReplace.RecordBegin.ToString("X")), Properties.Resources.ReplaceItem_Successful_Caption, MessageBoxButton.OK, MessageBoxImage.Information);
+					MessageBox.Show(String.Format(Settings.Strings["ReplaceItem_Successful"], recordToReplace.Name, recordToReplace.RecordBegin.ToString("X")), Settings.Strings["ReplaceItem_Successful_Caption"], MessageBoxButton.OK, MessageBoxImage.Information);
 
 					// this is actually needed to avoid writing to old records that have already been replaced. Replacing a record
 					//   will relocate it and we'll need to refresh the whole tree to avoid any possible errors.
@@ -415,7 +425,7 @@ namespace VisualGGPK
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(string.Format(Properties.Resources.ReplaceItem_Failed, ex.Message), Properties.Resources.Error_Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(string.Format(Settings.Strings["ReplaceItem_Failed"], ex.Message), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 

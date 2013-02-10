@@ -40,6 +40,9 @@ namespace VisualGGPK
 			data = new DatWrapper(inStream, filename);
 			InitializeComponent();
 			DataContext = this;
+
+			buttonSave.Content = Settings.Strings["DatViewer_Button_Save"];
+			buttonExportCSV.Content = Settings.Strings["DatViewer_Button_Export"];
 		}
 
 		public DatViewer(string filename)
@@ -48,12 +51,18 @@ namespace VisualGGPK
 			data = new DatWrapper(filename);
 			InitializeComponent();
 			DataContext = this;
+
+			buttonSave.Content = Settings.Strings["DatViewer_Button_Save"];
+			buttonExportCSV.Content = Settings.Strings["DatViewer_Button_Export"];
 		}
 
 		public DatViewer()
 		{
 			InitializeComponent();
 			DataContext = this;
+
+			buttonSave.Content = Settings.Strings["DatViewer_Button_Save"];
+			buttonExportCSV.Content = Settings.Strings["DatViewer_Button_ExportCSV"];
 		}
 
 		public void Reset(string filename, BinaryReader inStream)
@@ -89,11 +98,11 @@ namespace VisualGGPK
 				}
 				catch (Exception ex)
 				{
-					MessageBox.Show(string.Format(Properties.Resources.DatViewer_ExportCSV_Failed, ex.Message), Properties.Resources.Error_Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+					MessageBox.Show(string.Format(Settings.Strings["DatViewer_ExportCSV_Failed"], ex.Message), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
 					return;
 				}
 
-				MessageBox.Show(string.Format(Properties.Resources.DatViewer_ExportCSV_Successful, sfd.FileName), Properties.Resources.DatViewer_ExportCSV_Successful_Caption, MessageBoxButton.OK, MessageBoxImage.Information);
+				MessageBox.Show(string.Format(Settings.Strings["DatViewer_ExportCSV_Successful"], sfd.FileName), Settings.Strings["DatViewer_ExportCSV_Successful_Caption"], MessageBoxButton.OK, MessageBoxImage.Information);
 			}
 		}
 
@@ -199,7 +208,7 @@ namespace VisualGGPK
 					temp = temp.InnerException;
 				}
 
-				MessageBox.Show(string.Format(Resources.DatWrapper_Save_Failed, errorString), Properties.Resources.Error_Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(string.Format(Resources.DatWrapper_Save_Failed, errorString), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 
 			MessageBox.Show(string.Format(Resources.DatWrapper_Save_Successful, savePath), Resources.DatWrapper_Save_Successful_Caption, MessageBoxButton.OK, MessageBoxImage.Information);

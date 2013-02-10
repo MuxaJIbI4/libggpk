@@ -106,20 +106,20 @@ namespace TestProject
 			ReadAndDumpStruct();
 			return;
 
-			//for (int i = 0; i < datFiles.Length; i++)
-			{
-				try
-				{
-					var container = new DatContainer<GrantedEffectsPerLevel>("GrantedEffectsPerLevel.dat");
-					//string dump = DumpContainer(container, '\t');
-					//File.WriteAllText(datFiles[i] + ".csv", dump);
-					//Console.WriteLine(dump);
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine("Failed: {0}", ex.Message);
-				}
-			}
+			////for (int i = 0; i < datFiles.Length; i++)
+			//{
+			//	try
+			//	{
+			//		var container = new DatContainer<GrantedEffectsPerLevel>("GrantedEffectsPerLevel.dat");
+			//		//string dump = DumpContainer(container, '\t');
+			//		//File.WriteAllText(datFiles[i] + ".csv", dump);
+			//		//Console.WriteLine(dump);
+			//	}
+			//	catch (Exception ex)
+			//	{
+			//		Console.WriteLine("Failed: {0}", ex.Message);
+			//	}
+			//}
 		}
 
 		private static void DumpDat(string filePath)
@@ -171,44 +171,6 @@ namespace TestProject
 
 			File.WriteAllText(filePath + "_bytes.txt", sb.ToString());
 		}
-
-		/*
-		private static string DumpContainer(DatContainer container, char seperator)
-		{
-			StringBuilder sb = new StringBuilder();
-
-			bool displayedHeader = false;
-			foreach (var item in container.Entries)
-			{
-				var fields = item.GetType().GetFields();
-
-				if (!displayedHeader)
-				{
-					foreach (var fieldInfo in fields)
-					{
-						sb.AppendFormat("{0}{1}", fieldInfo.Name, seperator);
-					}
-					sb.Remove(sb.Length - 1, 1);
-					sb.AppendLine();
-					displayedHeader = true;
-				}
-				{
-					foreach (var fieldInfo in fields)
-					{
-						object fieldValue = fieldInfo.GetValue(item);
-
-						if (fieldInfo.GetCustomAttributes(false).Length > 0)
-							sb.AppendFormat("{0}{1}", container.DataEntries[(int)fieldValue].ToString().Replace("\r\n", " ").Replace('\t', ' '), seperator);
-						else
-							sb.AppendFormat("{0}{1}", fieldValue, seperator);
-					}
-					sb.Remove(sb.Length - 1, 1);
-					sb.AppendLine();
-				}
-			}
-
-			return sb.ToString();
-		}*/
 
 		private static void DumpProps(string[] vars)
 		{

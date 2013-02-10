@@ -124,15 +124,13 @@
     <value>Failed to read file: {0}</value>
   </data>
   <data name="ReloadGGPK_Traversing_Tree" xml:space="preserve">
-    <value>Traversing tree....
-</value>
+    <value>Traversing tree....</value>
   </data>
   <data name="Error_Read_Directory_Tree" xml:space="preserve">
     <value>Failed to read directory tree: {0}</value>
   </data>
   <data name="ReloadGGPK_Successful" xml:space="preserve">
-    <value>All done!
-</value>
+    <value>All done!</value>
   </data>
   <data name="UpdateDisplayPanel_Failed" xml:space="preserve">
     <value> * Unable to view item, export it if you want to view it *
@@ -211,10 +209,10 @@ Details: {0}</value>
   <data name="MainWindow_Menu_View" xml:space="preserve">
     <value>View</value>
   </data>
-	<data name="DatViewer_Button_ExportCSV" xml:space="preserve">
+  <data name="DatViewer_Button_ExportCSV" xml:space="preserve">
     <value>Export CSV</value>
   </data>
-	<data name="DatViewer_Button_Save" xml:space="preserve">
+  <data name="DatViewer_Button_Save" xml:space="preserve">
     <value>Save</value>
   </data>
 </root>

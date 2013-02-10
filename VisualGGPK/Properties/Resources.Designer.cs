@@ -286,8 +286,7 @@ namespace VisualGGPK.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to All done!
-        ///.
+        ///   Looks up a localized string similar to All done!.
         /// </summary>
         public static string ReloadGGPK_Successful {
             get {
@@ -296,8 +295,7 @@ namespace VisualGGPK.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Traversing tree....
-        ///.
+        ///   Looks up a localized string similar to Traversing tree.....
         /// </summary>
         public static string ReloadGGPK_Traversing_Tree {
             get {

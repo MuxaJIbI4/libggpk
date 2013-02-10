@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using VisualGGPK.Properties;
@@ -12,16 +13,16 @@ namespace VisualGGPK
 	{
 		public static readonly Settings Strings = new Settings();
 
-		private const string SettingsPath = "Translation.xml";
+		private static readonly string SettingsPath = typeof(Settings).Namespace + "." + "i18n.xml";
 		private static readonly Dictionary<string, string> UserStrings = new Dictionary<string, string>();
 
 		[Serializable]
-		[XmlType("Text")]
+		[XmlType("Resource")]
 		public class UserData
 		{
 			[XmlAttribute]
 			public string Tag { get; set; }
-			[XmlText]
+			[XmlElement]
 			public string Text { get; set; }
 		}
 
@@ -54,7 +55,7 @@ namespace VisualGGPK
 
 			XmlSerializer serializer = new XmlSerializer(userStringList.GetType());
 			userStringList = (List<UserData>)serializer.Deserialize(XmlReader.Create(SettingsPath));
-			return userStringList.ToDictionary(n => n.Tag, n => n.Text);
+			return userStringList.ToDictionary(n => n.Tag, n => n.Text.Replace("__BREAK__", Environment.NewLine));
 		}
 
 		private static void CreateExampleTranlsationFile()
@@ -71,7 +72,7 @@ namespace VisualGGPK
 				}
 			}
 
-			List<UserData> userStringList = (from n in derp select new UserData() { Tag = n.Key, Text = n.Value }).ToList();
+			List<UserData> userStringList = (from n in derp select new UserData() { Tag = n.Key, Text = n.Value.Replace(Environment.NewLine, "__BREAK__") }).ToList();
 			XmlSerializer serializer = new XmlSerializer(userStringList.GetType());
 
 			using (FileStream fs = new FileStream(SettingsPath + ".Example", FileMode.Create))
