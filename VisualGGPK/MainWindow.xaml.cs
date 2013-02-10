@@ -204,7 +204,15 @@ namespace VisualGGPK
 			{
 				ResetViewer();
 				textBoxOutput.Visibility = System.Windows.Visibility.Visible;
-				textBoxOutput.Text = " * Unable to view item, export it if you want to view it *\r\n\r\nDetails: " + ex.Message;
+
+				StringBuilder sb = new StringBuilder();
+				while (ex != null)
+				{
+					sb.AppendLine(ex.Message);
+					ex = ex.InnerException;
+				} 
+
+				textBoxOutput.Text = " * Unable to view item, export it if you want to view it *\r\n\r\nDetails: " + sb.ToString();
 			}
 
 		}

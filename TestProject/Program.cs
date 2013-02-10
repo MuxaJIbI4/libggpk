@@ -110,7 +110,7 @@ namespace TestProject
 			{
 				try
 				{
-					var container = new DatContainer<MonsterPackEntries>("MonsterPackEntries.dat");
+					var container = new DatContainer<GrantedEffectsPerLevel>("GrantedEffectsPerLevel.dat");
 					//string dump = DumpContainer(container, '\t');
 					//File.WriteAllText(datFiles[i] + ".csv", dump);
 					//Console.WriteLine(dump);

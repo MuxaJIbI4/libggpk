@@ -14,13 +14,11 @@ namespace LibDat.Files
 		public int Unknown4 { get; set; }
 		public int Unknown5 { get; set; }
 		public int Unknown6 { get; set; }
-		[StringIndex]
-		public int Index1 { get; set; }
-		public bool Flag0 { get; set; }
 		public int Unknown7 { get; set; }
+		public bool Flag0 { get; set; }
 		public int Unknown8 { get; set; }
-		[StringIndex]
-		public int Index2 { get; set; }
+		public int Unknown9 { get; set; }
+		public int Unknown10 { get; set; }
 
 		public MonsterPacks(BinaryReader inStream)
 		{
@@ -32,11 +30,11 @@ namespace LibDat.Files
 			Unknown4 = inStream.ReadInt32();
 			Unknown5 = inStream.ReadInt32();
 			Unknown6 = inStream.ReadInt32();
-			Index1 = inStream.ReadInt32();
-			Flag0 = inStream.ReadBoolean();
 			Unknown7 = inStream.ReadInt32();
+			Flag0 = inStream.ReadBoolean();
 			Unknown8 = inStream.ReadInt32();
-			Index2 = inStream.ReadInt32();
+			Unknown9 = inStream.ReadInt32();
+			Unknown10 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -49,11 +47,11 @@ namespace LibDat.Files
 			outStream.Write(Unknown4);
 			outStream.Write(Unknown5);
 			outStream.Write(Unknown6);
-			outStream.Write(Index1);
-			outStream.Write(Flag0);
 			outStream.Write(Unknown7);
+			outStream.Write(Flag0);
 			outStream.Write(Unknown8);
-			outStream.Write(Index2);
+			outStream.Write(Unknown9);
+			outStream.Write(Unknown10);
 		}
 
 		public override int GetSize()

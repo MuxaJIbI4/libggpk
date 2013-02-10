@@ -44,7 +44,6 @@ namespace VisualGGPK
 		{
 			this.FileName = filename;
 			data = new DatWrapper(inStream, filename);
-			InitializeComponent();
 			DataContext = null;
 			DataContext = this;
 		}
@@ -145,7 +144,7 @@ namespace VisualGGPK
 			}
 			catch (Exception ex)
 			{
-				throw new Exception("Failed to read dat: " + ex.Message);
+				throw new Exception("Failed to read dat: " + ex.Message, ex);
 			}
 		}
 
