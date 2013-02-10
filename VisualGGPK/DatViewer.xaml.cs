@@ -161,7 +161,7 @@ namespace VisualGGPK
 			datTypeInUse = Type.GetType(string.Format("LibDat.Files.{0}, LibDat", System.IO.Path.GetFileNameWithoutExtension(fileName)));
 			if (datTypeInUse == null)
 			{
-				throw new Exception(string.Format(Resources.DatWrapper_ParseDatFile_Unsupported_File, fileName));
+				throw new Exception(string.Format(Settings.Strings["DatWrapper_ParseDatFile_Unsupported_File"], fileName));
 			}
 
 			datContainerType = typeof(DatContainer<>).MakeGenericType(new Type[] { datTypeInUse });
@@ -184,7 +184,7 @@ namespace VisualGGPK
 			}
 			catch (Exception ex)
 			{
-				throw new Exception(string.Format(Resources.DatWrapper_ParseDatFile_Failed, ex.Message), ex);
+				throw new Exception(string.Format(Settings.Strings["DatWrapper_ParseDatFile_Failed"], ex.Message), ex);
 			}
 		}
 
@@ -208,10 +208,10 @@ namespace VisualGGPK
 					temp = temp.InnerException;
 				}
 
-				MessageBox.Show(string.Format(Resources.DatWrapper_Save_Failed, errorString), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(string.Format(Settings.Strings["DatWrapper_Save_Failed"], errorString), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 
-			MessageBox.Show(string.Format(Resources.DatWrapper_Save_Successful, savePath), Resources.DatWrapper_Save_Successful_Caption, MessageBoxButton.OK, MessageBoxImage.Information);
+			MessageBox.Show(string.Format(Settings.Strings["DatWrapper_Save_Successful"], savePath), Settings.Strings["DatWrapper_Save_Successful_Caption"], MessageBoxButton.OK, MessageBoxImage.Information);
 		}
 
 		/// <summary>
