@@ -224,7 +224,7 @@ namespace VisualGGPK
 
 			using (MemoryStream ms = new MemoryStream(data))
 			{
-				using (BinaryReader br = new BinaryReader(ms))
+				using (BinaryReader br = new BinaryReader(ms, System.Text.Encoding.Unicode))
 				{
 					datViewerOutput.Reset(selectedRecord.Name, br);
 				}
@@ -325,7 +325,7 @@ namespace VisualGGPK
 					File.Move(extractedCSV, extractedCSV + ".csv");
 					extractedCSV = extractedCSV + ".csv";
 
-					using (BinaryReader br = new BinaryReader(File.OpenRead(extractedFileName)))
+					using (BinaryReader br = new BinaryReader(File.OpenRead(extractedFileName), System.Text.Encoding.Unicode))
 					{
 						DatWrapper tempWrapper = new DatWrapper(br, selectedRecord.Name);
 						File.WriteAllText(extractedCSV, tempWrapper.GetCSV());
@@ -454,14 +454,16 @@ namespace VisualGGPK
 
 					recordToReplace.ReplaceContents(ggpkPath, openFileDialog.FileName, content.FreeRoot);
 					MessageBox.Show(String.Format("Record {0} updated and relocated to offset {1}", recordToReplace.Name, recordToReplace.RecordBegin.ToString("X")), "Replacement successful", MessageBoxButton.OK, MessageBoxImage.Information);
+
+					// this is actually needed to avoid writing to old records that have already been replaced. Replacing a record
+					//   will relocate it and we'll need to refresh the whole tree to avoid any possible errors.
+					ReloadGGPK();
 				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show("Failed to export item: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show("Failed to replace item: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
-
-			//ReloadGGPK();
 		}
 
 		private void menuItemView_Click(object sender, RoutedEventArgs e)

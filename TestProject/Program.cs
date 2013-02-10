@@ -128,7 +128,7 @@ namespace TestProject
 			StringBuilder sb = new StringBuilder();
 			using (MemoryStream ms = new MemoryStream(fileBytes))
 			{
-				using (BinaryReader br = new BinaryReader(ms))
+				using (BinaryReader br = new BinaryReader(ms, System.Text.Encoding.Unicode))
 				{
 					int entryCount = br.ReadInt32();
 					int dataTableStart = -1;

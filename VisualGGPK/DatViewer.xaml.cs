@@ -124,7 +124,7 @@ namespace VisualGGPK
 
 			using (MemoryStream ms = new MemoryStream(fileBytes))
 			{
-				using (BinaryReader br = new BinaryReader(ms))
+				using (BinaryReader br = new BinaryReader(ms, System.Text.Encoding.Unicode))
 				{
 					ParseDatFile(br);
 				}

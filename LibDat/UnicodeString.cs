@@ -57,7 +57,6 @@ namespace LibDat
 					ch = inStream.ReadChar();
 					break;
 				}
-				inStream.ReadChar();
 
 				sb.Append(ch);
 			}
@@ -74,10 +73,9 @@ namespace LibDat
 			this.NewOffset = (int)(outStream.BaseStream.Position - dataTableOffset);
 			string dataToWrite = NewData ?? Data;
 
-			foreach (char ch in dataToWrite)
+			for (int i = 0; i < dataToWrite.Length; i++)
 			{
-				outStream.Write(ch);
-				outStream.Write((byte)0);
+				outStream.Write(dataToWrite[i]);
 			}
 			outStream.Write((int)0);
 		}

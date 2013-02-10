@@ -47,7 +47,7 @@ namespace LibDat
 
 			using (MemoryStream ms = new MemoryStream(fileBytes))
 			{
-				using (BinaryReader br = new BinaryReader(ms))
+				using (BinaryReader br = new BinaryReader(ms, System.Text.Encoding.Unicode))
 				{
 					Read(br);
 				}
@@ -151,7 +151,7 @@ namespace LibDat
 		/// <param name="fileName">Path to write contents to</param>
 		public void Save(string fileName)
 		{
-			using (BinaryWriter outStream = new BinaryWriter(File.Open(fileName, FileMode.Create)))
+			using (BinaryWriter outStream = new BinaryWriter(File.Open(fileName, FileMode.Create), System.Text.Encoding.Unicode))
 			{
 				Save(outStream);
 			}
