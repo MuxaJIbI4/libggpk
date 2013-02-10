@@ -44,7 +44,7 @@ namespace VisualGGPK
 		{
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.CheckFileExists = true;
-			ofd.Filter = "GGPK Pack File|*.ggpk";
+			ofd.Filter = Properties.Resources.Load_GGPK_Filter;
 			if (ofd.ShowDialog() == true)
 			{
 				if (!File.Exists(ofd.FileName))
@@ -82,32 +82,29 @@ namespace VisualGGPK
 				}
 				catch (Exception ex)
 				{
-					Output("Failed to read file: " + ex.Message);
+					Output(string.Format(Properties.Resources.ReloadGGPK_Failed, ex.Message));
 					return;
 				}
 
-				Output("Traversing tree....\n");
-				OnReadComplete();
+				Output(Properties.Resources.ReloadGGPK_Traversing_Tree);
+
+				treeView1.Dispatcher.BeginInvoke(new Action(() =>
+				{
+					try
+					{
+						AddDirectoryTreeToControl(content.DirectoryRoot, null);
+					}
+					catch (Exception ex)
+					{
+						Output(string.Format(Properties.Resources.Error_Read_Directory_Tree, ex.Message));
+						return;
+					}
+				}), null);
+
+				Output(Properties.Resources.ReloadGGPK_Successful);
 			}));
 
 			worker.Start();
-		}
-
-		private void OnReadComplete()
-		{
-			treeView1.Dispatcher.BeginInvoke(new Action(() =>
-			{
-				try
-				{
-					AddDirectoryTreeToControl(content.DirectoryRoot, null);
-				}
-				catch (Exception ex)
-				{
-					Output("Failed to read directory tree: " + ex.Message);
-					return;
-				}
-			}), null);
-			Output("All done!\n");
 		}
 
 		private void AddDirectoryTreeToControl(DirectoryTreeNode directoryTreeNode, TreeViewItem parentControl)
@@ -212,7 +209,7 @@ namespace VisualGGPK
 					ex = ex.InnerException;
 				} 
 
-				textBoxOutput.Text = " * Unable to view item, export it if you want to view it *\r\n\r\nDetails: " + sb.ToString();
+				textBoxOutput.Text = string.Format(Properties.Resources.UpdateDisplayPanel_Failed, sb.ToString());
 			}
 
 		}
@@ -293,12 +290,12 @@ namespace VisualGGPK
 				if (saveFileDialog.ShowDialog() == true)
 				{
 					selectedRecord.ExtractFile(ggpkPath, saveFileDialog.FileName);
-					MessageBox.Show(string.Format("Exported {0} bytes", selectedRecord.DataLength), "Export successful", MessageBoxButton.OK, MessageBoxImage.Information);
+					MessageBox.Show(string.Format(Properties.Resources.ExportSelectedItem_Successful, selectedRecord.DataLength), Properties.Resources.ExportAllItemsInDirectory_Successful_Caption, MessageBoxButton.OK, MessageBoxImage.Information);
 				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show("Failed to export item: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(string.Format(Properties.Resources.ExportSelectedItem_Failed, ex.Message), Properties.Resources.Error_Caption, MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
 		}
@@ -337,7 +334,7 @@ namespace VisualGGPK
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show("Failed to extract file for viewing: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(string.Format(Properties.Resources.ViewSelectedItem_Failed, ex.Message), Properties.Resources.Error_Caption, MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
 
@@ -352,7 +349,9 @@ namespace VisualGGPK
 		{
 			Process sourceProcess = sender as Process;
 			if (sourceProcess == null)
-				throw new Exception("fileViewerProcess_Exited handled event with invalid sender?");
+			{
+				return;
+			}
 
 			try
 			{
@@ -360,6 +359,7 @@ namespace VisualGGPK
 			}
 			catch (Exception /*ex*/)
 			{
+				/* Suppress any exceptions, they're just temporary files */
 				//MessageBox.Show(String.Format("Failed to delete temporary file '{0}': {1}", sourceProcess.StartInfo.FileName, ex.Message)); 
 			}
 		}
@@ -375,7 +375,7 @@ namespace VisualGGPK
 			try
 			{
 				SaveFileDialog saveFileDialog = new SaveFileDialog();
-				saveFileDialog.FileName = "selectedRecord.Name";
+				saveFileDialog.FileName = Properties.Resources.ExportAllItemsInDirectory_Default_FileName;
 				if (saveFileDialog.ShowDialog() == true)
 				{
 					string exportDirectory = Path.GetDirectoryName(saveFileDialog.FileName) + "/";
@@ -383,12 +383,39 @@ namespace VisualGGPK
 					{
 						item.ExtractFileWithDirectoryStructure(ggpkPath, exportDirectory);
 					}
-					MessageBox.Show(string.Format("Exported {0} files", recordsToExport.Count), "Export successful", MessageBoxButton.OK, MessageBoxImage.Information);
+					MessageBox.Show(string.Format(Properties.Resources.ExportAllItemsInDirectory_Successful, recordsToExport.Count), Properties.Resources.ExportAllItemsInDirectory_Successful_Caption, MessageBoxButton.OK, MessageBoxImage.Information);
 				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show("Failed to export item: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(string.Format(Properties.Resources.ExportAllItemsInDirectory_Failed, ex.Message), Properties.Resources.Error_Caption, MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+		}
+
+		private void ReplaceItem(FileRecord recordToReplace)
+		{
+			try
+			{
+				OpenFileDialog openFileDialog = new OpenFileDialog();
+				openFileDialog.FileName = "";
+				openFileDialog.CheckFileExists = true;
+				openFileDialog.CheckPathExists = true;
+
+				if (openFileDialog.ShowDialog() == true)
+				{
+					long previousOffset = recordToReplace.RecordBegin;
+
+					recordToReplace.ReplaceContents(ggpkPath, openFileDialog.FileName, content.FreeRoot);
+					MessageBox.Show(String.Format(Properties.Resources.ReplaceItem_Successful, recordToReplace.Name, recordToReplace.RecordBegin.ToString("X")), Properties.Resources.ReplaceItem_Successful_Caption, MessageBoxButton.OK, MessageBoxImage.Information);
+
+					// this is actually needed to avoid writing to old records that have already been replaced. Replacing a record
+					//   will relocate it and we'll need to refresh the whole tree to avoid any possible errors.
+					ReloadGGPK();
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(string.Format(Properties.Resources.ReplaceItem_Failed, ex.Message), Properties.Resources.Error_Caption, MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 
@@ -441,29 +468,7 @@ namespace VisualGGPK
 			if (recordToReplace == null)
 				return;
 
-			try
-			{
-				OpenFileDialog openFileDialog = new OpenFileDialog();
-				openFileDialog.FileName = "";
-				openFileDialog.CheckFileExists = true;
-				openFileDialog.CheckPathExists = true;
-
-				if (openFileDialog.ShowDialog() == true)
-				{
-					long previousOffset = recordToReplace.RecordBegin;
-
-					recordToReplace.ReplaceContents(ggpkPath, openFileDialog.FileName, content.FreeRoot);
-					MessageBox.Show(String.Format("Record {0} updated and relocated to offset {1}", recordToReplace.Name, recordToReplace.RecordBegin.ToString("X")), "Replacement successful", MessageBoxButton.OK, MessageBoxImage.Information);
-
-					// this is actually needed to avoid writing to old records that have already been replaced. Replacing a record
-					//   will relocate it and we'll need to refresh the whole tree to avoid any possible errors.
-					ReloadGGPK();
-				}
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show("Failed to replace item: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-			}
+			ReplaceItem(recordToReplace);
 		}
 
 		private void menuItemView_Click(object sender, RoutedEventArgs e)

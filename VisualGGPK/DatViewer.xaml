@@ -2,8 +2,8 @@
 			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-			 mc:Ignorable="d" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Properties="clr-namespace:VisualGGPK.Properties"
+             mc:Ignorable="d" 
 			 d:DesignHeight="300" d:DesignWidth="300">
 	<Grid>
 		<Grid.RowDefinitions>
@@ -16,8 +16,8 @@
 		<GridSplitter Grid.Row="1" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Height="4" />
 		<DataGrid Grid.Row="2" Name="dataGridData" AutoGenerateColumns="True" ItemsSource="{Binding DataStrings}" />
 		<StackPanel Grid.Row="3" HorizontalAlignment="Center" Orientation="Horizontal">
-			<Button Margin="5 0 5 0" Click="Button_Click_1">Save</Button>
-			<Button Margin="5 0 5 0" Click="Button_Click_2">Export CSV</Button>
+			<Button Margin="5 0 5 0" Name="buttonSave" Click="buttonSave_Click_1" Content="{x:Static Properties:Resources.DatViewer_Button_Save}" />
+			<Button Margin="5 0 5 0" Name="buttonExportCSV" Click="buttonExportCSV_Click_1" Content="{x:Static Properties:Resources.DatViewer_Button_ExportCSV}"/>
 		</StackPanel>
 	</Grid>
 </UserControl>

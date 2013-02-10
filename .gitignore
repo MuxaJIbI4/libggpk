@@ -10,3 +10,5 @@
 *.opensdf
 *.ipch
 *.DotSettings
+
+/VisualGGPK/VisualGGPK.csproj.DotSettings.user

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using VisualGGPK.Properties;
 
 namespace VisualGGPK
 {
@@ -17,6 +18,21 @@ namespace VisualGGPK
 	{
 		private DatWrapper data;
 		public string FileName { get; set; }
+		public List<UnicodeString> DataStrings
+		{
+			get
+			{
+				return data.Strings;
+			}
+		}
+
+		public System.Collections.IEnumerable Entries
+		{
+			get
+			{
+				return data.Entries;
+			}
+		}
 
 		public DatViewer(string filename, BinaryReader inStream)
 		{
@@ -48,23 +64,7 @@ namespace VisualGGPK
 			DataContext = this;
 		}
 
-		public List<UnicodeString> DataStrings
-		{
-			get
-			{
-				return data.Strings;
-			}
-		}
-
-		public System.Collections.IEnumerable Entries
-		{
-			get
-			{
-				return data.Entries;
-			}
-		}
-
-		private void Button_Click_1(object sender, RoutedEventArgs e)
+		private void SaveDat()
 		{
 			SaveFileDialog sfd = new SaveFileDialog();
 			sfd.DefaultExt = ".dat";
@@ -76,7 +76,7 @@ namespace VisualGGPK
 			}
 		}
 
-		private void Button_Click_2(object sender, RoutedEventArgs e)
+		private void ExportCSV()
 		{
 			SaveFileDialog sfd = new SaveFileDialog();
 			sfd.FileName = Path.GetFileNameWithoutExtension(FileName) + ".csv";
@@ -89,12 +89,22 @@ namespace VisualGGPK
 				}
 				catch (Exception ex)
 				{
-					MessageBox.Show("Failed to save CSV file: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					MessageBox.Show(string.Format(Properties.Resources.DatViewer_ExportCSV_Failed, ex.Message), Properties.Resources.Error_Caption, MessageBoxButton.OK, MessageBoxImage.Error);
 					return;
 				}
 
-				MessageBox.Show("Saved CSV file to " + sfd.FileName, "Successfully saved CSV", MessageBoxButton.OK, MessageBoxImage.Information);
+				MessageBox.Show(string.Format(Properties.Resources.DatViewer_ExportCSV_Successful, sfd.FileName), Properties.Resources.DatViewer_ExportCSV_Successful_Caption, MessageBoxButton.OK, MessageBoxImage.Information);
 			}
+		}
+
+		private void buttonSave_Click_1(object sender, RoutedEventArgs e)
+		{
+			SaveDat();
+		}
+
+		private void buttonExportCSV_Click_1(object sender, RoutedEventArgs e)
+		{
+			ExportCSV();
 		}
 	}
 	public class DatWrapper
@@ -142,7 +152,7 @@ namespace VisualGGPK
 			datTypeInUse = Type.GetType(string.Format("LibDat.Files.{0}, LibDat", System.IO.Path.GetFileNameWithoutExtension(fileName)));
 			if (datTypeInUse == null)
 			{
-				throw new Exception("No handler for file " + fileName);
+				throw new Exception(string.Format(Resources.DatWrapper_ParseDatFile_Unsupported_File, fileName));
 			}
 
 			datContainerType = typeof(DatContainer<>).MakeGenericType(new Type[] { datTypeInUse });
@@ -165,7 +175,7 @@ namespace VisualGGPK
 			}
 			catch (Exception ex)
 			{
-				throw new Exception("Failed to read dat: " + ex.Message, ex);
+				throw new Exception(string.Format(Resources.DatWrapper_ParseDatFile_Failed, ex.Message), ex);
 			}
 		}
 
@@ -189,10 +199,10 @@ namespace VisualGGPK
 					temp = temp.InnerException;
 				}
 
-				MessageBox.Show("Failed to save: " + errorString, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(string.Format(Resources.DatWrapper_Save_Failed, errorString), Properties.Resources.Error_Caption, MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 
-			MessageBox.Show("Saved '" + savePath + "'", "Saved", MessageBoxButton.OK, MessageBoxImage.Information);
+			MessageBox.Show(string.Format(Resources.DatWrapper_Save_Successful, savePath), Resources.DatWrapper_Save_Successful_Caption, MessageBoxButton.OK, MessageBoxImage.Information);
 		}
 
 		/// <summary>
@@ -201,7 +211,7 @@ namespace VisualGGPK
 		/// <returns></returns>
 		public string GetCSV()
 		{
-			char seperator = ',';
+			const char seperator = ',';
 			StringBuilder sb = new StringBuilder();
 
 			bool displayedHeader = false;

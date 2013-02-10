@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,6 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -68,9 +69,10 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -85,9 +87,10 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -109,9 +112,109 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Load_GGPK_Filter" xml:space="preserve">
+    <value>GGPK Pack File|*.ggpk</value>
+  </data>
+  <data name="ReloadGGPK_Failed" xml:space="preserve">
+    <value>Failed to read file: {0}</value>
+  </data>
+  <data name="ReloadGGPK_Traversing_Tree" xml:space="preserve">
+    <value>Traversing tree....
+</value>
+  </data>
+  <data name="Error_Read_Directory_Tree" xml:space="preserve">
+    <value>Failed to read directory tree: {0}</value>
+  </data>
+  <data name="ReloadGGPK_Successful" xml:space="preserve">
+    <value>All done!
+</value>
+  </data>
+  <data name="UpdateDisplayPanel_Failed" xml:space="preserve">
+    <value> * Unable to view item, export it if you want to view it *
+
+Details: {0}</value>
+  </data>
+  <data name="ExportSelectedItem_Successful" xml:space="preserve">
+    <value>Exported {0} bytes</value>
+  </data>
+  <data name="ExportAllItemsInDirectory_Successful_Caption" xml:space="preserve">
+    <value>Export successful</value>
+  </data>
+  <data name="ExportSelectedItem_Failed" xml:space="preserve">
+    <value>Failed to export item: {0}</value>
+  </data>
+  <data name="Error_Caption" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ViewSelectedItem_Failed" xml:space="preserve">
+    <value>Failed to extract file for viewing: {0}</value>
+  </data>
+  <data name="ExportAllItemsInDirectory_Default_FileName" xml:space="preserve">
+    <value>selectedRecord.Name</value>
+  </data>
+  <data name="ExportAllItemsInDirectory_Successful" xml:space="preserve">
+    <value>Exported {0} files</value>
+  </data>
+  <data name="ExportAllItemsInDirectory_Failed" xml:space="preserve">
+    <value>Failed to export item(s): {0}</value>
+  </data>
+  <data name="ReplaceItem_Successful" xml:space="preserve">
+    <value>Record {0} updated and relocated to offset {1}</value>
+  </data>
+  <data name="ReplaceItem_Successful_Caption" xml:space="preserve">
+    <value>Replacement successful</value>
+  </data>
+  <data name="ReplaceItem_Failed" xml:space="preserve">
+    <value>Failed to replace item: {0}</value>
+  </data>
+  <data name="DatViewer_ExportCSV_Failed" xml:space="preserve">
+    <value>Failed to save CSV file: {0}</value>
+  </data>
+  <data name="DatViewer_ExportCSV_Successful" xml:space="preserve">
+    <value>Saved CSV file to {0}</value>
+  </data>
+  <data name="DatViewer_ExportCSV_Successful_Caption" xml:space="preserve">
+    <value>Successfully saved CSV</value>
+  </data>
+  <data name="DatWrapper_ParseDatFile_Unsupported_File" xml:space="preserve">
+    <value>No handler for file {0}</value>
+  </data>
+  <data name="DatWrapper_ParseDatFile_Failed" xml:space="preserve">
+    <value>Failed to read dat: {0}</value>
+  </data>
+  <data name="DatWrapper_Save_Failed" xml:space="preserve">
+    <value>Failed to save: {0}</value>
+  </data>
+  <data name="DatWrapper_Save_Successful_Caption" xml:space="preserve">
+    <value>Saved</value>
+  </data>
+  <data name="DatWrapper_Save_Successful" xml:space="preserve">
+    <value>Saved '{0}'</value>
+  </data>
+  <data name="MainWindow_Label_FileOffset" xml:space="preserve">
+    <value>File Offset:</value>
+  </data>
+  <data name="LabelFileOFfset_Content" xml:space="preserve">
+    <value>File Offset:</value>
+  </data>
+  <data name="MainWindow_Menu_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="MainWindow_Menu_Replace" xml:space="preserve">
+    <value>Replace</value>
+  </data>
+  <data name="MainWindow_Menu_View" xml:space="preserve">
+    <value>View</value>
+  </data>
+	<data name="DatViewer_Button_ExportCSV" xml:space="preserve">
+    <value>Export CSV</value>
+  </data>
+	<data name="DatViewer_Button_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
 </root>
