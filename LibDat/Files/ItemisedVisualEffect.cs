@@ -44,7 +44,7 @@ namespace LibDat.Files
 
                 public override int GetSize()
                 {
-                        return 0x40;
+                        return 0x3C;
                 }
         }
 }

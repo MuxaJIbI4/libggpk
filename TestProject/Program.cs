@@ -103,8 +103,8 @@ namespace TestProject
 			};
 
 
-			//ReadAndDumpStruct();
-			//return;
+			ReadAndDumpStruct();
+			return;
 
 			//for (int i = 0; i < datFiles.Length; i++)
 			{
@@ -291,7 +291,7 @@ namespace TestProject
 		private static void ReadAndDumpStruct()
 		{
 			string className = Console.ReadLine().Trim();
-			string input = Console.ReadLine();
+			string input = Console.ReadLine().Trim();
 			string previousInput = input;
 			Console.Clear();
 			do
