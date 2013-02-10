@@ -89,11 +89,11 @@ namespace VisualGGPK
 				}
 				catch (Exception ex)
 				{
-					MessageBox.Show("Failed to save CSV file: " + ex.Message);
+					MessageBox.Show("Failed to save CSV file: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 					return;
 				}
 
-				MessageBox.Show("Saved CSV file to " + sfd.FileName);
+				MessageBox.Show("Saved CSV file to " + sfd.FileName, "Successfully saved CSV", MessageBoxButton.OK, MessageBoxImage.Information);
 			}
 		}
 	}
@@ -189,7 +189,7 @@ namespace VisualGGPK
 					temp = temp.InnerException;
 				}
 
-				MessageBox.Show("Failed to save: " + errorString);
+				MessageBox.Show("Failed to save: " + errorString, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 
 			MessageBox.Show("Saved '" + savePath + "'", "Saved", MessageBoxButton.OK, MessageBoxImage.Information);

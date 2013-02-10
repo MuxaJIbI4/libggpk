@@ -293,12 +293,12 @@ namespace VisualGGPK
 				if (saveFileDialog.ShowDialog() == true)
 				{
 					selectedRecord.ExtractFile(ggpkPath, saveFileDialog.FileName);
-					MessageBox.Show(string.Format("Exported {0} bytes", selectedRecord.DataLength));
+					MessageBox.Show(string.Format("Exported {0} bytes", selectedRecord.DataLength), "Export successful", MessageBoxButton.OK, MessageBoxImage.Information);
 				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show("Failed to export item: " + ex.Message);
+				MessageBox.Show("Failed to export item: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
 		}
@@ -312,14 +312,32 @@ namespace VisualGGPK
 			if (selectedRecord == null)
 				return;
 
+
 			string extractedFileName;
 			try
 			{
 				extractedFileName = selectedRecord.ExtractTempFile(ggpkPath);
+
+				// If we're dealing with .dat files then just create a human readable CSV and view that instead
+				if (Path.GetExtension(selectedRecord.Name).ToLower() == ".dat")
+				{
+					string extractedCSV = Path.GetTempFileName();
+					File.Move(extractedCSV, extractedCSV + ".csv");
+					extractedCSV = extractedCSV + ".csv";
+
+					using (BinaryReader br = new BinaryReader(File.OpenRead(extractedFileName)))
+					{
+						DatWrapper tempWrapper = new DatWrapper(br, selectedRecord.Name);
+						File.WriteAllText(extractedCSV, tempWrapper.GetCSV());
+					}
+
+					File.Delete(extractedFileName);
+					extractedFileName = extractedCSV;
+				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show("Failed to extract file for viewing: " + ex.Message);
+				MessageBox.Show("Failed to extract file for viewing: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
 
@@ -365,12 +383,12 @@ namespace VisualGGPK
 					{
 						item.ExtractFileWithDirectoryStructure(ggpkPath, exportDirectory);
 					}
-					MessageBox.Show(string.Format("Exported {0} files", recordsToExport.Count));
+					MessageBox.Show(string.Format("Exported {0} files", recordsToExport.Count), "Export successful", MessageBoxButton.OK, MessageBoxImage.Information);
 				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show("Failed to export item: " + ex.Message);
+				MessageBox.Show("Failed to export item: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 
@@ -435,12 +453,12 @@ namespace VisualGGPK
 					long previousOffset = recordToReplace.RecordBegin;
 
 					recordToReplace.ReplaceContents(ggpkPath, openFileDialog.FileName, content.FreeRoot);
-					MessageBox.Show(String.Format("Record {0} updated and relocated to offset {1}", recordToReplace.Name, recordToReplace.RecordBegin.ToString("X")));
+					MessageBox.Show(String.Format("Record {0} updated and relocated to offset {1}", recordToReplace.Name, recordToReplace.RecordBegin.ToString("X")), "Replacement successful", MessageBoxButton.OK, MessageBoxImage.Information);
 				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show("Failed to export item: " + ex.Message);
+				MessageBox.Show("Failed to export item: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 
 			//ReloadGGPK();
