@@ -11,6 +11,11 @@ namespace LibDat
 	/// </summary>
 	public class DataIndex : System.Attribute { }
 
+	public class UserStringIndex : StringIndex
+	{
+	}
+
+
 	public abstract class BaseDat
 	{
 		/// <summary>

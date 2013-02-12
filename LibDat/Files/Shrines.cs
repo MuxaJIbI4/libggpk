@@ -11,9 +11,9 @@ namespace LibDat.Files
 		public int RegenTime { get; set; }
 		public int Unknown2 { get; set; }
 		public int Unknown3 { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Name { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Message { get; set; }
 		[StringIndex]
 		public int AoFile { get; set; }

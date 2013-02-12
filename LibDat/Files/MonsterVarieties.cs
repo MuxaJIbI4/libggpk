@@ -61,7 +61,7 @@ namespace LibDat.Files
 		[DataIndex]
 		public int UnknownDataIndex9 { get; set; }
 		public Int64 Unknown20 { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int ActorNameIndex { get; set; }
 		public int Unknown21 { get; set; }
 		public int Unknown22 { get; set; }

@@ -7,7 +7,7 @@ namespace LibDat.Files
 		[StringIndex]
 		public int Index0 { get; set; }
 		public int Unknown0 { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Index1 { get; set; }
 
 		public FlavourText(BinaryReader inStream)

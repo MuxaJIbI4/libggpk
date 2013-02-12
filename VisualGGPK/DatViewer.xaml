@@ -3,7 +3,7 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Properties="clr-namespace:VisualGGPK.Properties"
-             mc:Ignorable="d" 
+			 mc:Ignorable="d" 
 			 d:DesignHeight="300" d:DesignWidth="300">
 	<Grid>
 		<Grid.RowDefinitions>
@@ -12,7 +12,7 @@
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
-		<DataGrid Grid.Row="0" Name="dataGridEntries" AutoGenerateColumns="True" ItemsSource="{Binding Entries}" />
+		<DataGrid Grid.Row="0" Name="dataGridEntries" AutoGenerateColumns="False"/>
 		<GridSplitter Grid.Row="1" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Height="4" />
 		<DataGrid Grid.Row="2" Name="dataGridData" AutoGenerateColumns="True" ItemsSource="{Binding DataStrings}" />
 		<StackPanel Grid.Row="3" HorizontalAlignment="Center" Orientation="Horizontal">

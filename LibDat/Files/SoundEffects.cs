@@ -5,20 +5,20 @@ namespace LibDat.Files
 	public class SoundEffects : BaseDat
 	{
 		[StringIndex]
-		public int Index0 { get; set; }
+		public int Id { get; set; }
 		[StringIndex]
-		public int Index1 { get; set; }
+		public int Sound { get; set; }
 
 		public SoundEffects(BinaryReader inStream)
 		{
-			Index0 = inStream.ReadInt32();
-			Index1 = inStream.ReadInt32();
+			Id = inStream.ReadInt32();
+			Sound = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
 		{
-			outStream.Write(Index0);
-			outStream.Write(Index1);
+			outStream.Write(Id);
+			outStream.Write(Sound);
 		}
 
 		public override int GetSize()

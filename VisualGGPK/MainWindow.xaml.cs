@@ -231,10 +231,7 @@ namespace VisualGGPK
 
 			using (MemoryStream ms = new MemoryStream(data))
 			{
-				using (BinaryReader br = new BinaryReader(ms, System.Text.Encoding.Unicode))
-				{
-					datViewerOutput.Reset(selectedRecord.Name, br);
-				}
+				datViewerOutput.Reset(selectedRecord.Name, ms);
 			}
 		}
 
@@ -332,10 +329,10 @@ namespace VisualGGPK
 					File.Move(extractedCSV, extractedCSV + ".csv");
 					extractedCSV = extractedCSV + ".csv";
 
-					using (BinaryReader br = new BinaryReader(File.OpenRead(extractedFileName), System.Text.Encoding.Unicode))
+					using (FileStream inStream = File.OpenRead(extractedFileName))
 					{
-						DatWrapper tempWrapper = new DatWrapper(br, selectedRecord.Name);
-						File.WriteAllText(extractedCSV, tempWrapper.GetCSV());
+						DatWrapper tempWrapper = new DatWrapper(inStream, selectedRecord.Name);
+						File.WriteAllText(extractedCSV, tempWrapper.Dat.GetCSV());
 					}
 
 					File.Delete(extractedFileName);

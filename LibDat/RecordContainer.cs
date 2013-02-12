@@ -1,15 +1,16 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace LibDat
 {
 	/// <summary>
 	/// Parses and holds all information found in a specific .dat file.
 	/// </summary>
-	/// <typeparam name="T">Type of .dat file being parsed</typeparam>
-	public class DatContainer<T> where T : BaseDat
+	public class DatContainer
 	{
 		/// <summary>
 		/// Mapping of all known strings and other data found in the data section. Key = offset with respect to beginning of data section.
@@ -18,23 +19,35 @@ namespace LibDat
 		/// <summary>
 		/// List of properties for the specified dat type. See code in Files directory.
 		/// </summary>
-		public List<T> Entries;
+		public List<BaseDat> Entries;
 		/// <summary>
 		/// Offset of the data section in the .dat file (Starts with 0xbbbbbbbbbbbbbbbb)
 		/// </summary>
-		public int DataTableBegin;
+		public long DataTableBegin;
 		/// <summary>
 		/// Contains the entire unmodified data section of the .dat file
 		/// </summary>
 		private byte[] originalDataTable;
+		/// <summary>
+		/// 
+		/// </summary>
+		private string datName;
+		/// <summary>
+		/// 
+		/// </summary>
+		public Type datType;
 
 		/// <summary>
 		/// Parses the .dat file contents from inStream.
 		/// </summary>
-		/// <param name="inStream">Stream containing contents of a .dat file</param>
-		public DatContainer(BinaryReader inStream)
+		/// <param name="inStream">Unicode binary reader containing ONLY the contents of a single .dat file and nothing more</param>
+		public DatContainer(Stream inStream, string fileName)
 		{
-			Read(inStream);
+			datName = Path.GetFileNameWithoutExtension(fileName);
+			using (BinaryReader br = new BinaryReader(inStream, Encoding.Unicode))
+			{
+				Read(br);
+			}
 		}
 
 		/// <summary>
@@ -43,6 +56,7 @@ namespace LibDat
 		/// <param name="fileName">Path of .dat file to parse</param>
 		public DatContainer(string fileName)
 		{
+			this.datName = Path.GetFileNameWithoutExtension(fileName);
 			byte[] fileBytes = File.ReadAllBytes(fileName);
 
 			using (MemoryStream ms = new MemoryStream(fileBytes))
@@ -60,9 +74,10 @@ namespace LibDat
 		/// </summary>
 		/// <param name="entry">Dat parser created from parsing a single entry of the .dat file.</param>
 		/// <param name="inStream">Stream containing contents of .dat file. Stream position not preserved.</param>
-		private void AddDataToTable(T entry, BinaryReader inStream)
+		private void AddDataToTable(BaseDat entry, BinaryReader inStream)
 		{
-			var properties = typeof(T).GetProperties();
+			var properties = entry.GetType().GetProperties();
+
 			foreach (var prop in properties)
 			{
 				object[] customAttributes = prop.GetCustomAttributes(false);
@@ -79,13 +94,12 @@ namespace LibDat
 				if (customAttributes[0] is StringIndex)
 				{
 					DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin);
+				//	Console.WriteLine("{0} -> {1}", offset, DataEntries[offset]);
 				}
 				else if (customAttributes[0] is DataIndex)
 				{
 					DataEntries[offset] = new UnkownData(inStream, offset, DataTableBegin);
 				}
-				// TODO: Debug purposes only
-				Console.WriteLine("{0} -> {1}", offset, DataEntries[offset]);
 			}
 		}
 
@@ -94,9 +108,9 @@ namespace LibDat
 		/// </summary>
 		/// <param name="entry">Entry being updated</param>
 		/// <param name="updatedOffsets">Mapping of all changed offsets. Key = original offset, Value = new offset.</param>
-		private void UpdateDataOffsets(T entry, Dictionary<int, int> updatedOffsets)
+		private void UpdateDataOffsets(BaseDat entry, Dictionary<long, long> updatedOffsets)
 		{
-			var properties = typeof(T).GetProperties();
+			var properties = entry.GetType().GetProperties();
 			foreach (var prop in properties)
 			{
 				object[] customAttributes = prop.GetCustomAttributes(false);
@@ -107,8 +121,8 @@ namespace LibDat
 				int offset = (int)prop.GetValue(entry, null);
 				if (updatedOffsets.ContainsKey(offset))
 				{
-					Console.WriteLine("Updating offset {0} for {1} (now {2})", offset, prop.Name, updatedOffsets[offset]);
-					prop.SetValue(entry, updatedOffsets[offset], null);
+					//Console.WriteLine("Updating offset {0} for {1} (now {2})", offset, prop.Name, updatedOffsets[offset]);
+					prop.SetValue(entry, (int)updatedOffsets[offset], null);
 				}
 			}
 		}
@@ -120,13 +134,17 @@ namespace LibDat
 		private void Read(BinaryReader inStream)
 		{
 			int numberOfEntries = inStream.ReadInt32();
-			Entries = new List<T>(numberOfEntries);
+			Entries = new List<BaseDat>(numberOfEntries);
+			datType = DatFactory.GetType(datName);
+
+			if (datType == null)
+			{
+				throw new Exception("Missing dat parser for type " + datName);
+			}
 
 			for (int i = 0; i < numberOfEntries; i++)
 			{
-				// TODO: Skip reflection if it's running slow (compiled lambda?)
-				T newEntry = (T)Activator.CreateInstance(typeof(T), new object[] { inStream });
-				Entries.Add(newEntry);
+				Entries.Add(DatFactory.Create(datName, inStream));
 			}
 
 			if (inStream.ReadUInt64() != 0xBBbbBBbbBBbbBBbb)
@@ -134,7 +152,7 @@ namespace LibDat
 				throw new ApplicationException("Missing magic number after records");
 			}
 
-			DataTableBegin = (int)(inStream.BaseStream.Position - 8);
+			DataTableBegin = inStream.BaseStream.Position - 8;
 			inStream.BaseStream.Seek(-8, SeekOrigin.Current);
 			originalDataTable = inStream.ReadBytes((int)(inStream.BaseStream.Length - inStream.BaseStream.Position));
 
@@ -164,7 +182,7 @@ namespace LibDat
 		public void Save(BinaryWriter outStream)
 		{
 			// Mapping of the new string and data offsets
-			Dictionary<int, int> changedOffsets = new Dictionary<int, int>();
+			Dictionary<long, long> changedOffsets = new Dictionary<long, long>();
 
 			outStream.Write(Entries.Count);
 
@@ -199,6 +217,59 @@ namespace LibDat
 				UpdateDataOffsets(item, changedOffsets);
 				item.Save(outStream);
 			}
+		}
+
+		/// <summary>
+		/// Returns a CSV table with the contents of this dat container.
+		/// </summary>
+		/// <returns></returns>
+		public string GetCSV()
+		{
+			const char seperator = ',';
+			StringBuilder sb = new StringBuilder();
+
+			bool displayedHeader = false;
+			foreach (var item in Entries)
+			{
+				var properties = item.GetType().GetProperties();
+
+				if (!displayedHeader)
+				{
+					foreach (var propertyInfo in properties)
+					{
+						sb.AppendFormat("{0}{1}", propertyInfo.Name, seperator);
+					}
+					sb.Remove(sb.Length - 1, 1);
+					sb.AppendLine();
+					displayedHeader = true;
+				}
+
+				foreach (var propertyInfo in properties)
+				{
+					object fieldValue = propertyInfo.GetValue(item, null);
+					object[] customAttributes = propertyInfo.GetCustomAttributes(false);
+
+					if (customAttributes.Length > 0)
+					{
+						if (customAttributes.Any(n => n is StringIndex))
+						{
+							sb.AppendFormat("\"{0}\"{1}", DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""), seperator);
+						}
+						else
+						{
+							sb.AppendFormat("{0}{1}", DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""), seperator);
+						}
+					}
+					else
+					{
+						sb.AppendFormat("{0}{1}", fieldValue, seperator);
+					}
+				}
+				sb.Remove(sb.Length - 1, 1);
+				sb.AppendLine();
+			}
+
+			return sb.ToString();
 		}
 	}
 }

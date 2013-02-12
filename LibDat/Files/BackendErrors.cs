@@ -6,7 +6,7 @@ namespace LibDat.Files
 	{
 		[StringIndex]
 		public int Id { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Text { get; set; }
 
 		public BackendErrors()

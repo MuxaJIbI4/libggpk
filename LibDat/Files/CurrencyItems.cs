@@ -10,10 +10,10 @@ namespace LibDat.Files
 		public int Unknown2 { get; set; }
 		[StringIndex]
 		public int Action { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Directions { get; set; }
 		public Int64 Unknown3 { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Description { get; set; }
 
 		public CurrencyItems(BinaryReader inStream)

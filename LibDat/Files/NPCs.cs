@@ -6,7 +6,7 @@ namespace LibDat.Files
 	{
 		[StringIndex]
 		public int Index0 { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Index1 { get; set; }
 		[StringIndex]
 		public int Index2 { get; set; }
@@ -17,7 +17,6 @@ namespace LibDat.Files
 		[StringIndex]
 		public int Index4 { get; set; }
 		public int Unknown2 { get; set; }
-		[StringIndex]
 		public int Index5 { get; set; }
 		public int Unknown3 { get; set; }
 		public int Unknown4 { get; set; }
@@ -26,7 +25,6 @@ namespace LibDat.Files
 		public int Unknown5 { get; set; }
 		public int Unknown6 { get; set; }
 		public int Unknown7 { get; set; }
-		[StringIndex]
 		public int Index7 { get; set; }
 		public int Unknown8 { get; set; }
 		public int Unknown9 { get; set; }

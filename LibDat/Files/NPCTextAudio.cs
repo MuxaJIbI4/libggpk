@@ -8,7 +8,7 @@ namespace LibDat.Files
 		[StringIndex]
 		public int Id { get; set; }
 		public Int64 Unknown0 { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Text { get; set; }
 		[StringIndex]
 		public int AudioPath { get; set; }

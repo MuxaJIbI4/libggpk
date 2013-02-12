@@ -28,7 +28,7 @@ namespace LibDat.Files
 		public int Unknown10 { get; set; }
 		[DataIndex]
 		public int Data0 { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Description { get; set; }
 		public int Unknown11 { get; set; }
 		public int Unknown12 { get; set; }

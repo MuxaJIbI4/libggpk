@@ -7,7 +7,7 @@ namespace LibDat.Files
 	{
 		[StringIndex]
 		public int Id { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Description { get; set; }
 		public bool Invisible { get; set; }
 		public bool Removable { get; set; }

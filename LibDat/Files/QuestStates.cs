@@ -12,7 +12,7 @@ namespace LibDat.Files
 		public int Data0 { get; set; }
 		public int Unknown4 { get; set; }
 		public int Unknown5 { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Text { get; set; }
 		public int Unknown6 { get; set; }
 		public bool Flag0 { get; set; }

@@ -12,9 +12,8 @@ namespace LibDat.Files
                 public Int64 Unknown4 { get; set; }
                 public int Unknown5 { get; set; }
                 public int Unknown6 { get; set; }
-                [StringIndex]
-                public int Index0 { get; set; }
-                public Int64 Unknown7 { get; set; }
+                public int Unknown7 { get; set; }
+                public Int64 Unknown8 { get; set; }
 
                 public ItemisedVisualEffect(BinaryReader inStream)
                 {
@@ -25,8 +24,8 @@ namespace LibDat.Files
                         Unknown4 = inStream.ReadInt64();
                         Unknown5 = inStream.ReadInt32();
                         Unknown6 = inStream.ReadInt32();
-                        Index0 = inStream.ReadInt32();
-                        Unknown7 = inStream.ReadInt64();
+                        Unknown7 = inStream.ReadInt32();
+                        Unknown8 = inStream.ReadInt64();
                 }
 
                 public override void Save(BinaryWriter outStream)
@@ -38,8 +37,8 @@ namespace LibDat.Files
                         outStream.Write(Unknown4);
                         outStream.Write(Unknown5);
                         outStream.Write(Unknown6);
-                        outStream.Write(Index0);
                         outStream.Write(Unknown7);
+                        outStream.Write(Unknown8);
                 }
 
                 public override int GetSize()

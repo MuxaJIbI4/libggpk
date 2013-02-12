@@ -10,13 +10,13 @@ namespace LibDat
 		/// <summary>
 		/// Offset in the dat file with respect to the beginning of the data section
 		/// </summary>
-		public int Offset { get; set; }
+		public long Offset { get; set; }
 		/// <summary>
 		/// The unknown data
 		/// </summary>
 		public int Data { get; set; }
 
-		public UnkownData(BinaryReader inStream, int offset, int dataTableOffset)
+		public UnkownData(BinaryReader inStream, long offset, long dataTableOffset)
 		{
 			this.Offset = offset;
 

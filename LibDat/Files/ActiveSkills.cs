@@ -6,9 +6,9 @@ namespace LibDat.Files
 	{
 		[StringIndex]
 		public int NameIndex { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int DisplayedName { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Description { get; set; }
 		[StringIndex]
 		public int Index3 { get; set; }
@@ -25,9 +25,9 @@ namespace LibDat.Files
 		[DataIndex]
 		public int Data2 { get; set; }
 		[StringIndex]
-		public int ExtraDescription { get; set; }
+		public int WebsiteDescription { get; set; }
 		[StringIndex]
-		public int ExamplePath { get; set; }
+		public int WebsiteImage { get; set; }
 		public bool Flag0 { get; set; }
 		public int Unknown4 { get; set; }
 		public bool Flag1 { get; set; }
@@ -49,8 +49,8 @@ namespace LibDat.Files
 			Data1 = inStream.ReadInt32();
 			Unknown3 = inStream.ReadInt32();
 			Data2 = inStream.ReadInt32();
-			ExtraDescription = inStream.ReadInt32();
-			ExamplePath = inStream.ReadInt32();
+			WebsiteDescription = inStream.ReadInt32();
+			WebsiteImage = inStream.ReadInt32();
 			Flag0 = inStream.ReadBoolean();
 			Unknown4 = inStream.ReadInt32();
 			Flag1 = inStream.ReadBoolean();
@@ -72,8 +72,8 @@ namespace LibDat.Files
 			outStream.Write(Data1);
 			outStream.Write(Unknown3);
 			outStream.Write(Data2);
-			outStream.Write(ExtraDescription);
-			outStream.Write(ExamplePath);
+			outStream.Write(WebsiteDescription);
+			outStream.Write(WebsiteImage);
 			outStream.Write(Flag0);
 			outStream.Write(Unknown4);
 			outStream.Write(Flag1);

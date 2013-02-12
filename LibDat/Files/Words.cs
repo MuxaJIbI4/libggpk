@@ -5,8 +5,8 @@ namespace LibDat.Files
 	public class Words : BaseDat
 	{
 		public int Unknown0 { get; set; }
-		[StringIndex]
-		public int Index0 { get; set; }
+		[UserStringIndex]
+		public int Text { get; set; }
 		public int Unknown2 { get; set; }
 		public int Unknown3 { get; set; }
 		public int Unknown4 { get; set; }
@@ -16,7 +16,7 @@ namespace LibDat.Files
 		public Words(BinaryReader inStream)
 		{
 			Unknown0 = inStream.ReadInt32();
-			Index0 = inStream.ReadInt32();
+			Text = inStream.ReadInt32();
 			Unknown2 = inStream.ReadInt32();
 			Unknown3 = inStream.ReadInt32();
 			Unknown4 = inStream.ReadInt32();
@@ -27,7 +27,7 @@ namespace LibDat.Files
 		public override void Save(BinaryWriter outStream)
 		{
 			outStream.Write(Unknown0);
-			outStream.Write(Index0);
+			outStream.Write(Text);
 			outStream.Write(Unknown2);
 			outStream.Write(Unknown3);
 			outStream.Write(Unknown4);

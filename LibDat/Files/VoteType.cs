@@ -6,11 +6,11 @@ namespace LibDat.Files
 	{
 		[StringIndex]
 		public int Id { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Text { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int AcceptText { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int RejectText { get; set; }
 		public int Unknown0 { get; set; }
 

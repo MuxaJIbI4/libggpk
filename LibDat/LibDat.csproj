@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="BaseData.cs" />
     <Compile Include="BaseRecord.cs" />
+    <Compile Include="DatFactory.cs" />
     <Compile Include="Files\ActiveSkills.cs" />
     <Compile Include="Files\ArmourTypes.cs" />
     <Compile Include="Files\BackendErrors.cs" />

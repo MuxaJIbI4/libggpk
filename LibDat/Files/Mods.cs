@@ -31,7 +31,7 @@ namespace LibDat.Files
 		// 4 - Chest
 		// 5 - Map
 		public int Domain { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Name { get; set; }
 		// 1 - Prefix
 		// 2 - Suffix

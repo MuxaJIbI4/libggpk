@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using LibGGPK;
 using System.IO;
@@ -29,7 +30,7 @@ namespace TestProject
 		{
 			// TESTING PURPOSES ONLY
 
-			Environment.CurrentDirectory = @"C:\Program Files (x86)\Grinding Gear Games\Path of Exile\dataExtracted\Data";
+			//Environment.CurrentDirectory = @"O:\Program Files (x86)\Grinding Gear Games\Path of Exile\dat\Data";
 
 			string[] datFiles = 
 			{
@@ -103,24 +104,125 @@ namespace TestProject
 			};
 
 
-			ReadAndDumpStruct();
-			return;
+			//ReadAndDumpStruct();
+			//return;
 
-			////for (int i = 0; i < datFiles.Length; i++)
+			//	var container = new DatContainer(datFiles[0]);
+			//	Console.WriteLine(datFiles[i] + ":");
+
+			string ggpkPath = @"C:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk";
+			GGPK content = new GGPK();
+			content.Read(ggpkPath, Output);
+
+			foreach (var pair in content.RecordOffsets)
+			{
+				if (!(pair.Value is FileRecord))
+					continue;
+
+				FileRecord record = pair.Value as FileRecord;
+				if (Path.GetExtension(record.Name) != ".dat")
+					continue;
+
+				if (record.Name != "NPCTextAudio.dat")
+					continue;
+				Console.WriteLine(record.Name);
+
+				byte[] datBytes = record.ReadData(ggpkPath);
+				using (MemoryStream datStream = new MemoryStream(datBytes))
+				{
+					DatContainer container;
+					//try
+					//{
+					container = new DatContainer(datStream, record.Name);
+					//}
+					//catch (Exception ex)
+					//{
+					//	continue;
+					//}
+
+
+					foreach (var propInfo in container.datType.GetProperties())
+					{
+						if (propInfo.GetCustomAttributes(false).Any(n => n is UserStringIndex))
+						{
+							foreach (var entry in container.Entries)
+							{
+								int stringIndex = (int)propInfo.GetValue(entry, null);
+								string stringValue = container.DataEntries[stringIndex].ToString();
+
+								Console.WriteLine("  " + stringValue);
+								//userStrings.Add(stringValue);
+							}
+						}
+					}
+				}
+			}
+			//Dictionary<string, HashSet<string>> userStringsPerFile = new Dictionary<string, HashSet<string>>();
+
+			//HashSet<string> userStrings = new HashSet<string>();
+			//for (int i = 0; i < datFiles.Length; i++)
 			//{
-			//	try
+
+			//	var container = new DatContainer(datFiles[i]);
+
+			//	foreach (var propInfo in container.datType.GetProperties())
 			//	{
-			//		var container = new DatContainer<GrantedEffectsPerLevel>("GrantedEffectsPerLevel.dat");
-			//		//string dump = DumpContainer(container, '\t');
-			//		//File.WriteAllText(datFiles[i] + ".csv", dump);
-			//		//Console.WriteLine(dump);
-			//	}
-			//	catch (Exception ex)
-			//	{
-			//		Console.WriteLine("Failed: {0}", ex.Message);
+			//		if (propInfo.GetCustomAttributes(false).Any(n => n is UserStringIndex))
+			//		{
+			//			foreach (var entry in container.Entries)
+			//			{
+			//				int stringIndex = (int)propInfo.GetValue(entry, null);
+			//				string stringValue = container.DataEntries[stringIndex].ToString();
+
+			//				userStrings.Add(stringValue);
+			//			}
+			//		}
 			//	}
 			//}
+			//userStringsPerFile.Add(datFiles[0], userStrings);
+
+
+			//int itemCount = 0;
+			//foreach (var set in userStringsPerFile)
+			//{
+			//	//Console.WriteLine(set.Key + ":");
+			//	foreach (var item in set.Value)
+			//	{
+			//		++itemCount;
+			//		//Console.WriteLine("  " + item);
+			//	}
+			//}
+			//Console.WriteLine("Total strings: " + itemCount);
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		private static void DumpDat(string filePath)
 		{

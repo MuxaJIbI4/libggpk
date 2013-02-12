@@ -5,20 +5,20 @@ namespace LibDat.Files
 	public class GemTags : BaseDat
 	{
 		[StringIndex]
-		public int Index0 { get; set; }
-		[StringIndex]
-		public int Index1 { get; set; }
+		public int Id { get; set; }
+		[UserStringIndex]
+		public int Tag { get; set; }
 
 		public GemTags(BinaryReader inStream)
 		{
-			Index0 = inStream.ReadInt32();
-			Index1 = inStream.ReadInt32();
+			Id = inStream.ReadInt32();
+			Tag = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
 		{
-			outStream.Write(Index0);
-			outStream.Write(Index1);
+			outStream.Write(Id);
+			outStream.Write(Tag);
 		}
 
 		public override int GetSize()
