@@ -123,25 +123,23 @@ namespace TestProject
 				if (Path.GetExtension(record.Name) != ".dat")
 					continue;
 
-				if (record.Name != "NPCTextAudio.dat")
-					continue;
-				Console.WriteLine(record.Name);
+				HashSet<string> userStrings = new HashSet<string>();
 
 				byte[] datBytes = record.ReadData(ggpkPath);
 				using (MemoryStream datStream = new MemoryStream(datBytes))
 				{
 					DatContainer container;
-					//try
-					//{
-					container = new DatContainer(datStream, record.Name);
-					//}
-					//catch (Exception ex)
-					//{
-					//	continue;
-					//}
+					try
+					{
+						container = new DatContainer(datStream, record.Name);
+					}
+					catch (Exception ex)
+					{
+						continue;
+					}
 
 
-					foreach (var propInfo in container.datType.GetProperties())
+					foreach (var propInfo in container.DatType.GetProperties())
 					{
 						if (propInfo.GetCustomAttributes(false).Any(n => n is UserStringIndex))
 						{
@@ -150,10 +148,26 @@ namespace TestProject
 								int stringIndex = (int)propInfo.GetValue(entry, null);
 								string stringValue = container.DataEntries[stringIndex].ToString();
 
-								Console.WriteLine("  " + stringValue);
-								//userStrings.Add(stringValue);
+								if (string.IsNullOrWhiteSpace(stringValue))
+									continue;
+
+								userStrings.Add(stringValue);
+							//	Console.WriteLine(stringValue);
 							}
 						}
+					}
+				}
+
+				if (userStrings.Count > 0)
+				{
+					Console.WriteLine();
+					Console.WriteLine("--------------------------------------");
+					Console.WriteLine("        " + record.Name);
+					Console.WriteLine("--------------------------------------");
+					var sortedStrings = from n in userStrings orderby n ascending select n;
+					foreach (var userString in sortedStrings)
+					{
+						Console.WriteLine(userString);
 					}
 				}
 			}
@@ -165,7 +179,7 @@ namespace TestProject
 
 			//	var container = new DatContainer(datFiles[i]);
 
-			//	foreach (var propInfo in container.datType.GetProperties())
+			//	foreach (var propInfo in container.DatType.GetProperties())
 			//	{
 			//		if (propInfo.GetCustomAttributes(false).Any(n => n is UserStringIndex))
 			//		{

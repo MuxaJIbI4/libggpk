@@ -25,25 +25,29 @@ namespace LibDat
 		/// </summary>
 		public long DataTableBegin;
 		/// <summary>
+		/// Type of .dat file
+		/// </summary>
+		public Type DatType;
+		/// <summary>
 		/// Contains the entire unmodified data section of the .dat file
 		/// </summary>
 		private byte[] originalDataTable;
 		/// <summary>
-		/// 
+		/// Name of the dat file (without .dat extension)
 		/// </summary>
-		private string datName;
-		/// <summary>
-		/// 
-		/// </summary>
-		public Type datType;
+		private readonly string datName;
+
 
 		/// <summary>
 		/// Parses the .dat file contents from inStream.
 		/// </summary>
 		/// <param name="inStream">Unicode binary reader containing ONLY the contents of a single .dat file and nothing more</param>
+		/// <param name="fileName">Name of the dat file (with extension)</param>
 		public DatContainer(Stream inStream, string fileName)
 		{
 			datName = Path.GetFileNameWithoutExtension(fileName);
+			DatType = DatFactory.GetType(datName);
+
 			using (BinaryReader br = new BinaryReader(inStream, Encoding.Unicode))
 			{
 				Read(br);
@@ -57,6 +61,8 @@ namespace LibDat
 		public DatContainer(string fileName)
 		{
 			this.datName = Path.GetFileNameWithoutExtension(fileName);
+			DatType = DatFactory.GetType(datName);
+
 			byte[] fileBytes = File.ReadAllBytes(fileName);
 
 			using (MemoryStream ms = new MemoryStream(fileBytes))
@@ -135,9 +141,8 @@ namespace LibDat
 		{
 			int numberOfEntries = inStream.ReadInt32();
 			Entries = new List<BaseDat>(numberOfEntries);
-			datType = DatFactory.GetType(datName);
 
-			if (datType == null)
+			if (DatType == null)
 			{
 				throw new Exception("Missing dat parser for type " + datName);
 			}
