@@ -97,12 +97,12 @@ namespace LibDat
 					continue;
 				}
 
-				if (customAttributes[0] is StringIndex)
+				if (customAttributes.Any(n => n is StringIndex))
 				{
-					DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin);
-				//	Console.WriteLine("{0} -> {1}", offset, DataEntries[offset]);
+					DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, (customAttributes.Any(n => n is UserStringIndex)));
+					//	Console.WriteLine("{0} -> {1}", offset, DataEntries[offset]);
 				}
-				else if (customAttributes[0] is DataIndex)
+				else if (customAttributes.Any(n => n is DataIndex))
 				{
 					DataEntries[offset] = new UnkownData(inStream, offset, DataTableBegin);
 				}
@@ -168,13 +168,21 @@ namespace LibDat
 			}
 		}
 
+		public byte[] GetBytes()
+		{
+			MemoryStream ms = new MemoryStream();
+			Save(ms);
+
+			return ms.ToArray();
+		}
+
 		/// <summary>
 		/// Saves parsed data to specified path
 		/// </summary>
 		/// <param name="fileName">Path to write contents to</param>
 		public void Save(string fileName)
 		{
-			using (BinaryWriter outStream = new BinaryWriter(File.Open(fileName, FileMode.Create), System.Text.Encoding.Unicode))
+			using (FileStream outStream = File.Open(fileName, FileMode.Create))
 			{
 				Save(outStream);
 			}
@@ -184,11 +192,12 @@ namespace LibDat
 		/// Saves parsed data to specified stream
 		/// </summary>
 		/// <param name="outStream">Stream to write contents to</param>
-		public void Save(BinaryWriter outStream)
+		public void Save(Stream rawOutStream)
 		{
 			// Mapping of the new string and data offsets
 			Dictionary<long, long> changedOffsets = new Dictionary<long, long>();
 
+			BinaryWriter outStream = new BinaryWriter(rawOutStream, System.Text.Encoding.Unicode);
 			outStream.Write(Entries.Count);
 
 			if (Entries.Count > 0)

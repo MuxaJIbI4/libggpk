@@ -22,6 +22,10 @@ namespace LibDat
 		/// </summary>
 		public string NewData { get; set; }
 		/// <summary>
+		/// Determins if this UnicodeString is a translatable string (eg: not used as an id, path, etc)
+		/// </summary>
+		public bool IsUserString { get; set; }
+		/// <summary>
 		/// Offset of the new string with respect to the beginning of the data section. This will be invalid until save is called.
 		/// </summary>
 		public long NewOffset;
@@ -29,13 +33,13 @@ namespace LibDat
 		/// Offset of the data section in the .dat file (Starts with 0xbbbbbbbbbbbbbbbb)
 		/// </summary>
 		private readonly long dataTableOffset;
-
 		
-		public UnicodeString(BinaryReader inStream, long offset, long dataTableOffset)
+		public UnicodeString(BinaryReader inStream, long offset, long dataTableOffset, bool isUserString)
 		{
 			this.dataTableOffset = dataTableOffset;
 			this.Offset = offset;
 			this.NewData = null;
+			this.IsUserString = isUserString;
 
 			inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
 			ReadData(inStream);

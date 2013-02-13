@@ -196,15 +196,8 @@ namespace LibGGPK
 			ggpkFileStream.Write(BitConverter.GetBytes(RecordBegin), 0, 8);
 		}
 
-		/// <summary>
-		/// Replaces the contents of this file with the data from the specified file on disk.
-		/// </summary>
-		/// <param name="ggpkPath">Path of pack file that contains this record</param>
-		/// <param name="replacmentPath">Path to file containing replacement data</param>
-		/// <param name="freeRecordRoot">Root of the Free record list</param>
-		public void ReplaceContents(string ggpkPath, string replacmentPath, LinkedList<FreeRecord> freeRecordRoot)
+		public void ReplaceContents(string ggpkPath, byte[] replacmentData, LinkedList<FreeRecord> freeRecordRoot)
 		{
-			byte[] replacmentData = File.ReadAllBytes(replacmentPath);
 			long previousRecordBegin = RecordBegin;
 
 			using (FileStream ggpkFileStream = File.Open(ggpkPath, FileMode.Open))
@@ -231,6 +224,17 @@ namespace LibGGPK
 			}
 
 			ContainingDirectory.Record.UpdateOffset(ggpkPath, previousRecordBegin, RecordBegin);
+		}
+
+		/// <summary>
+		/// Replaces the contents of this file with the data from the specified file on disk.
+		/// </summary>
+		/// <param name="ggpkPath">Path of pack file that contains this record</param>
+		/// <param name="replacmentPath">Path to file containing replacement data</param>
+		/// <param name="freeRecordRoot">Root of the Free record list</param>
+		public void ReplaceContents(string ggpkPath, string replacmentPath, LinkedList<FreeRecord> freeRecordRoot)
+		{
+			ReplaceContents(ggpkPath, File.ReadAllBytes(replacmentPath), freeRecordRoot);
 		}
 
 
