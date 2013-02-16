@@ -54,8 +54,8 @@ namespace PoeStrings
 		{
 			InitializeComponent();
 
-			labelTranslation.Content = Settings.Strings["StringEditor_Label_Original"];
-			labelOriginal.Content = Settings.Strings["StringEditor_Label_Translation"];
+			labelTranslation.Content = Settings.Strings["StringEditor_Label_Translation"];
+			labelOriginal.Content = Settings.Strings["StringEditor_Label_Original"];
 
 			Translations = null;
 
