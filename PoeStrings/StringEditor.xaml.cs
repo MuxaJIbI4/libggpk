@@ -54,6 +54,9 @@ namespace PoeStrings
 		{
 			InitializeComponent();
 
+			labelTranslation.Content = Settings.Strings["StringEditor_Label_Original"];
+			labelOriginal.Content = Settings.Strings["StringEditor_Label_Translation"];
+
 			Translations = null;
 
 			listBoxStrings.ItemsSource = Translations;
@@ -100,7 +103,7 @@ namespace PoeStrings
 			if (sourceTranslation == null)
 				return;
 
-			if (MessageBox.Show(string.Format("Delete '{0}'?", sourceTranslation.ShortNameCurrent), "Delete translation?", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+			if (MessageBox.Show(string.Format(Settings.Strings["StringEditor_DeleteTranslation"], sourceTranslation.ShortNameCurrent), Settings.Strings["StringEditor_DeleteTranslation_Caption"], MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
 			{
 				Translations.Remove(sourceTranslation);
 				UpdateStringList();

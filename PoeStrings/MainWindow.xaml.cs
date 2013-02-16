@@ -26,7 +26,7 @@ namespace PoeStrings
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private string ggpkPath = @"c:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk";
+		private readonly string ggpkPath;
 		private Backend backend;
 
 		public Dictionary<string, DatTranslation> UserTranslations
@@ -51,9 +51,23 @@ namespace PoeStrings
 		{
 			InitializeComponent();
 
+			buttonApplyAll.Content = Settings.Strings["MainWindow_Button_ApplyAll"];
+			buttonRevertAll.Content = Settings.Strings["MainWindow_Button_RevertAll"];
+			buttonSaveConfig.Content = Settings.Strings["MainWindow_Button_SaveConfig"];
+
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.FileName = "Content.ggpk";
-			ofd.Filter = "GGPK Pack File|*.ggpk";
+			try
+			{
+				ofd.Filter = Settings.Strings["Load_GGPK_Filter"];
+
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(string.Format(Settings.Strings["MainWindow_InvalidFileFilter"], ex.Message), Settings.Strings["Error"], MessageBoxButton.OK, MessageBoxImage.Error);
+				this.Close();
+				return;
+			}
 			ofd.CheckFileExists = true;
 
 			if (ofd.ShowDialog() == true)

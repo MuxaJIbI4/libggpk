@@ -9,6 +9,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using LibDat;
 using LibGGPK;
+using PoeStrings.Properties;
 
 namespace PoeStrings
 {
@@ -51,7 +52,7 @@ namespace PoeStrings
 			}
 			catch (Exception ex)
 			{
-				OutputLine(string.Format("Failed to load config: {0}", ex.Message));
+				OutputLine(string.Format(Settings.Strings["ReloadAllData_Failed"], ex.Message));
 			}
 
 			allStrings = GetTranslatableDatStrings(content);
@@ -156,7 +157,6 @@ namespace PoeStrings
 
 			foreach (var userTranslation in userTranslations)
 			{
-				outputBuffer.AppendLine(userTranslation.Value.DatName + ": ");
 				// Record we will be translating with data from translationTable
 				FileRecord datRecord = fileRecordMap[userTranslation.Value.DatName];
 
@@ -198,7 +198,7 @@ namespace PoeStrings
 							if (translation.TranslationHash != currentDatStringHash)
 								continue;
 
-							outputBuffer.AppendLine(string.Format("  Replacing '{0}' with '{1}'", translation.ShortNameTranslated, translation.ShortNameOriginal));
+							outputBuffer.AppendLine(string.Format(Settings.Strings["ApplyTranslations_TextReplaced"], translation.ShortNameTranslated, translation.ShortNameOriginal));
 							currentDatString.NewData = translation.OriginalText;
 							translation.Status = Translation.TranslationStatus.NeedToApply;
 							wasTranslationApplied = true;
@@ -208,7 +208,7 @@ namespace PoeStrings
 							if (translation.CurrentHash != currentDatStringHash)
 								continue;
 
-							outputBuffer.AppendLine(string.Format("  Replacing '{0}' with '{1}'", translation.ShortNameCurrent, translation.ShortNameTranslated));
+							outputBuffer.AppendLine(string.Format(Settings.Strings["ApplyTranslations_TextReplaced"], translation.ShortNameCurrent, translation.ShortNameTranslated));
 							currentDatString.NewData = translation.TranslatedText;
 							translation.Status = Translation.TranslationStatus.AlreadyApplied;
 							wasTranslationApplied = true;
@@ -306,7 +306,7 @@ namespace PoeStrings
 				translatableDatStrings.Add(record.Name, translatableStringMap);
 			}
 
-			OutputLine(string.Format("Total Strings: {0}", debugItemsRead));
+			OutputLine(string.Format(Settings.Strings["GetTranslatableDatStrings_TotalStrings"], debugItemsRead));
 			return translatableDatStrings;
 		}
 
@@ -344,7 +344,7 @@ namespace PoeStrings
 				}
 
 				serializer.Serialize(fs, datTranslations);
-				OutputLine(String.Format("Saved {0} translations to {1}", debugTranslationCount, SettingsPath));
+				OutputLine(String.Format(Settings.Strings["SaveTranslationData_Successful"], debugTranslationCount, SettingsPath));
 			}
 		}
 
@@ -370,7 +370,7 @@ namespace PoeStrings
 				}
 			}
 
-			OutputLine(string.Format("Translations read: {0}", debugTranslationCount));
+			OutputLine(string.Format(Settings.Strings["ReadTranslationData_Successful"], debugTranslationCount));
 			return newUserTranslations;
 		}
 
