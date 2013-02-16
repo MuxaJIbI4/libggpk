@@ -56,14 +56,19 @@ namespace LibGGPK
 					float percentComplete = br.BaseStream.Position / (float)br.BaseStream.Length;
 					if (percentComplete - previousPercentComplete >= 0.10f)
 					{
-						output(String.Format("{0:00.00}%{1}", 100.0 * percentComplete, Environment.NewLine));
+						if (output != null)
+						{
+							output(String.Format("{0:00.00}%{1}", 100.0 * percentComplete, Environment.NewLine));
+						}
+
 						previousPercentComplete = percentComplete;
 					}
 				}
-				output(String.Format("{0:00.00}%{1}", 100.0f * br.BaseStream.Position / (float)br.BaseStream.Length, Environment.NewLine));
+				if (output != null)
+				{
+					output(String.Format("{0:00.00}%{1}", 100.0f * br.BaseStream.Position / (float)br.BaseStream.Length, Environment.NewLine));
+				}
 			}
-
-
 		}
 
 		/// <summary>
@@ -83,10 +88,19 @@ namespace LibGGPK
 		/// <param name="output">Output function</param>
 		public void Read(string pathToGgpk, Action<string> output)
 		{
-			output("Parsing GGPK..." + Environment.NewLine);
+			if (output != null)
+			{
+				output("Parsing GGPK..." + Environment.NewLine);
+			}
+
 			ReadRecordOfsets(pathToGgpk, output);
-			output(Environment.NewLine);
-			output("Building directory tree..." + Environment.NewLine);
+
+			if (output != null)
+			{
+				output(Environment.NewLine);
+				output("Building directory tree..." + Environment.NewLine);
+			}
+
 			CreateDirectoryTree(output);
 		}
 	}

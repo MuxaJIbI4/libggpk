@@ -1,8 +1,32 @@
-﻿<Window x:Class="PoeStrings.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-		<TextBox Name="textBoxOutput" />
+﻿<Window
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:local="clr-namespace:PoeStrings" x:Class="PoeStrings.MainWindow"
+		Title="MainWindow" Height="350" Width="1024">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition  Height="*"/>
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="auto" MinWidth="150"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+
+		<ListBox Name="listBoxFiles" Grid.Column="0" ItemsSource="{Binding UserTranslations}" SelectionChanged="listBoxFiles_SelectionChanged_1">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<TextBlock Name="Item" Text="{Binding Key, Mode=OneWay}" />
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+		<local:StringEditor x:Name="stringEditorMain" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+		<StackPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Orientation="Horizontal">
+			<Button Name="buttonApplyAll" Margin="10 0 10 0" Click="buttonApplyAll_Click_1">Apply all</Button>
+			<Button Name="buttonRevertAll" Margin="10 0 10 0" Click="buttonRevertAll_Click_1">Revert all</Button>
+			<Button Name="buttonSaveConfig" Margin="10 0 10 0" Click="buttonSaveConfig_Click_1">Save config</Button>
+		</StackPanel>
+		<TextBox Name="textBoxOutput" Grid.Row="2" Grid.ColumnSpan="2" FontFamily="Consolas" Background="Black" Foreground="White" TextWrapping="Wrap" FontSize="12" VerticalScrollBarVisibility="Visible"  Height="128" />
 	</Grid>
 </Window>
