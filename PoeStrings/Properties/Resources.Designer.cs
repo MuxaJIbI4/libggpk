@@ -70,6 +70,15 @@ namespace PoeStrings.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to read {0}: {1}.
+        /// </summary>
+        public static string CollectTranslatableStrings_FailedReading {
+            get {
+                return ResourceManager.GetString("CollectTranslatableStrings_FailedReading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string Error {
@@ -201,6 +210,24 @@ namespace PoeStrings.Properties {
         public static string StringEditor_Label_Translation {
             get {
                 return ResourceManager.GetString("StringEditor_Label_Translation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save file before continuing?.
+        /// </summary>
+        public static string WindowClosing_Save {
+            get {
+                return ResourceManager.GetString("WindowClosing_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string WindowClosing_Save_Title {
+            get {
+                return ResourceManager.GetString("WindowClosing_Save_Title", resourceCulture);
             }
         }
     }

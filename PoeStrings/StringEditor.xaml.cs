@@ -22,6 +22,8 @@ namespace PoeStrings
 	/// </summary>
 	public partial class StringEditor : UserControl
 	{
+		public bool HasModfiedData { get; set; }
+
 		public List<Translation> Translations
 		{
 			get
@@ -52,6 +54,7 @@ namespace PoeStrings
 
 		public StringEditor()
 		{
+			HasModfiedData = false;
 			InitializeComponent();
 
 			labelTranslation.Content = Settings.Strings["StringEditor_Label_Translation"];
@@ -108,6 +111,11 @@ namespace PoeStrings
 				Translations.Remove(sourceTranslation);
 				UpdateStringList();
 			}
+		}
+
+		private void textBoxReplacement_TextChanged_1(object sender, TextChangedEventArgs e)
+		{
+			HasModfiedData = true;
 		}
 	}
 }

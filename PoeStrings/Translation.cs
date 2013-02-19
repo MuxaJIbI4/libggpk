@@ -93,12 +93,6 @@ namespace PoeStrings
 			}
 		}
 
-		[XmlIgnore]
-		public uint OriginalHash { get; set; }
-		[XmlIgnore]
-		public uint TranslationHash { get; set; }
-		[XmlIgnore]
-		public uint CurrentHash { get; set; }
 
 		[XmlIgnore]
 		public string CurrentText
@@ -110,7 +104,6 @@ namespace PoeStrings
 			set
 			{
 				_currentText = value;
-				CurrentHash = Hash.MurmurHash2(value);
 			}
 		}
 		private string _currentText;
@@ -141,7 +134,6 @@ namespace PoeStrings
 			set
 			{
 				_originalText = value;
-				OriginalHash = Hash.MurmurHash2(value);
 			}
 		}
 		private string _originalText;
@@ -155,7 +147,6 @@ namespace PoeStrings
 			set
 			{
 				_translatedText = value;
-				TranslationHash = Hash.MurmurHash2(value);
 				if (string.IsNullOrEmpty(_translatedText))
 				{
 					Status = TranslationStatus.Ignore;
@@ -171,7 +162,14 @@ namespace PoeStrings
 
 		public Translation()
 		{
-
+			
+		}
+		public Translation(string originalString)
+		{
+			this.OriginalText = originalString;
+			this.CurrentText = originalString;
+			this.TranslatedText = null;
+			this.Status = TranslationStatus.Ignore;
 		}
 
 		public override string ToString()

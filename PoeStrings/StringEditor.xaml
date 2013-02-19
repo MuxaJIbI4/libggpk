@@ -29,7 +29,7 @@
 			<Label  Name="labelOriginal" Grid.Row="0" Content="{x:Static Properties:Resources.StringEditor_Label_Original}" />
 			<TextBox Name="textBoxOriginal" AcceptsReturn="True" AcceptsTab="True" Grid.Row="1" Text="{Binding SelectedTranslation.OriginalText}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" IsReadOnly="True" />
 			<Label Name="labelTranslation"  Grid.Row="2" Content="{x:Static Properties:Resources.StringEditor_Label_Translation}" />
-			<TextBox Name="textBoxReplacement" AcceptsReturn="True" AcceptsTab="True" Grid.Row="3" Text="{Binding SelectedTranslation.TranslatedText}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" />
+			<TextBox Name="textBoxReplacement" AcceptsReturn="True" AcceptsTab="True" Grid.Row="3" Text="{Binding SelectedTranslation.TranslatedText}" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" TextChanged="textBoxReplacement_TextChanged_1" />
 		</Grid>
 	</Grid>
 </UserControl>

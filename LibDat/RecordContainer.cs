@@ -46,7 +46,7 @@ namespace LibDat
 		public DatContainer(Stream inStream, string fileName)
 		{
 			datName = Path.GetFileNameWithoutExtension(fileName);
-			DatType = DatFactory.GetType(datName);
+			DatType = DatFactory.GetTypeName(datName);
 
 			using (BinaryReader br = new BinaryReader(inStream, Encoding.Unicode))
 			{
@@ -61,7 +61,7 @@ namespace LibDat
 		public DatContainer(string fileName)
 		{
 			this.datName = Path.GetFileNameWithoutExtension(fileName);
-			DatType = DatFactory.GetType(datName);
+			DatType = DatFactory.GetTypeName(datName);
 
 			byte[] fileBytes = File.ReadAllBytes(fileName);
 

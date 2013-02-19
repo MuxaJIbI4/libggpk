@@ -7,9 +7,9 @@ using LibDat.Files;
 
 namespace LibDat
 {
-	static class DatFactory
+	public static class DatFactory
 	{
-		public static Type GetType(string fileName)
+		public static Type GetTypeName(string fileName)
 		{
 			switch (fileName)
 			{

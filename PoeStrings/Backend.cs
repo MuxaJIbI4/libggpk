@@ -15,30 +15,24 @@ namespace PoeStrings
 {
 	public class Backend
 	{
-		private const string SettingsPath = ".\\translation.xml";
+		//private const string settingsPath = ".\\translation.xml";
 		private readonly Action<string> outputFunc;
-
-
 		private GGPK content = new GGPK();
 		private string ggpkPath;
-		private Dictionary<string, DatTranslation> userTranslations;
-		private Dictionary<string, Dictionary<uint, string>> allStrings;
+		private string settingsPath;
+
+
+		/// <summary>
+		/// Maps file names to FileRecord
+		/// </summary>
 		private Dictionary<string, FileRecord> fileRecordMap;
+		public Dictionary<string, DatTranslation> AllDatTranslations { get; set; }
 
-
-		public Dictionary<string, DatTranslation> UserTranslations
+		public Backend(Action<string> outputFunc, string settingsPath)
 		{
-			get
-			{
-				return userTranslations;
-			}
-		}
-
-		public Backend(Action<string> outputFunc)
-		{
+			this.settingsPath = settingsPath;
 			this.outputFunc = outputFunc;
 		}
-
 
 		public void ReloadAllData(string ggpkPath)
 		{
@@ -46,180 +40,116 @@ namespace PoeStrings
 			content = new GGPK();
 			content.Read(ggpkPath, outputFunc);
 
+			CollectTranslatableStrings();
+			MergeUserTranslations();
+		}
+
+		/// <summary>
+		/// Merges user translations with master list of transleatable strings and determiens if the user
+		/// translation is already applied or is invalid (possibly due to a patch).
+		/// </summary>
+		private void MergeUserTranslations()
+		{
+			Dictionary<string, DatTranslation> userDatTranslations;
 			try
 			{
-				userTranslations = ReadTranslationData();
+				userDatTranslations = ReadTranslationData();
 			}
 			catch (Exception ex)
 			{
 				OutputLine(string.Format(Settings.Strings["ReloadAllData_Failed"], ex.Message));
+				return;
 			}
 
-			allStrings = GetTranslatableDatStrings(content);
-
-			UpdateUserTranslations();
-		}
-
-		private void UpdateUserTranslations()
-		{
-			if (userTranslations == null)
+			if (userDatTranslations == null)
 			{
-				userTranslations = new Dictionary<string, DatTranslation>();
+				return;
 			}
 
-			// Invalidate all user translations. After we go through all of the current .dat strings any translations
-			//   with an 'Invalid' status are no longer present possibly due to a patch changing the original string.
-			foreach (var userTranslation in userTranslations)
+			foreach (var userTranslation in userDatTranslations)
 			{
+				if (!AllDatTranslations.ContainsKey(userTranslation.Key))
+				{
+					AllDatTranslations.Add(userTranslation.Key, new DatTranslation());
+				}
+
+				DatTranslation currentDatTranslation = AllDatTranslations[userTranslation.Key];
+
+				// Mapping of originalText -> Translation pairs to determine if the user translation is already applied, not yet applied, or no longer valid
+				Dictionary<string, Translation> translationsByOriginalHash = AllDatTranslations[userTranslation.Key].Translations.ToDictionary(k => k.OriginalText);
+
 				foreach (var translation in userTranslation.Value.Translations)
 				{
-					translation.CurrentText = translation.OriginalText;
-					translation.Status = Translation.TranslationStatus.Invalid;
-				}
-			}
-
-			//foreach (var datTranslation in userTranslations)
-			foreach (var allStringKvp in allStrings)
-			{
-				if (allStringKvp.Value.Count == 0)
-				{
-					continue;
-				}
-
-				if (!userTranslations.ContainsKey(allStringKvp.Key))
-				{
-					userTranslations.Add(allStringKvp.Key, new DatTranslation(allStringKvp.Key));
-				}
-
-				DatTranslation translationTable = userTranslations[allStringKvp.Key];
-				Dictionary<uint, string> allStringsForThisDat = allStrings[allStringKvp.Key];
-
-				Dictionary<uint, Translation> userTranslationsByOriginalHash = translationTable.Translations.ToDictionary(n => n.OriginalHash);
-				Dictionary<uint, Translation> userTranslationsByTranslationHash = translationTable.Translations.ToDictionary(n => n.TranslationHash);
-
-				// Map of hash->string pairs of strings we will need to replace in the target dat file
-
-				// Lots of text can be generated ahead, just write to buffer then dump the buffer to the output function
-				StringBuilder outputTextBuffer = new StringBuilder();
-				foreach (var datStringKvp in allStringsForThisDat)
-				{
-					uint datStringHash = datStringKvp.Key;
-
-					if (userTranslationsByOriginalHash.ContainsKey(datStringHash))
+					if (translationsByOriginalHash.ContainsKey(translation.OriginalText))
 					{
-						// Original string still exists in dat file, we need to replace it with our translation text
-						userTranslationsByOriginalHash[datStringHash].CurrentText = datStringKvp.Value;
-						userTranslationsByOriginalHash[datStringHash].Status = Translation.TranslationStatus.NeedToApply;
+						translation.Status = Translation.TranslationStatus.NeedToApply;
+
+						translationsByOriginalHash[translation.OriginalText].Status = translation.Status;
+						translationsByOriginalHash[translation.OriginalText].TranslatedText = translation.TranslatedText;
+						translationsByOriginalHash[translation.OriginalText].CurrentText = translation.OriginalText;
 					}
-					else if (userTranslationsByTranslationHash.ContainsKey(datStringHash))
+					else if (translationsByOriginalHash.ContainsKey(translation.TranslatedText))
 					{
-						// Original string has already been replaced by our translation text.
-						userTranslationsByTranslationHash[datStringHash].CurrentText = datStringKvp.Value;
-						userTranslationsByTranslationHash[datStringHash].Status = Translation.TranslationStatus.AlreadyApplied;
+						translation.Status = Translation.TranslationStatus.AlreadyApplied;
+
+						translationsByOriginalHash[translation.TranslatedText].Status = translation.Status;
+						translationsByOriginalHash[translation.TranslatedText].TranslatedText = translation.TranslatedText;
+						translationsByOriginalHash[translation.TranslatedText].CurrentText = translation.TranslatedText;
+						translationsByOriginalHash[translation.TranslatedText].OriginalText = translation.OriginalText;
 					}
 					else
 					{
-						// New string found, either a previously ignored string or a string modified by a recent patch
-						Translation newTranslation = new Translation()
-						{
-							CurrentText = datStringKvp.Value,
-							OriginalText = datStringKvp.Value,
-							TranslatedText = string.Empty,
-							Status = Translation.TranslationStatus.Ignore,
-						};
-
-						translationTable.Translations.Add(newTranslation);
-						userTranslationsByOriginalHash.Add(datStringHash, newTranslation);
-						userTranslationsByTranslationHash.Add(datStringHash, newTranslation);
+						translation.Status = Translation.TranslationStatus.Invalid;
+						currentDatTranslation.Translations.Add(translation);
 					}
 				}
 			}
-		}
-
-		public void ApplyAllTranslations()
-		{
-			ApplyTranslations(false);
-		}
-
-		public void RevertAllTranslations()
-		{
-			ApplyTranslations(true);
 		}
 
 		/// <summary>
 		/// Applies translations to content.ggpk
 		/// </summary>
-		private void ApplyTranslations(bool isRevertingTranslation)
+		public void ApplyTranslations()
 		{
-			SaveTranslationData();
-
 			StringBuilder outputBuffer = new StringBuilder();
 
-			foreach (var userTranslation in userTranslations)
+			foreach (var datTranslation in AllDatTranslations)
 			{
 				// Record we will be translating with data from translationTable
-				FileRecord datRecord = fileRecordMap[userTranslation.Value.DatName];
+				FileRecord datRecord = fileRecordMap[datTranslation.Value.DatName];
 
 				// Raw bytes of the .dat file we will be translating
 				byte[] datBytes = datRecord.ReadData(ggpkPath);
 
 				// Dat parser for changing the actual strings
-				DatContainer dc = new DatContainer(new MemoryStream(datBytes), userTranslation.Value.DatName);
+				DatContainer dc = new DatContainer(new MemoryStream(datBytes), datTranslation.Value.DatName);
 
-				foreach (var translation in userTranslation.Value.Translations)
+				// Map of originalText -> Translation containing all translations to apply
+				Dictionary<string, Translation> translationsToApply = (from n in datTranslation.Value.Translations
+																	   where n.Status == Translation.TranslationStatus.NeedToApply
+																	   select n).ToDictionary(k => k.OriginalText);
+
+				// Replace the actual strings
+				foreach (var item in dc.DataEntries)
 				{
-					if (isRevertingTranslation)
+					UnicodeString currentDatString = (item.Value as UnicodeString);
+					if (currentDatString == null || !currentDatString.IsUserString)
 					{
-						if (translation.Status != Translation.TranslationStatus.AlreadyApplied)
-							continue;
-					}
-					else
-					{
-						if (translation.Status != Translation.TranslationStatus.NeedToApply)
-							continue;
+						continue;
 					}
 
-					bool wasTranslationApplied = false;
-
-					// Replace the actual strings
-					foreach (var item in dc.DataEntries)
+					if (!translationsToApply.ContainsKey(currentDatString.Data))
 					{
-						if (!(item.Value is UnicodeString))
-							continue;
-
-						UnicodeString currentDatString = (item.Value as UnicodeString);
-						if (!currentDatString.IsUserString)
-							continue;
-
-						uint currentDatStringHash = Hash.MurmurHash2(currentDatString.Data);
-
-						if (isRevertingTranslation)
-						{
-							if (translation.TranslationHash != currentDatStringHash)
-								continue;
-
-							outputBuffer.AppendLine(string.Format(Settings.Strings["ApplyTranslations_TextReplaced"], translation.ShortNameTranslated, translation.ShortNameOriginal));
-							currentDatString.NewData = translation.OriginalText;
-							translation.Status = Translation.TranslationStatus.NeedToApply;
-							wasTranslationApplied = true;
-						}
-						else
-						{
-							if (translation.CurrentHash != currentDatStringHash)
-								continue;
-
-							outputBuffer.AppendLine(string.Format(Settings.Strings["ApplyTranslations_TextReplaced"], translation.ShortNameCurrent, translation.ShortNameTranslated));
-							currentDatString.NewData = translation.TranslatedText;
-							translation.Status = Translation.TranslationStatus.AlreadyApplied;
-							wasTranslationApplied = true;
-						}
+						continue;
 					}
 
-					if (wasTranslationApplied)
-					{
-						translation.CurrentText = translation.OriginalText;
-					}
+					Translation translationBeingApplied = translationsToApply[currentDatString.Data];
+					currentDatString.NewData = translationBeingApplied.TranslatedText;
+
+					outputBuffer.AppendLine(string.Format(Settings.Strings["ApplyTranslations_TextReplaced"], translationBeingApplied.ShortNameCurrent, translationBeingApplied.ShortNameTranslated));
+					translationBeingApplied.Status = Translation.TranslationStatus.AlreadyApplied;
 				}
+
 				// dc.GetBytes() will return the new data for this .dat file after replacing the original strings with whatever's in 'NewData'
 				datRecord.ReplaceContents(ggpkPath, dc.GetBytes(), content.FreeRoot);
 			}
@@ -231,94 +161,116 @@ namespace PoeStrings
 		}
 
 		/// <summary>
-		/// Searches all of the /data/*.dat files in content.ggpk for user strings that can be translated.
+		/// Searches all of the /data/*.dat files in content.ggpk for user strings that can be translated. Also fills
+		/// out 'fileRecordMap' with valid datName -> FileRecord mappings.
 		/// </summary>
-		/// <returns>
-		/// Map of hash|string maps for each file
-		/// eg:
-		/// result = map  
-		/// {
-		///		Key = "VoteState.dat", 
-		///		Value = Map {
-		///			{Key = Hash("Help the bandit"),  Value = "Help the bandit"},
-		///			{Key = Hash("Kill the bandit"),  Value = "Kill the bandit"}
-		///		}
-		/// }
-		/// </returns>
-		private Dictionary<string, Dictionary<uint, string>> GetTranslatableDatStrings(GGPK content)
+		private void CollectTranslatableStrings()
 		{
-			int debugItemsRead = 0;
-
-			var translatableDatStrings = new Dictionary<string, Dictionary<uint, string>>();
+			AllDatTranslations = new Dictionary<string, DatTranslation>();
 			fileRecordMap = new Dictionary<string, FileRecord>();
 
 			foreach (var recordOffset in content.RecordOffsets)
 			{
-				if (!(recordOffset.Value is FileRecord))
-					continue;
-
 				FileRecord record = recordOffset.Value as FileRecord;
-				if (record.ContainingDirectory == null || Path.GetExtension(record.Name) != ".dat")
+
+				if (record == null || record.ContainingDirectory == null || Path.GetExtension(record.Name) != ".dat")
+				{
 					continue;
+				}
+
+				// Make sure parser for .dat type actually exists
+				if (DatFactory.GetTypeName(Path.GetFileNameWithoutExtension(record.Name)) == null)
+				{
+					continue;
+				}
 
 				// We'll need this .dat FileRecord later on so we're storing it in a map of fileName -> FileRecord
 				fileRecordMap.Add(record.Name, record);
-				// Map of all strings that can be safely translated (not used as ID's, paths, etc) stored by their hash
-				Dictionary<uint, string> translatableStringMap = new Dictionary<uint, string>();
 
-				byte[] datBytes = record.ReadData(ggpkPath);
-				using (MemoryStream datStream = new MemoryStream(datBytes))
+				List<string> translatableStrings;
+
+				try
 				{
-					DatContainer container;
-					try
-					{
-						container = new DatContainer(datStream, record.Name);
-					}
-					catch (Exception)
+					translatableStrings = GetTranslatableStringsFromDatFile(record);
+				}
+				catch (Exception ex)
+				{
+					OutputLine(string.Format(Settings.Strings["CollectTranslatableStrings_FailedReading"], record.Name, ex.Message));
+					continue;
+				}
+
+				DatTranslation newDatTranslation = new DatTranslation();
+				newDatTranslation.DatName = record.Name;
+				newDatTranslation.Translations = new List<Translation>();
+
+				foreach (string str in translatableStrings)
+				{
+					newDatTranslation.Translations.Add(new Translation(str));
+				}
+
+				if (translatableStrings.Count > 0)
+				{
+					AllDatTranslations.Add(record.Name, newDatTranslation);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets a list of all translatable strings in specified record. Record must be a FileRecord of a valid dat file.
+		/// </summary>
+		/// <param name="record">Dat File Record to extract translatable strings from</param>
+		/// <returns>List of translatable strings contained in specified dat file</returns>
+		private List<string> GetTranslatableStringsFromDatFile(FileRecord record)
+		{
+			// Map of all strings that can be safely translated (not used as ID's, paths, etc) stored by their hash
+			HashSet<string> currentStrings = new HashSet<string>();
+
+			byte[] datBytes = record.ReadData(ggpkPath);
+			using (MemoryStream datStream = new MemoryStream(datBytes))
+			{
+				DatContainer container = new DatContainer(datStream, record.Name);
+
+				// Any properties with the UserStringIndex attribute are translatable
+				foreach (var propInfo in container.DatType.GetProperties())
+				{
+					if (!propInfo.GetCustomAttributes(false).Any(n => n is UserStringIndex))
 					{
 						continue;
 					}
 
-					// Any properties with the UserStringIndex attribute are translatable
-					foreach (var propInfo in container.DatType.GetProperties())
+					foreach (var entry in container.Entries)
 					{
-						if (!propInfo.GetCustomAttributes(false).Any(n => n is UserStringIndex)) 
-							continue;
+						int stringIndex = (int)propInfo.GetValue(entry, null);
+						string stringValue = container.DataEntries[stringIndex].ToString();
 
-						foreach (var entry in container.Entries)
+						if (string.IsNullOrWhiteSpace(stringValue))
 						{
-							int stringIndex = (int)propInfo.GetValue(entry, null);
-							string stringValue = container.DataEntries[stringIndex].ToString();
+							continue;
+						}
 
-							if (string.IsNullOrWhiteSpace(stringValue))
-								continue;
-
-							uint hash = Hash.MurmurHash2(stringValue);
-							if (translatableStringMap.ContainsKey(hash))
-								continue;
-
-							++debugItemsRead;
-							translatableStringMap.Add(hash, stringValue);
+						if (!currentStrings.Contains(stringValue))
+						{
+							currentStrings.Add(stringValue);
 						}
 					}
 				}
-
-				translatableDatStrings.Add(record.Name, translatableStringMap);
 			}
 
-			OutputLine(string.Format(Settings.Strings["GetTranslatableDatStrings_TotalStrings"], debugItemsRead));
-			return translatableDatStrings;
+			return currentStrings.ToList();
 		}
 
+		/// <summary>
+		/// Saves all translations to file
+		/// </summary>
 		public void SaveTranslationData()
 		{
 			int debugTranslationCount = 0;
 
 			List<DatTranslation> datTranslations = new List<DatTranslation>();
 			XmlSerializer serializer = new XmlSerializer(datTranslations.GetType());
-			using (FileStream fs = new FileStream(SettingsPath, FileMode.Create))
+			using (FileStream fs = new FileStream(settingsPath, FileMode.Create))
 			{
-				foreach (var datTranslationTable in userTranslations)
+				foreach (var datTranslationTable in AllDatTranslations)
 				{
 					if (datTranslationTable.Value.Translations.Count == 0)
 						continue;
@@ -344,10 +296,14 @@ namespace PoeStrings
 				}
 
 				serializer.Serialize(fs, datTranslations);
-				OutputLine(String.Format(Settings.Strings["SaveTranslationData_Successful"], debugTranslationCount, SettingsPath));
+				OutputLine(String.Format(Settings.Strings["SaveTranslationData_Successful"], debugTranslationCount, settingsPath));
 			}
 		}
 
+		/// <summary>
+		/// Reads user translations from file
+		/// </summary>
+		/// <returns></returns>
 		private Dictionary<string, DatTranslation> ReadTranslationData()
 		{
 			int debugTranslationCount = 0;
@@ -355,7 +311,7 @@ namespace PoeStrings
 			Dictionary<string, DatTranslation> newUserTranslations = new Dictionary<string, DatTranslation>();
 
 			XmlSerializer serializer = new XmlSerializer(typeof(List<DatTranslation>));
-			List<DatTranslation> deserializedTranslations = (List<DatTranslation>)serializer.Deserialize(XmlReader.Create(SettingsPath));
+			List<DatTranslation> deserializedTranslations = (List<DatTranslation>)serializer.Deserialize(XmlReader.Create(settingsPath));
 
 			foreach (var datTranslationTable in deserializedTranslations)
 			{

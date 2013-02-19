@@ -26,14 +26,17 @@ namespace PoeStrings
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		private bool isApplyingTranslationOnStartup = false;
+		private bool hasModifiedData = false;
 		private readonly string ggpkPath;
 		private Backend backend;
+		private string settingsPath = @".\translation.xml";
 
-		public Dictionary<string, DatTranslation> UserTranslations
+		public Dictionary<string, DatTranslation> AllDatTranslations
 		{
 			get
 			{
-				return backend.UserTranslations;
+				return backend.AllDatTranslations;
 			}
 		}
 
@@ -49,10 +52,15 @@ namespace PoeStrings
 
 		public MainWindow()
 		{
+			if (Application.Current.Properties.Contains("FileToLoad"))
+			{
+				isApplyingTranslationOnStartup = true;
+				settingsPath = (string)Application.Current.Properties["FileToLoad"];
+			}
+
 			InitializeComponent();
 
 			buttonApplyAll.Content = Settings.Strings["MainWindow_Button_ApplyAll"];
-			buttonRevertAll.Content = Settings.Strings["MainWindow_Button_RevertAll"];
 			buttonSaveConfig.Content = Settings.Strings["MainWindow_Button_SaveConfig"];
 
 			OpenFileDialog ofd = new OpenFileDialog();
@@ -84,7 +92,7 @@ namespace PoeStrings
 
 			Thread driverThread = new Thread(new ThreadStart(() =>
 			{
-				backend = new Backend(Output);
+				backend = new Backend(Output, settingsPath);
 				backend.ReloadAllData(ggpkPath);
 				OnBackendLoaded();
 			}));
@@ -95,6 +103,11 @@ namespace PoeStrings
 		private void OnBackendLoaded()
 		{
 			listBoxFiles.Dispatcher.BeginInvoke(new Action(UpdateBindings), null);
+
+			if (isApplyingTranslationOnStartup)
+			{
+				this.Dispatcher.BeginInvoke(new Action(backend.ApplyTranslations), null);
+			}
 		}
 
 		private void listBoxFiles_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
@@ -118,34 +131,56 @@ namespace PoeStrings
 				previouslySelectedFileName = ((KeyValuePair<string, DatTranslation>)listBoxFiles.SelectedItem).Key;
 
 			listBoxFiles.ItemsSource = null;
-			listBoxFiles.ItemsSource = UserTranslations;
+			listBoxFiles.ItemsSource = AllDatTranslations;
 			stringEditorMain.Translations = null;
 			stringEditorMain.DataContext = null;
 			stringEditorMain.DataContext = this;
 
-			if (previouslySelectedFileName != null && UserTranslations.ContainsKey(previouslySelectedFileName))
+			if (previouslySelectedFileName != null && AllDatTranslations.ContainsKey(previouslySelectedFileName))
 			{
-				listBoxFiles.SelectedItem = new KeyValuePair<string, DatTranslation>(previouslySelectedFileName, UserTranslations[previouslySelectedFileName]);
+				listBoxFiles.SelectedItem = new KeyValuePair<string, DatTranslation>(previouslySelectedFileName, AllDatTranslations[previouslySelectedFileName]);
 			}
 		}
 
 		private void buttonSaveConfig_Click_1(object sender, RoutedEventArgs e)
 		{
+			hasModifiedData = false;
+			stringEditorMain.HasModfiedData = false;
 			backend.SaveTranslationData();
 		}
 
 		private void buttonApplyAll_Click_1(object sender, RoutedEventArgs e)
 		{
-			backend.ApplyAllTranslations();
+			if (hasModifiedData || stringEditorMain.HasModfiedData)
+			{
+				PromptToSave();
+			}
+			hasModifiedData = false;
+			stringEditorMain.HasModfiedData = false;
+
+			backend.ApplyTranslations();
 			backend.ReloadAllData(ggpkPath);
 			UpdateBindings();
 		}
 
-		private void buttonRevertAll_Click_1(object sender, RoutedEventArgs e)
+
+		private void PromptToSave()
 		{
-			backend.RevertAllTranslations();
-			backend.ReloadAllData(ggpkPath);
-			UpdateBindings();
+			if (MessageBox.Show(Settings.Strings["WindowClosing_Save"], Settings.Strings["WindowClosing_Save_Title"], MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+			{
+				backend.SaveTranslationData();
+			}
 		}
+
+		private void Window_Closing_1(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			if (hasModifiedData || stringEditorMain.HasModfiedData)
+			{
+				PromptToSave();
+			}
+			hasModifiedData = false;
+			stringEditorMain.HasModfiedData = false;
+		}
+
 	}
 }
