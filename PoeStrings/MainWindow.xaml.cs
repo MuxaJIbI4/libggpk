@@ -159,7 +159,7 @@ namespace PoeStrings
 			stringEditorMain.HasModfiedData = false;
 
 			backend.ApplyTranslations();
-			backend.ReloadAllData(ggpkPath);
+			//backend.ReloadAllData(ggpkPath);
 			UpdateBindings();
 		}
 

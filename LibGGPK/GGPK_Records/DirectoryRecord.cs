@@ -99,10 +99,12 @@ namespace LibGGPK
 
 			using (FileStream ggpkFileStream = File.Open(ggpkPath, FileMode.Open))
 			{
-				// See DirectoryEntry struct, seeks the offset portion of the specified entry
-				ggpkFileStream.Seek(EntriesBegin + 12*entryIndex + 4, SeekOrigin.Begin);
+				// Jump to the location of 'Entries' in the ggpk file and change the entry for 'previousEntryOffset'
+				//  to 'newEntryOffset'
+				ggpkFileStream.Seek(EntriesBegin + 12 * entryIndex + 4, SeekOrigin.Begin);
 				BinaryWriter bw = new BinaryWriter(ggpkFileStream);
 				bw.Write(newEntryOffset);
+				Entries[entryIndex].Offset = newEntryOffset;
 			}
 		}
 

@@ -415,9 +415,7 @@ namespace VisualGGPK
 					recordToReplace.ReplaceContents(ggpkPath, openFileDialog.FileName, content.FreeRoot);
 					MessageBox.Show(String.Format(Settings.Strings["ReplaceItem_Successful"], recordToReplace.Name, recordToReplace.RecordBegin.ToString("X")), Settings.Strings["ReplaceItem_Successful_Caption"], MessageBoxButton.OK, MessageBoxImage.Information);
 
-					// this is actually needed to avoid writing to old records that have already been replaced. Replacing a record
-					//   will relocate it and we'll need to refresh the whole tree to avoid any possible errors.
-					ReloadGGPK();
+					UpdateDisplayPanel();
 				}
 			}
 			catch (Exception ex)
