@@ -241,6 +241,69 @@ namespace VisualGGPK.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can only drop a single file, directory, or zip file.
+        /// </summary>
+        public static string MainWindow_Drop_Failed {
+            get {
+                return ResourceManager.GetString("MainWindow_Drop_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Applying contents of {0}.
+        /// </summary>
+        public static string MainWindow_HandleDropArchive_Info {
+            get {
+                return ResourceManager.GetString("MainWindow_HandleDropArchive_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File count = {0}.
+        /// </summary>
+        public static string MainWindow_HandleDropDirectory_Count {
+            get {
+                return ResourceManager.GetString("MainWindow_HandleDropDirectory_Count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to replace file {0} -&gt; Missing.
+        /// </summary>
+        public static string MainWindow_HandleDropDirectory_Failed {
+            get {
+                return ResourceManager.GetString("MainWindow_HandleDropDirectory_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replacing {0}.
+        /// </summary>
+        public static string MainWindow_HandleDropDirectory_Replace {
+            get {
+                return ResourceManager.GetString("MainWindow_HandleDropDirectory_Replace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Must select a file to replace in the tree view.
+        /// </summary>
+        public static string MainWindow_HandleDropFile_Failed {
+            get {
+                return ResourceManager.GetString("MainWindow_HandleDropFile_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replacing {0}{1}.
+        /// </summary>
+        public static string MainWindow_HandleDropFile_Replace {
+            get {
+                return ResourceManager.GetString("MainWindow_HandleDropFile_Replace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File Offset:.
         /// </summary>
         public static string MainWindow_Label_FileOffset {
@@ -273,6 +336,24 @@ namespace VisualGGPK.Properties {
         public static string MainWindow_Menu_View {
             get {
                 return ResourceManager.GetString("MainWindow_Menu_View", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replace files?.
+        /// </summary>
+        public static string MainWindow_Window_Drop_Confirm {
+            get {
+                return ResourceManager.GetString("MainWindow_Window_Drop_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm replace.
+        /// </summary>
+        public static string MainWindow_Window_Drop_Confirm_Caption {
+            get {
+                return ResourceManager.GetString("MainWindow_Window_Drop_Confirm_Caption", resourceCulture);
             }
         }
         

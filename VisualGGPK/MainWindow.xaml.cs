@@ -458,7 +458,7 @@ namespace VisualGGPK
 		/// <param name="archivePath">Path to archive containing</param>
 		private void HandleDropArchive(string archivePath)
 		{
-			OutputLine("Applying contents of " + archivePath);
+			OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropArchive_Info"], archivePath));
 
 			using (ZipFile zipFile = new ZipFile(archivePath))
 			{
@@ -478,10 +478,10 @@ namespace VisualGGPK
 
 					if (!RecordsByPath.ContainsKey(fixedFileName))
 					{
-						OutputLine("Unable to replace file " + fixedFileName + " -> Missing");
+						OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropDirectory_Failed"], fixedFileName));
 						continue;
 					}
-					OutputLine("Replacing " + fixedFileName);
+					OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropDirectory_Replace"], fixedFileName));
 
 					using (var reader = item.OpenReader())
 					{
@@ -503,11 +503,11 @@ namespace VisualGGPK
 			FileRecord record = treeView1.SelectedItem as FileRecord;
 			if (record == null)
 			{
-				OutputLine("Must select a file to replace in the tree view");
+				OutputLine(Settings.Strings["MainWindow_HandleDropFile_Failed"]);
 				return;
 			}
 
-			OutputLine("Replacing " + record.GetDirectoryPath() + record.Name);
+			OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropFile_Replace"], record.GetDirectoryPath(), record.Name));
 
 			record.ReplaceContents(ggpkPath, fileName, content.FreeRoot);
 		}
@@ -525,16 +525,16 @@ namespace VisualGGPK
 			string[] filesToReplace = Directory.GetFiles(baseDirectory, "*.*", SearchOption.AllDirectories);
 			int baseDirectoryNameLength = Path.GetFileName(baseDirectory).Length;
 
-			OutputLine("FilesToReplace = " + filesToReplace.Length);
+			OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropDirectory_Count"], filesToReplace.Length));
 			foreach (var item in filesToReplace)
 			{
 				string fixedFileName = item.Remove(0, baseDirectory.Length - baseDirectoryNameLength);
 				if (!RecordsByPath.ContainsKey(fixedFileName))
 				{
-					OutputLine("Unable to replace file " + fixedFileName + " -> Missing");
+					OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropDirectory_Failed"], fixedFileName));
 					continue;
 				}
-				OutputLine("Replacing " + fixedFileName);
+				OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropDirectory_Replace"], fixedFileName));
 
 				RecordsByPath[fixedFileName].ReplaceContents(ggpkPath, item, content.FreeRoot);
 			}
@@ -677,7 +677,7 @@ namespace VisualGGPK
 			textBoxOutput.Text = string.Empty;
 			textBoxOutput.Visibility = System.Windows.Visibility.Visible;
 
-			if (MessageBox.Show("Replace files?", "Confirm replace", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+			if (MessageBox.Show(Settings.Strings["MainWindow_Window_Drop_Confirm"], Settings.Strings["MainWindow_Window_Drop_Confirm_Caption"], MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
 			{
 				return;
 			}
@@ -685,7 +685,7 @@ namespace VisualGGPK
 			string[] fileNames = e.Data.GetData(System.Windows.DataFormats.FileDrop) as string[];
 			if (fileNames == null || fileNames.Length != 1)
 			{
-				OutputLine("Can only drop a single file, directory, or zip file");
+				OutputLine(Settings.Strings["MainWindow_Drop_Failed"]);
 				return;
 			}
 
