@@ -31,26 +31,28 @@ namespace TestProject
 		public class DatFile
 		{
 			public string Name { get; set; }
-
 		}
-
 
 		public static void Main(string[] args)
 		{
 			new Program();
 		}
 
-		private const string ggpkPath = @"c:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk";
-
+		private const string ggpkPath = @"o:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk";
+		Dictionary<string, FileRecord> RecordsByPath;
 
 		public Program()
 		{
-			//CreateExampleUserTranslations();
-			//SaveTranslationData();
-			//ReadTranslationData();
-			//
-			//// TESTING PURPOSES ONLY
-			
+			GGPK content = new GGPK();
+			content.Read(ggpkPath, Output);
+
+			RecordsByPath = new Dictionary<string, FileRecord>(content.RecordOffsets.Count);
+			DirectoryTreeNode.TraverseTreePostorder(content.DirectoryRoot, null, n => RecordsByPath.Add(n.GetDirectoryPath() + n.Name, n as FileRecord));
+
+			foreach (var item in RecordsByPath)
+			{
+				Console.WriteLine(item.Key + " -> " + item.Value.Name);
+			}
 		}
 
 

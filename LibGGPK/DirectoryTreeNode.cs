@@ -67,7 +67,7 @@ namespace LibGGPK
 		{
 			foreach (var childDirectory in root.Children)
 			{
-				TraverseTreePreorder(childDirectory, directoryAction, fileAction);
+				TraverseTreePostorder(childDirectory, directoryAction, fileAction);
 				if (directoryAction != null)
 				{
 					directoryAction(childDirectory);

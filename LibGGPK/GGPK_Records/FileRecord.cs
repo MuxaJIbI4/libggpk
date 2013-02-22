@@ -111,10 +111,10 @@ namespace LibGGPK
 		public void ExtractFileWithDirectoryStructure(string ggpkPath, string outputDirectory)
 		{
 			byte[] fileData = ReadData(ggpkPath);
-			string completeOutputDirectory = outputDirectory + "\\" + GetDirectoryPath();
+			string completeOutputDirectory = outputDirectory + Path.DirectorySeparatorChar + GetDirectoryPath();
 
 			Directory.CreateDirectory(completeOutputDirectory);
-			File.WriteAllBytes(completeOutputDirectory + "\\" + Name, fileData);
+			File.WriteAllBytes(completeOutputDirectory + Path.DirectorySeparatorChar + Name, fileData);
 		}
 
 		/// <summary>
@@ -169,7 +169,7 @@ namespace LibGGPK
 
 			foreach (var item in pathQueue)
 			{
-				sb.Append(item + "\\");
+				sb.Append(item + Path.DirectorySeparatorChar);
 			}
 
 			directoryPath = sb.ToString();

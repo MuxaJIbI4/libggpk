@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using Ionic.Zip;
 using LibGGPK;
 using System.IO;
 using System.Data;
@@ -26,6 +27,12 @@ namespace VisualGGPK
 	{
 		private string ggpkPath = String.Empty;
 		private GGPK content = null;
+		private Thread workerThread = null;
+		/// <summary>
+		/// Dictionary mapping ggpk file paths to FileRecords for easy lookup
+		/// EG: "Scripts\foobar.mel" -> FileRecord{Foobar.mel}
+		/// </summary>
+		Dictionary<string, FileRecord> RecordsByPath;
 
 		public MainWindow()
 		{
@@ -45,36 +52,9 @@ namespace VisualGGPK
 			}), null);
 		}
 
-		private void Window_Loaded(object sender, RoutedEventArgs e)
-		{
-			OpenFileDialog ofd = new OpenFileDialog();
-			ofd.CheckFileExists = true;
-			ofd.Filter = Settings.Strings["Load_GGPK_Filter"];
-			if (ofd.ShowDialog() == true)
-			{
-				if (!File.Exists(ofd.FileName))
-				{
-					this.Close();
-					return;
-				}
-				else
-				{
-					ggpkPath = ofd.FileName;
-					ReloadGGPK();
-				}
-			}
-			else
-			{
-				this.Close();
-				return;
-			}
-
-			menuItemExport.Header = Settings.Strings["MainWindow_Menu_Export"];
-			menuItemReplace.Header = Settings.Strings["MainWindow_Menu_Replace"];
-			menuItemView.Header = Settings.Strings["MainWindow_Menu_View"];
-			labelFileOffset.Content = Settings.Strings["MainWindow_Label_FileOffset"];
-		}
-
+		/// <summary>
+		/// Reloads the entire content.ggpk, rebuilds the tree
+		/// </summary>
 		private void ReloadGGPK()
 		{
 			treeView1.Items.Clear();
@@ -83,7 +63,7 @@ namespace VisualGGPK
 			textBoxOutput.Text = string.Empty;
 			content = null;
 
-			Thread worker = new Thread(new ThreadStart(() =>
+			workerThread = new Thread(new ThreadStart(() =>
 			{
 				content = new GGPK();
 				try
@@ -98,6 +78,10 @@ namespace VisualGGPK
 
 				OutputLine(Settings.Strings["ReloadGGPK_Traversing_Tree"]);
 
+				// Collect all FileRecordPath -> FileRecord pairs for easier replacing
+				RecordsByPath = new Dictionary<string, FileRecord>(content.RecordOffsets.Count);
+				DirectoryTreeNode.TraverseTreePostorder(content.DirectoryRoot, null, n => RecordsByPath.Add(n.GetDirectoryPath() + n.Name, n as FileRecord));
+
 				treeView1.Dispatcher.BeginInvoke(new Action(() =>
 				{
 					try
@@ -109,14 +93,22 @@ namespace VisualGGPK
 						Output(string.Format(Settings.Strings["Error_Read_Directory_Tree"], ex.Message));
 						return;
 					}
+
+					workerThread = null;
 				}), null);
+
 
 				OutputLine(Settings.Strings["ReloadGGPK_Successful"]);
 			}));
 
-			worker.Start();
+			workerThread.Start();
 		}
 
+		/// <summary>
+		/// Recursivly adds the specified GGPK DirectoryTree to the TreeListView
+		/// </summary>
+		/// <param name="directoryTreeNode">Node to add to tree</param>
+		/// <param name="parentControl">TreeViewItem to add children to</param>
 		private void AddDirectoryTreeToControl(DirectoryTreeNode directoryTreeNode, TreeViewItem parentControl)
 		{
 			TreeViewItem rootItem = new TreeViewItem();
@@ -144,6 +136,9 @@ namespace VisualGGPK
 			}
 		}
 
+		/// <summary>
+		/// Resets all of the file viewers
+		/// </summary>
 		private void ResetViewer()
 		{
 			textBoxOutput.Visibility = System.Windows.Visibility.Hidden;
@@ -159,6 +154,9 @@ namespace VisualGGPK
 			textBoxOffset.Text = String.Empty;
 		}
 
+		/// <summary>
+		/// Updates the FileViewers to display the currently selected item in the TreeView
+		/// </summary>
 		private void UpdateDisplayPanel()
 		{
 			ResetViewer();
@@ -224,6 +222,10 @@ namespace VisualGGPK
 
 		}
 
+		/// <summary>
+		/// Displays the contents of a FileRecord in the DatViewer
+		/// </summary>
+		/// <param name="selectedRecord">FileRecord to display</param>
 		private void DisplayDat(FileRecord selectedRecord)
 		{
 			byte[] data = selectedRecord.ReadData(ggpkPath);
@@ -235,6 +237,10 @@ namespace VisualGGPK
 			}
 		}
 
+		/// <summary>
+		/// Displays the contents of a FileRecord in the RichTextBox
+		/// </summary>
+		/// <param name="selectedRecord">FileRecord to display</param>
 		private void DisplayRichText(FileRecord selectedRecord)
 		{
 			byte[] buffer = selectedRecord.ReadData(ggpkPath);
@@ -246,6 +252,10 @@ namespace VisualGGPK
 			}
 		}
 
+		/// <summary>
+		/// Displays the contents of a FileRecord in the TextBox as Unicode text
+		/// </summary>
+		/// <param name="selectedRecord">FileRecord to display</param>
 		private void DisplayUnicode(FileRecord selectedRecord)
 		{
 			byte[] buffer = selectedRecord.ReadData(ggpkPath);
@@ -254,6 +264,10 @@ namespace VisualGGPK
 			textBoxOutput.Text = Encoding.Unicode.GetString(buffer);
 		}
 
+		/// <summary>
+		/// Displays the contents of a FileRecord in the TextBox as Ascii text
+		/// </summary>
+		/// <param name="selectedRecord">FileRecord to display</param>
 		private void DisplayAscii(FileRecord selectedRecord)
 		{
 			byte[] buffer = selectedRecord.ReadData(ggpkPath);
@@ -262,6 +276,10 @@ namespace VisualGGPK
 			textBoxOutput.Text = Encoding.ASCII.GetString(buffer);
 		}
 
+		/// <summary>
+		/// Displays the contents of a FileRecord in the ImageBox
+		/// </summary>
+		/// <param name="selectedRecord">FileRecord to display</param>
 		private void DisplayImage(FileRecord selectedRecord)
 		{
 			byte[] buffer = selectedRecord.ReadData(ggpkPath);
@@ -278,18 +296,12 @@ namespace VisualGGPK
 			}
 		}
 
-		private void ExportSelectedItem(object selectedItem)
+		/// <summary>
+		/// Exports the specified FileRecord to disk
+		/// </summary>
+		/// <param name="selectedRecord">FileRecord to export</param>
+		private void ExportFileRecord(FileRecord selectedRecord)
 		{
-			if (selectedItem == null)
-			{
-				return;
-			}
-
-
-			FileRecord selectedRecord = selectedItem as FileRecord;
-			if (selectedRecord == null)
-				return;
-
 			try
 			{
 				SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -307,16 +319,12 @@ namespace VisualGGPK
 			}
 		}
 
-		private void ViewSelectedItem(object selectedItem)
+		/// <summary>
+		/// Attempts to display the specified record on the gui
+		/// </summary>
+		/// <param name="selectedRecord">Record to view</param>
+		private void ViewFileRecord(FileRecord selectedRecord)
 		{
-			if (selectedItem == null)
-				return;
-
-			FileRecord selectedRecord = selectedItem as FileRecord;
-			if (selectedRecord == null)
-				return;
-
-
 			string extractedFileName;
 			try
 			{
@@ -352,25 +360,10 @@ namespace VisualGGPK
 			fileViewerProcess.Start();
 		}
 
-		private void fileViewerProcess_Exited(object sender, EventArgs e)
-		{
-			Process sourceProcess = sender as Process;
-			if (sourceProcess == null)
-			{
-				return;
-			}
-
-			try
-			{
-				File.Delete(sourceProcess.StartInfo.FileName);
-			}
-			catch (Exception /*ex*/)
-			{
-				/* Suppress any exceptions, they're just temporary files */
-				//MessageBox.Show(String.Format("Failed to delete temporary file '{0}': {1}", sourceProcess.StartInfo.FileName, ex.Message)); 
-			}
-		}
-
+		/// <summary>
+		/// Exports entire DirectoryTreeNode to disk, preserving directory structure
+		/// </summary>
+		/// <param name="selectedDirectoryNode">Node to export to disk</param>
 		private void ExportAllItemsInDirectory(DirectoryTreeNode selectedDirectoryNode)
 		{
 			List<FileRecord> recordsToExport = new List<FileRecord>();
@@ -385,7 +378,7 @@ namespace VisualGGPK
 				saveFileDialog.FileName = Settings.Strings["ExportAllItemsInDirectory_Default_FileName"];
 				if (saveFileDialog.ShowDialog() == true)
 				{
-					string exportDirectory = Path.GetDirectoryName(saveFileDialog.FileName) + "/";
+					string exportDirectory = Path.GetDirectoryName(saveFileDialog.FileName) + Path.DirectorySeparatorChar;
 					foreach (var item in recordsToExport)
 					{
 						item.ExtractFileWithDirectoryStructure(ggpkPath, exportDirectory);
@@ -399,6 +392,10 @@ namespace VisualGGPK
 			}
 		}
 
+		/// <summary>
+		/// Replaces selected file with file user selects via MessageBox
+		/// </summary>
+		/// <param name="recordToReplace"></param>
 		private void ReplaceItem(FileRecord recordToReplace)
 		{
 			try
@@ -421,6 +418,174 @@ namespace VisualGGPK
 			catch (Exception ex)
 			{
 				MessageBox.Show(string.Format(Settings.Strings["ReplaceItem_Failed"], ex.Message), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+		}
+
+		/// <summary>
+		/// Constructs the full GGPK path of the specified DirectoryTreeNode.
+		/// EG:
+		/// Directory 'BuffIcons' has parent '2DArt', which has parent 'Art', so the DirectoryPath
+		/// would result int Art\2DArt\BuffIcons\
+		/// </summary>
+		/// <param name="containingDirectory">Directory to get full path from</param>
+		/// <returns>Full path (in GGPK structure) of specified directory</returns>
+		public string GetDirectoryPath(DirectoryTreeNode containingDirectory)
+		{
+			Stack<string> pathQueue = new Stack<string>();
+			StringBuilder sb = new StringBuilder();
+
+			// Traverse the directory tree until we hit the root node, pushing all
+			//  encountered directory names onto the stack
+			DirectoryTreeNode iter = containingDirectory;
+			while (iter != null && iter.Name.Length > 0)
+			{
+				pathQueue.Push(iter.Name);
+				iter = iter.Parent;
+			}
+
+			foreach (var item in pathQueue)
+			{
+				sb.Append(item + Path.DirectorySeparatorChar);
+			}
+
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// Extracts specified archive and replaces files in GGPK with extracted files. Files in
+		/// archive must have same directory structure as in GGPK.
+		/// </summary>
+		/// <param name="archivePath">Path to archive containing</param>
+		private void HandleDropArchive(string archivePath)
+		{
+			OutputLine("Applying contents of " + archivePath);
+
+			using (ZipFile zipFile = new ZipFile(archivePath))
+			{
+				var fileNames = zipFile.EntryFileNames;
+				foreach (var item in zipFile.Entries)
+				{
+					if (item.IsDirectory)
+					{
+						continue;
+					}
+
+					string fixedFileName = item.FileName;
+					if (Path.DirectorySeparatorChar != '/')
+					{
+						fixedFileName = fixedFileName.Replace('/', Path.DirectorySeparatorChar);
+					}
+
+					if (!RecordsByPath.ContainsKey(fixedFileName))
+					{
+						OutputLine("Unable to replace file " + fixedFileName + " -> Missing");
+						continue;
+					}
+					OutputLine("Replacing " + fixedFileName);
+
+					using (var reader = item.OpenReader())
+					{
+						byte[] replacementData = new byte[item.UncompressedSize];
+						reader.Read(replacementData, 0, replacementData.Length);
+
+						RecordsByPath[fixedFileName].ReplaceContents(ggpkPath, replacementData, content.FreeRoot);
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Replaces the currently selected TreeViewItem with specified file on disk
+		/// </summary>
+		/// <param name="fileName">Path of file to replace currently selected item with.</param>
+		private void HandleDropFile(string fileName)
+		{
+			FileRecord record = treeView1.SelectedItem as FileRecord;
+			if (record == null)
+			{
+				OutputLine("Must select a file to replace in the tree view");
+				return;
+			}
+
+			OutputLine("Replacing " + record.GetDirectoryPath() + record.Name);
+
+			record.ReplaceContents(ggpkPath, fileName, content.FreeRoot);
+		}
+
+		/// <summary>
+		/// Specified directory was dropped onto interface, attept to replace GGPK files with same directory
+		/// structure with files in directory. Directory must have same directory structure as GGPK file.
+		/// EG:
+		/// dropping 'Art' directory containing '2DArt' directory containing 'BuffIcons' directory containing 'buffbleed.dds' will replace
+		/// \Art\2DArt\BuffIcons\buffbleed.dds with buffbleed.dds from dropped directory
+		/// </summary>
+		/// <param name="baseDirectory">Directory containing files to replace</param>
+		private void HandleDropDirectory(string baseDirectory)
+		{
+			string[] filesToReplace = Directory.GetFiles(baseDirectory, "*.*", SearchOption.AllDirectories);
+			int baseDirectoryNameLength = Path.GetFileName(baseDirectory).Length;
+
+			OutputLine("FilesToReplace = " + filesToReplace.Length);
+			foreach (var item in filesToReplace)
+			{
+				string fixedFileName = item.Remove(0, baseDirectory.Length - baseDirectoryNameLength);
+				if (!RecordsByPath.ContainsKey(fixedFileName))
+				{
+					OutputLine("Unable to replace file " + fixedFileName + " -> Missing");
+					continue;
+				}
+				OutputLine("Replacing " + fixedFileName);
+
+				RecordsByPath[fixedFileName].ReplaceContents(ggpkPath, item, content.FreeRoot);
+			}
+		}
+
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			OpenFileDialog ofd = new OpenFileDialog();
+			ofd.CheckFileExists = true;
+			ofd.Filter = Settings.Strings["Load_GGPK_Filter"];
+			if (ofd.ShowDialog() == true)
+			{
+				if (!File.Exists(ofd.FileName))
+				{
+					this.Close();
+					return;
+				}
+				else
+				{
+					ggpkPath = ofd.FileName;
+					ReloadGGPK();
+				}
+			}
+			else
+			{
+				this.Close();
+				return;
+			}
+
+			menuItemExport.Header = Settings.Strings["MainWindow_Menu_Export"];
+			menuItemReplace.Header = Settings.Strings["MainWindow_Menu_Replace"];
+			menuItemView.Header = Settings.Strings["MainWindow_Menu_View"];
+			labelFileOffset.Content = Settings.Strings["MainWindow_Label_FileOffset"];
+		}
+
+		private void fileViewerProcess_Exited(object sender, EventArgs e)
+		{
+			Process sourceProcess = sender as Process;
+			if (sourceProcess == null)
+			{
+				return;
+			}
+
+			try
+			{
+				File.Delete(sourceProcess.StartInfo.FileName);
+			}
+			catch (Exception /*ex*/)
+			{
+				/* Suppress any exceptions, they're just temporary files */
+				//MessageBox.Show(String.Format("Failed to delete temporary file '{0}': {1}", sourceProcess.StartInfo.FileName, ex.Message)); 
 			}
 		}
 
@@ -462,10 +627,9 @@ namespace VisualGGPK
 			}
 			else if (treeView1.SelectedItem is FileRecord)
 			{
-				ExportSelectedItem(treeView1.SelectedItem);
+				ExportFileRecord(treeView1.SelectedItem as FileRecord);
 			}
 		}
-
 
 		private void menuItemReplace_Click(object sender, RoutedEventArgs e)
 		{
@@ -478,7 +642,7 @@ namespace VisualGGPK
 
 		private void menuItemView_Click(object sender, RoutedEventArgs e)
 		{
-			ViewSelectedItem(treeView1.SelectedItem);
+			ViewFileRecord(treeView1.SelectedItem as FileRecord);
 		}
 
 		private void treeView1_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
@@ -494,13 +658,58 @@ namespace VisualGGPK
 
 			if (hitElement != null)
 			{
-				ViewSelectedItem((hitElement as TreeViewItem).DataContext);
+				ViewFileRecord((hitElement as TreeViewItem).DataContext as FileRecord);
 			}
 		}
 
-		private void menuItemExit_Click(object sender, RoutedEventArgs e)
+		private void Window_PreviewDrop_1(object sender, DragEventArgs e)
 		{
-			this.Close();
+			e.Effects = DragDropEffects.Link;
+		}
+
+		private void Window_Drop_1(object sender, DragEventArgs e)
+		{
+			if (!e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop))
+			{
+				return;
+			}
+
+			textBoxOutput.Text = string.Empty;
+			textBoxOutput.Visibility = System.Windows.Visibility.Visible;
+
+			if (MessageBox.Show("Replace files?", "Confirm replace", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+			{
+				return;
+			}
+
+			string[] fileNames = e.Data.GetData(System.Windows.DataFormats.FileDrop) as string[];
+			if (fileNames == null || fileNames.Length != 1)
+			{
+				OutputLine("Can only drop a single file, directory, or zip file");
+				return;
+			}
+
+			if (Directory.Exists(fileNames[0]))
+			{
+				HandleDropDirectory(fileNames[0]);
+			}
+			else if (string.Compare(Path.GetExtension(fileNames[0]), ".zip", true) == 0)
+			{
+				// Zip file
+				HandleDropArchive(fileNames[0]);
+			}
+			else
+			{
+				HandleDropFile(fileNames[0]);
+			}
+		}
+
+		private void Window_Closing_1(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			if (workerThread != null)
+			{
+				workerThread.Abort();
+			}
 		}
 	}
 }

@@ -3,8 +3,8 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:local="clr-namespace:VisualGGPK" xmlns:Properties="clr-namespace:VisualGGPK.Properties"
 		x:Class="VisualGGPK.MainWindow"
-		Title="VisualGGPK" Height="350" Width="525" Loaded="Window_Loaded">
-	<Grid>
+		Title="VisualGGPK" Height="350" Width="525" Loaded="Window_Loaded" AllowDrop="True" Drop="Window_Drop_1" PreviewDrop="Window_PreviewDrop_1" Closing="Window_Closing_1">
+	<Grid >
 
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto" />
