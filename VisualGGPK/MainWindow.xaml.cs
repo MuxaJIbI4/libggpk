@@ -642,7 +642,11 @@ namespace VisualGGPK
 
 		private void menuItemView_Click(object sender, RoutedEventArgs e)
 		{
-			ViewFileRecord(treeView1.SelectedItem as FileRecord);
+			FileRecord fileToView = (treeView1.SelectedItem as TreeViewItem).DataContext as FileRecord;
+			if (fileToView == null)
+				return;
+
+			ViewFileRecord(fileToView);
 		}
 
 		private void treeView1_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
@@ -658,7 +662,11 @@ namespace VisualGGPK
 
 			if (hitElement != null)
 			{
-				ViewFileRecord((hitElement as TreeViewItem).DataContext as FileRecord);
+				FileRecord fileToView = (hitElement as TreeViewItem).DataContext as FileRecord;
+				if (fileToView == null)
+					return;
+
+				ViewFileRecord(fileToView);
 			}
 		}
 
