@@ -4,21 +4,25 @@ namespace LibDat.Files
 {
 	public class CharacterAudioEvents : BaseDat
 	{
+		// It appears that the sound path strings are now prefixed with one or more 4-byte integers
+		//   if the corresponding 'PrefixCount' is not 0. This file doesn't contain any translatable
+		//   strings so it doesn't really matter.
+
 		[StringIndex]
 		public int Id { get; set; }
-		[StringIndex]
+		public int SoundMaruaderPrefixCount { get; set; }
 		public int SoundMaruader { get; set; }
-		[StringIndex]
+		public int SoundRangerPrefixCount { get; set; }
 		public int SoundRanger { get; set; }
-		[StringIndex]
+		public int SoundWitchPrefixCount { get; set; }
 		public int SoundWitch { get; set; }
-		[StringIndex]
+		public int SoundDualistPrefixCount { get; set; }
 		public int SoundDualist { get; set; }
-		[StringIndex]
+		public int SoundShadowPrefixCount { get; set; }
 		public int SoundShadow { get; set; }
-		[StringIndex]
+		public int SoundTemplarPrefixCount { get; set; }
 		public int SoundTemplar { get; set; }
-		[StringIndex]
+		public int Index7PrefixCount { get; set; }
 		public int Index7 { get; set; } // Sound file for the next class?
 		public int Unknown0 { get; set; }
 		public int Unknown1 { get; set; }
@@ -30,12 +34,19 @@ namespace LibDat.Files
 		public CharacterAudioEvents(BinaryReader inStream)
 		{
 			Id = inStream.ReadInt32();
+			SoundMaruaderPrefixCount = inStream.ReadInt32();
 			SoundMaruader = inStream.ReadInt32();
+			SoundRangerPrefixCount = inStream.ReadInt32();
 			SoundRanger = inStream.ReadInt32();
+			SoundWitchPrefixCount = inStream.ReadInt32();
 			SoundWitch = inStream.ReadInt32();
+			SoundDualistPrefixCount = inStream.ReadInt32();
 			SoundDualist = inStream.ReadInt32();
+			SoundShadowPrefixCount = inStream.ReadInt32();
 			SoundShadow = inStream.ReadInt32();
+			SoundTemplarPrefixCount = inStream.ReadInt32();
 			SoundTemplar = inStream.ReadInt32();
+			Index7PrefixCount = inStream.ReadInt32();
 			Index7 = inStream.ReadInt32();
 			Unknown0 = inStream.ReadInt32();
 			Unknown1 = inStream.ReadInt32();
@@ -61,7 +72,7 @@ namespace LibDat.Files
 
 		public override int GetSize()
 		{
-			return 0x30;
+			return 0x4c;
 		}
 	}
 }
