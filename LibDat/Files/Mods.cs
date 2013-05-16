@@ -11,7 +11,7 @@ namespace LibDat.Files
 		// Generalized mod group
 		//		group 45 = increased attack speed
 		//		group 80 = local increased attack speed
-		public int Group { get; set; }
+		//public int Group { get; set; } // Removed as of latest patch
 		public int Level { get; set; }
 		public int Stat1Min { get; set; }
 		public int Stat1Max { get; set; }
@@ -55,7 +55,6 @@ namespace LibDat.Files
 		{
 			Id = inStream.ReadInt32();
 			Unknown0 = inStream.ReadInt32();
-			Group = inStream.ReadInt32();
 			Level = inStream.ReadInt32();
 			Stat1Min = inStream.ReadInt32();
 			Stat1Max = inStream.ReadInt32();
@@ -88,7 +87,6 @@ namespace LibDat.Files
 		{
 			outStream.Write(Id);
 			outStream.Write(Unknown0);
-			outStream.Write(Group);
 			outStream.Write(Level);
 			outStream.Write(Stat1Min);
 			outStream.Write(Stat1Max);
@@ -120,7 +118,7 @@ namespace LibDat.Files
 
 		public override int GetSize()
 		{
-			return 0x8c;
+			return 0x88;
 		}
 	}
 }

@@ -43,6 +43,11 @@ namespace LibDat.Files
 		public int Unknown28 { get; set; }
 		public bool IsPVP { get; set; }
 		public int Unknown29 { get; set; }
+		public int Unknown30 { get; set; }
+		public int Unknown31 { get; set; }
+		public int Unknown32 { get; set; }
+		public int Unknown33 { get; set; }
+		public bool Flag4 { get; set; }
 
 		public WorldAreas(BinaryReader inStream)
 		{
@@ -80,6 +85,11 @@ namespace LibDat.Files
 			Unknown28 = inStream.ReadInt32();
 			IsPVP = inStream.ReadBoolean();
 			Unknown29 = inStream.ReadInt32();
+			Unknown30 = inStream.ReadInt32();
+			Unknown31 = inStream.ReadInt32();
+			Unknown32 = inStream.ReadInt32();
+			Unknown33 = inStream.ReadInt32();
+			Flag4 = inStream.ReadBoolean();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -118,11 +128,16 @@ namespace LibDat.Files
 			outStream.Write(Unknown28);
 			outStream.Write(IsPVP);
 			outStream.Write(Unknown29);
+			outStream.Write(Unknown30);
+			outStream.Write(Unknown31);
+			outStream.Write(Unknown32);
+			outStream.Write(Unknown33);
+			outStream.Write(Flag4);
 		}
 
 		public override int GetSize()
 		{
-			return 0x80;
+			return 0x91;
 		}
 	}
 }
