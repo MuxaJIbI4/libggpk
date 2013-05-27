@@ -36,6 +36,11 @@ namespace LibDat.Files
 		public bool Flag9 { get; set; }
 		public bool Flag10 { get; set; }
 		public int Unknown8 { get; set; }
+		/// <summary>
+		/// Version 0.10.8c 
+		/// •	Added buff icons for Consecrated and Desecrated ground effects.
+		/// </summary>
+		public bool Flag11 { get; set; }
 
 		public BuffDefinitions(BinaryReader inStream)
 		{
@@ -63,6 +68,7 @@ namespace LibDat.Files
 			Flag9 = inStream.ReadBoolean();
 			Flag10 = inStream.ReadBoolean();
 			Unknown8 = inStream.ReadInt32();
+			Flag11 = inStream.ReadBoolean();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -91,11 +97,12 @@ namespace LibDat.Files
 			outStream.Write(Flag9);
 			outStream.Write(Flag10);
 			outStream.Write(Unknown8);
+			outStream.Write(Flag11);
 		}
 
 		public override int GetSize()
 		{
-			return 0x4b;
+			return 0x4c;
 		}
 	}
 }
