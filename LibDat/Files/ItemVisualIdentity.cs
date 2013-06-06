@@ -28,6 +28,9 @@ namespace LibDat.Files
 		public int Unknown14 { get; set; }
 		public int Unknown15 { get; set; }
 		public int Unknown16 { get; set; }
+		public int Unknown17 { get; set; }
+		public int Unknown18 { get; set; }
+		public Int64 Unknown19 { get; set; }
 
 		public ItemVisualIdentity(BinaryReader inStream)
 		{
@@ -51,6 +54,9 @@ namespace LibDat.Files
 			Unknown14 = inStream.ReadInt32();
 			Unknown15 = inStream.ReadInt32();
 			Unknown16 = inStream.ReadInt32();
+			Unknown17 = inStream.ReadInt32();
+			Unknown18 = inStream.ReadInt32();
+			Unknown19 = inStream.ReadInt64();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -58,9 +64,6 @@ namespace LibDat.Files
 			outStream.Write(Index0);
 			outStream.Write(Index1);
 			outStream.Write(Index2);
-			outStream.Write(Unknown0);
-			outStream.Write(Unknown1);
-			outStream.Write(Unknown2);
 			outStream.Write(Unknown3);
 			outStream.Write(Unknown4);
 			outStream.Write(Unknown5);
@@ -75,11 +78,14 @@ namespace LibDat.Files
 			outStream.Write(Unknown14);
 			outStream.Write(Unknown15);
 			outStream.Write(Unknown16);
+			outStream.Write(Unknown17);
+			outStream.Write(Unknown18);
+			outStream.Write(Unknown19);
 		}
 
 		public override int GetSize()
 		{
-			return 0x54;
+			return 0x64;
 		}
 	}
 }

@@ -15,6 +15,7 @@ namespace LibDat.Files
 		public Int64 Unknown3 { get; set; }
 		[UserStringIndex]
 		public int Description { get; set; }
+		public Int64 Unknown4 { get; set; }
 
 		public CurrencyItems(BinaryReader inStream)
 		{
@@ -25,6 +26,7 @@ namespace LibDat.Files
 			Directions = inStream.ReadInt32();
 			Unknown3 = inStream.ReadInt64();
 			Description = inStream.ReadInt32();
+			Unknown4 = inStream.ReadInt64();
 		}
 		public override void Save(BinaryWriter outStream)
 		{
@@ -35,11 +37,12 @@ namespace LibDat.Files
 			outStream.Write(Directions);
 			outStream.Write(Unknown3);
 			outStream.Write(Description);
+			outStream.Write(Unknown4);
 		}
 
 		public override int GetSize()
 		{
-			return 0x24;
+			return 0x2C;
 		}
 	}
 }

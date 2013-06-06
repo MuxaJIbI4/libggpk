@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace LibDat.Files
 {
@@ -23,6 +24,7 @@ namespace LibDat.Files
 		public bool IsNotable { get; set; }
 		public int Unknown12 { get; set; }
 		public bool IsJustIcon { get; set; }
+		public Int64 Unknown13 { get; set; }
 
 		public PassiveSkills(BinaryReader inStream)
 		{
@@ -42,6 +44,7 @@ namespace LibDat.Files
 			IsNotable = inStream.ReadBoolean();
 			Unknown12 = inStream.ReadInt32();
 			IsJustIcon = inStream.ReadBoolean();
+			Unknown13 = inStream.ReadInt64();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -62,11 +65,12 @@ namespace LibDat.Files
 			outStream.Write(IsNotable);
 			outStream.Write(Unknown12);
 			outStream.Write(IsJustIcon);
+			outStream.Write(Unknown13);
 		}
 
 		public override int GetSize()
 		{
-			return 0x37;
+			return 0x3F;
 		}
 	}
 }

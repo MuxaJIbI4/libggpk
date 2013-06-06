@@ -22,9 +22,9 @@ namespace LibDat.Files
 		public int Index7 { get; set; }
 		[StringIndex]
 		public int Index8 { get; set; }
-
 		public int Unknown9 { get; set; }
 		public int Unknown10 { get; set; }
+		public int Unknown11 { get; set; }
 
 		public BloodTypes(BinaryReader inStream)
 		{
@@ -39,6 +39,7 @@ namespace LibDat.Files
 			Index8 = inStream.ReadInt32();
 			Unknown9 = inStream.ReadInt32();
 			Unknown10 = inStream.ReadInt32();
+			Unknown11 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -54,11 +55,12 @@ namespace LibDat.Files
 			outStream.Write(Index8);
 			outStream.Write(Unknown9);
 			outStream.Write(Unknown10);
+			outStream.Write(Unknown11);
 		}
 
 		public override int GetSize()
 		{
-			return 0x2C;
+			return 0x30;
 		}
 	}
 }
