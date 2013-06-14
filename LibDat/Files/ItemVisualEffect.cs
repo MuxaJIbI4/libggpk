@@ -31,6 +31,7 @@ namespace LibDat.Files
 		public int Index12 { get; set; }
 		[StringIndex]
 		public int Index13 { get; set; }
+		public bool Flag1 { get; set; }
 
 		public ItemVisualEffect(BinaryReader inStream)
 		{
@@ -48,6 +49,7 @@ namespace LibDat.Files
 			Index11 = inStream.ReadInt32();
 			Index12 = inStream.ReadInt32();
 			Index13 = inStream.ReadInt32();
+			Flag1 = inStream.ReadBoolean();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -66,11 +68,12 @@ namespace LibDat.Files
 			outStream.Write(Index11);
 			outStream.Write(Index12);
 			outStream.Write(Index13);
+			outStream.Write(Flag1);
 		}
 
 		public override int GetSize()
 		{
-			return 0x38;
+			return 0x39;
 		}
 	}
 }
