@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace LibDat.Files
 {
@@ -12,19 +13,17 @@ namespace LibDat.Files
 		public int Index2 { get; set; }
 		[StringIndex]
 		public int Index3 { get; set; }
+		public Int64 Unknown4 { get; set; }
 		[StringIndex]
 		public int Index4 { get; set; }
 		[StringIndex]
 		public int Index5 { get; set; }
 		[StringIndex]
 		public int Index6 { get; set; }
-		[StringIndex]
-		public int Index7 { get; set; }
-		[StringIndex]
-		public int Index8 { get; set; }
-		public int Unknown9 { get; set; }
-		public int Unknown10 { get; set; }
+		public Int64 Unknown9 { get; set; }
 		public int Unknown11 { get; set; }
+		public int Unknown12 { get; set; }
+		public Int64 Unknown13 { get; set; }
 
 		public BloodTypes(BinaryReader inStream)
 		{
@@ -32,14 +31,14 @@ namespace LibDat.Files
 			Index1 = inStream.ReadInt32();
 			Index2 = inStream.ReadInt32();
 			Index3 = inStream.ReadInt32();
+			Unknown4 = inStream.ReadInt64();
 			Index4 = inStream.ReadInt32();
 			Index5 = inStream.ReadInt32();
 			Index6 = inStream.ReadInt32();
-			Index7 = inStream.ReadInt32();
-			Index8 = inStream.ReadInt32();
-			Unknown9 = inStream.ReadInt32();
-			Unknown10 = inStream.ReadInt32();
+			Unknown9 = inStream.ReadInt64();
 			Unknown11 = inStream.ReadInt32();
+			Unknown12 = inStream.ReadInt32();
+			Unknown13 = inStream.ReadInt64();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -48,19 +47,19 @@ namespace LibDat.Files
 			outStream.Write(Index1);
 			outStream.Write(Index2);
 			outStream.Write(Index3);
+			outStream.Write(Unknown4);
 			outStream.Write(Index4);
 			outStream.Write(Index5);
 			outStream.Write(Index6);
-			outStream.Write(Index7);
-			outStream.Write(Index8);
 			outStream.Write(Unknown9);
-			outStream.Write(Unknown10);
 			outStream.Write(Unknown11);
+			outStream.Write(Unknown12);
+			outStream.Write(Unknown13);
 		}
 
 		public override int GetSize()
 		{
-			return 0x30;
+			return 0x3C;
 		}
 	}
 }
