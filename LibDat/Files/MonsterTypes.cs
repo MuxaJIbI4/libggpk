@@ -16,6 +16,8 @@ namespace LibDat.Files
 		public int Unknown6 { get; set; }
 		public int Unknown7 { get; set; }
 		public int Unknown8 { get; set; }
+		public int Unknown9 { get; set; }
+		public int Unknown10 { get; set; }
 
 		public MonsterTypes(BinaryReader inStream)
 		{
@@ -30,6 +32,8 @@ namespace LibDat.Files
 			Unknown6 = inStream.ReadInt32();
 			Unknown7 = inStream.ReadInt32();
 			Unknown8 = inStream.ReadInt32();
+			Unknown9 = inStream.ReadInt32();
+			Unknown10 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -45,11 +49,13 @@ namespace LibDat.Files
 			outStream.Write(Unknown6);
 			outStream.Write(Unknown7);
 			outStream.Write(Unknown8);
+			outStream.Write(Unknown9);
+			outStream.Write(Unknown10);
 		}
 
 		public override int GetSize()
 		{
-			return 0x29;
+			return 0x31;
 		}
 	}
 }

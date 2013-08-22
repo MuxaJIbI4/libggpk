@@ -50,6 +50,8 @@ namespace LibDat.Files
 		// possibly [StringIndex] if previous is 0?
 		public int Unknown25 { get; set; }
 		public Int64 Unknown26 { get; set; }
+		public int Unknown27 { get; set; }
+		public int Unknown28 { get; set; }
 
 		public Mods(BinaryReader inStream)
 		{
@@ -81,6 +83,8 @@ namespace LibDat.Files
 			Unknown24 = inStream.ReadInt32();
 			Unknown25 = inStream.ReadInt32();
 			Unknown26 = inStream.ReadInt64();
+			Unknown27 = inStream.ReadInt32();
+			Unknown28 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -113,12 +117,14 @@ namespace LibDat.Files
 			outStream.Write(Unknown24);
 			outStream.Write(Unknown25);
 			outStream.Write(Unknown26);
+			outStream.Write(Unknown27);
+			outStream.Write(Unknown28);
 
 		}
 
 		public override int GetSize()
 		{
-			return 0x88;
+			return 0x90;
 		}
 	}
 }
