@@ -20,10 +20,12 @@ namespace LibDat.Files
 		public int Unknown8 { get; set; }
 		public int Unknown9 { get; set; }
 		[StringIndex]
-		public int Unknown10 { get; set; }
+		public int ArtPath { get; set; }
 		public Int64 Unknown11 { get; set; }
 		[StringIndex]
-		public int Unknown13 { get; set; }
+		public int YoutubeVideo { get; set; }
+		[StringIndex]
+		public int LargeArtPath { get; set; }
 
 
 		public ShopItem(BinaryReader inStream)
@@ -39,9 +41,10 @@ namespace LibDat.Files
 			Unknown7 = inStream.ReadInt32();
 			Unknown8 = inStream.ReadInt32();
 			Unknown9 = inStream.ReadInt32();
-			Unknown10 = inStream.ReadInt32();
+			ArtPath = inStream.ReadInt32();
 			Unknown11 = inStream.ReadInt64();
-			Unknown13 = inStream.ReadInt32();
+			YoutubeVideo = inStream.ReadInt32();
+			LargeArtPath = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -57,14 +60,15 @@ namespace LibDat.Files
 			outStream.Write(Unknown7);
 			outStream.Write(Unknown8);
 			outStream.Write(Unknown9);
-			outStream.Write(Unknown10);
+			outStream.Write(ArtPath);
 			outStream.Write(Unknown11);
-			outStream.Write(Unknown13);
+			outStream.Write(YoutubeVideo);
+			outStream.Write(LargeArtPath);
 		}
 
 		public override int GetSize()
 		{
-			return 0x39;
+			return 0x3D;
 		}
 	}
 }

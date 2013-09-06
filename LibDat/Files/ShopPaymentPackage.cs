@@ -10,6 +10,7 @@ namespace LibDat.Files
 		public int Text { get; set; }
 		public int Coins { get; set; }
 		public int Price { get; set; }
+		public int Unknown4 { get; set; }
 
 		public ShopPaymentPackage(BinaryReader inStream)
 		{
@@ -17,6 +18,7 @@ namespace LibDat.Files
 			Text = inStream.ReadInt32();
 			Coins = inStream.ReadInt32();
 			Price = inStream.ReadInt32();
+			Unknown4 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -25,11 +27,12 @@ namespace LibDat.Files
 			outStream.Write(Text);
 			outStream.Write(Coins);
 			outStream.Write(Price);
+			outStream.Write(Unknown4);
 		}
 
 		public override int GetSize()
 		{
-			return 0x10;
+			return 0x14;
 		}
 	}
 }
