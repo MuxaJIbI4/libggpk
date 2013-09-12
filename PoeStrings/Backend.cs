@@ -115,6 +115,15 @@ namespace PoeStrings
 
 			foreach (var datTranslation in AllDatTranslations)
 			{
+				// Map of originalText -> Translation containing all translations to apply
+				Dictionary<string, Translation> translationsToApply = (from n in datTranslation.Value.Translations
+																	   where n.Status == Translation.TranslationStatus.NeedToApply
+																	   select n).ToDictionary(k => k.OriginalText);
+				if (translationsToApply.Count == 0)
+				{
+					continue;
+				}
+
 				// Record we will be translating with data from translationTable
 				FileRecord datRecord = fileRecordMap[datTranslation.Value.DatName];
 
@@ -123,11 +132,6 @@ namespace PoeStrings
 
 				// Dat parser for changing the actual strings
 				DatContainer dc = new DatContainer(new MemoryStream(datBytes), datTranslation.Value.DatName);
-
-				// Map of originalText -> Translation containing all translations to apply
-				Dictionary<string, Translation> translationsToApply = (from n in datTranslation.Value.Translations
-																	   where n.Status == Translation.TranslationStatus.NeedToApply
-																	   select n).ToDictionary(k => k.OriginalText);
 
 				// Replace the actual strings
 				foreach (var item in dc.DataEntries)

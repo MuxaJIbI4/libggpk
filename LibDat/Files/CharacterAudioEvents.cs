@@ -57,12 +57,19 @@ namespace LibDat.Files
 		public override void Save(BinaryWriter outStream)
 		{
 			outStream.Write(Id);
+			outStream.Write(SoundMaruaderPrefixCount);
 			outStream.Write(SoundMaruader);
+			outStream.Write(SoundRangerPrefixCount);
 			outStream.Write(SoundRanger);
+			outStream.Write(SoundWitchPrefixCount);
 			outStream.Write(SoundWitch);
+			outStream.Write(SoundDualistPrefixCount);
 			outStream.Write(SoundDualist);
+			outStream.Write(SoundShadowPrefixCount);
 			outStream.Write(SoundShadow);
+			outStream.Write(SoundTemplarPrefixCount);
 			outStream.Write(SoundTemplar);
+			outStream.Write(Index7PrefixCount);
 			outStream.Write(Index7);
 			outStream.Write(Unknown0);
 			outStream.Write(Unknown1);

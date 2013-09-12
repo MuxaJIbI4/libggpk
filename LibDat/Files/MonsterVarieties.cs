@@ -160,6 +160,7 @@ namespace LibDat.Files
 			outStream.Write(Unknown20);
 			outStream.Write(Unknown21);
 			outStream.Write(Unknown22);
+			outStream.Write(Unknown23);
 			outStream.Write(Unknown24);
 			outStream.Write(Unknown25);
 			outStream.Write(Unknown26);
@@ -180,6 +181,7 @@ namespace LibDat.Files
 			outStream.Write(Unknown41);
 			outStream.Write(Unknown42);
 			outStream.Write(Unknown43);
+			outStream.Write(Unknown44);
 			outStream.Write(Unknown45);
 			outStream.Write(Unknown46);
 			outStream.Write(Unknown47);

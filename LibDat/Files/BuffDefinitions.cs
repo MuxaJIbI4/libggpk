@@ -66,6 +66,8 @@ namespace LibDat.Files
 			outStream.Write(Flag2);
 			outStream.Write(Unknown5);
 			outStream.Write(Unknown6);
+			outStream.Write(Flag3);
+			outStream.Write(Flag4);
 			outStream.Write(Unknown7);
 		}
 
