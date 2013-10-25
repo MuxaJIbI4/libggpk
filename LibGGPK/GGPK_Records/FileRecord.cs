@@ -126,7 +126,7 @@ namespace LibGGPK
 		{
 			byte[] buffer = new byte[DataLength];
 
-			using (var fs = File.Open(ggpkPath, FileMode.Open))
+			using (var fs = File.Open(ggpkPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
 			{
 				fs.Seek(DataBegin, SeekOrigin.Begin);
 				fs.Read(buffer, 0, buffer.Length);

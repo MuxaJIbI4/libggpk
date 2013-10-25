@@ -52,7 +52,15 @@ namespace VisualGGPK
 			}), null);
 		}
 
-		/// <summary>
+	    private void UpdateTitle(string newTitle)
+	    {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                Title = newTitle;
+            }), null);
+	    }
+
+	    /// <summary>
 		/// Reloads the entire content.ggpk, rebuilds the tree
 		/// </summary>
 		private void ReloadGGPK()
@@ -75,6 +83,12 @@ namespace VisualGGPK
 					Output(string.Format(Settings.Strings["ReloadGGPK_Failed"], ex.Message));
 					return;
 				}
+
+                if (content.IsReadOnly)
+                {
+                    Output(Settings.Strings["ReloadGGPK_ReadOnly"] + Environment.NewLine);
+                    UpdateTitle(Settings.Strings["MainWindow_Title_Readonly"]);
+                }
 
 				OutputLine(Settings.Strings["ReloadGGPK_Traversing_Tree"]);
 
@@ -337,7 +351,7 @@ namespace VisualGGPK
 					File.Move(extractedCSV, extractedCSV + ".csv");
 					extractedCSV = extractedCSV + ".csv";
 
-					using (FileStream inStream = File.OpenRead(extractedFileName))
+					using (FileStream inStream = File.Open(extractedFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
 					{
 						DatWrapper tempWrapper = new DatWrapper(inStream, selectedRecord.Name);
 						File.WriteAllText(extractedCSV, tempWrapper.Dat.GetCSV());
@@ -398,6 +412,12 @@ namespace VisualGGPK
 		/// <param name="recordToReplace"></param>
 		private void ReplaceItem(FileRecord recordToReplace)
 		{
+            if (content.IsReadOnly)
+            {
+                MessageBox.Show(Settings.Strings["ReplaceItem_Readonly"], Settings.Strings["ReplaceItem_ReadonlyCaption"]);
+                return;
+            }
+
 			try
 			{
 				OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -458,6 +478,12 @@ namespace VisualGGPK
 		/// <param name="archivePath">Path to archive containing</param>
 		private void HandleDropArchive(string archivePath)
 		{
+            if (content.IsReadOnly)
+            {
+                MessageBox.Show(Settings.Strings["ReplaceItem_Readonly"], Settings.Strings["ReplaceItem_ReadonlyCaption"]);
+                return;
+            }
+
 			OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropArchive_Info"], archivePath));
 
 			using (ZipFile zipFile = new ZipFile(archivePath))
@@ -500,6 +526,12 @@ namespace VisualGGPK
 		/// <param name="fileName">Path of file to replace currently selected item with.</param>
 		private void HandleDropFile(string fileName)
 		{
+            if (content.IsReadOnly)
+            {
+                MessageBox.Show(Settings.Strings["ReplaceItem_Readonly"], Settings.Strings["ReplaceItem_ReadonlyCaption"]);
+                return;
+            }
+
 			FileRecord record = treeView1.SelectedItem as FileRecord;
 			if (record == null)
 			{
@@ -522,6 +554,12 @@ namespace VisualGGPK
 		/// <param name="baseDirectory">Directory containing files to replace</param>
 		private void HandleDropDirectory(string baseDirectory)
 		{
+            if (content.IsReadOnly)
+            {
+                MessageBox.Show(Settings.Strings["ReplaceItem_Readonly"], Settings.Strings["ReplaceItem_ReadonlyCaption"]);
+                return;
+            }
+
 			string[] filesToReplace = Directory.GetFiles(baseDirectory, "*.*", SearchOption.AllDirectories);
 			int baseDirectoryNameLength = Path.GetFileName(baseDirectory).Length;
 
@@ -539,6 +577,8 @@ namespace VisualGGPK
 				RecordsByPath[fixedFileName].ReplaceContents(ggpkPath, item, content.FreeRoot);
 			}
 		}
+
+
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
@@ -672,11 +712,20 @@ namespace VisualGGPK
 
 		private void Window_PreviewDrop_1(object sender, DragEventArgs e)
 		{
-			e.Effects = DragDropEffects.Link;
+            if (!content.IsReadOnly)
+            {
+                e.Effects = DragDropEffects.Link;
+            }
 		}
 
 		private void Window_Drop_1(object sender, DragEventArgs e)
 		{
+            if (content.IsReadOnly)
+            {
+                MessageBox.Show(Settings.Strings["ReplaceItem_Readonly"], Settings.Strings["ReplaceItem_ReadonlyCaption"]);
+                return;
+            }
+
 			if (!e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop))
 			{
 				return;

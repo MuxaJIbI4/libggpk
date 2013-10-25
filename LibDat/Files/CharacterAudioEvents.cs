@@ -26,8 +26,6 @@ namespace LibDat.Files
 		public int Index7 { get; set; } // Sound file for the next class?
 		public int Unknown0 { get; set; }
 		public int Unknown1 { get; set; }
-		public int Unknown2 { get; set; }
-		[StringIndex]
 		public int Index8 { get; set; } // Sound for all classes?
 
 
@@ -50,7 +48,6 @@ namespace LibDat.Files
 			Index7 = inStream.ReadInt32();
 			Unknown0 = inStream.ReadInt32();
 			Unknown1 = inStream.ReadInt32();
-			Unknown2 = inStream.ReadInt32();
 			Index8 = inStream.ReadInt32();
 		}
 
@@ -73,13 +70,12 @@ namespace LibDat.Files
 			outStream.Write(Index7);
 			outStream.Write(Unknown0);
 			outStream.Write(Unknown1);
-			outStream.Write(Unknown2);
 			outStream.Write(Index8);
 		}
 
 		public override int GetSize()
 		{
-			return 0x4c;
+			return 72;
 		}
 	}
 }

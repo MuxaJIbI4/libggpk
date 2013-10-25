@@ -95,7 +95,9 @@ namespace LibGGPK
 			}
 
 			if (entryIndex == -1)
-				throw new Exception("Entry not found!");
+			{
+				throw new ApplicationException("Entry not found!");
+			}
 
 			using (FileStream ggpkFileStream = File.Open(ggpkPath, FileMode.Open))
 			{

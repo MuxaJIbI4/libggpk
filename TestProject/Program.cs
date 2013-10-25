@@ -35,7 +35,14 @@ namespace TestProject
 
 		public static void Main(string[] args)
 		{
-			new Program();
+            if (args.Length != 1)
+            {
+                Console.WriteLine("Derp");
+                return;
+            }
+            DumpDat(args[0]);
+		    Console.WriteLine(  "Press any key to continue...");
+		    Console.ReadLine(); //new Program();
 		}
 
 		private const string ggpkPath = @"o:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk";
@@ -43,16 +50,16 @@ namespace TestProject
 
 		public Program()
 		{
-			GGPK content = new GGPK();
-			content.Read(ggpkPath, Output);
-
-			RecordsByPath = new Dictionary<string, FileRecord>(content.RecordOffsets.Count);
-			DirectoryTreeNode.TraverseTreePostorder(content.DirectoryRoot, null, n => RecordsByPath.Add(n.GetDirectoryPath() + n.Name, n as FileRecord));
-
-			foreach (var item in RecordsByPath)
-			{
-				Console.WriteLine(item.Key + " -> " + item.Value.Name);
-			}
+			//GGPK content = new GGPK();
+			//content.Read(ggpkPath, Output);
+            //
+			//RecordsByPath = new Dictionary<string, FileRecord>(content.RecordOffsets.Count);
+			//DirectoryTreeNode.TraverseTreePostorder(content.DirectoryRoot, null, n => RecordsByPath.Add(n.GetDirectoryPath() + n.Name, n as FileRecord));
+            //
+			//foreach (var item in RecordsByPath)
+			//{
+			//	Console.WriteLine(item.Key + " -> " + item.Value.Name);
+			//}
 		}
 
 
@@ -107,17 +114,27 @@ namespace TestProject
 							break;
 						}
 					}
+
+
 					br.BaseStream.Seek(4, SeekOrigin.Begin);
 
 					int entrySize = dataTableStart / entryCount;
+				    Console.WriteLine("0x{0:X2}", entrySize);
+                    for (int i = 0; i < entrySize/4; i++)
+				    {
+				        sb.Append("Unknown" + i + "\t\t");
+				    }
+                    sb.AppendLine();
 
-
-					sb.AppendLine(Path.GetFileNameWithoutExtension(filePath));
+				    //sb.AppendLine(Path.GetFileNameWithoutExtension(filePath));
 					for (int i = 0; i < entryCount; i++)
 					{
 						byte[] data = br.ReadBytes(entrySize);
 						for (int j = 0; j < data.Length; j++)
 						{
+						    if (j != 0 && j%4 == 0)
+						        sb.Append("\t");
+
 							sb.AppendFormat("{0:X2} ", data[j]);
 						}
 						sb.AppendLine();

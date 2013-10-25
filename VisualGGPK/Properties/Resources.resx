@@ -215,31 +215,43 @@ Details: {0}</value>
   <data name="DatViewer_Button_Save" xml:space="preserve">
     <value>Save</value>
   </data>
-	<data name="MainWindow_Drop_Failed" xml:space="preserve">
+  <data name="MainWindow_Drop_Failed" xml:space="preserve">
     <value>Can only drop a single file, directory, or zip file</value>
   </data>
-	<data name="MainWindow_Window_Drop_Confirm" xml:space="preserve">
+  <data name="MainWindow_Window_Drop_Confirm" xml:space="preserve">
     <value>Replace files?</value>
   </data>
-	<data name="MainWindow_Window_Drop_Confirm_Caption" xml:space="preserve">
+  <data name="MainWindow_Window_Drop_Confirm_Caption" xml:space="preserve">
     <value>Confirm replace</value>
   </data>
-	<data name="MainWindow_HandleDropDirectory_Count" xml:space="preserve">
+  <data name="MainWindow_HandleDropDirectory_Count" xml:space="preserve">
     <value>File count = {0}</value>
   </data>
-	<data name="MainWindow_HandleDropDirectory_Failed" xml:space="preserve">
+  <data name="MainWindow_HandleDropDirectory_Failed" xml:space="preserve">
     <value>Unable to replace file {0} -&gt; Missing</value>
   </data>
-	<data name="MainWindow_HandleDropDirectory_Replace" xml:space="preserve">
+  <data name="MainWindow_HandleDropDirectory_Replace" xml:space="preserve">
     <value>Replacing {0}</value>
   </data>
-	<data name="MainWindow_HandleDropFile_Failed" xml:space="preserve">
+  <data name="MainWindow_HandleDropFile_Failed" xml:space="preserve">
     <value>Must select a file to replace in the tree view</value>
   </data>
-	<data name="MainWindow_HandleDropFile_Replace" xml:space="preserve">
+  <data name="MainWindow_HandleDropFile_Replace" xml:space="preserve">
     <value>Replacing {0}{1}</value>
   </data>
-	<data name="MainWindow_HandleDropArchive_Info" xml:space="preserve">
+  <data name="MainWindow_HandleDropArchive_Info" xml:space="preserve">
     <value>Applying contents of {0}</value>
+  </data>
+  <data name="ReloadGGPK_ReadOnly" xml:space="preserve">
+    <value>***Opening GGPK in read-only mode ***</value>
+  </data>
+  <data name="ReplaceItem_Readonly" xml:space="preserve">
+    <value>GGPK open in read-only mode</value>
+  </data>
+  <data name="ReplaceItem_Readonly_Caption" xml:space="preserve">
+    <value>Cannot write to GGPK</value>
+  </data>
+  <data name="MainWindow_Title_Readonly" xml:space="preserve">
+    <value>VisualGGPK (Read-Only)</value>
   </data>
 </root>

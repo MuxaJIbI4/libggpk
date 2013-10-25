@@ -25,6 +25,10 @@ namespace LibDat.Files
                 public int Unknown17 { get; set; }
                 public int Unknown18 { get; set; }
                 public int Unknown19 { get; set; }
+                public int Unknown20 { get; set; }
+                public bool Flag0 { get; set; }
+                public bool Flag1 { get; set; }
+                public bool Flag2 { get; set; }
 
                 public NPCTalk(BinaryReader inStream)
                 {
@@ -48,6 +52,10 @@ namespace LibDat.Files
                         Unknown17 = inStream.ReadInt32();
                         Unknown18 = inStream.ReadInt32();
                         Unknown19 = inStream.ReadInt32();
+                        Unknown20 = inStream.ReadInt32();
+                        Flag0 = inStream.ReadBoolean();
+                        Flag1 = inStream.ReadBoolean();
+                        Flag2 = inStream.ReadBoolean();
                 }
 
                 public override void Save(BinaryWriter outStream)
@@ -72,11 +80,15 @@ namespace LibDat.Files
                         outStream.Write(Unknown17);
                         outStream.Write(Unknown18);
                         outStream.Write(Unknown19);
+                        outStream.Write(Unknown20);
+                        outStream.Write(Flag0);
+                        outStream.Write(Flag1);
+                        outStream.Write(Flag2);
                 }
 
                 public override int GetSize()
                 {
-                        return 0x50;
+                        return 0x57;
                 }
         }
 }

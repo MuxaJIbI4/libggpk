@@ -29,6 +29,9 @@ namespace LibGGPK
 		/// </summary>
 		private const int EstimatedFileCount = 175000;
 
+		public bool IsReadOnly { get { return isReadOnly; } }
+		private bool isReadOnly = false;
+
 		public GGPK()
 		{
 			RecordOffsets = new Dictionary<long, BaseRecord>(EstimatedFileCount);
@@ -43,7 +46,7 @@ namespace LibGGPK
 		{
 			float previousPercentComplete = 0.0f;
 
-			using (FileStream fs = File.Open(pathToGgpk, FileMode.Open))
+			using (FileStream fs = Utils.OpenFile(pathToGgpk, out isReadOnly))
 			{
 				BinaryReader br = new BinaryReader(fs);
 
