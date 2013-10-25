@@ -41,16 +41,17 @@ namespace LibGGPK
 		/// <summary>
 		/// Types of data a file can contain
 		/// </summary>
-		public enum DataFormat
-		{
-			Unknown,
-			Image,
-			Ascii,
-			Unicode,
-			RichText,
-			Sound,
-			Dat,
-		}
+        public enum DataFormat
+        {
+            Unknown,
+            Image,
+            Ascii,
+            Unicode,
+            RichText,
+            Sound,
+            Dat,
+            TextureDDS,
+        }
 
 		public FileRecord(uint length, BinaryReader br)
 		{
@@ -258,7 +259,7 @@ namespace LibGGPK
 			{".csv", DataFormat.Ascii},
 			{".dat", DataFormat.Dat},
 			{".dct", DataFormat.Unicode},
-			{".dds", DataFormat.Unknown},
+			{".dds", DataFormat.TextureDDS},
 			{".ddt", DataFormat.Unicode},
 			{".dgr", DataFormat.Unicode},
 			{".dlp", DataFormat.Unicode},

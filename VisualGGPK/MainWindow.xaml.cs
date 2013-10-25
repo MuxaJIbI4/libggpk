@@ -17,6 +17,8 @@ using System.Data;
 using Microsoft.Win32;
 using System.Threading;
 using System.Diagnostics;
+using KUtility;
+using System.Drawing.Imaging;
 
 namespace VisualGGPK
 {
@@ -202,7 +204,10 @@ namespace VisualGGPK
 				{
 					case FileRecord.DataFormat.Image:
 						DisplayImage(selectedRecord);
-						break;
+                        break;
+                    case FileRecord.DataFormat.TextureDDS:
+                        DisplayDDS(selectedRecord);
+                        break;
 					case FileRecord.DataFormat.Ascii:
 						DisplayAscii(selectedRecord);
 						break;
@@ -309,6 +314,30 @@ namespace VisualGGPK
 				imageOutput.Source = bmp;
 			}
 		}
+
+        /// <summary>
+        /// Displays the contents of a FileRecord in the ImageBox (DDS Texture mode)
+        /// </summary>
+        /// <param name="selectedRecord">FileRecord to display</param>
+        private void DisplayDDS(FileRecord selectedRecord)
+        {
+            byte[] buffer = selectedRecord.ReadData(ggpkPath);
+            imageOutput.Visibility = System.Windows.Visibility.Visible;
+
+            DDSImage dds = new DDSImage(buffer);
+                
+			using (MemoryStream ms = new MemoryStream())
+			{
+                dds.images[0].Save(ms, ImageFormat.Png);
+
+				BitmapImage bmp = new BitmapImage();
+				bmp.BeginInit();
+				bmp.CacheOption = BitmapCacheOption.OnLoad;
+				bmp.StreamSource = ms;
+				bmp.EndInit();
+				imageOutput.Source = bmp;
+			}
+        }
 
 		/// <summary>
 		/// Exports the specified FileRecord to disk
