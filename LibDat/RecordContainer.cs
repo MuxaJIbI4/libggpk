@@ -140,6 +140,13 @@ namespace LibDat
 		private void Read(BinaryReader inStream)
 		{
 			int numberOfEntries = inStream.ReadInt32();
+			if (inStream.ReadUInt64() == 0xBBbbBBbbBBbbBBbb)
+			{
+				Entries = new List<BaseDat>();
+				return;
+			}
+			inStream.BaseStream.Seek(-8, SeekOrigin.Current);
+
 			Entries = new List<BaseDat>(numberOfEntries);
 
 			if (DatType == null)
