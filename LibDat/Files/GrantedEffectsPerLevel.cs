@@ -35,6 +35,7 @@ namespace LibDat.Files
 		public int Unknown28 { get; set; }
 		public int Unknown29 { get; set; }
 		public int Unknown30 { get; set; }
+		public bool Flag0 { get; set; }
 
 		public GrantedEffectsPerLevel(BinaryReader inStream)
 		{
@@ -69,6 +70,7 @@ namespace LibDat.Files
 			Unknown28 = inStream.ReadInt32();
 			Unknown29 = inStream.ReadInt32();
 			Unknown30 = inStream.ReadInt32();
+			Flag0 = inStream.ReadBoolean();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -104,11 +106,12 @@ namespace LibDat.Files
 			outStream.Write(Unknown28);
 			outStream.Write(Unknown29);
 			outStream.Write(Unknown30);
+			outStream.Write(Flag0);
 		}
 
 		public override int GetSize()
 		{
-			return 0x7C;
+			return 0x7D;
 		}
 	}
 }
