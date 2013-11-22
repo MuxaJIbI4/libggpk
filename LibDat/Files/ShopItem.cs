@@ -26,6 +26,7 @@ namespace LibDat.Files
 		public int YoutubeVideo { get; set; }
 		[StringIndex]
 		public int LargeArtPath { get; set; }
+		public int Unknown15 { get; set; }
 
 
 		public ShopItem(BinaryReader inStream)
@@ -45,6 +46,7 @@ namespace LibDat.Files
 			Unknown11 = inStream.ReadInt64();
 			YoutubeVideo = inStream.ReadInt32();
 			LargeArtPath = inStream.ReadInt32();
+			Unknown15 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -64,11 +66,12 @@ namespace LibDat.Files
 			outStream.Write(Unknown11);
 			outStream.Write(YoutubeVideo);
 			outStream.Write(LargeArtPath);
+			outStream.Write(Unknown15);
 		}
 
 		public override int GetSize()
 		{
-			return 0x3D;
+			return 0x41;
 		}
 	}
 }
