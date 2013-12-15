@@ -12,6 +12,10 @@ namespace LibDat.Files
 		public int Unknown2 { get; set; }
 		[StringIndex] // UserStringIndex?
 		public int Unknown3 { get; set; }
+		[StringIndex] 
+		public int Unknown4 { get; set; }
+		[StringIndex] 
+		public int Unknown5 { get; set; }
 
 		public ShopCategory()
 		{
@@ -23,6 +27,8 @@ namespace LibDat.Files
 			Unknown1 = inStream.ReadInt32();
 			Unknown2 = inStream.ReadInt32();
 			Unknown3 = inStream.ReadInt32();
+			Unknown4 = inStream.ReadInt32();
+			Unknown5 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -31,11 +37,13 @@ namespace LibDat.Files
 			outStream.Write(Unknown1);
 			outStream.Write(Unknown2);
 			outStream.Write(Unknown3);
+			outStream.Write(Unknown4);
+			outStream.Write(Unknown5);
 		}
 
 		public override int GetSize()
 		{
-			return 0x10;
+			return 0x18;
 		}
 	}
 }
