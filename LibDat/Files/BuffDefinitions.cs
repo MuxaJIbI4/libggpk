@@ -11,7 +11,7 @@ namespace LibDat.Files
 		public int Description { get; set; }
 		public bool Invisible { get; set; }
 		public bool Removable { get; set; }
-		[StringIndex]
+        [UserStringIndex]
 		public int Name { get; set; }
 		public int Unknown0 { get; set; }
 		public int Unknown1 { get; set; }

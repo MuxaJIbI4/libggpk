@@ -9,7 +9,7 @@ namespace LibDat.Files
 		public int Index0 { get; set; }
 		public bool Flag0 { get; set; }
 		public int Unknown0 { get; set; }
-		[StringIndex] // Translatable?
+		[UserStringIndex] // Translatable?
 		public int Index1 { get; set; }
 		[StringIndex]
 		public int Index2 { get; set; }

@@ -9,7 +9,7 @@ namespace LibDat.Files
 		[UserStringIndex]
 		public int Description { get; set; }
 		public int Unknown2 { get; set; }
-		[StringIndex]
+        [UserStringIndex]
 		public int Objective { get; set; }
 		public int Unknown4 { get; set; }
 		public bool Flag0 { get; set; }

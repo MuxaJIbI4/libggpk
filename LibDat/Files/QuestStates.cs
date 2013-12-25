@@ -13,9 +13,10 @@ namespace LibDat.Files
 		public int Unknown5 { get; set; }
 		[UserStringIndex]
 		public int Text { get; set; }
-		public int Unknown6 { get; set; }
 		public bool Flag0 { get; set; }
-		public int Unknown7 { get; set; }
+        [UserStringIndex]
+        public int Message { get; set; }
+        public int Unknown7 { get; set; }
 		public int Data1 { get; set; }
 		public int Unknown9 { get; set; }
 
@@ -29,8 +30,8 @@ namespace LibDat.Files
 			Unknown4 = inStream.ReadInt32();
 			Unknown5 = inStream.ReadInt32();
 			Text = inStream.ReadInt32();
-			Unknown6 = inStream.ReadInt32();
-			Flag0 = inStream.ReadBoolean();
+            Flag0 = inStream.ReadBoolean();
+            Message = inStream.ReadInt32();
 			Unknown7 = inStream.ReadInt32();
 			Data1 = inStream.ReadInt32();
 			Unknown9 = inStream.ReadInt32();
@@ -46,9 +47,9 @@ namespace LibDat.Files
 			outStream.Write(Unknown4);
 			outStream.Write(Unknown5);
 			outStream.Write(Text);
-			outStream.Write(Unknown6);
 			outStream.Write(Flag0);
-			outStream.Write(Unknown7);
+            outStream.Write(Message);
+            outStream.Write(Unknown7);
 			outStream.Write(Data1);
 			outStream.Write(Unknown9);
 		}
