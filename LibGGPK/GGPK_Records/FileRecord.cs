@@ -70,7 +70,7 @@ namespace LibGGPK
 			Hash = br.ReadBytes(32);
 
 			Name = Encoding.Unicode.GetString(br.ReadBytes(2 * (nameLength - 1)));
-			br.ReadBytes(2); // Null terminator
+			br.BaseStream.Seek(2, SeekOrigin.Current); // Null terminator
 			DataBegin = br.BaseStream.Position;
 			DataLength = Length - (8 + nameLength * 2 + 32 + 4);
 
@@ -245,7 +245,9 @@ namespace LibGGPK
 		/// </summary>
 		private static readonly Dictionary<string, DataFormat> KnownFileFormats = new Dictionary<string, DataFormat>()
 		{
+			{"", DataFormat.Unknown},
 			{".act", DataFormat.Unicode},
+			{".ais", DataFormat.Unicode},
 			{".amd", DataFormat.Unicode},
 			{".ao", DataFormat.Unicode},
 			{".aoc", DataFormat.Unicode},
@@ -253,6 +255,7 @@ namespace LibGGPK
 			{".arm", DataFormat.Unicode},
 			{".ast", DataFormat.Unknown},
 			{".atlas", DataFormat.Unicode},
+			{".bat", DataFormat.Unknown},
 			{".cfg", DataFormat.Ascii},
 			{".cht", DataFormat.Unicode},
 			{".clt", DataFormat.Unicode},
@@ -293,8 +296,9 @@ namespace LibGGPK
 			{".sm", DataFormat.Unicode},
 			{".smd", DataFormat.Unknown},
 			{".tdt", DataFormat.Unknown},
+			{".tgm", DataFormat.Unknown},
 			{".tgr", DataFormat.Unicode},
-			{".tgt", DataFormat.Unknown},
+			{".tgt", DataFormat.Unicode},
 			{".tmd", DataFormat.Unknown},
 			{".tsi", DataFormat.Unicode},
 			{".tst", DataFormat.Unicode},

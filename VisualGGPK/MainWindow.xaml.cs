@@ -168,6 +168,7 @@ namespace VisualGGPK
 			richTextOutput.Document.Blocks.Clear();
 			dataGridOutput.ItemsSource = null;
 			textBoxOffset.Text = String.Empty;
+			textBoxSize.Text = String.Empty;
 		}
 
 		/// <summary>
@@ -189,6 +190,7 @@ namespace VisualGGPK
 					return;
 
 				textBoxOffset.Text = selectedDirectory.Record.RecordBegin.ToString("X");
+				textBoxSize.Text = String.Empty;
 				return;
 			}
 
@@ -197,6 +199,7 @@ namespace VisualGGPK
 				return;
 
 			textBoxOffset.Text = selectedRecord.RecordBegin.ToString("X");
+			textBoxSize.Text = selectedRecord.DataLength.ToString();
 
 			try
 			{

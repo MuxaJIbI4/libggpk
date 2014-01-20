@@ -48,6 +48,8 @@
 				<StackPanel Grid.Row="1" Orientation="Horizontal">
 					<Label Name="labelFileOffset" Content="{x:Static Properties:Resources.MainWindow_Label_FileOffset}"/>
 					<TextBox x:Name="textBoxOffset" Width="100" IsReadOnly="True"/>
+					<Label x:Name="labelFileSize" Content="{x:Static Properties:Resources.MainWindow_Label_FileSize}"/>
+					<TextBox x:Name="textBoxSize" Width="100" IsReadOnly="True"/>
 				</StackPanel>
 				
 			</Grid>

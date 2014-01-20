@@ -61,7 +61,7 @@ namespace LibGGPK
 
 			Hash = br.ReadBytes(32);
 			Name = Encoding.Unicode.GetString(br.ReadBytes(2 * (nameLength - 1)));
-			br.ReadBytes(2); // Null terminator
+			br.BaseStream.Seek(2, SeekOrigin.Current); // Null terminator
 
 			EntriesBegin = br.BaseStream.Position;
 			Entries = new DirectoryEntry[totalEntries];

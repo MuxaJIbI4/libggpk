@@ -23,7 +23,10 @@ namespace VisualGGPK
 		{
 			get
 			{
-				return data.Strings;
+				if (data != null)
+					return data.Strings;
+				else
+					return new List<UnicodeString>();
 			}
 		}
 

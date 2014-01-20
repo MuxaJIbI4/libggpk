@@ -254,4 +254,7 @@ Details: {0}</value>
   <data name="MainWindow_Title_Readonly" xml:space="preserve">
     <value>VisualGGPK (Read-Only)</value>
   </data>
+  <data name="MainWindow_Label_FileSize" xml:space="preserve">
+    <value>File Size:</value>
+  </data>
 </root>
