@@ -10,7 +10,7 @@ namespace LibDat.Files
 		public int Text { get; set; }
 		public int Coins { get; set; }
 		public int Price { get; set; }
-		public bool Flag0 { get; set; }
+		public bool AvailableFlag { get; set; }
 		public int Unknown4 { get; set; }
 
 		public ShopPaymentPackage(BinaryReader inStream)
@@ -19,7 +19,7 @@ namespace LibDat.Files
 			Text = inStream.ReadInt32();
 			Coins = inStream.ReadInt32();
 			Price = inStream.ReadInt32();
-			Flag0 = inStream.ReadBoolean();
+			AvailableFlag = inStream.ReadBoolean();
 			Unknown4 = inStream.ReadInt32();
 		}
 
@@ -29,7 +29,7 @@ namespace LibDat.Files
 			outStream.Write(Text);
 			outStream.Write(Coins);
 			outStream.Write(Price);
-			outStream.Write(Flag0);
+			outStream.Write(AvailableFlag);
 			outStream.Write(Unknown4);
 		}
 

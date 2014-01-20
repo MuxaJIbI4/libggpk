@@ -17,7 +17,8 @@ namespace LibDat.Files
 		public bool Flag4 { get; set; }
 		public bool Flag5 { get; set; }
 		public bool Flag6 { get; set; }
-		public Int64 Unknown4 { get; set; }
+		public int StatKey1 { get; set; }
+		public int StatKey2 { get; set; }
 		public bool Flag7 { get; set; }
 
 		public Stats(BinaryReader inStream)
@@ -32,7 +33,8 @@ namespace LibDat.Files
 			Flag4 = inStream.ReadBoolean();
 			Flag5 = inStream.ReadBoolean();
 			Flag6 = inStream.ReadBoolean();
-			Unknown4 = inStream.ReadInt64();
+			StatKey1 = inStream.ReadInt32();
+			StatKey2 = inStream.ReadInt32();
 			Flag7 = inStream.ReadBoolean();
 		}
 
@@ -48,7 +50,8 @@ namespace LibDat.Files
 			outStream.Write(Flag4);
 			outStream.Write(Flag5);
 			outStream.Write(Flag6);
-			outStream.Write(Unknown4);
+			outStream.Write(StatKey1);
+			outStream.Write(StatKey2);
 			outStream.Write(Flag7);
 		}
 

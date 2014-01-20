@@ -11,14 +11,17 @@ namespace LibDat.Files
 		public int Name { get; set; }
 		[UserStringIndex]
 		public int Description { get; set; }
-		public int Unknown3 { get; set; }
-		public int Unknown4 { get; set; }
+		public int Data0Length { get; set; }
+		[DataIndex]
+		public int Data0 { get; set; }
 		public bool Flag0 { get; set; }
-		public int Unknown5 { get; set; }
-		public int Unknown6 { get; set; }
-		public int Unknown7 { get; set; }
-		public int Unknown8 { get; set; }
-		public int Unknown9 { get; set; }
+		public int Data1Length { get; set; }
+		[DataIndex]
+		public int Data1 { get; set; }
+		public int Price { get; set; }
+		public int Data2Length { get; set; }
+		[DataIndex]
+		public int Data2 { get; set; }
 		[StringIndex]
 		public int ArtPath { get; set; }
 		public Int64 Unknown11 { get; set; }
@@ -36,14 +39,14 @@ namespace LibDat.Files
 			Id = inStream.ReadInt32();
 			Name = inStream.ReadInt32();
 			Description = inStream.ReadInt32();
-			Unknown3 = inStream.ReadInt32();
-			Unknown4 = inStream.ReadInt32();
+			Data0Length = inStream.ReadInt32();
+			Data0 = inStream.ReadInt32();
 			Flag0 = inStream.ReadBoolean();
-			Unknown5 = inStream.ReadInt32();
-			Unknown6 = inStream.ReadInt32();
-			Unknown7 = inStream.ReadInt32();
-			Unknown8 = inStream.ReadInt32();
-			Unknown9 = inStream.ReadInt32();
+			Data1Length = inStream.ReadInt32();
+			Data1 = inStream.ReadInt32();
+			Price = inStream.ReadInt32();
+			Data2Length = inStream.ReadInt32();
+			Data2 = inStream.ReadInt32();
 			ArtPath = inStream.ReadInt32();
 			Unknown11 = inStream.ReadInt64();
 			YoutubeVideo = inStream.ReadInt32();
@@ -57,14 +60,14 @@ namespace LibDat.Files
 			outStream.Write(Id);
 			outStream.Write(Name);
 			outStream.Write(Description);
-			outStream.Write(Unknown3);
-			outStream.Write(Unknown4);
+			outStream.Write(Data0Length);
+			outStream.Write(Data0);
 			outStream.Write(Flag0);
-			outStream.Write(Unknown5);
-			outStream.Write(Unknown6);
-			outStream.Write(Unknown7);
-			outStream.Write(Unknown8);
-			outStream.Write(Unknown9);
+			outStream.Write(Data1Length);
+			outStream.Write(Data1);
+			outStream.Write(Price);
+			outStream.Write(Data2Length);
+			outStream.Write(Data2);
 			outStream.Write(ArtPath);
 			outStream.Write(Unknown11);
 			outStream.Write(YoutubeVideo);
