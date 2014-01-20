@@ -15,6 +15,8 @@ namespace LibDat.Files
 		public int ServerLength2 { get; set; }
 		[DataIndex]
 		public int Server2 { get; set; }
+		[StringIndex]
+		public int ShortName { get; set; }
 
 		public Realms(BinaryReader inStream)
 		{
@@ -25,6 +27,7 @@ namespace LibDat.Files
 			Flag0 = inStream.ReadBoolean();
 			ServerLength2 = inStream.ReadInt32();
 			Server2 = inStream.ReadInt32();
+			ShortName = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -36,6 +39,7 @@ namespace LibDat.Files
 			outStream.Write(Flag0);
 			outStream.Write(ServerLength2);
 			outStream.Write(Server2);
+			outStream.Write(ShortName);
 		}
 
 		public override int GetSize()
