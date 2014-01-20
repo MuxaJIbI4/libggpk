@@ -22,8 +22,8 @@ namespace LibDat.Files
 		public int SoundShadow { get; set; }
 		public int SoundTemplarPrefixCount { get; set; }
 		public int SoundTemplar { get; set; }
-		public int Index7PrefixCount { get; set; }
-		public int Index7 { get; set; } // Sound file for the next class?
+		public int SoundScionPrefixCount { get; set; }
+		public int SoundScion { get; set; } // Sound file for the next class?
 		public int Unknown0 { get; set; }
 		public int Unknown1 { get; set; }
 		public int Index8 { get; set; } // Sound for all classes?
@@ -44,8 +44,8 @@ namespace LibDat.Files
 			SoundShadow = inStream.ReadInt32();
 			SoundTemplarPrefixCount = inStream.ReadInt32();
 			SoundTemplar = inStream.ReadInt32();
-			Index7PrefixCount = inStream.ReadInt32();
-			Index7 = inStream.ReadInt32();
+            SoundScionPrefixCount = inStream.ReadInt32();
+            SoundScion = inStream.ReadInt32();
 			Unknown0 = inStream.ReadInt32();
 			Unknown1 = inStream.ReadInt32();
 			Index8 = inStream.ReadInt32();
@@ -66,8 +66,8 @@ namespace LibDat.Files
 			outStream.Write(SoundShadow);
 			outStream.Write(SoundTemplarPrefixCount);
 			outStream.Write(SoundTemplar);
-			outStream.Write(Index7PrefixCount);
-			outStream.Write(Index7);
+            outStream.Write(SoundScionPrefixCount);
+            outStream.Write(SoundScion);
 			outStream.Write(Unknown0);
 			outStream.Write(Unknown1);
 			outStream.Write(Index8);

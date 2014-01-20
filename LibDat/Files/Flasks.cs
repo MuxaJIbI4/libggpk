@@ -13,8 +13,9 @@ namespace LibDat.Files
 		public int Unknown3 { get; set; }
 		public int Unknown4 { get; set; }
 		public Int64 Unknown5 { get; set; }
-		public int Unknown6 { get; set; }
-		public int Unknown7 { get; set; }
+		public int Data0Length { get; set; }
+		[DataIndex]
+		public int Data0 { get; set; }
 
 		public Flasks(BinaryReader inStream)
 		{
@@ -25,8 +26,8 @@ namespace LibDat.Files
 			Unknown3 = inStream.ReadInt32();
 			Unknown4 = inStream.ReadInt32();
 			Unknown5 = inStream.ReadInt64();
-			Unknown6 = inStream.ReadInt32();
-			Unknown7 = inStream.ReadInt32();
+			Data0Length = inStream.ReadInt32();
+			Data0 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -38,8 +39,8 @@ namespace LibDat.Files
 			outStream.Write(Unknown3);
 			outStream.Write(Unknown4);
 			outStream.Write(Unknown5);
-			outStream.Write(Unknown6);
-			outStream.Write(Unknown7);
+			outStream.Write(Data0Length);
+			outStream.Write(Data0);
 		}
 
 		public override int GetSize()

@@ -13,8 +13,9 @@ namespace LibDat.Files
 		public bool Removable { get; set; }
         [UserStringIndex]
 		public int Name { get; set; }
-		public int Unknown0 { get; set; }
-		public int Unknown1 { get; set; }
+		public int Data0Length { get; set; }
+        [DataIndex]
+		public int Data0 { get; set; }
 		public bool Flag0 { get; set; }
 		public int Unknown2 { get; set; }
 		public bool Flag1 { get; set; }
@@ -34,8 +35,8 @@ namespace LibDat.Files
 			Invisible = inStream.ReadBoolean();
 			Removable = inStream.ReadBoolean();
 			Name = inStream.ReadInt32();
-			Unknown0 = inStream.ReadInt32();
-			Unknown1 = inStream.ReadInt32();
+            Data0Length = inStream.ReadInt32();
+            Data0 = inStream.ReadInt32();
 			Flag0 = inStream.ReadBoolean();
 			Unknown2 = inStream.ReadInt32();
 			Flag1 = inStream.ReadBoolean();
@@ -56,8 +57,8 @@ namespace LibDat.Files
 			outStream.Write(Invisible);
 			outStream.Write(Removable);
 			outStream.Write(Name);
-			outStream.Write(Unknown0);
-			outStream.Write(Unknown1);
+            outStream.Write(Data0Length);
+            outStream.Write(Data0);
 			outStream.Write(Flag0);
 			outStream.Write(Unknown2);
 			outStream.Write(Flag1);

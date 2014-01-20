@@ -25,7 +25,7 @@ namespace LibDat.Files
 		public int BaseStrength { get; set; }
 		public int BaseDexterity { get; set; }
 		public int BaseIntelligence { get; set; }
-		public int Unknown10 { get; set; }
+		public int Data0Length { get; set; }
 		[DataIndex]
 		public int Data0 { get; set; }
 		[UserStringIndex]
@@ -57,7 +57,7 @@ namespace LibDat.Files
 			BaseStrength = inStream.ReadInt32();
 			BaseDexterity = inStream.ReadInt32();
 			BaseIntelligence = inStream.ReadInt32();
-			Unknown10 = inStream.ReadInt32();
+            Data0Length = inStream.ReadInt32();
 			Data0 = inStream.ReadInt32();
 			Description = inStream.ReadInt32();
 			Unknown11 = inStream.ReadInt32();
@@ -87,7 +87,7 @@ namespace LibDat.Files
 			outStream.Write(BaseStrength);
 			outStream.Write(BaseDexterity);
 			outStream.Write(BaseIntelligence);
-			outStream.Write(Unknown10);
+            outStream.Write(Data0Length);
 			outStream.Write(Data0);
 			outStream.Write(Description);
 			outStream.Write(Unknown11);

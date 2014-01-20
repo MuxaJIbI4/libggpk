@@ -1,75 +1,77 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace LibDat.Files
 {
 	public class GrantedEffectsPerLevel : BaseDat
 	{
-		public int Unknown0 { get; set; }
+		public Int64 Unknown0 { get; set; }
 		public int Unknown1 { get; set; }
-		public int Unknown2 { get; set; }
-		public int Unknown3 { get; set; }
-		public int Unknown4 { get; set; }
-		public int Unknown5 { get; set; }
-		public int Unknown6 { get; set; }
-		public int Unknown7 { get; set; }
-		public int Unknown8 { get; set; }
-		public int Unknown9 { get; set; }
-		public int Unknown10 { get; set; }
-		public int Unknown11 { get; set; }
-		public int Unknown12 { get; set; }
-		public int Unknown13 { get; set; }
+		public int Data0Length { get; set; }
+		[DataIndex]
+		public int Data0 { get; set; }
+		public int Stat1 { get; set; }
+		public int Stat2 { get; set; }
+		public int Stat3 { get; set; }
+		public int Stat4 { get; set; }
+		public int Stat5 { get; set; }
+		public int Stat6 { get; set; }
+		public int Stat7 { get; set; }
+		public int Stat8 { get; set; }
+		public Int64 Unknown12 { get; set; }
 		public int Unknown14 { get; set; }
 		public int Unknown15 { get; set; }
 		public int Unknown16 { get; set; }
 		public int Unknown17 { get; set; }
-		public int Unknown18 { get; set; }
-		public int Unknown19 { get; set; }
-		public int Unknown20 { get; set; }
-		public int Unknown21 { get; set; }
+		public int Data1Length { get; set; }
+        [DataIndex]
+		public int Data1 { get; set; }
+		public int Data2Length { get; set; }
+        [DataIndex]
+		public int Data2 { get; set; }
 		public int Unknown22 { get; set; }
 		public int Unknown23 { get; set; }
 		public int Unknown24 { get; set; }
 		public int Unknown25 { get; set; }
 		public int Unknown26 { get; set; }
 		public int Unknown27 { get; set; }
-		public int Unknown28 { get; set; }
-		public int Unknown29 { get; set; }
-		public int Unknown30 { get; set; }
+		public int Data3Length { get; set; }
+        [DataIndex]
+		public int Data3 { get; set; }
 		public bool Flag0 { get; set; }
 
 		public GrantedEffectsPerLevel(BinaryReader inStream)
 		{
-			Unknown0 = inStream.ReadInt32();
+			Unknown0 = inStream.ReadInt64();
 			Unknown1 = inStream.ReadInt32();
-			Unknown2 = inStream.ReadInt32();
-			Unknown3 = inStream.ReadInt32();
-			Unknown4 = inStream.ReadInt32();
-			Unknown5 = inStream.ReadInt32();
-			Unknown6 = inStream.ReadInt32();
-			Unknown7 = inStream.ReadInt32();
-			Unknown8 = inStream.ReadInt32();
-			Unknown9 = inStream.ReadInt32();
-			Unknown10 = inStream.ReadInt32();
-			Unknown11 = inStream.ReadInt32();
-			Unknown12 = inStream.ReadInt32();
-			Unknown13 = inStream.ReadInt32();
+			Data0Length = inStream.ReadInt32();
+			Data0 = inStream.ReadInt32();
+			Stat1 = inStream.ReadInt32();
+			Stat2 = inStream.ReadInt32();
+			Stat3 = inStream.ReadInt32();
+			Stat4 = inStream.ReadInt32();
+			Stat5 = inStream.ReadInt32();
+			Stat6 = inStream.ReadInt32();
+			Stat7 = inStream.ReadInt32();
+			Stat8 = inStream.ReadInt32();
+			Unknown12 = inStream.ReadInt64();
+
 			Unknown14 = inStream.ReadInt32();
 			Unknown15 = inStream.ReadInt32();
 			Unknown16 = inStream.ReadInt32();
 			Unknown17 = inStream.ReadInt32();
-			Unknown18 = inStream.ReadInt32();
-			Unknown19 = inStream.ReadInt32();
-			Unknown20 = inStream.ReadInt32();
-			Unknown21 = inStream.ReadInt32();
+			Data1Length = inStream.ReadInt32();
+			Data1 = inStream.ReadInt32();
+			Data2Length = inStream.ReadInt32();
+			Data2 = inStream.ReadInt32();
 			Unknown22 = inStream.ReadInt32();
 			Unknown23 = inStream.ReadInt32();
 			Unknown24 = inStream.ReadInt32();
 			Unknown25 = inStream.ReadInt32();
 			Unknown26 = inStream.ReadInt32();
 			Unknown27 = inStream.ReadInt32();
-			Unknown28 = inStream.ReadInt32();
-			Unknown29 = inStream.ReadInt32();
-			Unknown30 = inStream.ReadInt32();
+			Data3Length = inStream.ReadInt32();
+			Data3 = inStream.ReadInt32();
 			Flag0 = inStream.ReadBoolean();
 		}
 
@@ -77,35 +79,33 @@ namespace LibDat.Files
 		{
 			outStream.Write(Unknown0);
 			outStream.Write(Unknown1);
-			outStream.Write(Unknown2);
-			outStream.Write(Unknown3);
-			outStream.Write(Unknown4);
-			outStream.Write(Unknown5);
-			outStream.Write(Unknown6);
-			outStream.Write(Unknown7);
-			outStream.Write(Unknown8);
-			outStream.Write(Unknown9);
-			outStream.Write(Unknown10);
-			outStream.Write(Unknown11);
+			outStream.Write(Data0Length);
+			outStream.Write(Data0);
+			outStream.Write(Stat1);
+			outStream.Write(Stat2);
+			outStream.Write(Stat3);
+			outStream.Write(Stat4);
+			outStream.Write(Stat5);
+			outStream.Write(Stat6);
+			outStream.Write(Stat7);
+			outStream.Write(Stat8);
 			outStream.Write(Unknown12);
-			outStream.Write(Unknown13);
 			outStream.Write(Unknown14);
 			outStream.Write(Unknown15);
 			outStream.Write(Unknown16);
 			outStream.Write(Unknown17);
-			outStream.Write(Unknown18);
-			outStream.Write(Unknown19);
-			outStream.Write(Unknown20);
-			outStream.Write(Unknown21);
+			outStream.Write(Data1Length);
+			outStream.Write(Data1);
+			outStream.Write(Data2Length);
+			outStream.Write(Data2);
 			outStream.Write(Unknown22);
 			outStream.Write(Unknown23);
 			outStream.Write(Unknown24);
 			outStream.Write(Unknown25);
 			outStream.Write(Unknown26);
 			outStream.Write(Unknown27);
-			outStream.Write(Unknown28);
-			outStream.Write(Unknown29);
-			outStream.Write(Unknown30);
+			outStream.Write(Data3Length);
+			outStream.Write(Data3);
 			outStream.Write(Flag0);
 		}
 

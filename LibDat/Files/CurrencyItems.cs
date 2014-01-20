@@ -6,7 +6,7 @@ namespace LibDat.Files
 	public class CurrencyItems : BaseDat
 	{
 		public Int64 Unknown0 { get; set; }
-		public int Unknown1 { get; set; }
+		public int Stacks { get; set; }
 		public int Unknown2 { get; set; }
 		[StringIndex]
 		public int Action { get; set; }
@@ -24,7 +24,7 @@ namespace LibDat.Files
 		public CurrencyItems(BinaryReader inStream)
 		{
 			Unknown0 = inStream.ReadInt64();
-			Unknown1 = inStream.ReadInt32();
+			Stacks = inStream.ReadInt32();
 			Unknown2 = inStream.ReadInt32();
 			Action = inStream.ReadInt32();
 			Directions = inStream.ReadInt32();
@@ -38,7 +38,7 @@ namespace LibDat.Files
 		public override void Save(BinaryWriter outStream)
 		{
 			outStream.Write(Unknown0);
-			outStream.Write(Unknown1);
+			outStream.Write(Stacks);
 			outStream.Write(Unknown2);
 			outStream.Write(Action);
 			outStream.Write(Directions);

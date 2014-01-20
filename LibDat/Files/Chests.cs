@@ -19,10 +19,12 @@ namespace LibDat.Files
 		public bool Flag3 { get; set; }
 		public bool Flag4 { get; set; }
 		public int Unknown2 { get; set; }
-		public int Unknown3 { get; set; }
-		public int Unknown4 { get; set; }
-		public int Unknown5 { get; set; }
-		public int Unknown6 { get; set; }
+		public int Data0Length { get; set; }
+		[DataIndex]
+		public int Data0 { get; set; }
+		public int Data1Length { get; set; }
+		[DataIndex]
+		public int Data1 { get; set; }
 		public Int64 Unknown7 { get; set; }
 		public bool Flag5 { get; set; }
 
@@ -39,10 +41,10 @@ namespace LibDat.Files
 			Flag3 = inStream.ReadBoolean();
 			Flag4 = inStream.ReadBoolean();
 			Unknown2 = inStream.ReadInt32();
-			Unknown3 = inStream.ReadInt32();
-			Unknown4 = inStream.ReadInt32();
-			Unknown5 = inStream.ReadInt32();
-			Unknown6 = inStream.ReadInt32();
+            Data0Length = inStream.ReadInt32();
+            Data0 = inStream.ReadInt32();
+            Data1Length = inStream.ReadInt32();
+            Data1 = inStream.ReadInt32();
 			Unknown7 = inStream.ReadInt64();
 			Flag5 = inStream.ReadBoolean();
 		}
@@ -60,10 +62,10 @@ namespace LibDat.Files
 			outStream.Write(Flag3);
 			outStream.Write(Flag4);
 			outStream.Write(Unknown2);
-			outStream.Write(Unknown3);
-			outStream.Write(Unknown4);
-			outStream.Write(Unknown5);
-			outStream.Write(Unknown6);
+            outStream.Write(Data0Length);
+            outStream.Write(Data0);
+            outStream.Write(Data1Length);
+            outStream.Write(Data1);
 			outStream.Write(Unknown7);
 			outStream.Write(Flag5);
 		}
