@@ -76,6 +76,7 @@
     <Compile Include="Files\Dances.cs" />
     <Compile Include="Files\Default.cs" />
     <Compile Include="Files\DefaultMonsterStats.cs" />
+    <Compile Include="Files\DescentExiles.cs" />
     <Compile Include="Files\DescentRewardChests.cs" />
     <Compile Include="Files\DescentStarterChest.cs" />
     <Compile Include="Files\Difficulties.cs" />
@@ -105,6 +106,8 @@
     <Compile Include="Files\MapConnections.cs" />
     <Compile Include="Files\MapPins.cs" />
     <Compile Include="Files\Maps.cs" />
+    <Compile Include="Files\MicrotransactionPortalVariations.cs" />
+    <Compile Include="Files\MicrotransactionSocialFrameVariations.cs" />
     <Compile Include="Files\MiscAnimated.cs" />
     <Compile Include="Files\MiscObjects.cs" />
     <Compile Include="Files\ModAuraFlags.cs" />

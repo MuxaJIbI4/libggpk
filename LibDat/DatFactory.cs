@@ -82,6 +82,8 @@ namespace LibDat
 					return typeof(Default);
 				case "DefaultMonsterStats":
 					return typeof(DefaultMonsterStats);
+				case "DescentExiles":
+					return typeof(DescentExiles);
 				case "DescentRewardChests":
 					return typeof(DescentRewardChests);
 				case "DescentStarterChest":
@@ -140,6 +142,10 @@ namespace LibDat
 					return typeof(MapPins);
 				case "Maps":
 					return typeof(Maps);
+				case "MicrotransactionPortalVariations":
+					return typeof(MicrotransactionPortalVariations);
+				case "MicrotransactionSocialFrameVariations":
+					return typeof(MicrotransactionSocialFrameVariations);
 				case "MiscAnimated":
 					return typeof(MiscAnimated);
 				case "MiscObjects":
@@ -335,6 +341,8 @@ namespace LibDat
 					return new Default(inStream);
 				case "DefaultMonsterStats":
 					return new DefaultMonsterStats(inStream);
+				case "DescentExiles":
+					return new DescentExiles(inStream);
 				case "DescentRewardChests":
 					return new DescentRewardChests(inStream);
 				case "DescentStarterChest":
@@ -393,6 +401,10 @@ namespace LibDat
 					return new MapPins(inStream);
 				case "Maps":
 					return new Maps(inStream);
+				case "MicrotransactionPortalVariations":
+					return new MicrotransactionPortalVariations(inStream);
+				case "MicrotransactionSocialFrameVariations":
+					return new MicrotransactionSocialFrameVariations(inStream);
 				case "MiscAnimated":
 					return new MiscAnimated(inStream);
 				case "MiscObjects":
