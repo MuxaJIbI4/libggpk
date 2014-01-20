@@ -763,6 +763,10 @@ namespace VisualGGPK
 				return;
 			}
 
+			// Brint-to-front hack
+			this.Topmost = true;
+			this.Topmost = false;
+
 			textBoxOutput.Text = string.Empty;
 			textBoxOutput.Visibility = System.Windows.Visibility.Visible;
 
