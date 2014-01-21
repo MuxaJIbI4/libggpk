@@ -24,7 +24,7 @@ namespace KUtility {
 		private const int DDPF_RGB = 0x00000040;
 		private const int DDPF_YUV = 0x00000200;
 		private const int DDPF_LUMINANCE = 0x00020000;
-		private const int DDSD_MIPMAPCOUNT    =       0x00020000;
+		private const int DDSD_MIPMAPCOUNT	=	   0x00020000;
 		private const int FOURCC_DXT1 = 0x31545844;
 		private const int FOURCC_DX10 = 0x30315844;
 		private const int FOURCC_DXT5 = 0x35545844;
@@ -56,8 +56,8 @@ namespace KUtility {
 						mipMapCount = header.dwMipMapCount;
 					images = new Bitmap[mipMapCount];
 
-                    int sliceSize = header.dwPitchOrLinearSize > 0 ? header.dwPitchOrLinearSize : header.dwWidth * header.dwHeight * 4;
-                    bdata = r.ReadBytes(sliceSize);
+					int sliceSize = header.dwPitchOrLinearSize > 0 ? header.dwPitchOrLinearSize : header.dwWidth * header.dwHeight * 4;
+					bdata = r.ReadBytes(sliceSize);
 					
 
 					for (int i = 0; i < mipMapCount; ++i) {
@@ -168,10 +168,10 @@ namespace KUtility {
 						}
 					}
 
-                    int px = x + i;
-                    int py = y + j;
-                    GraphicsUnit u = GraphicsUnit.Pixel;
-                    if (image.GetBounds(ref u).Contains(px, py))
+					int px = x + i;
+					int py = y + j;
+					GraphicsUnit u = GraphicsUnit.Pixel;
+					if (image.GetBounds(ref u).Contains(px, py))
 						image.SetPixel(x + i, y + j, finalColor);
 				}
 			}
@@ -278,9 +278,9 @@ namespace KUtility {
 							break;
 					}
 
-                    int px = x + i;
-                    int py = y + j;
-                    GraphicsUnit u = GraphicsUnit.Pixel;
+					int px = x + i;
+					int py = y + j;
+					GraphicsUnit u = GraphicsUnit.Pixel;
 					if (image.GetBounds(ref u).Contains(px, py))
 						image.SetPixel(px, py, finalColor);
 					//image[(y + j)*width + (x + i)] = finalColor;

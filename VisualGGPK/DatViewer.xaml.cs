@@ -127,7 +127,7 @@ namespace VisualGGPK
 			foreach (var propInfo in datType.GetProperties())
 			{
 				DataGridTextColumn col = new DataGridTextColumn();
-				col.Header = propInfo.Name;
+				col.Header = propInfo.Name + "\n[" + propInfo.PropertyType.Name + "]";
 				col.Binding = new Binding(propInfo.Name);
 				dataGridEntries.Columns.Add(col);
 			}

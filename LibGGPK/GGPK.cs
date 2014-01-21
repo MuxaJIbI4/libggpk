@@ -49,14 +49,15 @@ namespace LibGGPK
 			using (FileStream fs = Utils.OpenFile(pathToGgpk, out isReadOnly))
 			{
 				BinaryReader br = new BinaryReader(fs);
+				long streamLength = br.BaseStream.Length;
 
-				while (br.BaseStream.Position < br.BaseStream.Length)
+				while (br.BaseStream.Position < streamLength)
 				{
 					long currentOffset = br.BaseStream.Position;
 					BaseRecord record = RecordFactory.ReadRecord(br);
 					RecordOffsets.Add(currentOffset, record);
 
-					float percentComplete = br.BaseStream.Position / (float)br.BaseStream.Length;
+					float percentComplete = currentOffset / (float)streamLength;
 					if (percentComplete - previousPercentComplete >= 0.10f)
 					{
 						if (output != null)

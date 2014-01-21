@@ -74,6 +74,9 @@ namespace LibGGPK
 			else if (recordOffsets[fileOffset] is FileRecord)
 			{
 				FileRecord currentFile = recordOffsets[fileOffset] as FileRecord;
+				// Skip empty .dat Files under Data/
+				if (root.Name.Equals("Data") && currentFile.DataLength == 12)
+					return;
 				currentFile.ContainingDirectory = root;
 				root.Files.Add(currentFile);
 			}
