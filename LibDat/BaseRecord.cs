@@ -10,6 +10,18 @@ namespace LibDat
 	/// Property or field represents an offset to unknown data in the data section of the .dat file. These entries are not yet explored and are probably incorrect.
 	/// </summary>
 	public class DataIndex : System.Attribute { }
+	/// <summary>
+	/// Property or field represents an offset to uint64 list in the data section of the .dat file
+	/// </summary>
+	public class UInt64Index : System.Attribute { }
+	/// <summary>
+	/// Property or field represents an offset to uint32 list in the data section of the .dat file
+	/// </summary>
+	public class UInt32Index : System.Attribute { }
+	/// <summary>
+	/// Property or field represents an offset to int32 list in the data section of the .dat file
+	/// </summary>
+	public class Int32Index : System.Attribute { }
 
 	public class UserStringIndex : StringIndex
 	{

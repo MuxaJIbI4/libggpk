@@ -92,7 +92,7 @@ namespace LibDat
 					continue;
 
 				int offset = (int)prop.GetValue(entry, null);
-				if (DataEntries.ContainsKey(offset))
+				if (DataEntries.ContainsKey(offset) && !DataEntries[offset].ToString().Equals(""))
 				{
 					continue;
 				}
@@ -105,6 +105,21 @@ namespace LibDat
 				else if (customAttributes.Any(n => n is DataIndex))
 				{
 					DataEntries[offset] = new UnkownData(inStream, offset, DataTableBegin);
+				}
+				else if (customAttributes.Any(n => n is UInt64Index))
+				{
+					var propLength = entry.GetType().GetProperties().Where(x => x.Name == prop.Name+"Length").FirstOrDefault();
+					DataEntries[offset] = new UInt64List(inStream, offset, DataTableBegin, (int)(propLength.GetValue(entry, null)));
+				}
+				else if (customAttributes.Any(n => n is UInt32Index))
+				{
+					var propLength = entry.GetType().GetProperties().Where(x => x.Name == prop.Name + "Length").FirstOrDefault();
+					DataEntries[offset] = new UInt32List(inStream, offset, DataTableBegin, (int)(propLength.GetValue(entry, null)));
+				}
+				else if (customAttributes.Any(n => n is Int32Index))
+				{
+					var propLength = entry.GetType().GetProperties().Where(x => x.Name == prop.Name + "Length").FirstOrDefault();
+					DataEntries[offset] = new Int32List(inStream, offset, DataTableBegin, (int)(propLength.GetValue(entry, null)));
 				}
 			}
 		}
@@ -218,14 +233,14 @@ namespace LibDat
 
 			foreach (var item in DataEntries)
 			{
-				if (!(item.Value is UnicodeString))
-					continue;
-
-				UnicodeString str = item.Value as UnicodeString;
-				if (!string.IsNullOrWhiteSpace(str.NewData))
+				if (item.Value is UnicodeString)
 				{
-					str.Save(outStream);
-					changedOffsets[str.Offset] = str.NewOffset;
+					UnicodeString str = item.Value as UnicodeString;
+					if (!string.IsNullOrWhiteSpace(str.NewData))
+					{
+						str.Save(outStream);
+						changedOffsets[str.Offset] = str.NewOffset;
+					}
 				}
 			}
 

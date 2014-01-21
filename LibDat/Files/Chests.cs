@@ -20,10 +20,10 @@ namespace LibDat.Files
 		public bool Flag4 { get; set; }
 		public int Unknown2 { get; set; }
 		public int Data0Length { get; set; }
-		//[DataIndex]
+		[UInt64Index]
 		public int Data0 { get; set; }
 		public int Data1Length { get; set; }
-		//[DataIndex]
+		[UInt32Index]
 		public int Data1 { get; set; }
 		public Int64 ItemKey { get; set; }
 		public bool Flag5 { get; set; }

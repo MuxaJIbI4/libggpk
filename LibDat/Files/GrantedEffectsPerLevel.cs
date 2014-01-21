@@ -8,7 +8,7 @@ namespace LibDat.Files
 		public Int64 Unknown0 { get; set; }
 		public int Unknown1 { get; set; }
 		public int Data0Length { get; set; }
-		//[DataIndex]
+		[UInt64Index]
 		public int Data0 { get; set; }
 		public int Stat1 { get; set; }
 		public int Stat2 { get; set; }
@@ -24,10 +24,10 @@ namespace LibDat.Files
 		public int Unknown16 { get; set; }
 		public int Unknown17 { get; set; }
 		public int Data1Length { get; set; }
-		//[DataIndex]
+		[UInt64Index]
 		public int Data1 { get; set; }
 		public int Data2Length { get; set; }
-		//[DataIndex]
+		[UInt32Index]
 		public int Data2 { get; set; }
 		public int Unknown22 { get; set; }
 		public int Unknown23 { get; set; }
@@ -36,7 +36,7 @@ namespace LibDat.Files
 		public int Unknown26 { get; set; }
 		public int Unknown27 { get; set; }
 		public int Data3Length { get; set; }
-		//[DataIndex]
+		[UInt64Index]
 		public int Data3 { get; set; }
 		public bool Flag0 { get; set; }
 

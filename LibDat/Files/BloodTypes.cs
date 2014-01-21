@@ -22,7 +22,7 @@ namespace LibDat.Files
 		public int Index6 { get; set; }
 		public Int64 Unknown9 { get; set; }
 		public int Data0Length { get; set; }
-		[DataIndex]
+		[UInt64Index]
 		public int Data0 { get; set; }
 		public Int64 Unknown13 { get; set; }
 

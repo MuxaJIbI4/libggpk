@@ -14,7 +14,7 @@ namespace LibDat.Files
 		[UserStringIndex]
 		public int Name { get; set; }
 		public int Data0Length { get; set; }
-		[DataIndex]
+		[UInt64Index]
 		public int Data0 { get; set; }
 		public bool Flag0 { get; set; }
 		public int Unknown2 { get; set; }

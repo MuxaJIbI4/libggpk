@@ -1,3 +1,5 @@
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -5,26 +7,26 @@ using System.Text;
 namespace LibDat
 {
 	/// <summary>
-	/// Represents a unicode string found in the data section of a .dat file
+	/// Represents a list of UInt32 found in the resource section of a .dat file
 	/// </summary>
-	public class UnicodeString : BaseData
+	public class UInt32List : BaseData
 	{
 		/// <summary>
 		/// Offset in the dat file with respect to the beginning of the data section
 		/// </summary>
 		public long Offset { get; private set; }
 		/// <summary>
-		/// The string
+		/// Number of elements in the list
 		/// </summary>
-		public string Data { get; private set; }
+		public int ListLength { get; private set; }
+		/// <summary>
+		/// The UInt32 list
+		/// </summary>
+		public List<UInt32> Data { get; private set; }
 		/// <summary>
 		/// The replacement string. If this is set then it will replace the original string when it's saved.
 		/// </summary>
 		public string NewData { get; set; }
-		/// <summary>
-		/// Determins if this UnicodeString is a translatable string (eg: not used as an id, path, etc)
-		/// </summary>
-		public bool IsUserString { get; set; }
 		/// <summary>
 		/// Offset of the new string with respect to the beginning of the data section. This will be invalid until save is called.
 		/// </summary>
@@ -32,26 +34,22 @@ namespace LibDat
 		/// <summary>
 		/// Offset of the data section in the .dat file (Starts with 0xbbbbbbbbbbbbbbbb)
 		/// </summary>
-		private readonly long dataTableOffset;
+		public long dataTableOffset;
 
-		public UnicodeString(long offset, long dataTableOffset, string data)
+		public UInt32List(BinaryReader inStream, long offset, long dataTableOffset, int listLength)
 		{
+			this.Data = new List<UInt32>(listLength);
 			this.dataTableOffset = dataTableOffset;
 			this.Offset = offset;
+			this.ListLength = listLength;
 			this.NewData = null;
-			this.IsUserString = false;
-			this.Data = data;
-		}
-		
-		public UnicodeString(BinaryReader inStream, long offset, long dataTableOffset, bool isUserString)
-		{
-			this.dataTableOffset = dataTableOffset;
-			this.Offset = offset;
-			this.NewData = null;
-			this.IsUserString = isUserString;
+			if (listLength == 0) return;
 
 			inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
-			ReadData(inStream);
+			for (int i = 0; i < listLength; ++i)
+			{
+				ReadData(inStream);
+			}
 		}
 
 		/// <summary>
@@ -60,21 +58,12 @@ namespace LibDat
 		/// <param name="inStream">Stream containing the unicode string</param>
 		private void ReadData(BinaryReader inStream)
 		{
-			StringBuilder sb = new StringBuilder();
-
 			while (inStream.BaseStream.Position < inStream.BaseStream.Length)
 			{
-				char ch = inStream.ReadChar();
-				if (ch == 0)
-				{
-					ch = inStream.ReadChar();
-					break;
-				}
-
-				sb.Append(ch);
+				UInt32 u = inStream.ReadUInt32();
+				this.Data.Add(u);
+				break;
 			}
-
-			this.Data = sb.ToString();
 		}
 
 		/// <summary>
@@ -83,19 +72,18 @@ namespace LibDat
 		/// <param name="outStream"></param>
 		public override void Save(BinaryWriter outStream)
 		{
-			this.NewOffset = (int)(outStream.BaseStream.Position - dataTableOffset);
-			string dataToWrite = NewData ?? Data;
-
-			for (int i = 0; i < dataToWrite.Length; i++)
-			{
-				outStream.Write(dataToWrite[i]);
-			}
-			outStream.Write((int)0);
+			//TODO
 		}
 
 		public override string ToString()
 		{
-			return Data;
+			if (Data.Count == 0) return "";
+			StringBuilder sb = new StringBuilder();
+			foreach (var s in Data)
+			{
+				sb.Append(s.ToString()).Append(" ");
+			}
+			return sb.Remove(sb.Length - 1, 1).ToString();
 		}
 	}
 }

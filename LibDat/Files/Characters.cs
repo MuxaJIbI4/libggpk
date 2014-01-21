@@ -26,7 +26,7 @@ namespace LibDat.Files
 		public int BaseDexterity { get; set; }
 		public int BaseIntelligence { get; set; }
 		public int Data0Length { get; set; }
-		[DataIndex]
+		[UInt64Index]
 		public int Data0 { get; set; }
 		[UserStringIndex]
 		public int Description { get; set; }

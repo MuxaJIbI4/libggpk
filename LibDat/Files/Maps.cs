@@ -10,11 +10,13 @@ namespace LibDat.Files
 		public Int64 Unknown2 { get; set; }
 		public Int64 Unknown3 { get; set; }
 		public int Data0Length { get; set; }
+		[UInt64Index]
 		public int Data0 { get; set; }
 		public Int64 Unknown6 { get; set; }
 		public int Data1Length { get; set; }
 		public int Data1 { get; set; }
 		public int Data2Length { get; set; }
+		[UInt64Index]
 		public int Data2 { get; set; }
 
 		public Maps(BinaryReader inStream)

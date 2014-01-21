@@ -16,14 +16,14 @@ namespace LibDat.Files
 		[StringIndex]
 		public int IconPath { get; set; }
 		public int Data0Length { get; set; }
-		[DataIndex]
+		[UInt32Index]
 		public int Data0 { get; set; }
 		public int Unknown1 { get; set; }
 		public int Data1Length { get; set; }
-		[DataIndex]
+		[UInt32Index]
 		public int Data1 { get; set; }
 		public int Data2Length { get; set; }
-		[DataIndex]
+		[UInt32Index]
 		public int Data2 { get; set; }
 		[StringIndex]
 		public int WebsiteDescription { get; set; }

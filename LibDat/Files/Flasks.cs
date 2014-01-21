@@ -14,7 +14,7 @@ namespace LibDat.Files
 		public int Unknown4 { get; set; }
 		public Int64 Unknown5 { get; set; }
 		public int Data0Length { get; set; }
-		[DataIndex]
+		[UInt32Index]
 		public int Data0 { get; set; }
 
 		public Flasks(BinaryReader inStream)
