@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace LibDat.Files
 {
@@ -29,9 +30,8 @@ namespace LibDat.Files
 		[StringIndex]
 		public int WebsiteImage { get; set; }
 		public bool Flag0 { get; set; }
-		public int Unknown4 { get; set; }
+		public Int64 Unknown4 { get; set; }
 		public bool Flag1 { get; set; }
-		public int Unknown5 { get; set; }
 		[StringIndex]
 		public int Metadata { get; set; }
 
@@ -52,9 +52,8 @@ namespace LibDat.Files
 			WebsiteDescription = inStream.ReadInt32();
 			WebsiteImage = inStream.ReadInt32();
 			Flag0 = inStream.ReadBoolean();
-			Unknown4 = inStream.ReadInt32();
+			Unknown4 = inStream.ReadInt64();
 			Flag1 = inStream.ReadBoolean();
-			Unknown5 = inStream.ReadInt32();
 			Metadata = inStream.ReadInt32();
 		}
 
@@ -77,7 +76,6 @@ namespace LibDat.Files
 			outStream.Write(Flag0);
 			outStream.Write(Unknown4);
 			outStream.Write(Flag1);
-			outStream.Write(Unknown5);
 			outStream.Write(Metadata);
 		}
 

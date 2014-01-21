@@ -39,23 +39,22 @@ namespace LibDat.Files
 		public int GenerationType { get; set; }
 		[StringIndex]
 		public int CorrectGroup { get; set; }
-		public int Unknown18 { get; set; }
-		// possibly [StringIndex] ?
-		public int Unknown19 { get; set; }
-		public int Unknown20 { get; set; }
-		public int Unknown21 { get; set; }
+		public int Data0Length { get; set; }
+		public int Data0 { get; set; }
+		public int Data1Length { get; set; }
+		public int Data1 { get; set; }
 		public Int64 Unknown22 { get; set; }
 		public int Unknown23 { get; set; }
-		public int Unknown24 { get; set; }
-		// possibly [StringIndex] if previous is 0?
-		public int Unknown25 { get; set; }
+		public int Data2Length { get; set; }
+		public int Data2 { get; set; }
 		public Int64 Unknown26 { get; set; }
-		public int Unknown27 { get; set; }
-		public int Unknown28 { get; set; }
+		public int Data3Length { get; set; }
+		public int Data3 { get; set; }
 
-		public int Unknown29 { get; set; }
-		public int Unknown30 { get; set; }
-		public int Unknown31 { get; set; }
+		public int Data4Length { get; set; }
+		public int Data4 { get; set; }
+		[StringIndex]
+		public int Metadata { get; set; }
 		public Int64 Unknown32 { get; set; }
 
 
@@ -80,20 +79,20 @@ namespace LibDat.Files
 			Name = inStream.ReadInt32();
 			GenerationType = inStream.ReadInt32();
 			CorrectGroup = inStream.ReadInt32();
-			Unknown18 = inStream.ReadInt32();
-			Unknown19 = inStream.ReadInt32();
-			Unknown20 = inStream.ReadInt32();
-			Unknown21 = inStream.ReadInt32();
+			Data0Length = inStream.ReadInt32();
+			Data0 = inStream.ReadInt32();
+			Data1Length = inStream.ReadInt32();
+			Data1 = inStream.ReadInt32();
 			Unknown22 = inStream.ReadInt64();
 			Unknown23 = inStream.ReadInt32();
-			Unknown24 = inStream.ReadInt32();
-			Unknown25 = inStream.ReadInt32();
+			Data2Length = inStream.ReadInt32();
+			Data2 = inStream.ReadInt32();
 			Unknown26 = inStream.ReadInt64();
-			Unknown27 = inStream.ReadInt32();
-			Unknown28 = inStream.ReadInt32();
-			Unknown29 = inStream.ReadInt32();
-			Unknown30 = inStream.ReadInt32();
-			Unknown31 = inStream.ReadInt32();
+			Data3Length = inStream.ReadInt32();
+			Data3 = inStream.ReadInt32();
+			Data4Length = inStream.ReadInt32();
+			Data4 = inStream.ReadInt32();
+			Metadata = inStream.ReadInt32();
 			Unknown32 = inStream.ReadInt64();
 
 		}
@@ -119,20 +118,20 @@ namespace LibDat.Files
 			outStream.Write(Name);
 			outStream.Write(GenerationType);
 			outStream.Write(CorrectGroup);
-			outStream.Write(Unknown18);
-			outStream.Write(Unknown19);
-			outStream.Write(Unknown20);
-			outStream.Write(Unknown21);
+			outStream.Write(Data0Length);
+			outStream.Write(Data0);
+			outStream.Write(Data1Length);
+			outStream.Write(Data1);
 			outStream.Write(Unknown22);
 			outStream.Write(Unknown23);
-			outStream.Write(Unknown24);
-			outStream.Write(Unknown25);
+			outStream.Write(Data2Length);
+			outStream.Write(Data2);
 			outStream.Write(Unknown26);
-			outStream.Write(Unknown27);
-			outStream.Write(Unknown28);
-			outStream.Write(Unknown29);
-			outStream.Write(Unknown30);
-			outStream.Write(Unknown31);
+			outStream.Write(Data3Length);
+			outStream.Write(Data3);
+			outStream.Write(Data4Length);
+			outStream.Write(Data4);
+			outStream.Write(Metadata);
 			outStream.Write(Unknown32);
 		}
 
