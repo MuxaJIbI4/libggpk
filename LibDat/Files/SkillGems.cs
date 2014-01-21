@@ -11,7 +11,7 @@ namespace LibDat.Files
 		public int Dex { get; set; }
 		public int Int { get; set; }
 		public int Data0Length { get; set; }
-		[DataIndex]
+		[UInt64Index]
 		public int Data0 { get; set; }
 
 		public SkillGems(BinaryReader inStream)

@@ -1,17 +1,17 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace LibDat.Files
 {
 	public class QuestStates : BaseDat
 	{
-		public int Group { get; set; }
-		public int Unknown1 { get; set; }
+		public Int64 Group { get; set; }
 		public int Unknown2 { get; set; }
 		public int Data0Length { get; set; }
-		[DataIndex]
+		[UInt32Index]
 		public int Data0 { get; set; }
 		public int Data1Length { get; set; }
-		[DataIndex]
+		[UInt32Index]
 		public int Data1 { get; set; }
 		[UserStringIndex]
 		public int Text { get; set; }
@@ -19,14 +19,13 @@ namespace LibDat.Files
 		[UserStringIndex]
 		public int Message { get; set; }
 		public int Data2Length { get; set; }
-		[DataIndex]
+		[UInt64Index]
 		public int Data2 { get; set; }
 		public int Unknown9 { get; set; }
 
 		public QuestStates(BinaryReader inStream)
 		{
-			Group = inStream.ReadInt32();
-			Unknown1 = inStream.ReadInt32();
+			Group = inStream.ReadInt64();
 			Unknown2 = inStream.ReadInt32();
 			Data0Length = inStream.ReadInt32();
 			Data0 = inStream.ReadInt32();
@@ -43,7 +42,6 @@ namespace LibDat.Files
 		public override void Save(BinaryWriter outStream)
 		{
 			outStream.Write(Group);
-			outStream.Write(Unknown1);
 			outStream.Write(Unknown2);
 			outStream.Write(Data0Length);
 			outStream.Write(Data0);

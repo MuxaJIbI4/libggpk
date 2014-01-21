@@ -9,15 +9,15 @@ namespace LibDat.Files
 		[StringIndex]
 		public int Index1 { get; set; }
 		public int Data0Length { get; set; }
-		[DataIndex]
+		[UInt64Index]
 		public int Data0 { get; set; }
 		[StringIndex]
 		public int Index2 { get; set; }
 		[StringIndex]
 		public int Index3 { get; set; }
-		public int Unknown1 { get; set; }
-		[StringIndex]
-		public int Index4 { get; set; }
+		public int Data1Length { get; set; }
+		[UInt64Index]
+		public int Data1 { get; set; }
 		[StringIndex]
 		public int Index5 { get; set; }
 
@@ -29,8 +29,8 @@ namespace LibDat.Files
 			Data0 = inStream.ReadInt32();
 			Index2 = inStream.ReadInt32();
 			Index3 = inStream.ReadInt32();
-			Unknown1 = inStream.ReadInt32();
-			Index4 = inStream.ReadInt32();
+			Data1Length = inStream.ReadInt32();
+			Data1 = inStream.ReadInt32();
 			Index5 = inStream.ReadInt32();
 		}
 
@@ -42,8 +42,8 @@ namespace LibDat.Files
 			outStream.Write(Data0);
 			outStream.Write(Index2);
 			outStream.Write(Index3);
-			outStream.Write(Unknown1);
-			outStream.Write(Index4);
+			outStream.Write(Data1Length);
+			outStream.Write(Data1);
 			outStream.Write(Index5);
 		}
 

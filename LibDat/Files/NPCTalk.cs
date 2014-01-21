@@ -10,13 +10,13 @@ namespace LibDat.Files
 				[UserStringIndex]
 				public int DialogueOption { get; set; }
 				public int Data0Length { get; set; }
-				[DataIndex]
+				[UInt32Index]
 				public int Data0 { get; set; }
 				public int Data1Length { get; set; }
-				[DataIndex]
+				[UInt32Index]
 				public int Data1 { get; set; }
 				public int Data2Length { get; set; }
-				[DataIndex]
+				[UInt32Index]
 				public int Data2 { get; set; }
 				[StringIndex]
 				public int Unknown10 { get; set; }
@@ -26,10 +26,10 @@ namespace LibDat.Files
 				public int Unknown14 { get; set; }
 				public int Unknown15 { get; set; }
 				public int Data3Length { get; set; }
-				[DataIndex]
+				[UInt64Index]
 				public int Data3 { get; set; }
 				public int Data4Length { get; set; }
-				[DataIndex]
+				[UInt64Index]
 				public int Data4 { get; set; }
 				[StringIndex]
 				public int Unknown20 { get; set; }

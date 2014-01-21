@@ -8,7 +8,7 @@ namespace LibDat.Files
 		[StringIndex]
 		public int Id { get; set; }
 		public int Data0Length { get; set; }
-		[DataIndex]
+		[Int32Index]
 		public int Data0 { get; set; }
 		public Int64 Unknown3 { get; set; }
 		public Int64 Unknown4 { get; set; }

@@ -10,17 +10,17 @@ namespace LibDat.Files
 		public Int64 Unknown2 { get; set; }
 		public Int64 Unknown3 { get; set; }
 		public int Data0Length { get; set; }
-		//[DataIndex]
+		[UInt64Index]
 		public int Data0 { get; set; }
 		public int Data1Length { get; set; }
-		//[DataIndex]
+		[UInt32Index]
 		public int Data1 { get; set; }
 		public int Data2Length { get; set; }
-		//[DataIndex]
+		[UInt64Index]
 		public int Data2 { get; set; }
 		public bool Flag0 { get; set; }
 		public int Data3Length { get; set; }
-		//[DataIndex]
+		[UInt32Index]
 		public int Data3 { get; set; }
 
 		public ItemisedVisualEffect(BinaryReader inStream)

@@ -9,11 +9,11 @@ namespace LibDat.Files
 		[UserStringIndex]
 		public int Name { get; set; }
 		public int ServerLength { get; set; }
-		[DataIndex]
+		[UInt32Index]
 		public int Server { get; set; }
 		public bool Flag0 { get; set; }
 		public int ServerLength2 { get; set; }
-		[DataIndex]
+		[UInt32Index]
 		public int Server2 { get; set; }
 		[StringIndex]
 		public int ShortName { get; set; }

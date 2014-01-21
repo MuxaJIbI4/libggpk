@@ -9,7 +9,7 @@ namespace LibDat.Files
 		public int Id { get; set; }
 		public Int64 Unknown1 { get; set; }
 		public int Data0Length { get; set; }
-		[DataIndex]
+		[UInt64Index]
 		public int Data0 { get; set; }
 		[StringIndex]
 		public int Unknown4 { get; set; }
