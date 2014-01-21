@@ -230,6 +230,8 @@ namespace VisualGGPK
 			catch (Exception ex)
 			{
 				ResetViewer();
+				textBoxOffset.Text = selectedRecord.RecordBegin.ToString("X");
+				textBoxSize.Text = selectedRecord.DataLength.ToString();
 				textBoxOutput.Visibility = System.Windows.Visibility.Visible;
 
 				StringBuilder sb = new StringBuilder();

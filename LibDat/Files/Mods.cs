@@ -53,10 +53,10 @@ namespace LibDat.Files
 		public int Unknown27 { get; set; }
 		public int Unknown28 { get; set; }
 
-        public int Unknown29 { get; set; }
-        public int Unknown30 { get; set; }
-        public int Unknown31 { get; set; }
-        public Int64 Unknown32 { get; set; }
+		public int Unknown29 { get; set; }
+		public int Unknown30 { get; set; }
+		public int Unknown31 { get; set; }
+		public Int64 Unknown32 { get; set; }
 
 
 		public Mods(BinaryReader inStream)
@@ -91,10 +91,10 @@ namespace LibDat.Files
 			Unknown26 = inStream.ReadInt64();
 			Unknown27 = inStream.ReadInt32();
 			Unknown28 = inStream.ReadInt32();
-            Unknown29 = inStream.ReadInt32();
-            Unknown30 = inStream.ReadInt32();
-            Unknown31 = inStream.ReadInt32();
-            Unknown32 = inStream.ReadInt64();
+			Unknown29 = inStream.ReadInt32();
+			Unknown30 = inStream.ReadInt32();
+			Unknown31 = inStream.ReadInt32();
+			Unknown32 = inStream.ReadInt64();
 
 		}
 
@@ -129,11 +129,11 @@ namespace LibDat.Files
 			outStream.Write(Unknown25);
 			outStream.Write(Unknown26);
 			outStream.Write(Unknown27);
-            outStream.Write(Unknown28);
-            outStream.Write(Unknown29);
-            outStream.Write(Unknown30);
-            outStream.Write(Unknown31);
-            outStream.Write(Unknown32);
+			outStream.Write(Unknown28);
+			outStream.Write(Unknown29);
+			outStream.Write(Unknown30);
+			outStream.Write(Unknown31);
+			outStream.Write(Unknown32);
 		}
 
 		public override int GetSize()

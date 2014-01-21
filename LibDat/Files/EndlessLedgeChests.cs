@@ -22,8 +22,8 @@ namespace LibDat.Files
 		{
 			Id = inStream.ReadInt32();
 			Unknown1 = inStream.ReadInt64();
-            Data0Length = inStream.ReadInt32();
-            Data0 = inStream.ReadInt32();
+			Data0Length = inStream.ReadInt32();
+			Data0 = inStream.ReadInt32();
 			Unknown4 = inStream.ReadInt32();
 		}
 
@@ -31,8 +31,8 @@ namespace LibDat.Files
 		{
 			outStream.Write(Id);
 			outStream.Write(Unknown1);
-            outStream.Write(Data0Length);
-            outStream.Write(Data0);
+			outStream.Write(Data0Length);
+			outStream.Write(Data0);
 			outStream.Write(Unknown4);
 		}
 

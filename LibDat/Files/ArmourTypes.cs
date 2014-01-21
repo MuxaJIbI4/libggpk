@@ -5,16 +5,16 @@ namespace LibDat.Files
 {
 	public class ArmourTypes : BaseDat
 	{
-		public Int64 Unkown0 { get; set; }
+		public Int64 ItemKey { get; set; }
 
 		public ArmourTypes(BinaryReader inStream)
 		{
-			Unkown0 = inStream.ReadInt64();
+			ItemKey = inStream.ReadInt64();
 		}
 
 		public override void Save(System.IO.BinaryWriter outStream)
 		{
-			outStream.Write(Unkown0);
+			outStream.Write(ItemKey);
 		}
 
 		public override int GetSize()

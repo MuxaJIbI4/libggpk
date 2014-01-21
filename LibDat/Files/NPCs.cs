@@ -22,10 +22,10 @@ namespace LibDat.Files
 		public int Unknown11 { get; set; }
 		public int Unknown12 { get; set; }
 		public int Unknown13 { get; set; }
-        public int Unknown14 { get; set; }
-        public int Unknown15 { get; set; }
-        public int Unknown16 { get; set; }
-        public int Unknown17 { get; set; }
+		public int Unknown14 { get; set; }
+		public int Unknown15 { get; set; }
+		public int Unknown16 { get; set; }
+		public int Unknown17 { get; set; }
 
 		public NPCs(BinaryReader inStream)
 		{
@@ -45,10 +45,10 @@ namespace LibDat.Files
 			Unknown11 = inStream.ReadInt32();
 			Unknown12 = inStream.ReadInt32();
 			Unknown13 = inStream.ReadInt32();
-            Unknown14 = inStream.ReadInt32();
-            Unknown15 = inStream.ReadInt32();
-            Unknown16 = inStream.ReadInt32();
-            Unknown17 = inStream.ReadInt32();
+			Unknown14 = inStream.ReadInt32();
+			Unknown15 = inStream.ReadInt32();
+			Unknown16 = inStream.ReadInt32();
+			Unknown17 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -69,10 +69,10 @@ namespace LibDat.Files
 			outStream.Write(Unknown11);
 			outStream.Write(Unknown12);
 			outStream.Write(Unknown13);
-            outStream.Write(Unknown14);
-            outStream.Write(Unknown15);
-            outStream.Write(Unknown16);
-            outStream.Write(Unknown17);
+			outStream.Write(Unknown14);
+			outStream.Write(Unknown15);
+			outStream.Write(Unknown16);
+			outStream.Write(Unknown17);
 		}
 
 		public override int GetSize()

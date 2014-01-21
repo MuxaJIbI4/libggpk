@@ -42,7 +42,7 @@ namespace LibGGPK
 		/// </summary>
 		/// <param name="pathToGgpk">Path to pack file to read</param>
 		/// <param name="output">Output function</param>
-		private void ReadRecordOfsets(string pathToGgpk, Action<string> output)
+		private void ReadRecordOffsets(string pathToGgpk, Action<string> output)
 		{
 			float previousPercentComplete = 0.0f;
 
@@ -96,7 +96,7 @@ namespace LibGGPK
 				output("Parsing GGPK..." + Environment.NewLine);
 			}
 
-			ReadRecordOfsets(pathToGgpk, output);
+			ReadRecordOffsets(pathToGgpk, output);
 
 			if (output != null)
 			{

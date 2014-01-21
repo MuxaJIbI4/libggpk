@@ -8,15 +8,15 @@ namespace LibDat.Files
 		public int Index0 { get; set; }
 		public bool Flag0 { get; set; }
 		public int Data0Length { get; set; }
-		[DataIndex]
+		//[DataIndex]
 		public int Data0 { get; set; }
 		public int Unknown2 { get; set; }
 		public int Unknown3 { get; set; }
 		public int Data1Length { get; set; }
-		[DataIndex]
+		//[DataIndex]
 		public int Data1 { get; set; }
 		public int Data2Length { get; set; }
-		[DataIndex]
+		//[DataIndex]
 		public int Data2 { get; set; }
 
 		public GrantedEffects(BinaryReader inStream)

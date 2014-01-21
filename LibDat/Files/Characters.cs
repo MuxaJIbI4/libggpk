@@ -36,9 +36,9 @@ namespace LibDat.Files
 		public int Unknown14 { get; set; }
 		public int Unknown15 { get; set; }
 		public int Unknown16 { get; set; }
-        public int Unknown17 { get; set; }
-        [StringIndex]
-        public int Unknown18 { get; set; }
+		public int Unknown17 { get; set; }
+		[StringIndex]
+		public int Unknown18 { get; set; }
 
 		public Characters(BinaryReader inStream)
 		{
@@ -57,7 +57,7 @@ namespace LibDat.Files
 			BaseStrength = inStream.ReadInt32();
 			BaseDexterity = inStream.ReadInt32();
 			BaseIntelligence = inStream.ReadInt32();
-            Data0Length = inStream.ReadInt32();
+			Data0Length = inStream.ReadInt32();
 			Data0 = inStream.ReadInt32();
 			Description = inStream.ReadInt32();
 			Unknown11 = inStream.ReadInt32();
@@ -66,8 +66,8 @@ namespace LibDat.Files
 			Unknown14 = inStream.ReadInt32();
 			Unknown15 = inStream.ReadInt32();
 			Unknown16 = inStream.ReadInt32();
-            Unknown17 = inStream.ReadInt32();
-            Unknown18 = inStream.ReadInt32();
+			Unknown17 = inStream.ReadInt32();
+			Unknown18 = inStream.ReadInt32();
 		}
 
 		public override void Save(System.IO.BinaryWriter outStream)
@@ -87,7 +87,7 @@ namespace LibDat.Files
 			outStream.Write(BaseStrength);
 			outStream.Write(BaseDexterity);
 			outStream.Write(BaseIntelligence);
-            outStream.Write(Data0Length);
+			outStream.Write(Data0Length);
 			outStream.Write(Data0);
 			outStream.Write(Description);
 			outStream.Write(Unknown11);
@@ -96,8 +96,8 @@ namespace LibDat.Files
 			outStream.Write(Unknown14);
 			outStream.Write(Unknown15);
 			outStream.Write(Unknown16);
-            outStream.Write(Unknown17);
-            outStream.Write(Unknown18);
+			outStream.Write(Unknown17);
+			outStream.Write(Unknown18);
 		}
 
 		public override int GetSize()

@@ -44,8 +44,8 @@ namespace LibDat.Files
 			SoundShadow = inStream.ReadInt32();
 			SoundTemplarPrefixCount = inStream.ReadInt32();
 			SoundTemplar = inStream.ReadInt32();
-            SoundScionPrefixCount = inStream.ReadInt32();
-            SoundScion = inStream.ReadInt32();
+			SoundScionPrefixCount = inStream.ReadInt32();
+			SoundScion = inStream.ReadInt32();
 			Unknown0 = inStream.ReadInt32();
 			Unknown1 = inStream.ReadInt32();
 			Index8 = inStream.ReadInt32();
@@ -66,8 +66,8 @@ namespace LibDat.Files
 			outStream.Write(SoundShadow);
 			outStream.Write(SoundTemplarPrefixCount);
 			outStream.Write(SoundTemplar);
-            outStream.Write(SoundScionPrefixCount);
-            outStream.Write(SoundScion);
+			outStream.Write(SoundScionPrefixCount);
+			outStream.Write(SoundScion);
 			outStream.Write(Unknown0);
 			outStream.Write(Unknown1);
 			outStream.Write(Index8);

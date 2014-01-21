@@ -12,7 +12,7 @@ namespace LibDat.Files
 		public int Unknown4 { get; set; }
 		public int Unknown5 { get; set; }
 		public Int64 Unknown6 { get; set; }
-        public int Unknown7 { get; set; }
+		public int Unknown7 { get; set; }
 		public int Unknown8 { get; set; }
 		public int Unknown9 { get; set; }
 		public int Unknown10 { get; set; }
@@ -26,7 +26,7 @@ namespace LibDat.Files
 			Unknown4 = inStream.ReadInt32();
 			Unknown5 = inStream.ReadInt32();
 			Unknown6 = inStream.ReadInt64();
-            Unknown7 = inStream.ReadInt32();
+			Unknown7 = inStream.ReadInt32();
 			Unknown8 = inStream.ReadInt32();
 			Unknown9 = inStream.ReadInt32();
 			Unknown10 = inStream.ReadInt32();
@@ -41,7 +41,7 @@ namespace LibDat.Files
 			outStream.Write(Unknown4);
 			outStream.Write(Unknown5);
 			outStream.Write(Unknown6);
-            outStream.Write(Unknown7);
+			outStream.Write(Unknown7);
 			outStream.Write(Unknown8);
 			outStream.Write(Unknown9);
 			outStream.Write(Unknown10);

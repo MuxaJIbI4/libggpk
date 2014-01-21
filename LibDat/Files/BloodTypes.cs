@@ -22,7 +22,7 @@ namespace LibDat.Files
 		public int Index6 { get; set; }
 		public Int64 Unknown9 { get; set; }
 		public int Data0Length { get; set; }
-        [DataIndex]
+		[DataIndex]
 		public int Data0 { get; set; }
 		public Int64 Unknown13 { get; set; }
 
@@ -37,8 +37,8 @@ namespace LibDat.Files
 			Index5 = inStream.ReadInt32();
 			Index6 = inStream.ReadInt32();
 			Unknown9 = inStream.ReadInt64();
-            Data0Length = inStream.ReadInt32();
-            Data0 = inStream.ReadInt32();
+			Data0Length = inStream.ReadInt32();
+			Data0 = inStream.ReadInt32();
 			Unknown13 = inStream.ReadInt64();
 		}
 
@@ -53,8 +53,8 @@ namespace LibDat.Files
 			outStream.Write(Index5);
 			outStream.Write(Index6);
 			outStream.Write(Unknown9);
-            outStream.Write(Data0Length);
-            outStream.Write(Data0);
+			outStream.Write(Data0Length);
+			outStream.Write(Data0);
 			outStream.Write(Unknown13);
 		}
 
