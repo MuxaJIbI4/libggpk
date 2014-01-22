@@ -9,10 +9,11 @@ namespace LibDat.Files
 		[UserStringIndex]
 		public int Name { get; set; }
 		public int ServerLength { get; set; }
+		//[IndirectStringIndex]
 		[UInt32Index]
 		public int Server { get; set; }
 		public bool Flag0 { get; set; }
-		public int ServerLength2 { get; set; }
+		public int Server2Length { get; set; }
 		[UInt32Index]
 		public int Server2 { get; set; }
 		[StringIndex]
@@ -25,7 +26,7 @@ namespace LibDat.Files
 			ServerLength = inStream.ReadInt32();
 			Server = inStream.ReadInt32();
 			Flag0 = inStream.ReadBoolean();
-			ServerLength2 = inStream.ReadInt32();
+			Server2Length = inStream.ReadInt32();
 			Server2 = inStream.ReadInt32();
 			ShortName = inStream.ReadInt32();
 		}
@@ -37,7 +38,7 @@ namespace LibDat.Files
 			outStream.Write(ServerLength);
 			outStream.Write(Server);
 			outStream.Write(Flag0);
-			outStream.Write(ServerLength2);
+			outStream.Write(Server2Length);
 			outStream.Write(Server2);
 			outStream.Write(ShortName);
 		}

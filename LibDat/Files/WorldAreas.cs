@@ -12,9 +12,9 @@ namespace LibDat.Files
 		public int Act { get; set; }
 		public bool IsTown { get; set; }
 		public bool HasWaypoint { get; set; }
-		public int NumConnections { get; set; } // Number of area connections. (Only to "transition" objects, not other waypoints. Eg; Lioneye's Watch has 2)
-		[DataIndex]
-		public int ConnectionTable { get; set; } // int* -> array of indexes in the WorldArea.dat rows for the connecting areas
+		public int ConnectionsLength { get; set; } // Number of area connections. (Only to "transition" objects, not other waypoints. Eg; Lioneye's Watch has 2)
+		[UInt32Index]
+		public int Connections { get; set; } // int* -> array of indexes in the WorldArea.dat rows for the connecting areas
 		public Int64 MonsterLevel { get; set; }
 		public bool Flag2 { get; set; }
 		public int WorldAreaId { get; set; } // Used for waypoints and other UI-related things.
@@ -24,11 +24,11 @@ namespace LibDat.Files
 		public int LoadingScreen { get; set; }
 		public int Unknown10 { get; set; }
 		public int Data1Length { get; set; }
-		[DataIndex]
+		[UInt32Index]
 		public int Data1 { get; set; }
 		public int Unknown13 { get; set; }
 		public int TopologiesLength { get; set; } // How many different types of tile sets there are for the area.
-		[DataIndex]
+		[UInt64Index]
 		public int Topologies { get; set; } // Points to an array of Topologies rows
 		public int GoverningTown { get; set; } // Index to the "governing" town for this area. (Eg; Terraces' governing town is Lioneye's Watch)
 		public int Difficulty { get; set; }
@@ -37,28 +37,28 @@ namespace LibDat.Files
 		public int Unknown20 { get; set; }
 		public int Unknown21 { get; set; }
 		public int Unknown22 { get; set; }
-		public int MonsterVarietiesLength { get; set; } // // This, and the below, are just defining which types of monsters can spawn in an area.
-		[DataIndex]
+		public int BossVarietiesLength { get; set; } // // This, and the below, are just defining which types of monsters can spawn in an area.
+		[UInt64Index]
+		public int BossVarieties { get; set; }
+		public int MonsterVarietiesLength { get; set; } // // I believe this is for rares only? Not confirmed
+		[UInt64Index]
 		public int MonsterVarieties { get; set; }
-		public int MonsterVarietiesLength2 { get; set; } // // I believe this is for rares only? Not confirmed
-		[DataIndex]
-		public int MonsterVarieties2 { get; set; }
 		public int Unknown27 { get; set; }
 		public int DropTagsLength { get; set; }
-		[DataIndex]
+		[UInt64Index]
 		public int DropTags { get; set; }
 		public int Data6Length { get; set; } // DropTagWeight?
-		[DataIndex]
+		[UInt32Index]
 		public int Data6 { get; set; }
 		public bool IsMap { get; set; }
 		public int Data7Length { get; set; }
-		[DataIndex]
+		[UInt64Index]
 		public int Data7 { get; set; }
 		public int Unknown33 { get; set; }
 		public int Unknown34 { get; set; }
 		public Int64 AchievementItemsKey { get; set; } // Not a clue what this is for. It's only referenced by the AchievementItem manager. It's an array in the data section
 		public int Data8Length { get; set; }
-		[DataIndex]
+		[UInt64Index]
 		public int Data8 { get; set; }
 		[StringIndex]
 		public int MapSound { get; set; }
@@ -71,8 +71,8 @@ namespace LibDat.Files
 			Act = inStream.ReadInt32();
 			IsTown = inStream.ReadBoolean();
 			HasWaypoint = inStream.ReadBoolean();
-			NumConnections = inStream.ReadInt32();
-			ConnectionTable = inStream.ReadInt32();
+			ConnectionsLength = inStream.ReadInt32();
+			Connections = inStream.ReadInt32();
 			MonsterLevel = inStream.ReadInt64();
 			Flag2 = inStream.ReadBoolean();
 			WorldAreaId = inStream.ReadInt32();
@@ -92,10 +92,10 @@ namespace LibDat.Files
 			Unknown20 = inStream.ReadInt32();
 			Unknown21 = inStream.ReadInt32();
 			Unknown22 = inStream.ReadInt32();
+			BossVarietiesLength = inStream.ReadInt32();
+			BossVarieties = inStream.ReadInt32();
 			MonsterVarietiesLength = inStream.ReadInt32();
 			MonsterVarieties = inStream.ReadInt32();
-			MonsterVarietiesLength2 = inStream.ReadInt32();
-			MonsterVarieties2 = inStream.ReadInt32();
 			Unknown27 = inStream.ReadInt32();
 			DropTagsLength = inStream.ReadInt32();
 			DropTags = inStream.ReadInt32();
@@ -120,8 +120,8 @@ namespace LibDat.Files
 			outStream.Write(Act);
 			outStream.Write(IsTown);
 			outStream.Write(HasWaypoint);
-			outStream.Write(NumConnections);
-			outStream.Write(ConnectionTable);
+			outStream.Write(ConnectionsLength);
+			outStream.Write(Connections);
 			outStream.Write(MonsterLevel);
 			outStream.Write(Flag2);
 			outStream.Write(WorldAreaId);
@@ -141,10 +141,10 @@ namespace LibDat.Files
 			outStream.Write(Unknown20);
 			outStream.Write(Unknown21);
 			outStream.Write(Unknown22);
+			outStream.Write(BossVarietiesLength);
+			outStream.Write(BossVarieties);
 			outStream.Write(MonsterVarietiesLength);
 			outStream.Write(MonsterVarieties);
-			outStream.Write(MonsterVarietiesLength2);
-			outStream.Write(MonsterVarieties2);
 			outStream.Write(Unknown27);
 			outStream.Write(DropTagsLength);
 			outStream.Write(DropTags);

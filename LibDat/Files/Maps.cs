@@ -13,11 +13,13 @@ namespace LibDat.Files
 		[UInt64Index]
 		public int Data0 { get; set; }
 		public Int64 Unknown6 { get; set; }
+		//[StringIndex]
+		public int Unknown7 { get; set; }
+		//[StringIndex]
+		public int Unknown8 { get; set; }
 		public int Data1Length { get; set; }
-		public int Data1 { get; set; }
-		public int Data2Length { get; set; }
 		[UInt64Index]
-		public int Data2 { get; set; }
+		public int Data1 { get; set; }
 
 		public Maps(BinaryReader inStream)
 		{
@@ -28,10 +30,10 @@ namespace LibDat.Files
 			Data0Length = inStream.ReadInt32();
 			Data0 = inStream.ReadInt32();
 			Unknown6 = inStream.ReadInt64();
+			Unknown7 = inStream.ReadInt32();
+			Unknown8 = inStream.ReadInt32();
 			Data1Length = inStream.ReadInt32();
 			Data1 = inStream.ReadInt32();
-			Data2Length = inStream.ReadInt32();
-			Data2 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -43,10 +45,10 @@ namespace LibDat.Files
 			outStream.Write(Data0Length);
 			outStream.Write(Data0);
 			outStream.Write(Unknown6);
+			outStream.Write(Unknown7);
+			outStream.Write(Unknown8);
 			outStream.Write(Data1Length);
 			outStream.Write(Data1);
-			outStream.Write(Data2Length);
-			outStream.Write(Data2);
 		}
 
 		public override int GetSize()

@@ -6,27 +6,29 @@ namespace LibDat.Files
 	public class ModSellPrices : BaseDat
 	{
 		public Int64 Unknown0 { get; set; }
-		public int Unknown1 { get; set; }
-		public int Unknown2 { get; set; }
-		public int Unknown3 { get; set; }
-		public int Unknown4 { get; set; }
+		public int Data0Length { get; set; }
+		[UInt64Index]
+		public int Data0 { get; set; }
+		public int Data1Length { get; set; }
+		[UInt64Index]
+		public int Data1 { get; set; }
 
 		public ModSellPrices(BinaryReader inStream)
 		{
 			Unknown0 = inStream.ReadInt64();
-			Unknown1 = inStream.ReadInt32();
-			Unknown2 = inStream.ReadInt32();
-			Unknown3 = inStream.ReadInt32();
-			Unknown4 = inStream.ReadInt32();
+			Data0Length = inStream.ReadInt32();
+			Data0 = inStream.ReadInt32();
+			Data1Length = inStream.ReadInt32();
+			Data1 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
 		{
 			outStream.Write(Unknown0);
-			outStream.Write(Unknown1);
-			outStream.Write(Unknown2);
-			outStream.Write(Unknown3);
-			outStream.Write(Unknown4);
+			outStream.Write(Data0Length);
+			outStream.Write(Data0);
+			outStream.Write(Data1Length);
+			outStream.Write(Data1);
 		}
 
 		public override int GetSize()

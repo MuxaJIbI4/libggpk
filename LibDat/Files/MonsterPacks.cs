@@ -14,14 +14,17 @@ namespace LibDat.Files
 		public int Unknown5 { get; set; }
 		public int Unknown6 { get; set; }
 		public int Unknown7 { get; set; }
-		public int Unknown8 { get; set; }
-		public int Unknown9 { get; set; }
+		public int Data0Length { get; set; }
+		[UInt64Index]
+		public int Data0 { get; set; }
 		public bool Flag0 { get; set; }
 		public int Unknown11 { get; set; }
-		public int Unknown12 { get; set; }
-		public int Unknown13 { get; set; }
-		public int Unknown14 { get; set; }
-		public int Unknown15 { get; set; }
+		public int Data1Length { get; set; }
+		[UInt32Index]
+		public int Data1 { get; set; }
+		public int Data2Length { get; set; }
+		[UInt64Index]
+		public int Data2 { get; set; }
 
 		public MonsterPacks(BinaryReader inStream)
 		{
@@ -33,14 +36,14 @@ namespace LibDat.Files
 			Unknown5 = inStream.ReadInt32();
 			Unknown6 = inStream.ReadInt32();
 			Unknown7 = inStream.ReadInt32();
-			Unknown8 = inStream.ReadInt32();
-			Unknown9 = inStream.ReadInt32();
+			Data0Length = inStream.ReadInt32();
+			Data0 = inStream.ReadInt32();
 			Flag0 = inStream.ReadBoolean();
 			Unknown11 = inStream.ReadInt32();
-			Unknown12 = inStream.ReadInt32();
-			Unknown13 = inStream.ReadInt32();
-			Unknown14 = inStream.ReadInt32();
-			Unknown15 = inStream.ReadInt32();
+			Data1Length = inStream.ReadInt32();
+			Data1 = inStream.ReadInt32();
+			Data2Length = inStream.ReadInt32();
+			Data2 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -53,14 +56,14 @@ namespace LibDat.Files
 			outStream.Write(Unknown5);
 			outStream.Write(Unknown6);
 			outStream.Write(Unknown7);
-			outStream.Write(Unknown8);
-			outStream.Write(Unknown9);
+			outStream.Write(Data0Length);
+			outStream.Write(Data0);
 			outStream.Write(Flag0);
 			outStream.Write(Unknown11);
-			outStream.Write(Unknown12);
-			outStream.Write(Unknown13);
-			outStream.Write(Unknown14);
-			outStream.Write(Unknown15);
+			outStream.Write(Data1Length);
+			outStream.Write(Data1);
+			outStream.Write(Data2Length);
+			outStream.Write(Data2);
 		}
 
 		public override int GetSize()

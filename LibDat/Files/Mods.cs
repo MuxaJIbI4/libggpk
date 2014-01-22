@@ -40,18 +40,23 @@ namespace LibDat.Files
 		[StringIndex]
 		public int CorrectGroup { get; set; }
 		public int Data0Length { get; set; }
+		[UInt64Index]
 		public int Data0 { get; set; }
 		public int Data1Length { get; set; }
+		[UInt32Index]
 		public int Data1 { get; set; }
 		public Int64 Unknown22 { get; set; }
 		public int Unknown23 { get; set; }
 		public int Data2Length { get; set; }
+		[UInt64Index]
 		public int Data2 { get; set; }
 		public Int64 Unknown26 { get; set; }
 		public int Data3Length { get; set; }
+		[UInt32Index]
 		public int Data3 { get; set; }
 
 		public int Data4Length { get; set; }
+		[UInt32Index]
 		public int Data4 { get; set; }
 		[StringIndex]
 		public int Metadata { get; set; }

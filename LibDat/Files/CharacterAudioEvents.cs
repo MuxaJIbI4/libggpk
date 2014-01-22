@@ -11,18 +11,25 @@ namespace LibDat.Files
 		[StringIndex]
 		public int Id { get; set; }
 		public int SoundMaruaderPrefixCount { get; set; }
+		//[IndirectStringIndex]
 		public int SoundMaruader { get; set; }
 		public int SoundRangerPrefixCount { get; set; }
+		//[IndirectStringIndex]
 		public int SoundRanger { get; set; }
 		public int SoundWitchPrefixCount { get; set; }
+		//[IndirectStringIndex]
 		public int SoundWitch { get; set; }
 		public int SoundDualistPrefixCount { get; set; }
+		//[IndirectStringIndex]
 		public int SoundDualist { get; set; }
 		public int SoundShadowPrefixCount { get; set; }
+		//[IndirectStringIndex]
 		public int SoundShadow { get; set; }
 		public int SoundTemplarPrefixCount { get; set; }
+		//[IndirectStringIndex]
 		public int SoundTemplar { get; set; }
 		public int SoundScionPrefixCount { get; set; }
+		//[IndirectStringIndex]
 		public int SoundScion { get; set; } // Sound file for the next class?
 		public int Unknown0 { get; set; }
 		public int Unknown1 { get; set; }

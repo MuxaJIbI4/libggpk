@@ -10,6 +10,7 @@ namespace LibDat.Files
 		public int Data0Length { get; set; }
 		[UInt32Index]
 		public int Data0 { get; set; }
+		[StringIndex]
 		public int Unknown2 { get; set; }
 		public int Unknown3 { get; set; }
 		public int Data1Length { get; set; }
