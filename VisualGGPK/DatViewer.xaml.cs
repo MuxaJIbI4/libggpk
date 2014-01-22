@@ -127,7 +127,18 @@ namespace VisualGGPK
 			foreach (var propInfo in datType.GetProperties())
 			{
 				DataGridTextColumn col = new DataGridTextColumn();
-				col.Header = propInfo.Name + "\n[" + propInfo.PropertyType.Name + "]";
+				string colHeader = propInfo.Name;
+				if (propInfo.GetCustomAttributes(false).Any(n => n is UInt64Index))
+					colHeader += "\n[UInt64Index]";
+				else if (propInfo.GetCustomAttributes(false).Any(n => n is UInt32Index))
+					colHeader += "\n[UInt32Index]";
+				else if (propInfo.GetCustomAttributes(false).Any(n => n is Int32Index))
+					colHeader += "\n[Int32Index]";
+				else if (propInfo.GetCustomAttributes(false).Any(n => n is StringIndex))
+					colHeader += "\n[StringIndex]";
+				else
+					colHeader += "\n[" + propInfo.PropertyType.Name + "]";
+				col.Header = colHeader;
 				col.Binding = new Binding(propInfo.Name);
 				dataGridEntries.Columns.Add(col);
 			}
