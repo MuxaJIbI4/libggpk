@@ -287,7 +287,11 @@ namespace LibDat
 
 					if (customAttributes.Length > 0)
 					{
-						if (customAttributes.Any(n => n is StringIndex))
+						if (customAttributes.Any(n => n is UInt64Index) || customAttributes.Any(n => n is UInt32Index) || customAttributes.Any(n => n is Int32Index))
+						{
+							sb.AppendFormat("{0}{1}", fieldValue, seperator);
+						}
+						else if (customAttributes.Any(n => n is StringIndex))
 						{
 							sb.AppendFormat("\"{0}\"{1}", DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""), seperator);
 						}
