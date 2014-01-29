@@ -37,13 +37,14 @@ namespace LibDat.Files
 		[UInt32Index]
 		public int Data4 { get; set; }
 		public int Data5Length { get; set; }
-		[UInt32Index]
+		[UInt64Index]
 		public int Data5 { get; set; }
 		public int Unknown16 { get; set; }
 		public Int64 Unknown17 { get; set; }
 		public int Unknown18 { get; set; }
 
 		public int Data6Length { get; set; }
+		[UInt32Index]
 		public int Data6 { get; set; }
 		public Int64 Unknown21 { get; set; }
 

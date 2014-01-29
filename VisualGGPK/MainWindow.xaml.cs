@@ -129,6 +129,7 @@ namespace VisualGGPK
 		{
 			TreeViewItem rootItem = new TreeViewItem();
 			rootItem.Header = directoryTreeNode;
+			if ((directoryTreeNode.ToString() == "ROOT") || (directoryTreeNode.ToString() == "")) rootItem.IsExpanded = true;
 
 			if (parentControl == null)
 			{

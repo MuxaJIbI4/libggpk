@@ -10,6 +10,7 @@ namespace LibDat.Files
 		[StringIndex]
 		public int Icon { get; set; }
 		public int Data0Length { get; set; }
+		[UInt64Index]
 		public int Data0 { get; set; }
 		public int Stat1 { get; set; }
 		public int Stat2 { get; set; }
@@ -19,6 +20,7 @@ namespace LibDat.Files
 		[UserStringIndex]
 		public int Name { get; set; }
 		public int Data1Length { get; set; }
+		[UInt64Index]
 		public int Data1 { get; set; }
 		public bool IsKeystone { get; set; }
 		public bool IsNotable { get; set; }

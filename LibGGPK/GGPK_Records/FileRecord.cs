@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace LibGGPK
 {
@@ -210,6 +211,10 @@ namespace LibGGPK
 				// Update and write new record data to end of GGPK file
 				RecordBegin = ggpkFileStream.Position;
 				Length = (uint)(Length - DataLength + replacmentData.Length);
+
+				// Generate the new Hash
+				SHA256 sha256 = SHA256Managed.Create();
+				Hash = sha256.ComputeHash(replacmentData);
 
 				BinaryWriter bw = new BinaryWriter(ggpkFileStream);
 				bw.Write(Length);

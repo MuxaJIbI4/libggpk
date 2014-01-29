@@ -5,19 +5,19 @@ namespace LibDat.Files
 {
 	public class Dances : BaseDat
 	{
-		public Int64 Unknown0 { get; set; }
-		public Int64 Unknown1 { get; set; }
+		public Int64 ItemID { get; set; }
+		public Int64 CharactersID { get; set; }
 
 		public Dances(BinaryReader inStream)
 		{
-			Unknown0 = inStream.ReadInt64();
-			Unknown1 = inStream.ReadInt64();
+			ItemID = inStream.ReadInt64();
+			CharactersID = inStream.ReadInt64();
 		}
 
 		public override void Save(BinaryWriter outStream)
 		{
-			outStream.Write(Unknown0);
-			outStream.Write(Unknown1);
+			outStream.Write(ItemID);
+			outStream.Write(CharactersID);
 		}
 
 		public override int GetSize()

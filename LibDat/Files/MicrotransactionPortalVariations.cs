@@ -6,6 +6,7 @@ namespace LibDat.Files
 	public class MicrotransactionPortalVariations : BaseDat
 	{
 		public Int64 ItemKey { get; set; }
+		[StringIndex]
 		public int AnimatedObject { get; set; }
 
 		public MicrotransactionPortalVariations(BinaryReader inStream)
