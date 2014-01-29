@@ -170,6 +170,7 @@ namespace VisualGGPK
 			dataGridOutput.ItemsSource = null;
 			textBoxOffset.Text = String.Empty;
 			textBoxSize.Text = String.Empty;
+			textBoxHash.Text = String.Empty;
 		}
 
 		/// <summary>
@@ -191,7 +192,8 @@ namespace VisualGGPK
 					return;
 
 				textBoxOffset.Text = selectedDirectory.Record.RecordBegin.ToString("X");
-				textBoxSize.Text = String.Empty;
+				textBoxSize.Text = selectedDirectory.Record.Entries.Length.ToString();
+				textBoxHash.Text = BitConverter.ToString(selectedDirectory.Record.Hash);
 				return;
 			}
 
@@ -201,6 +203,7 @@ namespace VisualGGPK
 
 			textBoxOffset.Text = selectedRecord.RecordBegin.ToString("X");
 			textBoxSize.Text = selectedRecord.DataLength.ToString();
+			textBoxHash.Text = BitConverter.ToString(selectedRecord.Hash);
 
 			try
 			{
@@ -233,6 +236,7 @@ namespace VisualGGPK
 				ResetViewer();
 				textBoxOffset.Text = selectedRecord.RecordBegin.ToString("X");
 				textBoxSize.Text = selectedRecord.DataLength.ToString();
+				textBoxHash.Text = BitConverter.ToString(selectedRecord.Hash);
 				textBoxOutput.Visibility = System.Windows.Visibility.Visible;
 
 				StringBuilder sb = new StringBuilder();

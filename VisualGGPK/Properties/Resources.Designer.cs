@@ -304,6 +304,15 @@ namespace VisualGGPK.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hash:.
+        /// </summary>
+        public static string MainWindow_Label_FileHash {
+            get {
+                return ResourceManager.GetString("MainWindow_Label_FileHash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File Offset:.
         /// </summary>
         public static string MainWindow_Label_FileOffset {
