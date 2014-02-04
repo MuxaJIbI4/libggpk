@@ -12,6 +12,7 @@ namespace LibDat.Files
 		public int Price { get; set; }
 		public bool AvailableFlag { get; set; }
 		public int Unknown4 { get; set; }
+		public int Unknown5 { get; set; }
 
 		public ShopPaymentPackage(BinaryReader inStream)
 		{
@@ -21,6 +22,7 @@ namespace LibDat.Files
 			Price = inStream.ReadInt32();
 			AvailableFlag = inStream.ReadBoolean();
 			Unknown4 = inStream.ReadInt32();
+			Unknown5 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -31,11 +33,12 @@ namespace LibDat.Files
 			outStream.Write(Price);
 			outStream.Write(AvailableFlag);
 			outStream.Write(Unknown4);
+			outStream.Write(Unknown5);
 		}
 
 		public override int GetSize()
 		{
-			return 0x15;
+			return 0x19;
 		}
 	}
 }
