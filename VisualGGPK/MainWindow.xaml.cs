@@ -527,7 +527,40 @@ namespace VisualGGPK
 
 			using (ZipFile zipFile = new ZipFile(archivePath))
 			{
-				var fileNames = zipFile.EntryFileNames;
+				//var fileNames = zipFile.EntryFileNames;
+
+				// Archive Version Check: Read version.txt and check with patch_notes.rtf's Hash
+				foreach (var item in zipFile.Entries)
+				{
+					if (item.FileName.Equals("version.txt"))
+					{
+						using (var reader = item.OpenReader())
+						{
+							byte[] replacementData = new byte[item.UncompressedSize];
+							reader.Read(replacementData, 0, replacementData.Length);
+							string replacementStr = Encoding.UTF8.GetString(replacementData, 0, replacementData.Length);
+							foreach (var recordOffset in content.RecordOffsets)
+							{
+								FileRecord record = recordOffset.Value as FileRecord;
+								if (record == null || record.ContainingDirectory == null)
+								{
+									continue;
+								}
+								if (record.Name.Equals("patch_notes.rtf"))
+								{
+									if (!replacementStr.Equals(BitConverter.ToString(record.Hash)))
+									{
+										OutputLine(Settings.Strings["MainWindow_VersionCheck_Failed"]);
+										return;
+									}
+									break;
+								}
+							}
+						}
+						break;
+					}
+				}
+
 				foreach (var item in zipFile.Entries)
 				{
 					if (item.IsDirectory)

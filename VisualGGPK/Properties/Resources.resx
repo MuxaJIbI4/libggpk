@@ -260,4 +260,7 @@ Details: {0}</value>
   <data name="MainWindow_Label_FileHash" xml:space="preserve">
     <value>Hash:</value>
   </data>
+  <data name="MainWindow_VersionCheck_Failed" xml:space="preserve">
+    <value>Version check failed.</value>
+  </data>
 </root>
