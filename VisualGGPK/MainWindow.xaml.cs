@@ -536,9 +536,9 @@ namespace VisualGGPK
 					{
 						using (var reader = item.OpenReader())
 						{
-							byte[] replacementData = new byte[item.UncompressedSize];
-							reader.Read(replacementData, 0, replacementData.Length);
-							string replacementStr = Encoding.UTF8.GetString(replacementData, 0, replacementData.Length);
+							byte[] versionData = new byte[item.UncompressedSize];
+							reader.Read(versionData, 0, versionData.Length);
+							string versionStr = Encoding.UTF8.GetString(versionData, 0, versionData.Length);
 							foreach (var recordOffset in content.RecordOffsets)
 							{
 								FileRecord record = recordOffset.Value as FileRecord;
@@ -548,7 +548,8 @@ namespace VisualGGPK
 								}
 								if (record.Name.Equals("patch_notes.rtf"))
 								{
-									if (!replacementStr.Equals(BitConverter.ToString(record.Hash)))
+									string Hash = BitConverter.ToString(record.Hash);
+									if (!versionStr.Substring(0, Hash.Length).Equals(Hash))
 									{
 										OutputLine(Settings.Strings["MainWindow_VersionCheck_Failed"]);
 										return;
