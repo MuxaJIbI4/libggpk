@@ -139,6 +139,10 @@ namespace LibDat
 				if (customAttributes.Length == 0)
 					continue;
 
+				if (customAttributes.Any(n => n is UInt64Index) || customAttributes.Any(n => n is UInt32Index) ||
+					customAttributes.Any(n => n is Int32Index))
+					continue;
+
 				int offset = (int)prop.GetValue(entry, null);
 				if (updatedOffsets.ContainsKey(offset))
 				{
