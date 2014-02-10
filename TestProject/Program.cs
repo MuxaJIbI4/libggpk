@@ -51,20 +51,6 @@ namespace TestProject
 		private static Dictionary<string, FileRecord> RecordsByPath;
 		private static GGPK content;
 
-		public static void Main2(string[] args)
-		{
-			if (args.Length != 1)
-			{
-				Console.WriteLine("Derp");
-				Console.ReadLine();
-				return;
-			}
-			InitGGPK();
-			PatchGGPK(args[0]);
-			Console.WriteLine("Press any key to continue...");
-			Console.ReadLine(); //new Program();
-		}
-
 		private static void InitGGPK()
 		{
 			if (!File.Exists(ggpkPath))
@@ -98,99 +84,6 @@ namespace TestProject
 			}
 		}
 
-		private static void PatchGGPK(string archivePath)
-		{
-			if (content.IsReadOnly)
-			{
-				Console.WriteLine("Content.ggpk is Read Only.");
-			}
-			else if (File.Exists(archivePath))
-			{
-				HandlePatchArchive(archivePath);
-			}
-		}
-
-		private static void HandlePatchArchive(string archivePath)
-		{
-			using (ZipFile zipFile = new ZipFile(archivePath))
-			{
-				bool VersionCheck = false;
-				bool NeedVersionCheck = false;
-				foreach (var item in zipFile.Entries)
-				{
-					if (item.FileName.Equals("version.txt"))
-					{
-						using (var reader = item.OpenReader())
-						{
-							byte[] versionData = new byte[item.UncompressedSize];
-							reader.Read(versionData, 0, versionData.Length);
-							string versionStr = Encoding.UTF8.GetString(versionData, 0, versionData.Length);
-							foreach (var recordOffset in content.RecordOffsets)
-							{
-								FileRecord record = recordOffset.Value as FileRecord;
-								if (record == null || record.ContainingDirectory == null)
-								{
-									continue;
-								}
-								if (record.Name.Equals("patch_notes.rtf"))
-								{
-									string Hash = BitConverter.ToString(record.Hash);
-									if (versionStr.Substring(0, Hash.Length).Equals(Hash))
-									{
-										VersionCheck = true;
-									}
-									break;
-								}
-							}
-						}
-						break;
-					}
-					else if (Path.GetExtension(item.FileName).ToLower() == ".dat" || Path.GetExtension(item.FileName).ToLower() == ".txt")
-					{
-						NeedVersionCheck = true;
-					}
-				}
-				if (NeedVersionCheck && !VersionCheck)
-				{
-					Console.WriteLine("Version Check Failed");
-					return;
-				}
-
-				foreach (var item in zipFile.Entries)
-				{
-					if (item.IsDirectory)
-					{
-						continue;
-					}
-					if (item.FileName.Equals("version.txt"))
-					{
-						continue;
-					}
-
-					string fixedFileName = item.FileName;
-					if (Path.DirectorySeparatorChar != '/')
-					{
-						fixedFileName = fixedFileName.Replace('/', Path.DirectorySeparatorChar);
-					}
-
-					if (!RecordsByPath.ContainsKey(fixedFileName))
-					{
-						Console.WriteLine("Failed {0}", fixedFileName);
-						continue;
-					}
-					Console.WriteLine("Replace {0}", fixedFileName);
-
-					using (var reader = item.OpenReader())
-					{
-						byte[] replacementData = new byte[item.UncompressedSize];
-						reader.Read(replacementData, 0, replacementData.Length);
-
-						RecordsByPath[fixedFileName].ReplaceContents(ggpkPath, replacementData, content.FreeRoot);
-					}
-				}
-				Console.WriteLine("Content.ggpk is Fine.");
-			}
-		}
 
 
 
