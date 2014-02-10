@@ -27,16 +27,29 @@ namespace PatchGGPK
 
 		public static void Main(string[] args)
 		{
+			string archivePath = string.Empty;
 			if (args.Length != 1)
 			{
-				Console.WriteLine("Derp");
-				Console.ReadLine();
-				return;
+				string[] SubFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.zip");
+				if (SubFiles.Length > 0)
+				{
+					archivePath = SubFiles[0];
+				}
+				else
+				{
+					Console.WriteLine("Press any key to continue...");
+					Console.ReadLine();
+					return;
+				}
+			}
+			else
+			{
+				archivePath = args[0];
 			}
 			InitGGPK();
-			PatchGGPK(args[0]);
+			PatchGGPK(archivePath);
 			Console.WriteLine("Press any key to continue...");
-			Console.ReadLine(); //new Program();
+			Console.ReadLine();
 		}
 
 		private static void InitGGPK()
