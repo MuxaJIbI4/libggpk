@@ -662,11 +662,25 @@ namespace VisualGGPK
 			if ((ofd.InitialDirectory == null) || (ofd.InitialDirectory == string.Empty))
 			{
 				Microsoft.Win32.RegistryKey start = Microsoft.Win32.Registry.CurrentUser;
-				Microsoft.Win32.RegistryKey programName = start.OpenSubKey("Software\\GrindingGearGames\\Path of Exile");
+				Microsoft.Win32.RegistryKey programName = start.OpenSubKey(@"Software\GrindingGearGames\Path of Exile");
 				if (programName != null)
 				{
 					string pathString = (string)programName.GetValue("InstallLocation");
-					if (pathString != string.Empty && File.Exists(pathString + "Content.ggpk"))
+					if (pathString != string.Empty && File.Exists(pathString + @"\Content.ggpk"))
+					{
+						ofd.InitialDirectory = pathString;
+					}
+				}
+			}
+			// Get Garena PoE
+			if ((ofd.InitialDirectory == null) || (ofd.InitialDirectory == string.Empty))
+			{
+				Microsoft.Win32.RegistryKey start = Microsoft.Win32.Registry.LocalMachine;
+				Microsoft.Win32.RegistryKey programName = start.OpenSubKey(@"SOFTWARE\Wow6432Node\Garena\PoE");
+				if (programName != null)
+				{
+					string pathString = (string)programName.GetValue("Path");
+					if (pathString != string.Empty && File.Exists(pathString + @"\Content.ggpk"))
 					{
 						ofd.InitialDirectory = pathString;
 					}
