@@ -658,6 +658,20 @@ namespace VisualGGPK
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.CheckFileExists = true;
 			ofd.Filter = Settings.Strings["Load_GGPK_Filter"];
+			// Get InstallLocation From RegistryKey
+			if ((ofd.InitialDirectory == null) || (ofd.InitialDirectory == string.Empty))
+			{
+				Microsoft.Win32.RegistryKey start = Microsoft.Win32.Registry.CurrentUser;
+				Microsoft.Win32.RegistryKey programName = start.OpenSubKey("Software\\GrindingGearGames\\Path of Exile");
+				if (programName != null)
+				{
+					string pathString = (string)programName.GetValue("InstallLocation");
+					if (pathString != string.Empty && File.Exists(pathString + "Content.ggpk"))
+					{
+						ofd.InitialDirectory = pathString;
+					}
+				}
+			}
 			if (ofd.ShowDialog() == true)
 			{
 				if (!File.Exists(ofd.FileName))
