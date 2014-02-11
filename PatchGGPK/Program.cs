@@ -33,14 +33,15 @@ namespace PatchGGPK
 				string[] SubFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.zip");
 				if (SubFiles.Length > 0)
 				{
-					archivePath = SubFiles[0];
+					InitGGPK();
+					for (int i = 0; i < SubFiles.Length; i++)
+					{
+						PatchGGPK(SubFiles[0]);
+					}
 				}
-				else
-				{
-					Console.WriteLine("Press any key to continue...");
-					Console.ReadLine();
-					return;
-				}
+				Console.WriteLine("Press any key to continue...");
+				Console.ReadLine();
+				return;
 			}
 			else
 			{
@@ -115,6 +116,7 @@ namespace PatchGGPK
 			{
 				bool VersionCheck = false;
 				bool NeedVersionCheck = false;
+				Console.WriteLine("Archive {0}", archivePath);
 				foreach (var item in zipFile.Entries)
 				{
 					if (item.FileName.Equals("version.txt"))
