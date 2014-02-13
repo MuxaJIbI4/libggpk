@@ -55,6 +55,7 @@ namespace PatchGGPK
 
 		private static void InitGGPK()
 		{
+			// Search GGG ggpk
 			if (!File.Exists(ggpkPath))
 			{
 				Microsoft.Win32.RegistryKey start = Microsoft.Win32.Registry.CurrentUser;
@@ -70,6 +71,12 @@ namespace PatchGGPK
 			}
 			if (!File.Exists(ggpkPath))
 			{
+				if (File.Exists(@"C:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk"))
+					ggpkPath = @"C:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk";
+			}
+			// Search GGC ggpk
+			if (!File.Exists(ggpkPath))
+			{
 				Microsoft.Win32.RegistryKey start = Microsoft.Win32.Registry.LocalMachine;
 				Microsoft.Win32.RegistryKey programName = start.OpenSubKey(@"SOFTWARE\Wow6432Node\Garena\PoE");
 				if (programName != null)
@@ -80,6 +87,11 @@ namespace PatchGGPK
 						ggpkPath = pathString + @"\Content.ggpk";
 					}
 				}
+			}
+			if (!File.Exists(ggpkPath))
+			{
+				if (File.Exists(@"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE\Content.ggpk"))
+					ggpkPath = @"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE\Content.ggpk";
 			}
 			if (!File.Exists(ggpkPath))
 			{
