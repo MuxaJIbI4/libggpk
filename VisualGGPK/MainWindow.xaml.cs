@@ -568,6 +568,10 @@ namespace VisualGGPK
 					{
 						continue;
 					}
+					if (item.FileName.Equals("Version.txt"))
+					{
+						continue;
+					}
 
 					string fixedFileName = item.FileName;
 					if (Path.DirectorySeparatorChar != '/')
