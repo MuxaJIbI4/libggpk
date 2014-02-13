@@ -19,7 +19,10 @@ namespace PatchGGPK
 			Console.Write(msg);
 		}
 
-
+		private static void OutputLine(string msg)
+		{
+			Output(msg + Environment.NewLine);
+		}
 
 		private static string ggpkPath = @"o:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk";
 		private static Dictionary<string, FileRecord> RecordsByPath;
@@ -27,29 +30,24 @@ namespace PatchGGPK
 
 		public static void Main(string[] args)
 		{
-			string archivePath = string.Empty;
-			if (args.Length != 1)
+			string[] archiveFiles;
+			if (args.Length > 0)
 			{
-				string[] SubFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.zip");
-				if (SubFiles.Length > 0)
-				{
-					InitGGPK();
-					for (int i = 0; i < SubFiles.Length; i++)
-					{
-						PatchGGPK(SubFiles[0]);
-					}
-				}
-				Console.WriteLine("Press any key to continue...");
-				Console.ReadLine();
-				return;
+				archiveFiles = args;
 			}
 			else
 			{
-				archivePath = args[0];
+				archiveFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.zip");
 			}
-			InitGGPK();
-			PatchGGPK(archivePath);
-			Console.WriteLine("Press any key to continue...");
+			if (archiveFiles.Length > 0)
+			{
+				InitGGPK();
+				foreach (string archivePath in archiveFiles)
+				{
+					InitPatchArchive(archivePath);
+				}
+			}
+			OutputLine("Press any key to continue...");
 			Console.ReadLine();
 		}
 
@@ -72,7 +70,9 @@ namespace PatchGGPK
 			if (!File.Exists(ggpkPath))
 			{
 				if (File.Exists(@"C:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk"))
+				{
 					ggpkPath = @"C:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk";
+				}
 			}
 			// Search GGC ggpk
 			if (!File.Exists(ggpkPath))
@@ -91,14 +91,16 @@ namespace PatchGGPK
 			if (!File.Exists(ggpkPath))
 			{
 				if (File.Exists(@"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE\Content.ggpk"))
+				{
 					ggpkPath = @"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE\Content.ggpk";
+				}
 			}
 			if (!File.Exists(ggpkPath))
 			{
-				Console.WriteLine("GGPK {0} not exists.", ggpkPath);
+				OutputLine(string.Format("GGPK {0} not exists.", ggpkPath));
 				return;
 			}
-			Console.WriteLine("Parsing {0}", ggpkPath);
+			OutputLine(string.Format("Parsing {0}", ggpkPath));
 
 			content = new GGPK();
 			content.Read(ggpkPath, Output);
@@ -107,13 +109,13 @@ namespace PatchGGPK
 			DirectoryTreeNode.TraverseTreePostorder(content.DirectoryRoot, null, n => RecordsByPath.Add(n.GetDirectoryPath() + n.Name, n as FileRecord));
 		}
 
-		private static void PatchGGPK(string archivePath)
+		private static void InitPatchArchive(string archivePath)
 		{
 			if (File.Exists(ggpkPath)) 
 			{ 
 				if (content.IsReadOnly)
 				{
-					Console.WriteLine("Content.ggpk is Read Only.");
+					OutputLine("Content.ggpk is Read Only.");
 				}
 				else if (File.Exists(archivePath) && Path.GetExtension(archivePath).ToLower() == ".zip")
 				{
@@ -128,7 +130,7 @@ namespace PatchGGPK
 			{
 				bool VersionCheck = false;
 				bool NeedVersionCheck = false;
-				Console.WriteLine("Archive {0}", archivePath);
+				OutputLine(string.Format("Archive {0}", archivePath));
 				foreach (var item in zipFile.Entries)
 				{
 					if (item.FileName.Equals("version.txt"))
@@ -165,7 +167,7 @@ namespace PatchGGPK
 				}
 				if (NeedVersionCheck && !VersionCheck)
 				{
-					Console.WriteLine("Version Check Failed");
+					OutputLine("Version Check Failed");
 					return;
 				}
 
@@ -188,10 +190,10 @@ namespace PatchGGPK
 
 					if (!RecordsByPath.ContainsKey(fixedFileName))
 					{
-						Console.WriteLine("Failed {0}", fixedFileName);
+						OutputLine(string.Format("Failed {0}", fixedFileName));
 						continue;
 					}
-					Console.WriteLine("Replace {0}", fixedFileName);
+					OutputLine(string.Format("Replace {0}", fixedFileName));
 
 					using (var reader = item.OpenReader())
 					{
@@ -201,7 +203,7 @@ namespace PatchGGPK
 						RecordsByPath[fixedFileName].ReplaceContents(ggpkPath, replacementData, content.FreeRoot);
 					}
 				}
-				Console.WriteLine("Content.ggpk is Fine.");
+				OutputLine("Content.ggpk is Fine.");
 			}
 		}
 	}
