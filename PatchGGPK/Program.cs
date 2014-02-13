@@ -74,6 +74,13 @@ namespace PatchGGPK
 					ggpkPath = @"C:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk";
 				}
 			}
+			if (!File.Exists(ggpkPath))
+			{
+				if (File.Exists(@"C:\Program Files\Grinding Gear Games\Path of Exile\content.ggpk"))
+				{
+					ggpkPath = @"C:\Program Files\Grinding Gear Games\Path of Exile\content.ggpk";
+				}
+			}
 			// Search GGC ggpk
 			if (!File.Exists(ggpkPath))
 			{
@@ -93,6 +100,13 @@ namespace PatchGGPK
 				if (File.Exists(@"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE\Content.ggpk"))
 				{
 					ggpkPath = @"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE\Content.ggpk";
+				}
+			}
+			if (!File.Exists(ggpkPath))
+			{
+				if (File.Exists(@"C:\Program Files\GarenaPoE\GameData\Apps\PoE\Content.ggpk"))
+				{
+					ggpkPath = @"C:\Program Files\GarenaPoE\GameData\Apps\PoE\Content.ggpk";
 				}
 			}
 			if (!File.Exists(ggpkPath))
