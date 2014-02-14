@@ -24,7 +24,8 @@ namespace PatchGGPK
 			Output(msg + Environment.NewLine);
 		}
 
-		private static string ggpkPath = @"o:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk";
+		private static string contentGGPK = @"\Content.ggpk";
+		private static string ggpkPath = Directory.GetCurrentDirectory() + contentGGPK;
 		private static Dictionary<string, FileRecord> RecordsByPath;
 		private static GGPK content;
 
@@ -61,24 +62,24 @@ namespace PatchGGPK
 				if (programName != null)
 				{
 					string pathString = (string)programName.GetValue("InstallLocation");
-					if (pathString != string.Empty && File.Exists(pathString + @"\Content.ggpk"))
+					if (pathString != string.Empty && File.Exists(pathString + contentGGPK))
 					{
-						ggpkPath = pathString + @"\Content.ggpk";
+						ggpkPath = pathString + contentGGPK;
 					}
 				}
 			}
 			if (!File.Exists(ggpkPath))
 			{
-				if (File.Exists(@"C:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk"))
+				if (File.Exists(@"C:\Program Files (x86)\Grinding Gear Games\Path of Exile" + contentGGPK))
 				{
-					ggpkPath = @"C:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk";
+					ggpkPath = @"C:\Program Files (x86)\Grinding Gear Games\Path of Exile" + contentGGPK;
 				}
 			}
 			if (!File.Exists(ggpkPath))
 			{
-				if (File.Exists(@"C:\Program Files\Grinding Gear Games\Path of Exile\content.ggpk"))
+				if (File.Exists(@"C:\Program Files\Grinding Gear Games\Path of Exile" + contentGGPK))
 				{
-					ggpkPath = @"C:\Program Files\Grinding Gear Games\Path of Exile\content.ggpk";
+					ggpkPath = @"C:\Program Files\Grinding Gear Games\Path of Exile" + contentGGPK;
 				}
 			}
 			// Search GGC ggpk
@@ -89,24 +90,24 @@ namespace PatchGGPK
 				if (programName != null)
 				{
 					string pathString = (string)programName.GetValue("Path");
-					if (pathString != string.Empty && File.Exists(pathString + @"\Content.ggpk"))
+					if (pathString != string.Empty && File.Exists(pathString + contentGGPK))
 					{
-						ggpkPath = pathString + @"\Content.ggpk";
+						ggpkPath = pathString + contentGGPK;
 					}
 				}
 			}
 			if (!File.Exists(ggpkPath))
 			{
-				if (File.Exists(@"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE\Content.ggpk"))
+				if (File.Exists(@"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE" + contentGGPK))
 				{
-					ggpkPath = @"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE\Content.ggpk";
+					ggpkPath = @"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE" + contentGGPK;
 				}
 			}
 			if (!File.Exists(ggpkPath))
 			{
-				if (File.Exists(@"C:\Program Files\GarenaPoE\GameData\Apps\PoE\Content.ggpk"))
+				if (File.Exists(@"C:\Program Files\GarenaPoE\GameData\Apps\PoE" + contentGGPK))
 				{
-					ggpkPath = @"C:\Program Files\GarenaPoE\GameData\Apps\PoE\Content.ggpk";
+					ggpkPath = @"C:\Program Files\GarenaPoE\GameData\Apps\PoE" + contentGGPK;
 				}
 			}
 			if (!File.Exists(ggpkPath))
