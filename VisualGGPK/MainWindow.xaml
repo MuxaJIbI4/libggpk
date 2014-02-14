@@ -50,6 +50,8 @@
 					<TextBox x:Name="textBoxOffset" Width="100" IsReadOnly="True"/>
 					<Label x:Name="labelFileSize" Content="{x:Static Properties:Resources.MainWindow_Label_FileSize}"/>
 					<TextBox x:Name="textBoxSize" Width="100" IsReadOnly="True"/>
+					<Label x:Name="labelFileNameHash" Content="{x:Static Properties:Resources.MainWindow_Label_FileNameHash}"/>
+					<TextBox x:Name="textBoxNameHash" Width="100" IsReadOnly="True"/>
 					<Label x:Name="labelFileHash" Content="{x:Static Properties:Resources.MainWindow_Label_FileHash}"/>
 					<TextBox x:Name="textBoxHash" Width="100" IsReadOnly="True"/>
 				</StackPanel>

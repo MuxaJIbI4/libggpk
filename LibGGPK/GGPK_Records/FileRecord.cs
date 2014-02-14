@@ -38,21 +38,25 @@ namespace LibGGPK
 		/// Cached directory path so we don't need to recalculate it
 		/// </summary>
 		private string directoryPath = null;
+		/// <summary>
+		/// Murmur2 hash of lowercase entry name
+		/// </summary>
+		public int EntryNameHash;
 
 		/// <summary>
 		/// Types of data a file can contain
 		/// </summary>
-        public enum DataFormat
-        {
-            Unknown,
-            Image,
-            Ascii,
-            Unicode,
-            RichText,
-            Sound,
-            Dat,
-            TextureDDS,
-        }
+		public enum DataFormat
+		{
+			Unknown,
+			Image,
+			Ascii,
+			Unicode,
+			RichText,
+			Sound,
+			Dat,
+			TextureDDS,
+		}
 
 		public FileRecord(uint length, BinaryReader br)
 		{
@@ -200,8 +204,6 @@ namespace LibGGPK
 
 		public void ReplaceContents(string ggpkPath, byte[] replacmentData, LinkedList<FreeRecord> freeRecordRoot)
 		{
-			long previousRecordBegin = RecordBegin;
-
 			using (FileStream ggpkFileStream = File.Open(ggpkPath, FileMode.Open))
 			{
 				MarkAsFree(ggpkFileStream, freeRecordRoot);
@@ -229,7 +231,7 @@ namespace LibGGPK
 				bw.Write(replacmentData);
 			}
 
-			ContainingDirectory.Record.UpdateOffset(ggpkPath, previousRecordBegin, RecordBegin);
+			ContainingDirectory.Record.UpdateOffset(ggpkPath, EntryNameHash, RecordBegin);
 		}
 
 		/// <summary>

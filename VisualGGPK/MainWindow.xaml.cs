@@ -170,6 +170,7 @@ namespace VisualGGPK
 			dataGridOutput.ItemsSource = null;
 			textBoxOffset.Text = String.Empty;
 			textBoxSize.Text = String.Empty;
+			textBoxNameHash.Text = String.Empty;
 			textBoxHash.Text = String.Empty;
 		}
 
@@ -193,6 +194,7 @@ namespace VisualGGPK
 
 				textBoxOffset.Text = selectedDirectory.Record.RecordBegin.ToString("X");
 				textBoxSize.Text = selectedDirectory.Record.Entries.Length.ToString();
+				textBoxNameHash.Text = selectedDirectory.Record.EntryNameHash.ToString("X");
 				textBoxHash.Text = BitConverter.ToString(selectedDirectory.Record.Hash);
 				return;
 			}
@@ -203,6 +205,7 @@ namespace VisualGGPK
 
 			textBoxOffset.Text = selectedRecord.RecordBegin.ToString("X");
 			textBoxSize.Text = selectedRecord.DataLength.ToString();
+			textBoxNameHash.Text = selectedRecord.EntryNameHash.ToString("X");
 			textBoxHash.Text = BitConverter.ToString(selectedRecord.Hash);
 
 			try
@@ -236,6 +239,7 @@ namespace VisualGGPK
 				ResetViewer();
 				textBoxOffset.Text = selectedRecord.RecordBegin.ToString("X");
 				textBoxSize.Text = selectedRecord.DataLength.ToString();
+				textBoxNameHash.Text = selectedRecord.EntryNameHash.ToString("X");
 				textBoxHash.Text = BitConverter.ToString(selectedRecord.Hash);
 				textBoxOutput.Visibility = System.Windows.Visibility.Visible;
 
@@ -568,7 +572,7 @@ namespace VisualGGPK
 					{
 						continue;
 					}
-					if (item.FileName.Equals("Version.txt"))
+					if (item.FileName.Equals("version.txt"))
 					{
 						continue;
 					}

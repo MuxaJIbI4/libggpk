@@ -42,6 +42,10 @@ namespace LibGGPK
 		/// Offset in pack file where entries list begins. This is only here because it makes rewriting the entries list easier.
 		/// </summary>
 		public long EntriesBegin;
+		/// <summary>
+		/// Murmur2 hash of lowercase entry name
+		/// </summary>
+		public int EntryNameHash;
 
 		public DirectoryRecord(uint length, BinaryReader br)
 		{
@@ -79,15 +83,15 @@ namespace LibGGPK
 		/// Updates the location of an entry in this directory.
 		/// </summary>
 		/// <param name="ggpkPath">Path of pack file that contains this record</param>
-		/// <param name="previousEntryOffset">Previous offset of entry</param>
+		/// <param name="nameHash">Previous name hash of entry</param>
 		/// <param name="newEntryOffset">New offset of entry</param>
-		public void UpdateOffset(string ggpkPath, long previousEntryOffset, long newEntryOffset)
+		public void UpdateOffset(string ggpkPath, int nameHash, long newEntryOffset)
 		{
 			int entryIndex = -1;
 
 			for (int i = 0; i < Entries.Length; i++)
 			{
-				if (Entries[i].Offset == previousEntryOffset)
+				if (Entries[i].EntryNameHash == nameHash)
 				{
 					entryIndex = i;
 					break;

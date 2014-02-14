@@ -263,4 +263,7 @@ Details: {0}</value>
   <data name="MainWindow_VersionCheck_Failed" xml:space="preserve">
     <value>Version check failed.</value>
   </data>
+  <data name="MainWindow_Label_FileNameHash" xml:space="preserve">
+    <value>Name Hash:</value>
+  </data>
 </root>
