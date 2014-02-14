@@ -35,10 +35,6 @@ namespace LibGGPK
 		/// </summary>
 		public DirectoryTreeNode ContainingDirectory;
 		/// <summary>
-		/// Cached directory path so we don't need to recalculate it
-		/// </summary>
-		private string directoryPath = null;
-		/// <summary>
 		/// Murmur2 hash of lowercase entry name
 		/// </summary>
 		public int EntryNameHash;
@@ -158,28 +154,7 @@ namespace LibGGPK
 		/// <returns>Absolute directory of this file</returns>
 		public string GetDirectoryPath()
 		{
-			if(directoryPath != null)
-				return directoryPath;
-
-			Stack<string> pathQueue = new Stack<string>();
-			StringBuilder sb = new StringBuilder();
-
-			// Traverse the directory tree until we hit the root node, pushing all
-			//  encountered directory names onto the stack
-			DirectoryTreeNode iter = ContainingDirectory;
-			while (iter != null && iter.Name.Length > 0)
-			{
-				pathQueue.Push(iter.Name);
-				iter = iter.Parent;
-			}
-
-			foreach (var item in pathQueue)
-			{
-				sb.Append(item + Path.DirectorySeparatorChar);
-			}
-
-			directoryPath = sb.ToString();
-			return directoryPath;
+			return ContainingDirectory.GetDirectoryPath();
 		}
 
 		/// <summary>

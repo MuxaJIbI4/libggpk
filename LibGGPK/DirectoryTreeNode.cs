@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace LibGGPK
 {
@@ -30,6 +31,10 @@ namespace LibGGPK
 		/// PDIR record this directory tree node is for
 		/// </summary>
 		public DirectoryRecord Record;
+		/// <summary>
+		/// Cached directory path so we don't need to recalculate it
+		/// </summary>
+		private string directoryPath = null;
 
 		/// <summary>
 		/// Traverses a directory tree in PostOrder (Preform directory action, then traverse children) and preforms actions on the files and directories
@@ -81,6 +86,36 @@ namespace LibGGPK
 					fileAction(file);
 				}
 			}
+		}
+
+		/// <summary>
+		/// Gets the absolute directory of this node
+		/// </summary>
+		/// <returns>Absolute directory of this node</returns>
+		public string GetDirectoryPath()
+		{
+			if (directoryPath != null)
+				return directoryPath;
+
+			Stack<string> pathQueue = new Stack<string>();
+			StringBuilder sb = new StringBuilder();
+
+			// Traverse the directory tree until we hit the root node, pushing all
+			//  encountered directory names onto the stack
+			DirectoryTreeNode iter = this;
+			while (iter != null && iter.Name.Length > 0)
+			{
+				pathQueue.Push(iter.Name);
+				iter = iter.Parent;
+			}
+
+			foreach (var item in pathQueue)
+			{
+				sb.Append(item + Path.DirectorySeparatorChar);
+			}
+
+			directoryPath = sb.ToString();
+			return directoryPath;
 		}
 
 		public override string ToString()

@@ -24,7 +24,7 @@ namespace LibGGPK
 			{
 				Children = new List<DirectoryTreeNode>(),
 				Files = new List<FileRecord>(),
-				Name = "ROOT",
+				Name = "",
 				Parent = null,
 				Record = null,
 			};
@@ -32,47 +32,25 @@ namespace LibGGPK
 			// First level only contains a empty string name directory record and a free record
 			foreach (var Offset in currentDirectory.RecordOffsets)
 			{
-				BuildDirectoryTree(Offset, root, recordOffsets);
+				if (!recordOffsets.ContainsKey(Offset))
+				{
+					continue;
+				}
+
+				if (recordOffsets[Offset] is DirectoryRecord)
+				{
+					DirectoryRecord firstDirectory = recordOffsets[Offset] as DirectoryRecord;
+
+					foreach (var item in firstDirectory.Entries)
+					{
+						BuildDirectoryTree(item, root, recordOffsets);
+					}
+				}
 			}
 
 			return root;
 		}
 
-		/// <summary>
-		/// Recursivly creates a directory tree by traversing PDIR records. Adds FILE records to the current directory
-		/// tree node. Recursivly traverses PDIR records and adds them to the current directory tree node's children.
-		/// </summary>
-		/// <param name="fileOffset">Offset of this record being traversed</param>
-		/// <param name="root">Parent node</param>
-		/// <param name="recordOffsets">Map of record offsets and headers to create directory tree from</param>
-		private static void BuildDirectoryTree(long fileOffset, DirectoryTreeNode root, Dictionary<long, BaseRecord> recordOffsets)
-		{
-			if(!recordOffsets.ContainsKey(fileOffset))
-			{
-				return;
-			}
-
-			if(recordOffsets[fileOffset] is DirectoryRecord)
-			{
-				// This offset is a directory, add it as a child of root and process all of it's entries
-				DirectoryRecord currentDirectory = recordOffsets[fileOffset] as DirectoryRecord;
-				DirectoryTreeNode child = new DirectoryTreeNode()
-				{
-					Name = currentDirectory.Name,
-					Parent = root,
-					Children = new List<DirectoryTreeNode>(),
-					Files = new List<FileRecord>(),
-					Record = currentDirectory,
-				};
-
-				root.Children.Add(child);
-
-				foreach (var item in currentDirectory.Entries)
-				{
-					BuildDirectoryTree(item, child, recordOffsets);
-				}
-			}
-		}
 
 		/// <summary>
 		/// Recursivly creates a directory tree by traversing PDIR records. Adds FILE records to the current directory
