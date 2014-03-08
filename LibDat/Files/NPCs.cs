@@ -26,6 +26,7 @@ namespace LibDat.Files
 		public int Unknown15 { get; set; }
 		public int Unknown16 { get; set; }
 		public int Unknown17 { get; set; }
+		public bool Flag0 { get; set; }
 
 		public NPCs(BinaryReader inStream)
 		{
@@ -49,6 +50,7 @@ namespace LibDat.Files
 			Unknown15 = inStream.ReadInt32();
 			Unknown16 = inStream.ReadInt32();
 			Unknown17 = inStream.ReadInt32();
+			Flag0 = inStream.ReadBoolean();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -73,11 +75,12 @@ namespace LibDat.Files
 			outStream.Write(Unknown15);
 			outStream.Write(Unknown16);
 			outStream.Write(Unknown17);
+			outStream.Write(Flag0);
 		}
 
 		public override int GetSize()
 		{
-			return 0x50;
+			return 0x51;
 		}
 	}
 }

@@ -13,6 +13,7 @@ namespace LibDat.Files
 		public int Data0Length { get; set; }
 		[UInt64Index]
 		public int Data0 { get; set; }
+		public Int64 Unknown0 { get; set; }
 
 		public SkillGems(BinaryReader inStream)
 		{
@@ -23,6 +24,7 @@ namespace LibDat.Files
 			Int = inStream.ReadInt32();
 			Data0Length = inStream.ReadInt32();
 			Data0 = inStream.ReadInt32();
+			Unknown0 = inStream.ReadInt64();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -34,11 +36,12 @@ namespace LibDat.Files
 			outStream.Write(Int);
 			outStream.Write(Data0Length);
 			outStream.Write(Data0);
+			outStream.Write(Unknown0);
 		}
 
 		public override int GetSize()
 		{
-			return 0x24;
+			return 0x2c;
 		}
 	}
 }

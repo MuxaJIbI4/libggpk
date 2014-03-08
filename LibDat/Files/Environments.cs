@@ -20,6 +20,8 @@ namespace LibDat.Files
 		public int Data1 { get; set; }
 		[StringIndex]
 		public int Index5 { get; set; }
+		[StringIndex]
+		public int Index6 { get; set; }
 
 		public Environments(BinaryReader inStream)
 		{
@@ -32,6 +34,7 @@ namespace LibDat.Files
 			Data1Length = inStream.ReadInt32();
 			Data1 = inStream.ReadInt32();
 			Index5 = inStream.ReadInt32();
+			Index6 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -45,11 +48,12 @@ namespace LibDat.Files
 			outStream.Write(Data1Length);
 			outStream.Write(Data1);
 			outStream.Write(Index5);
+			outStream.Write(Index6);
 		}
 
 		public override int GetSize()
 		{
-			return 0x24;
+			return 0x28;
 		}
 	}
 }

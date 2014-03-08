@@ -17,9 +17,6 @@ namespace LibDat.Files
 		public int Unknown7 { get; set; }
 		//[StringIndex]
 		public int Unknown8 { get; set; }
-		public int Data1Length { get; set; }
-		[UInt64Index]
-		public int Data1 { get; set; }
 
 		public Maps(BinaryReader inStream)
 		{
@@ -32,8 +29,6 @@ namespace LibDat.Files
 			Unknown6 = inStream.ReadInt64();
 			Unknown7 = inStream.ReadInt32();
 			Unknown8 = inStream.ReadInt32();
-			Data1Length = inStream.ReadInt32();
-			Data1 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -47,13 +42,11 @@ namespace LibDat.Files
 			outStream.Write(Unknown6);
 			outStream.Write(Unknown7);
 			outStream.Write(Unknown8);
-			outStream.Write(Data1Length);
-			outStream.Write(Data1);
 		}
 
 		public override int GetSize()
 		{
-			return 0x40;
+			return 0x38;
 		}
 	}
 }

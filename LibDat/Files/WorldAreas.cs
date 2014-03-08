@@ -63,6 +63,21 @@ namespace LibDat.Files
 		[StringIndex]
 		public int MapSound { get; set; }
 		public int Unknown39 { get; set; }
+		// TODO: Verify the following
+		public int Unknown40 { get; set; }
+		public int Unknown41 { get; set; }
+		public int Unknown42 { get; set; }
+		public int Unknown43 { get; set; }
+		public int Unknown44 { get; set; }
+		public int Unknown45 { get; set; }
+		public int Unknown46 { get; set; }
+		public int Unknown47 { get; set; }
+		public bool Flag3 { get; set; }
+		public int Unknown48 { get; set; }
+		public int Unknown49 { get; set; }
+		public int Unknown50 { get; set; }
+		public int Unknown51 { get; set; }
+
 
 		public WorldAreas(BinaryReader inStream)
 		{
@@ -111,6 +126,19 @@ namespace LibDat.Files
 			Data8 = inStream.ReadInt32();
 			MapSound = inStream.ReadInt32();
 			Unknown39 = inStream.ReadInt32();
+			Unknown40 = inStream.ReadInt32();
+			Unknown41 = inStream.ReadInt32();
+			Unknown42 = inStream.ReadInt32();
+			Unknown43 = inStream.ReadInt32();
+			Unknown44 = inStream.ReadInt32();
+			Unknown45 = inStream.ReadInt32();
+			Unknown46 = inStream.ReadInt32();
+			Unknown47 = inStream.ReadInt32();
+			Flag3 = inStream.ReadBoolean();
+			Unknown48 = inStream.ReadInt32();
+			Unknown49 = inStream.ReadInt32();
+			Unknown50 = inStream.ReadInt32();
+			Unknown51 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -160,11 +188,24 @@ namespace LibDat.Files
 			outStream.Write(Data8);
 			outStream.Write(MapSound);
 			outStream.Write(Unknown39);
+			outStream.Write(Unknown40); 
+			outStream.Write(Unknown41); 
+			outStream.Write(Unknown42); 
+			outStream.Write(Unknown43); 
+			outStream.Write(Unknown44); 
+			outStream.Write(Unknown45); 
+			outStream.Write(Unknown46); 
+			outStream.Write(Unknown47); 
+			outStream.Write(Flag3);	
+			outStream.Write(Unknown48); 
+			outStream.Write(Unknown49); 
+			outStream.Write(Unknown50); 
+			outStream.Write(Unknown51); 
 		}
 
 		public override int GetSize()
 		{
-			return 0xB0;
+			return 0xE1;
 		}
 	}
 }

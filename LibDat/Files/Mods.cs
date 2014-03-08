@@ -61,6 +61,7 @@ namespace LibDat.Files
 		[StringIndex]
 		public int Metadata { get; set; }
 		public Int64 Unknown32 { get; set; }
+		public Int64 Unknown33 { get; set; }
 
 
 		public Mods(BinaryReader inStream)
@@ -99,6 +100,7 @@ namespace LibDat.Files
 			Data4 = inStream.ReadInt32();
 			Metadata = inStream.ReadInt32();
 			Unknown32 = inStream.ReadInt64();
+			Unknown33 = inStream.ReadInt64();
 
 		}
 
@@ -138,11 +140,12 @@ namespace LibDat.Files
 			outStream.Write(Data4);
 			outStream.Write(Metadata);
 			outStream.Write(Unknown32);
+			outStream.Write(Unknown33);
 		}
 
 		public override int GetSize()
 		{
-			return 0xa4;
+			return 0xAC;
 		}
 	}
 }

@@ -27,6 +27,7 @@ namespace LibDat.Files
 		public bool Flag3 { get; set; }
 		public bool Flag4 { get; set; }
 		public int Unknown7 { get; set; }
+		public bool Flag5 { get; set; }
 
 		public BuffDefinitions(BinaryReader inStream)
 		{
@@ -48,6 +49,7 @@ namespace LibDat.Files
 			Flag3 = inStream.ReadBoolean();
 			Flag4 = inStream.ReadBoolean();
 			Unknown7 = inStream.ReadInt32();
+			Flag5 = inStream.ReadBoolean();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -70,11 +72,12 @@ namespace LibDat.Files
 			outStream.Write(Flag3);
 			outStream.Write(Flag4);
 			outStream.Write(Unknown7);
+			outStream.Write(Flag5);
 		}
 
 		public override int GetSize()
 		{
-			return 0x3F;
+			return 0x40;
 		}
 	}
 }

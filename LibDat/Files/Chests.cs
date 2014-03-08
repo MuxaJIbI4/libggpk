@@ -27,6 +27,20 @@ namespace LibDat.Files
 		public int Data1 { get; set; }
 		public Int64 ItemKey { get; set; }
 		public bool Flag5 { get; set; }
+		// TODO: Verify the following (Added in big 1.1.0 patch / Sacrafice of vaal)
+		public int Data2Length { get; set; }
+		[UInt64Index]
+		public int Data2 { get; set; }
+		public bool Flag6 { get; set; }
+		public int Data3Length { get; set; }
+		[UInt64Index]
+		public int Data3 { get; set; }
+		public Int64 Unknown3 { get; set; }
+		public int Unknown4 { get; set; }
+		public bool Flag7 { get; set; }
+		public int Data4Length { get; set; }
+		[UInt64Index]
+		public int Data4 { get; set; }
 
 		public Chests(BinaryReader inStream)
 		{
@@ -47,6 +61,16 @@ namespace LibDat.Files
 			Data1 = inStream.ReadInt32();
 			ItemKey = inStream.ReadInt64();
 			Flag5 = inStream.ReadBoolean();
+			Data2Length = inStream.ReadInt32();
+			Data2 = inStream.ReadInt32();
+			Flag6 = inStream.ReadBoolean();
+			Data3Length = inStream.ReadInt32();
+			Data3 = inStream.ReadInt32();
+			Unknown3 = inStream.ReadInt64();
+			Unknown4 = inStream.ReadInt32();
+			Flag7 = inStream.ReadBoolean();
+			Data4Length = inStream.ReadInt32();
+			Data4 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -68,11 +92,21 @@ namespace LibDat.Files
 			outStream.Write(Data1);
 			outStream.Write(ItemKey);
 			outStream.Write(Flag5);
+			outStream.Write(Data2Length);
+			outStream.Write(Data2 );
+			outStream.Write(Flag6 );
+			outStream.Write(Data3Length );
+			outStream.Write(Data3 );
+			outStream.Write(Unknown3 );
+			outStream.Write(Unknown4 );
+			outStream.Write(Flag7 );
+			outStream.Write(Data4Length);
+			outStream.Write(Data4);
 		}
 
 		public override int GetSize()
 		{
-			return 0x36;
+			return 0x5c;
 		}
 	}
 }
