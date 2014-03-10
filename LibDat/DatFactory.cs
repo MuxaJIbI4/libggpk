@@ -122,6 +122,10 @@ namespace LibDat
 					return typeof(GrantedEffectsPerLevel);
 				case "ImpactSoundData":
 					return typeof(ImpactSoundData);
+				case "InvasionMonsterRestrictions":
+					return typeof(InvasionMonsterRestrictions);
+				case "InvasionMonstersPerArea":
+					return typeof(InvasionMonstersPerArea);
 				case "ItemClasses":
 					return typeof(ItemClasses);
 				case "ItemExperiencePerLevel":
@@ -238,10 +242,16 @@ namespace LibDat
 					return typeof(Stats);
 				case "StatSemantics":
 					return typeof(StatSemantics);
+				case "StrongBoxEffects":
+					return typeof(StrongBoxEffects);
 				case "Tags":
 					return typeof(Tags);
 				case "Topologies":
 					return typeof(Topologies);
+				case "UniqueChests":
+					return typeof(UniqueChests);
+				case "UniqueSets":
+					return typeof(UniqueSets);
 				case "VoteState":
 					return typeof(VoteState);
 				case "VoteType":
@@ -379,6 +389,10 @@ namespace LibDat
 					return new GrantedEffects(inStream);
 				case "GrantedEffectsPerLevel":
 					return new GrantedEffectsPerLevel(inStream);
+				case "InvasionMonsterRestrictions":
+					return new InvasionMonsterRestrictions(inStream);
+				case "InvasionMonstersPerArea":
+					return new InvasionMonstersPerArea(inStream);
 				case "ImpactSoundData":
 					return new ImpactSoundData(inStream);
 				case "ItemClasses":
@@ -499,10 +513,16 @@ namespace LibDat
 					return new StatSemantics(inStream);
 				case "Tags":
 					return new Tags(inStream);
+				case "StrongBoxEffects":
+					return new StrongBoxEffects(inStream);
 				case "Topologies":
 					return new Topologies(inStream);
+				case "UniqueChests":
+					return new UniqueChests(inStream);
 				case "VoteState":
 					return new VoteState(inStream);
+				case "UniqueSets":
+					return new UniqueSets(inStream);
 				case "VoteType":
 					return new VoteType(inStream);
 				case "WeaponArmourCommon":
