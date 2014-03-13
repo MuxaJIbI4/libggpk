@@ -761,7 +761,10 @@ namespace VisualGGPK
 
 		private void menuItemView_Click(object sender, RoutedEventArgs e)
 		{
-			FileRecord fileToView = (treeView1.SelectedItem as TreeViewItem).DataContext as FileRecord;
+			TreeViewItem viewItem = treeView1.SelectedItem as TreeViewItem;
+			if (viewItem == null)
+				return;
+			FileRecord fileToView = viewItem.DataContext as FileRecord;
 			if (fileToView == null)
 				return;
 
