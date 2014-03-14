@@ -19,6 +19,7 @@ namespace LibDat.Files
 		public int Data2Length { get; set; }
 		[UInt32Index]
 		public int Data2 { get; set; }
+		public bool Flag1 { get; set; }
 
 		public GrantedEffects(BinaryReader inStream)
 		{
@@ -32,6 +33,7 @@ namespace LibDat.Files
 			Data1 = inStream.ReadInt32();
 			Data2Length = inStream.ReadInt32();
 			Data2 = inStream.ReadInt32();
+			Flag1 = inStream.ReadBoolean();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -46,11 +48,12 @@ namespace LibDat.Files
 			outStream.Write(Data1);
 			outStream.Write(Data2Length);
 			outStream.Write(Data2);
+			outStream.Write(Flag1);
 		}
 
 		public override int GetSize()
 		{
-			return 0x25;
+			return 0x26;
 		}
 	}
 }
