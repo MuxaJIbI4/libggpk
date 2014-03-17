@@ -49,7 +49,7 @@ namespace PatchGGPK
 				}
 			}
 			OutputLine("Press any key to continue...");
-			Console.ReadLine();
+			Console.ReadKey();
 		}
 
 		private static void InitGGPK()
