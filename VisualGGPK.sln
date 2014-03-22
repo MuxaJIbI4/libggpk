@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualGGPK", "VisualGGPK\VisualGGPK.csproj", "{5DEF5905-D80F-47BD-85DB-7B83B5815247}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibGGPK", "LibGGPK\LibGGPK.csproj", "{6D97AF87-4B0A-4F43-A209-801CC72ABE75}"
@@ -14,6 +12,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoeStrings", "PoeStrings\PoeStrings.csproj", "{F6AB4750-B24F-47FD-9827-97FF93027444}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatchGGPK", "PatchGGPK\PatchGGPK.csproj", "{50574844-D4B9-44DF-A8D6-5CB6758528B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPatchGGPK", "VPatchGGPK\VPatchGGPK.csproj", "{4620BED1-A273-4286-B7AC-700639C31832}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6D97AF87-4B0A-4F43-A209-801CC72ABE75} = {6D97AF87-4B0A-4F43-A209-801CC72ABE75}
+		{8F9FC78E-6181-4447-AC45-56173C16A0FA} = {8F9FC78E-6181-4447-AC45-56173C16A0FA}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +89,16 @@ Global
 		{50574844-D4B9-44DF-A8D6-5CB6758528B8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{50574844-D4B9-44DF-A8D6-5CB6758528B8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{50574844-D4B9-44DF-A8D6-5CB6758528B8}.Release|x86.ActiveCfg = Release|Any CPU
+		{4620BED1-A273-4286-B7AC-700639C31832}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4620BED1-A273-4286-B7AC-700639C31832}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4620BED1-A273-4286-B7AC-700639C31832}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4620BED1-A273-4286-B7AC-700639C31832}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4620BED1-A273-4286-B7AC-700639C31832}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4620BED1-A273-4286-B7AC-700639C31832}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4620BED1-A273-4286-B7AC-700639C31832}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4620BED1-A273-4286-B7AC-700639C31832}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4620BED1-A273-4286-B7AC-700639C31832}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4620BED1-A273-4286-B7AC-700639C31832}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

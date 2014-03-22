@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+
 using LibGGPK;
 using System.IO;
 using System.Linq.Expressions;
@@ -10,53 +15,42 @@ using LibDat;
 using LibDat.Files;
 using Ionic.Zip;
 
-namespace PatchGGPK
+namespace VPatchGGPK
 {
-	class Program
+	public partial class Form1 : Form
 	{
-		static void Output(string msg)
-		{
-			Console.Write(msg);
-		}
-
-		private static void OutputLine(string msg)
-		{
-			Output(msg + Environment.NewLine);
-		}
-
-		private static string contentGGPK = @"\Content.ggpk";
-		private static string ggpkPath = Directory.GetCurrentDirectory() + contentGGPK;
+		private static GGPK content = null;
 		private static Dictionary<string, FileRecord> RecordsByPath;
-		private static GGPK content;
 
-		public static void Main(string[] args)
+		public Form1()
 		{
-			string[] archiveFiles;
-			if (args.Length > 0)
+			InitializeComponent();
+
+			string ggpkPath = searchContentGGPK();
+			if (File.Exists(ggpkPath))
 			{
-				archiveFiles = args;
+				textBox1.Text = ggpkPath;
+				OutputLine(ggpkPath);
 			}
-			else
-			{
-				archiveFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.zip");
-			}
-			if (archiveFiles.Length > 0)
-			{
-				InitGGPK();
-				foreach (string archivePath in archiveFiles)
-				{
-					InitPatchArchive(archivePath);
-				}
-			}
-			OutputLine("Press any key to continue...");
-			Console.ReadLine();
+		}
+
+		private void Output(string msg)
+		{
+			textBox3.AppendText(msg);
+			textBox3.SelectionStart = textBox3.Text.Length;
+			textBox3.ScrollToCaret();
+			textBox3.Refresh();
+		}
+
+		private void OutputLine(string msg)
+		{
+			Output(msg + "\r\n");
 		}
 
 		private static string searchContentGGPK()
 		{
 			string contentGGPK = @"\Content.ggpk";
 			string ggpkPath = Directory.GetCurrentDirectory() + contentGGPK;
-
 			// Search GGG ggpk
 			if (!File.Exists(ggpkPath))
 			{
@@ -117,9 +111,12 @@ namespace PatchGGPK
 			return ggpkPath;
 		}
 
-		private static void InitGGPK()
+		private void InitGGPK()
 		{
-			ggpkPath = searchContentGGPK();
+			if (content != null)
+				return;
+
+			string ggpkPath = textBox1.Text;
 			if (!File.Exists(ggpkPath))
 			{
 				OutputLine(string.Format("GGPK {0} not exists.", ggpkPath));
@@ -132,24 +129,12 @@ namespace PatchGGPK
 
 			RecordsByPath = new Dictionary<string, FileRecord>(content.RecordOffsets.Count);
 			DirectoryTreeNode.TraverseTreePostorder(content.DirectoryRoot, null, n => RecordsByPath.Add(n.GetDirectoryPath() + n.Name, n as FileRecord));
+
+			textBox1.Enabled = false;
+			buttonSelectPOE.Enabled = false;
 		}
 
-		private static void InitPatchArchive(string archivePath)
-		{
-			if (File.Exists(ggpkPath)) 
-			{ 
-				if (content.IsReadOnly)
-				{
-					OutputLine("Content.ggpk is Read Only.");
-				}
-				else if (File.Exists(archivePath) && Path.GetExtension(archivePath).ToLower() == ".zip")
-				{
-					HandlePatchArchive(archivePath);
-				}
-			}
-		}
-
-		private static void HandlePatchArchive(string archivePath)
+		private void HandlePatchArchive(string archivePath)
 		{
 			using (ZipFile zipFile = new ZipFile(archivePath))
 			{
@@ -225,11 +210,68 @@ namespace PatchGGPK
 						byte[] replacementData = new byte[item.UncompressedSize];
 						reader.Read(replacementData, 0, replacementData.Length);
 
-						RecordsByPath[fixedFileName].ReplaceContents(ggpkPath, replacementData, content.FreeRoot);
+						RecordsByPath[fixedFileName].ReplaceContents(textBox1.Text, replacementData, content.FreeRoot);
 					}
 				}
 				OutputLine("Content.ggpk is Fine.");
 			}
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog ofd = new OpenFileDialog();
+			ofd.CheckFileExists = true;
+			ofd.Filter = "GGPK Pack File|*.ggpk";
+			ofd.InitialDirectory = Path.GetDirectoryName(textBox1.Text);
+			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				if (!File.Exists(ofd.FileName))
+				{
+					this.Close();
+					return;
+				}
+				else
+				{
+					textBox1.Text = ofd.FileName;
+					OutputLine(textBox1.Text);
+					InitGGPK();
+				}
+			}
+			else
+			{
+				return;
+			}
+		}
+
+		private void button2_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog ofd = new OpenFileDialog();
+			ofd.CheckFileExists = true;
+			ofd.Filter = "ZIP File|*.zip";
+			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				if (!File.Exists(ofd.FileName))
+				{
+					this.Close();
+					return;
+				}
+				else
+				{
+					OutputLine(ofd.FileName);
+					InitGGPK();
+					string archivePath = ofd.FileName;
+					HandlePatchArchive(archivePath);
+				}
+			}
+			else
+			{
+				return;
+			}
+		}
+
+		private void buttonExit_Click(object sender, EventArgs e)
+		{
+			this.Close();
 		}
 	}
 }
