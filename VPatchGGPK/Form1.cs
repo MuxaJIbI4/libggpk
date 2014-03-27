@@ -327,18 +327,30 @@ namespace VPatchGGPK
 						{
 							if (line.Contains("const $globalFontSizeSmall  = "))
 							{
-								OutputLine("Small:" + line.Substring(30, 2) + " to " + textBoxSmallFont.Text);
-								line = "const $globalFontSizeSmall  = " + textBoxSmallFont.Text + ";";
+								int Small = Convert.ToInt32(textBoxSmallFont.Text);
+								if (Small > 10 && Small < 100)
+								{
+									OutputLine("Small:" + line.Substring(30, 2) + " to " + Small);
+									line = "const $globalFontSizeSmall  = " + Small + ";";
+								}
 							}
 							else if (line.Contains("const $globalFontSizeNormal = "))
 							{
-								OutputLine("Normal:" + line.Substring(30, 2) + " to " + textBoxNormalFont.Text);
-								line = "const $globalFontSizeNormal = " + textBoxNormalFont.Text + ";";
+								int Normal = Convert.ToInt32(textBoxNormalFont.Text);
+								if (Normal > 10 && Normal < 100)
+								{
+									OutputLine("Normal:" + line.Substring(30, 2) + " to " + Normal);
+									line = "const $globalFontSizeNormal = " + Normal + ";";
+								}
 							}
 							else if (line.Contains("const $globalFontSizeLarge  = "))
 							{
-								OutputLine("Large:" + line.Substring(30, 2) + " to " + textBoxLargeFont.Text);
-								line = "const $globalFontSizeLarge  = " + textBoxLargeFont.Text + ";";
+								int Large = Convert.ToInt32(textBoxLargeFont.Text);
+								if (Large > 10 && Large < 100)
+								{
+									OutputLine("Large:" + line.Substring(30, 2) + " to " + Large);
+									line = "const $globalFontSizeLarge  = " + Large + ";";
+								}
 							}
 							lines += line + "\r\n";
 						}
