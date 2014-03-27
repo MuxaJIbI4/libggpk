@@ -29,17 +29,17 @@ namespace VPatchGGPK
 			string ggpkPath = searchContentGGPK();
 			if (File.Exists(ggpkPath))
 			{
-				textBox1.Text = ggpkPath;
+				textBoxContentGGPK.Text = ggpkPath;
 				OutputLine(ggpkPath);
 			}
 		}
 
 		private void Output(string msg)
 		{
-			textBox3.AppendText(msg);
-			textBox3.SelectionStart = textBox3.Text.Length;
-			textBox3.ScrollToCaret();
-			textBox3.Refresh();
+			textBoxOutput.AppendText(msg);
+			textBoxOutput.SelectionStart = textBoxOutput.Text.Length;
+			textBoxOutput.ScrollToCaret();
+			textBoxOutput.Refresh();
 		}
 
 		private void OutputLine(string msg)
@@ -116,7 +116,7 @@ namespace VPatchGGPK
 			if (content != null)
 				return;
 
-			string ggpkPath = textBox1.Text;
+			string ggpkPath = textBoxContentGGPK.Text;
 			if (!File.Exists(ggpkPath))
 			{
 				OutputLine(string.Format("GGPK {0} not exists.", ggpkPath));
@@ -130,7 +130,7 @@ namespace VPatchGGPK
 			RecordsByPath = new Dictionary<string, FileRecord>(content.RecordOffsets.Count);
 			DirectoryTreeNode.TraverseTreePostorder(content.DirectoryRoot, null, n => RecordsByPath.Add(n.GetDirectoryPath() + n.Name, n as FileRecord));
 
-			textBox1.Enabled = false;
+			textBoxContentGGPK.Enabled = false;
 			buttonSelectPOE.Enabled = false;
 		}
 
@@ -210,7 +210,7 @@ namespace VPatchGGPK
 						byte[] replacementData = new byte[item.UncompressedSize];
 						reader.Read(replacementData, 0, replacementData.Length);
 
-						RecordsByPath[fixedFileName].ReplaceContents(textBox1.Text, replacementData, content.FreeRoot);
+						RecordsByPath[fixedFileName].ReplaceContents(textBoxContentGGPK.Text, replacementData, content.FreeRoot);
 					}
 				}
 				OutputLine("Content.ggpk is Fine.");
@@ -222,7 +222,7 @@ namespace VPatchGGPK
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.CheckFileExists = true;
 			ofd.Filter = "GGPK Pack File|*.ggpk";
-			ofd.InitialDirectory = Path.GetDirectoryName(textBox1.Text);
+			ofd.InitialDirectory = Path.GetDirectoryName(textBoxContentGGPK.Text);
 			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				if (!File.Exists(ofd.FileName))
@@ -232,8 +232,8 @@ namespace VPatchGGPK
 				}
 				else
 				{
-					textBox1.Text = ofd.FileName;
-					OutputLine(textBox1.Text);
+					textBoxContentGGPK.Text = ofd.FileName;
+					OutputLine(textBoxContentGGPK.Text);
 					InitGGPK();
 				}
 			}
@@ -272,6 +272,89 @@ namespace VPatchGGPK
 		private void buttonExit_Click(object sender, EventArgs e)
 		{
 			this.Close();
+		}
+
+		public static string Utf8ToUtf16(string utf8String)
+		{
+			// Get UTF8 bytes by reading each byte with ANSI encoding
+			byte[] utf8Bytes = Encoding.Default.GetBytes(utf8String);
+
+			// Convert UTF8 bytes to UTF16 bytes
+			byte[] utf16Bytes = Encoding.Convert(Encoding.UTF8, Encoding.Unicode, utf8Bytes);
+
+			// Return UTF16 bytes as UTF16 string
+			return Encoding.Unicode.GetString(utf16Bytes);
+		}
+
+		public string UTF8ToUnicode(string utf8String)
+		{
+			// Get UTF8 bytes by reading each byte with ANSI encoding
+			byte[] utf8Bytes = Encoding.UTF8.GetBytes(utf8String);
+
+			// Convert UTF8 bytes to UTF16 bytes
+			byte[] utf16Bytes = Encoding.Convert(Encoding.UTF8, Encoding.Unicode, utf8Bytes);
+
+			// Return UTF16 bytes as UTF16 string
+			return Encoding.Unicode.GetString(utf16Bytes);
+		}
+
+		private void buttonApplyFont_Click(object sender, EventArgs e)
+		{
+			InitGGPK();
+
+			if (content == null)
+				return;
+
+			foreach (var recordOffset in content.RecordOffsets)
+			{
+				FileRecord record = recordOffset.Value as FileRecord;
+
+				if (record == null || record.ContainingDirectory == null || record.Name != "Common.ui")
+				{
+					continue;
+				}
+
+				byte[] datBytes = record.ReadData(textBoxContentGGPK.Text);
+				char c = '\ufeff';
+				string lines = c.ToString();
+				using (MemoryStream datStream = new MemoryStream(datBytes))
+				{
+					using (var reader = new StreamReader(datStream, Encoding.Unicode))
+					{
+						string line;
+						
+						while ((line = reader.ReadLine()) != null)
+						{
+							if (line.Contains("const $globalFontSizeSmall  = "))
+							{
+								OutputLine("Small:" + line.Substring(30, 2) + " to " + textBoxSmallFont.Text);
+								line = "const $globalFontSizeSmall  = " + textBoxSmallFont.Text + ";";
+							}
+							else if (line.Contains("const $globalFontSizeNormal = "))
+							{
+								OutputLine("Normal:" + line.Substring(30, 2) + " to " + textBoxNormalFont.Text);
+								line = "const $globalFontSizeNormal = " + textBoxNormalFont.Text + ";";
+							}
+							else if (line.Contains("const $globalFontSizeLarge  = "))
+							{
+								OutputLine("Large:" + line.Substring(30, 2) + " to " + textBoxLargeFont.Text);
+								line = "const $globalFontSizeLarge  = " + textBoxLargeFont.Text + ";";
+							}
+							lines += line + "\r\n";
+						}
+						
+					}
+				}
+				//System.IO.File.WriteAllText("WriteLines.txt", lines, Encoding.Unicode);
+				string common_ui = "Metadata\\UI\\Common.ui";
+				if (lines.Length > 2000 && RecordsByPath.ContainsKey(common_ui))
+				{
+					RecordsByPath[common_ui].ReplaceContents(textBoxContentGGPK.Text, Encoding.Unicode.GetBytes(lines), content.FreeRoot);
+					OutputLine("Font Size Changed.");
+				}
+
+				break;
+			}
 		}
 	}
 }

@@ -30,11 +30,18 @@
 		{
 			this.buttonSelectPOE = new System.Windows.Forms.Button();
 			this.buttonTranslate = new System.Windows.Forms.Button();
-			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.textBoxContentGGPK = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
-			this.textBox3 = new System.Windows.Forms.TextBox();
+			this.textBoxOutput = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.buttonExit = new System.Windows.Forms.Button();
+			this.label3 = new System.Windows.Forms.Label();
+			this.textBoxSmallFont = new System.Windows.Forms.TextBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.textBoxNormalFont = new System.Windows.Forms.TextBox();
+			this.label5 = new System.Windows.Forms.Label();
+			this.textBoxLargeFont = new System.Windows.Forms.TextBox();
+			this.buttonApplyFont = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// buttonSelectPOE
@@ -57,12 +64,12 @@
 			this.buttonTranslate.UseVisualStyleBackColor = true;
 			this.buttonTranslate.Click += new System.EventHandler(this.button2_Click);
 			// 
-			// textBox1
+			// textBoxContentGGPK
 			// 
-			this.textBox1.Location = new System.Drawing.Point(117, 13);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(447, 22);
-			this.textBox1.TabIndex = 2;
+			this.textBoxContentGGPK.Location = new System.Drawing.Point(117, 13);
+			this.textBoxContentGGPK.Name = "textBoxContentGGPK";
+			this.textBoxContentGGPK.Size = new System.Drawing.Size(447, 22);
+			this.textBoxContentGGPK.TabIndex = 2;
 			// 
 			// label1
 			// 
@@ -73,13 +80,13 @@
 			this.label1.TabIndex = 4;
 			this.label1.Text = "Content.ggpk 路徑";
 			// 
-			// textBox3
+			// textBoxOutput
 			// 
-			this.textBox3.Location = new System.Drawing.Point(14, 41);
-			this.textBox3.Multiline = true;
-			this.textBox3.Name = "textBox3";
-			this.textBox3.Size = new System.Drawing.Size(550, 209);
-			this.textBox3.TabIndex = 6;
+			this.textBoxOutput.Location = new System.Drawing.Point(14, 41);
+			this.textBoxOutput.Multiline = true;
+			this.textBoxOutput.Name = "textBoxOutput";
+			this.textBoxOutput.Size = new System.Drawing.Size(550, 209);
+			this.textBoxOutput.TabIndex = 6;
 			// 
 			// label2
 			// 
@@ -100,16 +107,84 @@
 			this.buttonExit.UseVisualStyleBackColor = true;
 			this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
 			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(15, 260);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(29, 12);
+			this.label3.TabIndex = 9;
+			this.label3.Text = "小字";
+			// 
+			// textBoxSmallFont
+			// 
+			this.textBoxSmallFont.Location = new System.Drawing.Point(50, 257);
+			this.textBoxSmallFont.Name = "textBoxSmallFont";
+			this.textBoxSmallFont.Size = new System.Drawing.Size(100, 22);
+			this.textBoxSmallFont.TabIndex = 10;
+			this.textBoxSmallFont.Text = "26";
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(157, 260);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(29, 12);
+			this.label4.TabIndex = 11;
+			this.label4.Text = "中字";
+			// 
+			// textBoxNormalFont
+			// 
+			this.textBoxNormalFont.Location = new System.Drawing.Point(192, 256);
+			this.textBoxNormalFont.Name = "textBoxNormalFont";
+			this.textBoxNormalFont.Size = new System.Drawing.Size(100, 22);
+			this.textBoxNormalFont.TabIndex = 12;
+			this.textBoxNormalFont.Text = "33";
+			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(298, 260);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(29, 12);
+			this.label5.TabIndex = 13;
+			this.label5.Text = "大字";
+			// 
+			// textBoxLargeFont
+			// 
+			this.textBoxLargeFont.Location = new System.Drawing.Point(333, 256);
+			this.textBoxLargeFont.Name = "textBoxLargeFont";
+			this.textBoxLargeFont.Size = new System.Drawing.Size(100, 22);
+			this.textBoxLargeFont.TabIndex = 14;
+			this.textBoxLargeFont.Text = "45";
+			// 
+			// buttonApplyFont
+			// 
+			this.buttonApplyFont.Location = new System.Drawing.Point(439, 256);
+			this.buttonApplyFont.Name = "buttonApplyFont";
+			this.buttonApplyFont.Size = new System.Drawing.Size(75, 23);
+			this.buttonApplyFont.TabIndex = 15;
+			this.buttonApplyFont.Text = "修改字體";
+			this.buttonApplyFont.UseVisualStyleBackColor = true;
+			this.buttonApplyFont.Click += new System.EventHandler(this.buttonApplyFont_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(664, 262);
+			this.ClientSize = new System.Drawing.Size(664, 295);
+			this.Controls.Add(this.buttonApplyFont);
+			this.Controls.Add(this.textBoxLargeFont);
+			this.Controls.Add(this.label5);
+			this.Controls.Add(this.textBoxNormalFont);
+			this.Controls.Add(this.label4);
+			this.Controls.Add(this.textBoxSmallFont);
+			this.Controls.Add(this.label3);
 			this.Controls.Add(this.buttonExit);
 			this.Controls.Add(this.label2);
-			this.Controls.Add(this.textBox3);
+			this.Controls.Add(this.textBoxOutput);
 			this.Controls.Add(this.label1);
-			this.Controls.Add(this.textBox1);
+			this.Controls.Add(this.textBoxContentGGPK);
 			this.Controls.Add(this.buttonTranslate);
 			this.Controls.Add(this.buttonSelectPOE);
 			this.Name = "Form1";
@@ -123,11 +198,18 @@
 
 		private System.Windows.Forms.Button buttonSelectPOE;
 		private System.Windows.Forms.Button buttonTranslate;
-		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.TextBox textBoxContentGGPK;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.TextBox textBox3;
+		private System.Windows.Forms.TextBox textBoxOutput;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Button buttonExit;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.TextBox textBoxSmallFont;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.TextBox textBoxNormalFont;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.TextBox textBoxLargeFont;
+		private System.Windows.Forms.Button buttonApplyFont;
 	}
 }
 
