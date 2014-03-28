@@ -223,7 +223,8 @@ namespace VPatchGGPK
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.CheckFileExists = true;
 			ofd.Filter = "GGPK Pack File|*.ggpk";
-			ofd.InitialDirectory = Path.GetDirectoryName(textBoxContentGGPK.Text);
+			if (textBoxContentGGPK.Text != string.Empty)
+				ofd.InitialDirectory = Path.GetDirectoryName(textBoxContentGGPK.Text);
 			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				if (!File.Exists(ofd.FileName))
