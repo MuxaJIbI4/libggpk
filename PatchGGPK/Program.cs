@@ -27,7 +27,7 @@ namespace PatchGGPK
 		private static string contentGGPK = @"\Content.ggpk";
 		private static string ggpkPath = Directory.GetCurrentDirectory() + contentGGPK;
 		private static Dictionary<string, FileRecord> RecordsByPath;
-		private static GGPK content;
+		private static GGPK content = null;
 
 		public static void Main(string[] args)
 		{
@@ -46,6 +46,23 @@ namespace PatchGGPK
 				foreach (string archivePath in archiveFiles)
 				{
 					InitPatchArchive(archivePath);
+				}
+			}
+			// Addons
+			archiveFiles = Directory.GetFiles(Directory.GetCurrentDirectory()+@"\Addons\", "*.zip");
+			if (archiveFiles.Length > 0)
+			{
+				InitGGPK();
+				foreach (string archivePath in archiveFiles)
+				{
+					string msg = string.Format("Apply {0} [y/N]? ", Path.GetFileName(archivePath));
+					Output(msg);
+					ConsoleKeyInfo cki = Console.ReadKey();
+					OutputLine("");
+					if (cki.Key == ConsoleKey.Y) 
+					{
+						InitPatchArchive(archivePath);
+					}
 				}
 			}
 			OutputLine("Press any key to continue...");
@@ -119,6 +136,9 @@ namespace PatchGGPK
 
 		private static void InitGGPK()
 		{
+			if (content != null)
+				return;
+
 			ggpkPath = searchContentGGPK();
 			if (!File.Exists(ggpkPath))
 			{
