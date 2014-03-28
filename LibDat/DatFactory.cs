@@ -100,6 +100,10 @@ namespace LibDat
 					return typeof(EndlessLedgeChests);
 				case "Environments":
 					return typeof(Environments);
+				case "EventSeason":
+					return typeof(EventSeason);
+				case "EventSeasonRewards":
+					return typeof(EventSeasonRewards);
 				case "ExperienceLevels":
 					return typeof(ExperienceLevels);
 				case "Flasks":
@@ -369,6 +373,10 @@ namespace LibDat
 					return new EndlessLedgeChests(inStream);
 				case "Environments":
 					return new Environments(inStream);
+				case "EventSeason":
+					return new EventSeason(inStream);
+				case "EventSeasonRewards":
+					return new EventSeasonRewards(inStream);
 				case "ExperienceLevels":
 					return new ExperienceLevels(inStream);
 				case "Flasks":

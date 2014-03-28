@@ -85,6 +85,8 @@
     <Compile Include="Files\EffectivenessCostConstants.cs" />
     <Compile Include="Files\EndlessLedgeChests.cs" />
     <Compile Include="Files\Environments.cs" />
+    <Compile Include="Files\EventSeason.cs" />
+    <Compile Include="Files\EventSeasonRewards.cs" />
     <Compile Include="Files\ExperienceLevels.cs" />
     <Compile Include="Files\Flasks.cs" />
     <Compile Include="Files\FlaskType.cs" />
