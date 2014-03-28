@@ -32,6 +32,7 @@ namespace VPatchGGPK
 				textBoxContentGGPK.Text = ggpkPath;
 				OutputLine(ggpkPath);
 			}
+			ApplyLabelColor();
 		}
 
 		private void Output(string msg)
@@ -367,6 +368,111 @@ namespace VPatchGGPK
 
 				break;
 			}
+		}
+
+		private void ApplyLabelColor()
+		{
+			labelUnique.BackColor = Color.FromName("black");
+			labelUnique.ForeColor = Color.FromArgb(
+				Convert.ToInt32(textBoxUniqueR.Text), 
+				Convert.ToInt32(textBoxUniqueG.Text),
+				Convert.ToInt32(textBoxUniqueB.Text));
+			labelRare.BackColor = Color.FromName("black");
+			labelRare.ForeColor = Color.FromArgb(
+				Convert.ToInt32(textBoxRareR.Text),
+				Convert.ToInt32(textBoxRareG.Text),
+				Convert.ToInt32(textBoxRareB.Text));
+			labelMagic.BackColor = Color.FromName("black");
+			labelMagic.ForeColor = Color.FromArgb(
+				Convert.ToInt32(textBoxMagicR.Text),
+				Convert.ToInt32(textBoxMagicG.Text),
+				Convert.ToInt32(textBoxMagicB.Text));
+			labelGem.BackColor = Color.FromName("black");
+			labelGem.ForeColor = Color.FromArgb(
+				Convert.ToInt32(textBoxGemR.Text),
+				Convert.ToInt32(textBoxGemG.Text),
+				Convert.ToInt32(textBoxGemB.Text));
+			labelCurrency.BackColor = Color.FromName("black");
+			labelCurrency.ForeColor = Color.FromArgb(
+				Convert.ToInt32(textBoxCurrencyR.Text),
+				Convert.ToInt32(textBoxCurrencyG.Text),
+				Convert.ToInt32(textBoxCurrencyB.Text));
+		}
+
+		private void buttonApplyColor_Click(object sender, EventArgs e)
+		{
+			ApplyLabelColor();
+
+			InitGGPK();
+
+			if (content == null)
+				return;
+
+			foreach (var recordOffset in content.RecordOffsets)
+			{
+				FileRecord record = recordOffset.Value as FileRecord;
+
+				if (record == null || record.ContainingDirectory == null || record.Name != "named_colours.txt")
+				{
+					continue;
+				}
+
+				byte[] datBytes = record.ReadData(textBoxContentGGPK.Text);
+				char c = '\ufeff';
+				string lines = c.ToString();
+				using (MemoryStream datStream = new MemoryStream(datBytes))
+				{
+					using (var reader = new StreamReader(datStream, Encoding.Unicode))
+					{
+						string line;
+
+						while ((line = reader.ReadLine()) != null)
+						{
+							if (line.Contains("uniqueitem rgb"))
+							{
+								line = string.Format("uniqueitem rgb({0},{1},{2})", textBoxUniqueR.Text,
+									textBoxUniqueG.Text, textBoxUniqueB.Text);
+							}
+							else if (line.Contains("rareitem rgb"))
+							{
+								line = string.Format("rareitem rgb({0},{1},{2})", textBoxRareR.Text,
+									textBoxRareG.Text, textBoxRareB.Text);
+							}
+							else if (line.Contains("magicitem rgb"))
+							{
+								line = string.Format("magicitem rgb({0},{1},{2})", textBoxMagicR.Text,
+									textBoxMagicG.Text, textBoxMagicB.Text);
+							}
+							else if (line.Contains("gemitem rgb"))
+							{
+								line = string.Format("gemitem rgb({0},{1},{2})", textBoxGemR.Text,
+									textBoxGemG.Text, textBoxGemB.Text);
+							}
+							else if (line.Contains("currencyitem rgb"))
+							{
+								line = string.Format("currencyitem rgb({0},{1},{2})", textBoxCurrencyR.Text,
+									textBoxCurrencyG.Text, textBoxCurrencyB.Text);
+							}
+							lines += line + "\r\n";
+						}
+
+					}
+				}
+				//System.IO.File.WriteAllText("WriteLines.txt", lines, Encoding.Unicode);
+				string common_ui = "Metadata\\UI\\named_colours.txt";
+				if (RecordsByPath.ContainsKey(common_ui))
+				{
+					RecordsByPath[common_ui].ReplaceContents(textBoxContentGGPK.Text, Encoding.Unicode.GetBytes(lines), content.FreeRoot);
+					OutputLine("Color Changed.");
+				}
+
+				break;
+			}
+		}
+
+		private void button1_Click_1(object sender, EventArgs e)
+		{
+			ApplyLabelColor();
 		}
 	}
 }
