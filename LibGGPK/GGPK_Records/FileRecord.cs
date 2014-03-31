@@ -230,38 +230,38 @@ namespace LibGGPK
 			{"", DataFormat.Unknown},
 			{".act", DataFormat.Unicode},
 			{".ais", DataFormat.Unicode},
-			{".amd", DataFormat.Unicode},
-			{".ao", DataFormat.Unicode},
-			{".aoc", DataFormat.Unicode},
+			{".amd", DataFormat.Unicode}, // Animated Meta Data
+			{".ao", DataFormat.Unicode}, // Animated Object
+			{".aoc", DataFormat.Unicode}, // Animated Object Controller
 			{".arl", DataFormat.Unicode},
-			{".arm", DataFormat.Unicode},
-			{".ast", DataFormat.Unknown},
+			{".arm", DataFormat.Unicode}, // Rooms
+			{".ast", DataFormat.Unknown}, // Skeleton
 			{".atlas", DataFormat.Unicode},
 			{".bat", DataFormat.Unknown},
 			{".cfg", DataFormat.Ascii},
-			{".cht", DataFormat.Unicode},
+			{".cht", DataFormat.Unicode}, // ChestData
 			{".clt", DataFormat.Unicode},
 			{".csv", DataFormat.Ascii},
 			{".dat", DataFormat.Dat},
-			{".dct", DataFormat.Unicode},
+			{".dct", DataFormat.Unicode}, // Decals
 			{".dds", DataFormat.TextureDDS},
-			{".ddt", DataFormat.Unicode},
+			{".ddt", DataFormat.Unicode}, // Doodads
 			{".dgr", DataFormat.Unicode},
 			{".dlp", DataFormat.Unicode},
 			{".ecf", DataFormat.Unicode},
-			{".env", DataFormat.Unicode},
+			{".env", DataFormat.Unicode}, // Environment
 			{".epk", DataFormat.Unicode},
 			{".et", DataFormat.Unicode},
-			{".ffx", DataFormat.Unicode},
+			{".ffx", DataFormat.Unicode}, // FFX Render
 			{".fmt", DataFormat.Unknown},
-			{".fx", DataFormat.Ascii},
+			{".fx", DataFormat.Ascii}, // Shader
 			{".gft", DataFormat.Unicode},
-			{".gt", DataFormat.Unicode},
+			{".gt", DataFormat.Unicode}, // Ground Types
 			{".idl", DataFormat.Unicode},
 			{".idt", DataFormat.Unicode},
 			{".jpg", DataFormat.Image},
-			{".mat", DataFormat.Unicode},
-			{".mel", DataFormat.Ascii},
+			{".mat", DataFormat.Unicode}, // Materials
+			{".mel", DataFormat.Ascii}, // Maya Embedded Language
 			{".mtd", DataFormat.Unicode},
 			{".mtp", DataFormat.Unknown},
 			{".ogg", DataFormat.Sound},
@@ -272,11 +272,11 @@ namespace LibGGPK
 			{".properties", DataFormat.Ascii},
 			{".psg", DataFormat.Unknown},
 			{".red", DataFormat.Unicode},
-			{".rs", DataFormat.Unicode},
+			{".rs", DataFormat.Unicode}, // Room Set
 			{".rtf", DataFormat.RichText},
 			{".slt", DataFormat.Ascii},
-			{".sm", DataFormat.Unicode},
-			{".smd", DataFormat.Unknown},
+			{".sm", DataFormat.Unicode}, // Skin Mesh
+			{".smd", DataFormat.Unknown}, // Skin Mesh Data
 			{".tdt", DataFormat.Unknown},
 			{".tgm", DataFormat.Unknown},
 			{".tgr", DataFormat.Unicode},
@@ -284,9 +284,9 @@ namespace LibGGPK
 			{".tmd", DataFormat.Unknown},
 			{".tsi", DataFormat.Unicode},
 			{".tst", DataFormat.Unicode},
-			{".ttf", DataFormat.Unknown},
+			{".ttf", DataFormat.Unknown}, // Font
 			{".txt", DataFormat.Unicode},
-			{".ui", DataFormat.Unicode},
+			{".ui", DataFormat.Unicode}, // User Interface
 			{".xls", DataFormat.Unknown},
 			{".xlsx", DataFormat.Unknown},
 			{".xml", DataFormat.Unicode},

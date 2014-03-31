@@ -159,7 +159,7 @@ namespace PatchGGPK
 
 		private static void InitPatchArchive(string archivePath)
 		{
-			if (File.Exists(ggpkPath)) 
+			if (content != null)
 			{ 
 				if (content.IsReadOnly)
 				{
