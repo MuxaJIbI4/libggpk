@@ -808,6 +808,8 @@ namespace VisualGGPK
 			this.Topmost = true;
 			this.Topmost = false;
 
+			// reset viewer to show output message
+			ResetViewer();
 			textBoxOutput.Text = string.Empty;
 			textBoxOutput.Visibility = System.Windows.Visibility.Visible;
 
