@@ -49,19 +49,22 @@ namespace PatchGGPK
 				}
 			}
 			// Addons
-			archiveFiles = Directory.GetFiles(Directory.GetCurrentDirectory()+@"\Addons\", "*.zip");
-			if (archiveFiles.Length > 0)
-			{
-				InitGGPK();
-				foreach (string archivePath in archiveFiles)
+			if (Directory.Exists(Directory.GetCurrentDirectory() + @"\Addons\")) 
+			{ 
+				archiveFiles = Directory.GetFiles(Directory.GetCurrentDirectory()+@"\Addons\", "*.zip");
+				if (archiveFiles.Length > 0)
 				{
-					string msg = string.Format("Apply {0} [y/N]? ", Path.GetFileName(archivePath));
-					Output(msg);
-					ConsoleKeyInfo cki = Console.ReadKey();
-					OutputLine("");
-					if (cki.Key == ConsoleKey.Y) 
+					InitGGPK();
+					foreach (string archivePath in archiveFiles)
 					{
-						InitPatchArchive(archivePath);
+						string msg = string.Format("Apply {0} [y/N]? ", Path.GetFileName(archivePath));
+						Output(msg);
+						ConsoleKeyInfo cki = Console.ReadKey();
+						OutputLine("");
+						if (cki.Key == ConsoleKey.Y) 
+						{
+							InitPatchArchive(archivePath);
+						}
 					}
 				}
 			}
@@ -185,21 +188,12 @@ namespace PatchGGPK
 							byte[] versionData = new byte[item.UncompressedSize];
 							reader.Read(versionData, 0, versionData.Length);
 							string versionStr = Encoding.UTF8.GetString(versionData, 0, versionData.Length);
-							foreach (var recordOffset in content.RecordOffsets)
+							if (RecordsByPath.ContainsKey("patch_notes.rtf"))
 							{
-								FileRecord record = recordOffset.Value as FileRecord;
-								if (record == null || record.ContainingDirectory == null)
+								string Hash = BitConverter.ToString(RecordsByPath["patch_notes.rtf"].Hash);
+								if (versionStr.Substring(0, Hash.Length).Equals(Hash))
 								{
-									continue;
-								}
-								if (record.Name.Equals("patch_notes.rtf"))
-								{
-									string Hash = BitConverter.ToString(record.Hash);
-									if (versionStr.Substring(0, Hash.Length).Equals(Hash))
-									{
-										VersionCheck = true;
-									}
-									break;
+									VersionCheck = true;
 								}
 							}
 						}
