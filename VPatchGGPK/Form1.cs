@@ -307,16 +307,10 @@ namespace VPatchGGPK
 			if (content == null)
 				return;
 
-			foreach (var recordOffset in content.RecordOffsets)
+			string common_ui = "Metadata\\UI\\Common.ui";
+			if (RecordsByPath.ContainsKey(common_ui))
 			{
-				FileRecord record = recordOffset.Value as FileRecord;
-
-				if (record == null || record.ContainingDirectory == null || record.Name != "Common.ui")
-				{
-					continue;
-				}
-
-				byte[] datBytes = record.ReadData(textBoxContentGGPK.Text);
+				byte[] datBytes = RecordsByPath[common_ui].ReadData(textBoxContentGGPK.Text);
 				char c = '\ufeff';
 				string lines = c.ToString();
 				using (MemoryStream datStream = new MemoryStream(datBytes))
@@ -359,15 +353,8 @@ namespace VPatchGGPK
 						
 					}
 				}
-				//System.IO.File.WriteAllText("WriteLines.txt", lines, Encoding.Unicode);
-				string common_ui = "Metadata\\UI\\Common.ui";
-				if (lines.Length > 2000 && RecordsByPath.ContainsKey(common_ui))
-				{
-					RecordsByPath[common_ui].ReplaceContents(textBoxContentGGPK.Text, Encoding.Unicode.GetBytes(lines), content.FreeRoot);
-					OutputLine("Font Size Changed.");
-				}
-
-				break;
+				RecordsByPath[common_ui].ReplaceContents(textBoxContentGGPK.Text, Encoding.Unicode.GetBytes(lines), content.FreeRoot);
+				OutputLine("Font Size Changed.");
 			}
 		}
 
@@ -409,16 +396,10 @@ namespace VPatchGGPK
 			if (content == null)
 				return;
 
-			foreach (var recordOffset in content.RecordOffsets)
+			string common_ui = "Metadata\\UI\\named_colours.txt";
+			if (RecordsByPath.ContainsKey(common_ui))
 			{
-				FileRecord record = recordOffset.Value as FileRecord;
-
-				if (record == null || record.ContainingDirectory == null || record.Name != "named_colours.txt")
-				{
-					continue;
-				}
-
-				byte[] datBytes = record.ReadData(textBoxContentGGPK.Text);
+				byte[] datBytes = RecordsByPath[common_ui].ReadData(textBoxContentGGPK.Text);
 				char c = '\ufeff';
 				string lines = c.ToString();
 				using (MemoryStream datStream = new MemoryStream(datBytes))
@@ -459,15 +440,8 @@ namespace VPatchGGPK
 
 					}
 				}
-				//System.IO.File.WriteAllText("WriteLines.txt", lines, Encoding.Unicode);
-				string common_ui = "Metadata\\UI\\named_colours.txt";
-				if (RecordsByPath.ContainsKey(common_ui))
-				{
-					RecordsByPath[common_ui].ReplaceContents(textBoxContentGGPK.Text, Encoding.Unicode.GetBytes(lines), content.FreeRoot);
-					OutputLine("Color Changed.");
-				}
-
-				break;
+				RecordsByPath[common_ui].ReplaceContents(textBoxContentGGPK.Text, Encoding.Unicode.GetBytes(lines), content.FreeRoot);
+				OutputLine("Color Changed.");
 			}
 		}
 
