@@ -516,7 +516,7 @@ namespace VisualGGPK
 							if (RecordsByPath.ContainsKey("patch_notes.rtf"))
 							{
 								string Hash = BitConverter.ToString(RecordsByPath["patch_notes.rtf"].Hash);
-								if (versionStr.Substring(0, Hash.Length).Equals(Hash))
+								if (!versionStr.Substring(0, Hash.Length).Equals(Hash))
 								{
 									OutputLine(Settings.Strings["MainWindow_VersionCheck_Failed"]);
 									return;
