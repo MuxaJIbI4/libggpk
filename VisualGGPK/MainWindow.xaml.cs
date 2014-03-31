@@ -194,7 +194,7 @@ namespace VisualGGPK
 
 				textBoxOffset.Text = selectedDirectory.Record.RecordBegin.ToString("X");
 				textBoxSize.Text = selectedDirectory.Record.Entries.Length.ToString();
-				textBoxNameHash.Text = selectedDirectory.Record.EntryNameHash.ToString("X");
+				textBoxNameHash.Text = selectedDirectory.Record.GetNameHash().ToString("X");
 				textBoxHash.Text = BitConverter.ToString(selectedDirectory.Record.Hash);
 				return;
 			}
@@ -205,7 +205,7 @@ namespace VisualGGPK
 
 			textBoxOffset.Text = selectedRecord.RecordBegin.ToString("X");
 			textBoxSize.Text = selectedRecord.DataLength.ToString();
-			textBoxNameHash.Text = selectedRecord.EntryNameHash.ToString("X");
+			textBoxNameHash.Text = selectedRecord.GetNameHash().ToString("X");
 			textBoxHash.Text = BitConverter.ToString(selectedRecord.Hash);
 
 			try
@@ -239,7 +239,7 @@ namespace VisualGGPK
 				ResetViewer();
 				textBoxOffset.Text = selectedRecord.RecordBegin.ToString("X");
 				textBoxSize.Text = selectedRecord.DataLength.ToString();
-				textBoxNameHash.Text = selectedRecord.EntryNameHash.ToString("X");
+				textBoxNameHash.Text = selectedRecord.GetNameHash().ToString("X");
 				textBoxHash.Text = BitConverter.ToString(selectedRecord.Hash);
 				textBoxOutput.Visibility = System.Windows.Visibility.Visible;
 

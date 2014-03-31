@@ -34,10 +34,6 @@ namespace LibGGPK
 		/// Directory this file resides in
 		/// </summary>
 		public DirectoryTreeNode ContainingDirectory;
-		/// <summary>
-		/// Murmur2 hash of lowercase entry name
-		/// </summary>
-		public int EntryNameHash;
 
 		/// <summary>
 		/// Types of data a file can contain
@@ -144,6 +140,8 @@ namespace LibGGPK
 		{
 			get
 			{
+				if (Name.Equals("GameObjectRegister"))
+					return DataFormat.Unicode;
 				return KnownFileFormats[Path.GetExtension(Name).ToLower()];
 			}
 		}
@@ -155,6 +153,11 @@ namespace LibGGPK
 		public string GetDirectoryPath()
 		{
 			return ContainingDirectory.GetDirectoryPath();
+		}
+
+		public uint GetNameHash()
+		{
+			return Murmur.Hash2(Name);
 		}
 
 		/// <summary>
@@ -206,7 +209,7 @@ namespace LibGGPK
 				bw.Write(replacmentData);
 			}
 
-			ContainingDirectory.Record.UpdateOffset(ggpkPath, EntryNameHash, RecordBegin);
+			ContainingDirectory.Record.UpdateOffset(ggpkPath, GetNameHash(), RecordBegin);
 		}
 
 		/// <summary>

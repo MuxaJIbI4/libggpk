@@ -13,20 +13,20 @@ using System.Text;
 
 // 1. It will not work incrementally.
 // 2. It will not produce the same results on little-endian and big-endian
-//    machines.
+//	machines.
 
-namespace PoeStrings
+namespace LibGGPK
 {
-	class Hash
+	class Murmur
 	{
 		private const uint DefaultMurmurSeed = 0;
 
-		public static uint MurmurHash2(string str, uint seed = DefaultMurmurSeed)
+		public static uint Hash2(string str, uint seed = DefaultMurmurSeed)
 		{
-			return MurmurHash2(Encoding.Unicode.GetBytes(str), DefaultMurmurSeed);
+			return Hash2(Encoding.Unicode.GetBytes(str.ToLower()), DefaultMurmurSeed);
 		}
 
-		public static uint MurmurHash2(byte[] data, uint seed = DefaultMurmurSeed)
+		private static uint Hash2(byte[] data, uint seed = DefaultMurmurSeed)
 		{
 			// 'm' and 'r' are mixing constants generated offline.
 			// They're not really 'magic', they just happen to work well.

@@ -70,7 +70,6 @@ namespace LibGGPK
 			{
 				// This offset is a directory, add it as a child of root and process all of it's entries
 				DirectoryRecord currentDirectory = recordOffsets[directoryEntry.Offset] as DirectoryRecord;
-				currentDirectory.EntryNameHash = directoryEntry.EntryNameHash;
 				DirectoryTreeNode child = new DirectoryTreeNode()
 				{
 					Name = currentDirectory.Name,
@@ -91,10 +90,9 @@ namespace LibGGPK
 			{
 				FileRecord currentFile = recordOffsets[directoryEntry.Offset] as FileRecord;
 				// Skip empty .dat Files under Data/
-				if (root.Name.Equals("Data") && currentFile.DataLength == 12)
-					return;
+				//if (root.Name.Equals("Data") && currentFile.DataLength == 12)
+				//	return;
 				currentFile.ContainingDirectory = root;
-				currentFile.EntryNameHash = directoryEntry.EntryNameHash;
 				root.Files.Add(currentFile);
 			}
 		}

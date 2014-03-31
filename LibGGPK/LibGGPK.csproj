@@ -49,6 +49,7 @@
     <Compile Include="GGPK_Records\FileRecord.cs" />
     <Compile Include="GGPK_Records\FreeRecord.cs" />
     <Compile Include="GGPK_Records\GGPKRecord.cs" />
+    <Compile Include="Murmur.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecordFactory.cs" />
     <Compile Include="Utils.cs" />
