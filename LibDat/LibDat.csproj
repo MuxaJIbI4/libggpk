@@ -98,7 +98,9 @@
     <Compile Include="Files\GrantedEffects.cs" />
     <Compile Include="Files\GrantedEffectsPerLevel.cs" />
     <Compile Include="Files\ImpactSoundData.cs" />
+    <Compile Include="Files\InvasionMonsterGroups.cs" />
     <Compile Include="Files\InvasionMonsterRestrictions.cs" />
+    <Compile Include="Files\InvasionMonsterRoles.cs" />
     <Compile Include="Files\InvasionMonstersPerArea.cs" />
     <Compile Include="Files\ItemClasses.cs" />
     <Compile Include="Files\ItemExperiencePerLevel.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="Files\Tags.cs" />
     <Compile Include="Files\Topologies.cs" />
     <Compile Include="Files\UniqueChests.cs" />
+    <Compile Include="Files\UniqueSetNames.cs" />
     <Compile Include="Files\UniqueSets.cs" />
     <Compile Include="Files\VoteState.cs" />
     <Compile Include="Files\VoteType.cs" />
