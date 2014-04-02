@@ -14,6 +14,7 @@ using System.Linq.Expressions;
 using LibDat;
 using LibDat.Files;
 using Ionic.Zip;
+using System.Globalization;
 
 namespace VPatchGGPK
 {
@@ -33,6 +34,29 @@ namespace VPatchGGPK
 				OutputLine(ggpkPath);
 			}
 			ApplyLabelColor();
+
+			if (CultureInfo.CurrentCulture.Name.Equals("zh-TW"))
+			{
+				labelContentGGPKPath.Text = "Content.ggpk 路徑";
+				buttonSelectPOE.Text = "選擇 POE";
+				buttonApplyZIP.Text = "套用 ZIP";
+				buttonClose.Text = "關閉";
+
+				groupBoxFontSize.Text = "字體大小";
+				labelSmallFont.Text = "小字";
+				labelNormalFont.Text = "中字";
+				labelLargeFont.Text = "大字";
+				buttonApplyFont.Text = "修改字體";
+
+				groupBoxColor.Text = "顏色修改(R, G, B)";
+				labelUnique.Text = "獨特";
+				labelRare.Text = "稀有";
+				labelMagic.Text = "魔法";
+				labelGem.Text = "寶石";
+				labelCurrency.Text = "通貨";
+				buttonTestColor.Text = "測試顏色";
+				buttonApplyColor.Text = "修改顏色";
+			}
 		}
 
 		private void Output(string msg)

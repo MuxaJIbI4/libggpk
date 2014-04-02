@@ -29,45 +29,45 @@
 		private void InitializeComponent()
 		{
 			this.buttonSelectPOE = new System.Windows.Forms.Button();
-			this.buttonTranslate = new System.Windows.Forms.Button();
+			this.buttonApplyZIP = new System.Windows.Forms.Button();
 			this.textBoxContentGGPK = new System.Windows.Forms.TextBox();
-			this.label1 = new System.Windows.Forms.Label();
+			this.labelContentGGPKPath = new System.Windows.Forms.Label();
 			this.textBoxOutput = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
-			this.buttonExit = new System.Windows.Forms.Button();
-			this.label3 = new System.Windows.Forms.Label();
+			this.buttonClose = new System.Windows.Forms.Button();
+			this.labelSmallFont = new System.Windows.Forms.Label();
 			this.textBoxSmallFont = new System.Windows.Forms.TextBox();
-			this.label4 = new System.Windows.Forms.Label();
+			this.labelNormalFont = new System.Windows.Forms.Label();
 			this.textBoxNormalFont = new System.Windows.Forms.TextBox();
-			this.label5 = new System.Windows.Forms.Label();
+			this.labelLargeFont = new System.Windows.Forms.Label();
 			this.textBoxLargeFont = new System.Windows.Forms.TextBox();
 			this.buttonApplyFont = new System.Windows.Forms.Button();
 			this.labelUnique = new System.Windows.Forms.Label();
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.textBoxUniqueR = new System.Windows.Forms.TextBox();
-			this.textBoxUniqueG = new System.Windows.Forms.TextBox();
-			this.textBoxUniqueB = new System.Windows.Forms.TextBox();
-			this.labelRare = new System.Windows.Forms.Label();
-			this.textBoxRareB = new System.Windows.Forms.TextBox();
-			this.textBoxRareG = new System.Windows.Forms.TextBox();
-			this.textBoxRareR = new System.Windows.Forms.TextBox();
-			this.textBoxMagicB = new System.Windows.Forms.TextBox();
-			this.textBoxMagicG = new System.Windows.Forms.TextBox();
-			this.textBoxMagicR = new System.Windows.Forms.TextBox();
-			this.labelMagic = new System.Windows.Forms.Label();
-			this.textBoxGemB = new System.Windows.Forms.TextBox();
-			this.textBoxGemG = new System.Windows.Forms.TextBox();
-			this.textBoxGemR = new System.Windows.Forms.TextBox();
-			this.labelGem = new System.Windows.Forms.Label();
-			this.buttonApplyColor = new System.Windows.Forms.Button();
+			this.groupBoxFontSize = new System.Windows.Forms.GroupBox();
+			this.groupBoxColor = new System.Windows.Forms.GroupBox();
+			this.buttonTestColor = new System.Windows.Forms.Button();
 			this.textBoxCurrencyB = new System.Windows.Forms.TextBox();
 			this.textBoxCurrencyG = new System.Windows.Forms.TextBox();
 			this.textBoxCurrencyR = new System.Windows.Forms.TextBox();
 			this.labelCurrency = new System.Windows.Forms.Label();
-			this.buttonTestColor = new System.Windows.Forms.Button();
-			this.groupBox1.SuspendLayout();
-			this.groupBox2.SuspendLayout();
+			this.buttonApplyColor = new System.Windows.Forms.Button();
+			this.textBoxGemB = new System.Windows.Forms.TextBox();
+			this.textBoxGemG = new System.Windows.Forms.TextBox();
+			this.textBoxGemR = new System.Windows.Forms.TextBox();
+			this.labelGem = new System.Windows.Forms.Label();
+			this.textBoxMagicB = new System.Windows.Forms.TextBox();
+			this.textBoxMagicG = new System.Windows.Forms.TextBox();
+			this.textBoxMagicR = new System.Windows.Forms.TextBox();
+			this.labelMagic = new System.Windows.Forms.Label();
+			this.textBoxRareB = new System.Windows.Forms.TextBox();
+			this.textBoxRareG = new System.Windows.Forms.TextBox();
+			this.textBoxRareR = new System.Windows.Forms.TextBox();
+			this.labelRare = new System.Windows.Forms.Label();
+			this.textBoxUniqueB = new System.Windows.Forms.TextBox();
+			this.textBoxUniqueG = new System.Windows.Forms.TextBox();
+			this.textBoxUniqueR = new System.Windows.Forms.TextBox();
+			this.groupBoxFontSize.SuspendLayout();
+			this.groupBoxColor.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// buttonSelectPOE
@@ -76,19 +76,19 @@
 			this.buttonSelectPOE.Name = "buttonSelectPOE";
 			this.buttonSelectPOE.Size = new System.Drawing.Size(75, 23);
 			this.buttonSelectPOE.TabIndex = 0;
-			this.buttonSelectPOE.Text = "選擇 POE";
+			this.buttonSelectPOE.Text = "Select POE";
 			this.buttonSelectPOE.UseVisualStyleBackColor = true;
 			this.buttonSelectPOE.Click += new System.EventHandler(this.button1_Click);
 			// 
-			// buttonTranslate
+			// buttonApplyZIP
 			// 
-			this.buttonTranslate.Location = new System.Drawing.Point(414, 70);
-			this.buttonTranslate.Name = "buttonTranslate";
-			this.buttonTranslate.Size = new System.Drawing.Size(75, 23);
-			this.buttonTranslate.TabIndex = 1;
-			this.buttonTranslate.Text = "中文化";
-			this.buttonTranslate.UseVisualStyleBackColor = true;
-			this.buttonTranslate.Click += new System.EventHandler(this.button2_Click);
+			this.buttonApplyZIP.Location = new System.Drawing.Point(414, 70);
+			this.buttonApplyZIP.Name = "buttonApplyZIP";
+			this.buttonApplyZIP.Size = new System.Drawing.Size(75, 23);
+			this.buttonApplyZIP.TabIndex = 1;
+			this.buttonApplyZIP.Text = "Apply ZIP";
+			this.buttonApplyZIP.UseVisualStyleBackColor = true;
+			this.buttonApplyZIP.Click += new System.EventHandler(this.button2_Click);
 			// 
 			// textBoxContentGGPK
 			// 
@@ -97,14 +97,14 @@
 			this.textBoxContentGGPK.Size = new System.Drawing.Size(371, 22);
 			this.textBoxContentGGPK.TabIndex = 2;
 			// 
-			// label1
+			// labelContentGGPKPath
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(12, 17);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(96, 12);
-			this.label1.TabIndex = 4;
-			this.label1.Text = "Content.ggpk 路徑";
+			this.labelContentGGPKPath.AutoSize = true;
+			this.labelContentGGPKPath.Location = new System.Drawing.Point(12, 17);
+			this.labelContentGGPKPath.Name = "labelContentGGPKPath";
+			this.labelContentGGPKPath.Size = new System.Drawing.Size(92, 12);
+			this.labelContentGGPKPath.TabIndex = 4;
+			this.labelContentGGPKPath.Text = "Content.ggpk Path";
 			// 
 			// textBoxOutput
 			// 
@@ -123,24 +123,24 @@
 			this.label2.TabIndex = 7;
 			this.label2.Text = "statue";
 			// 
-			// buttonExit
+			// buttonClose
 			// 
-			this.buttonExit.Location = new System.Drawing.Point(414, 227);
-			this.buttonExit.Name = "buttonExit";
-			this.buttonExit.Size = new System.Drawing.Size(75, 23);
-			this.buttonExit.TabIndex = 8;
-			this.buttonExit.Text = "關閉";
-			this.buttonExit.UseVisualStyleBackColor = true;
-			this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
+			this.buttonClose.Location = new System.Drawing.Point(414, 227);
+			this.buttonClose.Name = "buttonClose";
+			this.buttonClose.Size = new System.Drawing.Size(75, 23);
+			this.buttonClose.TabIndex = 8;
+			this.buttonClose.Text = "Close";
+			this.buttonClose.UseVisualStyleBackColor = true;
+			this.buttonClose.Click += new System.EventHandler(this.buttonExit_Click);
 			// 
-			// label3
+			// labelSmallFont
 			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(6, 21);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(29, 12);
-			this.label3.TabIndex = 9;
-			this.label3.Text = "小字";
+			this.labelSmallFont.AutoSize = true;
+			this.labelSmallFont.Location = new System.Drawing.Point(6, 21);
+			this.labelSmallFont.Name = "labelSmallFont";
+			this.labelSmallFont.Size = new System.Drawing.Size(31, 12);
+			this.labelSmallFont.TabIndex = 9;
+			this.labelSmallFont.Text = "Small";
 			// 
 			// textBoxSmallFont
 			// 
@@ -150,14 +150,14 @@
 			this.textBoxSmallFont.TabIndex = 10;
 			this.textBoxSmallFont.Text = "26";
 			// 
-			// label4
+			// labelNormalFont
 			// 
-			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(6, 49);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(29, 12);
-			this.label4.TabIndex = 11;
-			this.label4.Text = "中字";
+			this.labelNormalFont.AutoSize = true;
+			this.labelNormalFont.Location = new System.Drawing.Point(6, 49);
+			this.labelNormalFont.Name = "labelNormalFont";
+			this.labelNormalFont.Size = new System.Drawing.Size(40, 12);
+			this.labelNormalFont.TabIndex = 11;
+			this.labelNormalFont.Text = "Normal";
 			// 
 			// textBoxNormalFont
 			// 
@@ -167,14 +167,14 @@
 			this.textBoxNormalFont.TabIndex = 12;
 			this.textBoxNormalFont.Text = "33";
 			// 
-			// label5
+			// labelLargeFont
 			// 
-			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(6, 80);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(29, 12);
-			this.label5.TabIndex = 13;
-			this.label5.Text = "大字";
+			this.labelLargeFont.AutoSize = true;
+			this.labelLargeFont.Location = new System.Drawing.Point(6, 80);
+			this.labelLargeFont.Name = "labelLargeFont";
+			this.labelLargeFont.Size = new System.Drawing.Size(32, 12);
+			this.labelLargeFont.TabIndex = 13;
+			this.labelLargeFont.Text = "Large";
 			// 
 			// textBoxLargeFont
 			// 
@@ -190,7 +190,7 @@
 			this.buttonApplyFont.Name = "buttonApplyFont";
 			this.buttonApplyFont.Size = new System.Drawing.Size(75, 23);
 			this.buttonApplyFont.TabIndex = 15;
-			this.buttonApplyFont.Text = "修改字體";
+			this.buttonApplyFont.Text = "Apply Font";
 			this.buttonApplyFont.UseVisualStyleBackColor = true;
 			this.buttonApplyFont.Click += new System.EventHandler(this.buttonApplyFont_Click);
 			// 
@@ -199,114 +199,143 @@
 			this.labelUnique.AutoSize = true;
 			this.labelUnique.Location = new System.Drawing.Point(6, 21);
 			this.labelUnique.Name = "labelUnique";
-			this.labelUnique.Size = new System.Drawing.Size(29, 12);
+			this.labelUnique.Size = new System.Drawing.Size(39, 12);
 			this.labelUnique.TabIndex = 16;
-			this.labelUnique.Text = "獨特";
+			this.labelUnique.Text = "Unique";
 			// 
-			// groupBox1
+			// groupBoxFontSize
 			// 
-			this.groupBox1.Controls.Add(this.label3);
-			this.groupBox1.Controls.Add(this.textBoxSmallFont);
-			this.groupBox1.Controls.Add(this.buttonApplyFont);
-			this.groupBox1.Controls.Add(this.label4);
-			this.groupBox1.Controls.Add(this.textBoxLargeFont);
-			this.groupBox1.Controls.Add(this.textBoxNormalFont);
-			this.groupBox1.Controls.Add(this.label5);
-			this.groupBox1.Location = new System.Drawing.Point(14, 256);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(94, 140);
-			this.groupBox1.TabIndex = 17;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "字體大小";
+			this.groupBoxFontSize.Controls.Add(this.labelSmallFont);
+			this.groupBoxFontSize.Controls.Add(this.textBoxSmallFont);
+			this.groupBoxFontSize.Controls.Add(this.buttonApplyFont);
+			this.groupBoxFontSize.Controls.Add(this.labelNormalFont);
+			this.groupBoxFontSize.Controls.Add(this.textBoxLargeFont);
+			this.groupBoxFontSize.Controls.Add(this.textBoxNormalFont);
+			this.groupBoxFontSize.Controls.Add(this.labelLargeFont);
+			this.groupBoxFontSize.Location = new System.Drawing.Point(14, 256);
+			this.groupBoxFontSize.Name = "groupBoxFontSize";
+			this.groupBoxFontSize.Size = new System.Drawing.Size(94, 140);
+			this.groupBoxFontSize.TabIndex = 17;
+			this.groupBoxFontSize.TabStop = false;
+			this.groupBoxFontSize.Text = "Font Size";
 			// 
-			// groupBox2
+			// groupBoxColor
 			// 
-			this.groupBox2.Controls.Add(this.buttonTestColor);
-			this.groupBox2.Controls.Add(this.textBoxCurrencyB);
-			this.groupBox2.Controls.Add(this.textBoxCurrencyG);
-			this.groupBox2.Controls.Add(this.textBoxCurrencyR);
-			this.groupBox2.Controls.Add(this.label2);
-			this.groupBox2.Controls.Add(this.labelCurrency);
-			this.groupBox2.Controls.Add(this.buttonApplyColor);
-			this.groupBox2.Controls.Add(this.textBoxGemB);
-			this.groupBox2.Controls.Add(this.textBoxGemG);
-			this.groupBox2.Controls.Add(this.textBoxGemR);
-			this.groupBox2.Controls.Add(this.labelGem);
-			this.groupBox2.Controls.Add(this.textBoxMagicB);
-			this.groupBox2.Controls.Add(this.textBoxMagicG);
-			this.groupBox2.Controls.Add(this.textBoxMagicR);
-			this.groupBox2.Controls.Add(this.labelMagic);
-			this.groupBox2.Controls.Add(this.textBoxRareB);
-			this.groupBox2.Controls.Add(this.textBoxRareG);
-			this.groupBox2.Controls.Add(this.textBoxRareR);
-			this.groupBox2.Controls.Add(this.labelRare);
-			this.groupBox2.Controls.Add(this.textBoxUniqueB);
-			this.groupBox2.Controls.Add(this.textBoxUniqueG);
-			this.groupBox2.Controls.Add(this.textBoxUniqueR);
-			this.groupBox2.Controls.Add(this.labelUnique);
-			this.groupBox2.Location = new System.Drawing.Point(117, 256);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(372, 140);
-			this.groupBox2.TabIndex = 18;
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "顏色修改(R, G, B)";
+			this.groupBoxColor.Controls.Add(this.buttonTestColor);
+			this.groupBoxColor.Controls.Add(this.textBoxCurrencyB);
+			this.groupBoxColor.Controls.Add(this.textBoxCurrencyG);
+			this.groupBoxColor.Controls.Add(this.textBoxCurrencyR);
+			this.groupBoxColor.Controls.Add(this.label2);
+			this.groupBoxColor.Controls.Add(this.labelCurrency);
+			this.groupBoxColor.Controls.Add(this.buttonApplyColor);
+			this.groupBoxColor.Controls.Add(this.textBoxGemB);
+			this.groupBoxColor.Controls.Add(this.textBoxGemG);
+			this.groupBoxColor.Controls.Add(this.textBoxGemR);
+			this.groupBoxColor.Controls.Add(this.labelGem);
+			this.groupBoxColor.Controls.Add(this.textBoxMagicB);
+			this.groupBoxColor.Controls.Add(this.textBoxMagicG);
+			this.groupBoxColor.Controls.Add(this.textBoxMagicR);
+			this.groupBoxColor.Controls.Add(this.labelMagic);
+			this.groupBoxColor.Controls.Add(this.textBoxRareB);
+			this.groupBoxColor.Controls.Add(this.textBoxRareG);
+			this.groupBoxColor.Controls.Add(this.textBoxRareR);
+			this.groupBoxColor.Controls.Add(this.labelRare);
+			this.groupBoxColor.Controls.Add(this.textBoxUniqueB);
+			this.groupBoxColor.Controls.Add(this.textBoxUniqueG);
+			this.groupBoxColor.Controls.Add(this.textBoxUniqueR);
+			this.groupBoxColor.Controls.Add(this.labelUnique);
+			this.groupBoxColor.Location = new System.Drawing.Point(117, 256);
+			this.groupBoxColor.Name = "groupBoxColor";
+			this.groupBoxColor.Size = new System.Drawing.Size(372, 140);
+			this.groupBoxColor.TabIndex = 18;
+			this.groupBoxColor.TabStop = false;
+			this.groupBoxColor.Text = "Color Modify(R, G, B)";
 			// 
-			// textBoxUniqueR
+			// buttonTestColor
 			// 
-			this.textBoxUniqueR.Location = new System.Drawing.Point(41, 18);
-			this.textBoxUniqueR.Name = "textBoxUniqueR";
-			this.textBoxUniqueR.Size = new System.Drawing.Size(40, 22);
-			this.textBoxUniqueR.TabIndex = 16;
-			this.textBoxUniqueR.Text = "175";
+			this.buttonTestColor.Location = new System.Drawing.Point(8, 105);
+			this.buttonTestColor.Name = "buttonTestColor";
+			this.buttonTestColor.Size = new System.Drawing.Size(75, 23);
+			this.buttonTestColor.TabIndex = 35;
+			this.buttonTestColor.Text = "Test Color";
+			this.buttonTestColor.UseVisualStyleBackColor = true;
+			this.buttonTestColor.Click += new System.EventHandler(this.button1_Click_1);
 			// 
-			// textBoxUniqueG
+			// textBoxCurrencyB
 			// 
-			this.textBoxUniqueG.Location = new System.Drawing.Point(87, 18);
-			this.textBoxUniqueG.Name = "textBoxUniqueG";
-			this.textBoxUniqueG.Size = new System.Drawing.Size(40, 22);
-			this.textBoxUniqueG.TabIndex = 17;
-			this.textBoxUniqueG.Text = "96";
+			this.textBoxCurrencyB.Location = new System.Drawing.Point(322, 46);
+			this.textBoxCurrencyB.Name = "textBoxCurrencyB";
+			this.textBoxCurrencyB.Size = new System.Drawing.Size(40, 22);
+			this.textBoxCurrencyB.TabIndex = 34;
+			this.textBoxCurrencyB.Text = "130";
 			// 
-			// textBoxUniqueB
+			// textBoxCurrencyG
 			// 
-			this.textBoxUniqueB.Location = new System.Drawing.Point(133, 18);
-			this.textBoxUniqueB.Name = "textBoxUniqueB";
-			this.textBoxUniqueB.Size = new System.Drawing.Size(40, 22);
-			this.textBoxUniqueB.TabIndex = 18;
-			this.textBoxUniqueB.Text = "37";
+			this.textBoxCurrencyG.Location = new System.Drawing.Point(276, 46);
+			this.textBoxCurrencyG.Name = "textBoxCurrencyG";
+			this.textBoxCurrencyG.Size = new System.Drawing.Size(40, 22);
+			this.textBoxCurrencyG.TabIndex = 33;
+			this.textBoxCurrencyG.Text = "158";
 			// 
-			// labelRare
+			// textBoxCurrencyR
 			// 
-			this.labelRare.AutoSize = true;
-			this.labelRare.Location = new System.Drawing.Point(6, 49);
-			this.labelRare.Name = "labelRare";
-			this.labelRare.Size = new System.Drawing.Size(29, 12);
-			this.labelRare.TabIndex = 19;
-			this.labelRare.Text = "稀有";
+			this.textBoxCurrencyR.Location = new System.Drawing.Point(230, 46);
+			this.textBoxCurrencyR.Name = "textBoxCurrencyR";
+			this.textBoxCurrencyR.Size = new System.Drawing.Size(40, 22);
+			this.textBoxCurrencyR.TabIndex = 32;
+			this.textBoxCurrencyR.Text = "170";
 			// 
-			// textBoxRareB
+			// labelCurrency
 			// 
-			this.textBoxRareB.Location = new System.Drawing.Point(133, 46);
-			this.textBoxRareB.Name = "textBoxRareB";
-			this.textBoxRareB.Size = new System.Drawing.Size(40, 22);
-			this.textBoxRareB.TabIndex = 22;
-			this.textBoxRareB.Text = "119";
+			this.labelCurrency.AutoSize = true;
+			this.labelCurrency.Location = new System.Drawing.Point(185, 49);
+			this.labelCurrency.Name = "labelCurrency";
+			this.labelCurrency.Size = new System.Drawing.Size(49, 12);
+			this.labelCurrency.TabIndex = 31;
+			this.labelCurrency.Text = "Currency";
 			// 
-			// textBoxRareG
+			// buttonApplyColor
 			// 
-			this.textBoxRareG.Location = new System.Drawing.Point(87, 46);
-			this.textBoxRareG.Name = "textBoxRareG";
-			this.textBoxRareG.Size = new System.Drawing.Size(40, 22);
-			this.textBoxRareG.TabIndex = 21;
-			this.textBoxRareG.Text = "255";
+			this.buttonApplyColor.Location = new System.Drawing.Point(98, 105);
+			this.buttonApplyColor.Name = "buttonApplyColor";
+			this.buttonApplyColor.Size = new System.Drawing.Size(75, 23);
+			this.buttonApplyColor.TabIndex = 16;
+			this.buttonApplyColor.Text = "Apply Color";
+			this.buttonApplyColor.UseVisualStyleBackColor = true;
+			this.buttonApplyColor.Click += new System.EventHandler(this.buttonApplyColor_Click);
 			// 
-			// textBoxRareR
+			// textBoxGemB
 			// 
-			this.textBoxRareR.Location = new System.Drawing.Point(41, 46);
-			this.textBoxRareR.Name = "textBoxRareR";
-			this.textBoxRareR.Size = new System.Drawing.Size(40, 22);
-			this.textBoxRareR.TabIndex = 20;
-			this.textBoxRareR.Text = "255";
+			this.textBoxGemB.Location = new System.Drawing.Point(322, 18);
+			this.textBoxGemB.Name = "textBoxGemB";
+			this.textBoxGemB.Size = new System.Drawing.Size(40, 22);
+			this.textBoxGemB.TabIndex = 30;
+			this.textBoxGemB.Text = "155";
+			// 
+			// textBoxGemG
+			// 
+			this.textBoxGemG.Location = new System.Drawing.Point(276, 18);
+			this.textBoxGemG.Name = "textBoxGemG";
+			this.textBoxGemG.Size = new System.Drawing.Size(40, 22);
+			this.textBoxGemG.TabIndex = 29;
+			this.textBoxGemG.Text = "162";
+			// 
+			// textBoxGemR
+			// 
+			this.textBoxGemR.Location = new System.Drawing.Point(230, 18);
+			this.textBoxGemR.Name = "textBoxGemR";
+			this.textBoxGemR.Size = new System.Drawing.Size(40, 22);
+			this.textBoxGemR.TabIndex = 28;
+			this.textBoxGemR.Text = "27";
+			// 
+			// labelGem
+			// 
+			this.labelGem.AutoSize = true;
+			this.labelGem.Location = new System.Drawing.Point(186, 21);
+			this.labelGem.Name = "labelGem";
+			this.labelGem.Size = new System.Drawing.Size(27, 12);
+			this.labelGem.TabIndex = 27;
+			this.labelGem.Text = "Gem";
 			// 
 			// textBoxMagicB
 			// 
@@ -337,115 +366,86 @@
 			this.labelMagic.AutoSize = true;
 			this.labelMagic.Location = new System.Drawing.Point(6, 77);
 			this.labelMagic.Name = "labelMagic";
-			this.labelMagic.Size = new System.Drawing.Size(29, 12);
+			this.labelMagic.Size = new System.Drawing.Size(34, 12);
 			this.labelMagic.TabIndex = 23;
-			this.labelMagic.Text = "魔法";
+			this.labelMagic.Text = "Magic";
 			// 
-			// textBoxGemB
+			// textBoxRareB
 			// 
-			this.textBoxGemB.Location = new System.Drawing.Point(322, 18);
-			this.textBoxGemB.Name = "textBoxGemB";
-			this.textBoxGemB.Size = new System.Drawing.Size(40, 22);
-			this.textBoxGemB.TabIndex = 30;
-			this.textBoxGemB.Text = "155";
+			this.textBoxRareB.Location = new System.Drawing.Point(133, 46);
+			this.textBoxRareB.Name = "textBoxRareB";
+			this.textBoxRareB.Size = new System.Drawing.Size(40, 22);
+			this.textBoxRareB.TabIndex = 22;
+			this.textBoxRareB.Text = "119";
 			// 
-			// textBoxGemG
+			// textBoxRareG
 			// 
-			this.textBoxGemG.Location = new System.Drawing.Point(276, 18);
-			this.textBoxGemG.Name = "textBoxGemG";
-			this.textBoxGemG.Size = new System.Drawing.Size(40, 22);
-			this.textBoxGemG.TabIndex = 29;
-			this.textBoxGemG.Text = "162";
+			this.textBoxRareG.Location = new System.Drawing.Point(87, 46);
+			this.textBoxRareG.Name = "textBoxRareG";
+			this.textBoxRareG.Size = new System.Drawing.Size(40, 22);
+			this.textBoxRareG.TabIndex = 21;
+			this.textBoxRareG.Text = "255";
 			// 
-			// textBoxGemR
+			// textBoxRareR
 			// 
-			this.textBoxGemR.Location = new System.Drawing.Point(230, 18);
-			this.textBoxGemR.Name = "textBoxGemR";
-			this.textBoxGemR.Size = new System.Drawing.Size(40, 22);
-			this.textBoxGemR.TabIndex = 28;
-			this.textBoxGemR.Text = "27";
+			this.textBoxRareR.Location = new System.Drawing.Point(41, 46);
+			this.textBoxRareR.Name = "textBoxRareR";
+			this.textBoxRareR.Size = new System.Drawing.Size(40, 22);
+			this.textBoxRareR.TabIndex = 20;
+			this.textBoxRareR.Text = "255";
 			// 
-			// labelGem
+			// labelRare
 			// 
-			this.labelGem.AutoSize = true;
-			this.labelGem.Location = new System.Drawing.Point(195, 21);
-			this.labelGem.Name = "labelGem";
-			this.labelGem.Size = new System.Drawing.Size(29, 12);
-			this.labelGem.TabIndex = 27;
-			this.labelGem.Text = "寶石";
+			this.labelRare.AutoSize = true;
+			this.labelRare.Location = new System.Drawing.Point(6, 49);
+			this.labelRare.Name = "labelRare";
+			this.labelRare.Size = new System.Drawing.Size(27, 12);
+			this.labelRare.TabIndex = 19;
+			this.labelRare.Text = "Rare";
 			// 
-			// buttonApplyColor
+			// textBoxUniqueB
 			// 
-			this.buttonApplyColor.Location = new System.Drawing.Point(98, 105);
-			this.buttonApplyColor.Name = "buttonApplyColor";
-			this.buttonApplyColor.Size = new System.Drawing.Size(75, 23);
-			this.buttonApplyColor.TabIndex = 16;
-			this.buttonApplyColor.Text = "修改顏色";
-			this.buttonApplyColor.UseVisualStyleBackColor = true;
-			this.buttonApplyColor.Click += new System.EventHandler(this.buttonApplyColor_Click);
+			this.textBoxUniqueB.Location = new System.Drawing.Point(133, 18);
+			this.textBoxUniqueB.Name = "textBoxUniqueB";
+			this.textBoxUniqueB.Size = new System.Drawing.Size(40, 22);
+			this.textBoxUniqueB.TabIndex = 18;
+			this.textBoxUniqueB.Text = "37";
 			// 
-			// textBoxCurrencyB
+			// textBoxUniqueG
 			// 
-			this.textBoxCurrencyB.Location = new System.Drawing.Point(322, 46);
-			this.textBoxCurrencyB.Name = "textBoxCurrencyB";
-			this.textBoxCurrencyB.Size = new System.Drawing.Size(40, 22);
-			this.textBoxCurrencyB.TabIndex = 34;
-			this.textBoxCurrencyB.Text = "130";
+			this.textBoxUniqueG.Location = new System.Drawing.Point(87, 18);
+			this.textBoxUniqueG.Name = "textBoxUniqueG";
+			this.textBoxUniqueG.Size = new System.Drawing.Size(40, 22);
+			this.textBoxUniqueG.TabIndex = 17;
+			this.textBoxUniqueG.Text = "96";
 			// 
-			// textBoxCurrencyG
+			// textBoxUniqueR
 			// 
-			this.textBoxCurrencyG.Location = new System.Drawing.Point(276, 46);
-			this.textBoxCurrencyG.Name = "textBoxCurrencyG";
-			this.textBoxCurrencyG.Size = new System.Drawing.Size(40, 22);
-			this.textBoxCurrencyG.TabIndex = 33;
-			this.textBoxCurrencyG.Text = "158";
-			// 
-			// textBoxCurrencyR
-			// 
-			this.textBoxCurrencyR.Location = new System.Drawing.Point(230, 46);
-			this.textBoxCurrencyR.Name = "textBoxCurrencyR";
-			this.textBoxCurrencyR.Size = new System.Drawing.Size(40, 22);
-			this.textBoxCurrencyR.TabIndex = 32;
-			this.textBoxCurrencyR.Text = "170";
-			// 
-			// labelCurrency
-			// 
-			this.labelCurrency.AutoSize = true;
-			this.labelCurrency.Location = new System.Drawing.Point(195, 49);
-			this.labelCurrency.Name = "labelCurrency";
-			this.labelCurrency.Size = new System.Drawing.Size(29, 12);
-			this.labelCurrency.TabIndex = 31;
-			this.labelCurrency.Text = "通貨";
-			// 
-			// buttonTestColor
-			// 
-			this.buttonTestColor.Location = new System.Drawing.Point(8, 105);
-			this.buttonTestColor.Name = "buttonTestColor";
-			this.buttonTestColor.Size = new System.Drawing.Size(75, 23);
-			this.buttonTestColor.TabIndex = 35;
-			this.buttonTestColor.Text = "測試顏色";
-			this.buttonTestColor.UseVisualStyleBackColor = true;
-			this.buttonTestColor.Click += new System.EventHandler(this.button1_Click_1);
+			this.textBoxUniqueR.Location = new System.Drawing.Point(41, 18);
+			this.textBoxUniqueR.Name = "textBoxUniqueR";
+			this.textBoxUniqueR.Size = new System.Drawing.Size(40, 22);
+			this.textBoxUniqueR.TabIndex = 16;
+			this.textBoxUniqueR.Text = "175";
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(500, 408);
-			this.Controls.Add(this.groupBox2);
-			this.Controls.Add(this.groupBox1);
-			this.Controls.Add(this.buttonExit);
+			this.Controls.Add(this.groupBoxColor);
+			this.Controls.Add(this.groupBoxFontSize);
+			this.Controls.Add(this.buttonClose);
 			this.Controls.Add(this.textBoxOutput);
-			this.Controls.Add(this.label1);
+			this.Controls.Add(this.labelContentGGPKPath);
 			this.Controls.Add(this.textBoxContentGGPK);
-			this.Controls.Add(this.buttonTranslate);
+			this.Controls.Add(this.buttonApplyZIP);
 			this.Controls.Add(this.buttonSelectPOE);
 			this.Name = "Form1";
 			this.Text = "VPatchGGPK";
-			this.groupBox1.ResumeLayout(false);
-			this.groupBox1.PerformLayout();
-			this.groupBox2.ResumeLayout(false);
-			this.groupBox2.PerformLayout();
+			this.groupBoxFontSize.ResumeLayout(false);
+			this.groupBoxFontSize.PerformLayout();
+			this.groupBoxColor.ResumeLayout(false);
+			this.groupBoxColor.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -454,22 +454,22 @@
 		#endregion
 
 		private System.Windows.Forms.Button buttonSelectPOE;
-		private System.Windows.Forms.Button buttonTranslate;
+		private System.Windows.Forms.Button buttonApplyZIP;
 		private System.Windows.Forms.TextBox textBoxContentGGPK;
-		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label labelContentGGPKPath;
 		private System.Windows.Forms.TextBox textBoxOutput;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Button buttonExit;
-		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.Button buttonClose;
+		private System.Windows.Forms.Label labelSmallFont;
 		private System.Windows.Forms.TextBox textBoxSmallFont;
-		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.Label labelNormalFont;
 		private System.Windows.Forms.TextBox textBoxNormalFont;
-		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.Label labelLargeFont;
 		private System.Windows.Forms.TextBox textBoxLargeFont;
 		private System.Windows.Forms.Button buttonApplyFont;
 		private System.Windows.Forms.Label labelUnique;
-		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.GroupBox groupBox2;
+		private System.Windows.Forms.GroupBox groupBoxFontSize;
+		private System.Windows.Forms.GroupBox groupBoxColor;
 		private System.Windows.Forms.TextBox textBoxCurrencyB;
 		private System.Windows.Forms.TextBox textBoxCurrencyG;
 		private System.Windows.Forms.TextBox textBoxCurrencyR;
