@@ -136,6 +136,15 @@ namespace VPatchGGPK
 			return ggpkPath;
 		}
 
+		private void CreateExampleRegistryFile(string ggpkPath)
+		{
+			string reg = "Windows Registry Editor Version 5.00"+Environment.NewLine;
+			reg += Environment.NewLine;
+			reg += "[HKEY_CURRENT_USER\\Software\\GrindingGearGames\\Path of Exile]"+Environment.NewLine;
+			reg += "\"InstallLocation\"=\"" + Path.GetDirectoryName(ggpkPath).Replace("\\", "\\\\") + "\\\\\"" + Environment.NewLine;
+			File.WriteAllText("GGG.reg", reg, Encoding.Unicode);
+		}
+
 		private void InitGGPK()
 		{
 			if (content != null)
@@ -157,6 +166,8 @@ namespace VPatchGGPK
 
 			textBoxContentGGPK.Enabled = false;
 			buttonSelectPOE.Enabled = false;
+
+			CreateExampleRegistryFile(ggpkPath);
 		}
 
 		private void HandlePatchArchive(string archivePath)
