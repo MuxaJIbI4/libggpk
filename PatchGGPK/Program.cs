@@ -199,7 +199,11 @@ namespace PatchGGPK
 						}
 						break;
 					}
-					else if (Path.GetExtension(item.FileName).ToLower() == ".dat" || Path.GetExtension(item.FileName).ToLower() == ".txt")
+					else if (Path.GetDirectoryName(item.FileName) == "Data" && Path.GetExtension(item.FileName).ToLower() == ".dat")
+					{
+						NeedVersionCheck = true;
+					}
+					else if (Path.GetDirectoryName(item.FileName) == "Metadata" && Path.GetExtension(item.FileName).ToLower() == ".txt")
 					{
 						NeedVersionCheck = true;
 					}
