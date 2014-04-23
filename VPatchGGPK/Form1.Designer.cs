@@ -66,8 +66,12 @@
 			this.textBoxUniqueB = new System.Windows.Forms.TextBox();
 			this.textBoxUniqueG = new System.Windows.Forms.TextBox();
 			this.textBoxUniqueR = new System.Windows.Forms.TextBox();
+			this.groupBoxQuality = new System.Windows.Forms.GroupBox();
+			this.buttonApplyQuality = new System.Windows.Forms.Button();
+			this.textBoxQuality = new System.Windows.Forms.TextBox();
 			this.groupBoxFontSize.SuspendLayout();
 			this.groupBoxColor.SuspendLayout();
+			this.groupBoxQuality.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// buttonSelectPOE
@@ -117,7 +121,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(331, 116);
+			this.label2.Location = new System.Drawing.Point(458, 384);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(31, 12);
 			this.label2.TabIndex = 7;
@@ -125,7 +129,7 @@
 			// 
 			// buttonClose
 			// 
-			this.buttonClose.Location = new System.Drawing.Point(414, 227);
+			this.buttonClose.Location = new System.Drawing.Point(413, 227);
 			this.buttonClose.Name = "buttonClose";
 			this.buttonClose.Size = new System.Drawing.Size(75, 23);
 			this.buttonClose.TabIndex = 8;
@@ -144,7 +148,7 @@
 			// 
 			// textBoxSmallFont
 			// 
-			this.textBoxSmallFont.Location = new System.Drawing.Point(41, 18);
+			this.textBoxSmallFont.Location = new System.Drawing.Point(43, 18);
 			this.textBoxSmallFont.Name = "textBoxSmallFont";
 			this.textBoxSmallFont.Size = new System.Drawing.Size(40, 22);
 			this.textBoxSmallFont.TabIndex = 10;
@@ -161,7 +165,7 @@
 			// 
 			// textBoxNormalFont
 			// 
-			this.textBoxNormalFont.Location = new System.Drawing.Point(41, 46);
+			this.textBoxNormalFont.Location = new System.Drawing.Point(43, 46);
 			this.textBoxNormalFont.Name = "textBoxNormalFont";
 			this.textBoxNormalFont.Size = new System.Drawing.Size(40, 22);
 			this.textBoxNormalFont.TabIndex = 12;
@@ -178,7 +182,7 @@
 			// 
 			// textBoxLargeFont
 			// 
-			this.textBoxLargeFont.Location = new System.Drawing.Point(41, 77);
+			this.textBoxLargeFont.Location = new System.Drawing.Point(43, 77);
 			this.textBoxLargeFont.Name = "textBoxLargeFont";
 			this.textBoxLargeFont.Size = new System.Drawing.Size(40, 22);
 			this.textBoxLargeFont.TabIndex = 14;
@@ -214,7 +218,7 @@
 			this.groupBoxFontSize.Controls.Add(this.labelLargeFont);
 			this.groupBoxFontSize.Location = new System.Drawing.Point(14, 256);
 			this.groupBoxFontSize.Name = "groupBoxFontSize";
-			this.groupBoxFontSize.Size = new System.Drawing.Size(94, 140);
+			this.groupBoxFontSize.Size = new System.Drawing.Size(94, 146);
 			this.groupBoxFontSize.TabIndex = 17;
 			this.groupBoxFontSize.TabStop = false;
 			this.groupBoxFontSize.Text = "Font Size";
@@ -225,7 +229,6 @@
 			this.groupBoxColor.Controls.Add(this.textBoxCurrencyB);
 			this.groupBoxColor.Controls.Add(this.textBoxCurrencyG);
 			this.groupBoxColor.Controls.Add(this.textBoxCurrencyR);
-			this.groupBoxColor.Controls.Add(this.label2);
 			this.groupBoxColor.Controls.Add(this.labelCurrency);
 			this.groupBoxColor.Controls.Add(this.buttonApplyColor);
 			this.groupBoxColor.Controls.Add(this.textBoxGemB);
@@ -246,14 +249,14 @@
 			this.groupBoxColor.Controls.Add(this.labelUnique);
 			this.groupBoxColor.Location = new System.Drawing.Point(117, 256);
 			this.groupBoxColor.Name = "groupBoxColor";
-			this.groupBoxColor.Size = new System.Drawing.Size(372, 140);
+			this.groupBoxColor.Size = new System.Drawing.Size(372, 99);
 			this.groupBoxColor.TabIndex = 18;
 			this.groupBoxColor.TabStop = false;
 			this.groupBoxColor.Text = "Color Modify(R, G, B)";
 			// 
 			// buttonTestColor
 			// 
-			this.buttonTestColor.Location = new System.Drawing.Point(8, 105);
+			this.buttonTestColor.Location = new System.Drawing.Point(187, 72);
 			this.buttonTestColor.Name = "buttonTestColor";
 			this.buttonTestColor.Size = new System.Drawing.Size(75, 23);
 			this.buttonTestColor.TabIndex = 35;
@@ -296,7 +299,7 @@
 			// 
 			// buttonApplyColor
 			// 
-			this.buttonApplyColor.Location = new System.Drawing.Point(98, 105);
+			this.buttonApplyColor.Location = new System.Drawing.Point(268, 72);
 			this.buttonApplyColor.Name = "buttonApplyColor";
 			this.buttonApplyColor.Size = new System.Drawing.Size(75, 23);
 			this.buttonApplyColor.TabIndex = 16;
@@ -427,14 +430,45 @@
 			this.textBoxUniqueR.TabIndex = 16;
 			this.textBoxUniqueR.Text = "175";
 			// 
+			// groupBoxQuality
+			// 
+			this.groupBoxQuality.Controls.Add(this.textBoxQuality);
+			this.groupBoxQuality.Controls.Add(this.buttonApplyQuality);
+			this.groupBoxQuality.Location = new System.Drawing.Point(117, 358);
+			this.groupBoxQuality.Name = "groupBoxQuality";
+			this.groupBoxQuality.Size = new System.Drawing.Size(149, 44);
+			this.groupBoxQuality.TabIndex = 19;
+			this.groupBoxQuality.TabStop = false;
+			this.groupBoxQuality.Text = "Screen Quality (0~10)";
+			// 
+			// buttonApplyQuality
+			// 
+			this.buttonApplyQuality.Location = new System.Drawing.Point(54, 15);
+			this.buttonApplyQuality.Name = "buttonApplyQuality";
+			this.buttonApplyQuality.Size = new System.Drawing.Size(87, 23);
+			this.buttonApplyQuality.TabIndex = 16;
+			this.buttonApplyQuality.Text = "Apply Quality";
+			this.buttonApplyQuality.UseVisualStyleBackColor = true;
+			this.buttonApplyQuality.Click += new System.EventHandler(this.button1_Click_2);
+			// 
+			// textBoxQuality
+			// 
+			this.textBoxQuality.Location = new System.Drawing.Point(8, 16);
+			this.textBoxQuality.Name = "textBoxQuality";
+			this.textBoxQuality.Size = new System.Drawing.Size(40, 22);
+			this.textBoxQuality.TabIndex = 16;
+			this.textBoxQuality.Text = "0";
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(500, 408);
+			this.Controls.Add(this.groupBoxQuality);
 			this.Controls.Add(this.groupBoxColor);
 			this.Controls.Add(this.groupBoxFontSize);
 			this.Controls.Add(this.buttonClose);
+			this.Controls.Add(this.label2);
 			this.Controls.Add(this.textBoxOutput);
 			this.Controls.Add(this.labelContentGGPKPath);
 			this.Controls.Add(this.textBoxContentGGPK);
@@ -446,6 +480,8 @@
 			this.groupBoxFontSize.PerformLayout();
 			this.groupBoxColor.ResumeLayout(false);
 			this.groupBoxColor.PerformLayout();
+			this.groupBoxQuality.ResumeLayout(false);
+			this.groupBoxQuality.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -491,6 +527,9 @@
 		private System.Windows.Forms.TextBox textBoxUniqueG;
 		private System.Windows.Forms.TextBox textBoxUniqueR;
 		private System.Windows.Forms.Button buttonTestColor;
+		private System.Windows.Forms.GroupBox groupBoxQuality;
+		private System.Windows.Forms.TextBox textBoxQuality;
+		private System.Windows.Forms.Button buttonApplyQuality;
 	}
 }
 

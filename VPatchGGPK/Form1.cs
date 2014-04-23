@@ -56,6 +56,9 @@ namespace VPatchGGPK
 				labelCurrency.Text = "通貨";
 				buttonTestColor.Text = "測試顏色";
 				buttonApplyColor.Text = "修改顏色";
+
+				groupBoxQuality.Text = "螢幕畫質(0最好,10最差)";
+				buttonApplyQuality.Text = "修改畫質";
 			}
 		}
 
@@ -474,6 +477,35 @@ namespace VPatchGGPK
 		private void button1_Click_1(object sender, EventArgs e)
 		{
 			ApplyLabelColor();
+		}
+
+		private void button1_Click_2(object sender, EventArgs e)
+		{
+			string config = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+@"\My Games\Path of Exile\production_Config.ini";
+			if (File.Exists(config))
+			{
+				OutputLine("Loading "+config);
+				string line;
+				string lines = "";
+
+				// Read the file and display it line by line.
+				System.IO.StreamReader file = new System.IO.StreamReader(config);
+				while ((line = file.ReadLine()) != null)
+				{
+					if (line.Contains("texture_quality="))
+					{
+						int quality = Convert.ToInt32(textBoxQuality.Text);
+						if (quality >=0 && quality <= 10)
+						{
+							line = "texture_quality=" + quality;
+							OutputLine(line);
+						}
+					}
+					lines += line + "\r\n";
+				}
+				file.Close();
+				File.WriteAllText(config, lines);
+			}
 		}
 	}
 }
