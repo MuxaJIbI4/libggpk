@@ -481,30 +481,34 @@ namespace VPatchGGPK
 
 		private void button1_Click_2(object sender, EventArgs e)
 		{
-			string config = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+@"\My Games\Path of Exile\production_Config.ini";
-			if (File.Exists(config))
+			string[] configs = {"production_Config.ini", "garena_sg_production_Config.ini"};
+			foreach (string fname in configs)
 			{
-				OutputLine("Loading "+config);
-				string line;
-				string lines = "";
-
-				// Read the file and display it line by line.
-				System.IO.StreamReader file = new System.IO.StreamReader(config);
-				while ((line = file.ReadLine()) != null)
+				string config = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Path of Exile\" + fname;
+				if (File.Exists(config))
 				{
-					if (line.Contains("texture_quality="))
+					OutputLine("Loading " + config);
+					string line;
+					string lines = "";
+
+					// Read the file and display it line by line.
+					System.IO.StreamReader file = new System.IO.StreamReader(config);
+					while ((line = file.ReadLine()) != null)
 					{
-						int quality = Convert.ToInt32(textBoxQuality.Text);
-						if (quality >=0 && quality <= 10)
+						if (line.Contains("texture_quality="))
 						{
-							line = "texture_quality=" + quality;
-							OutputLine(line);
+							int quality = Convert.ToInt32(textBoxQuality.Text);
+							if (quality >= 0 && quality <= 10)
+							{
+								line = "texture_quality=" + quality;
+								OutputLine(line);
+							}
 						}
+						lines += line + "\r\n";
 					}
-					lines += line + "\r\n";
+					file.Close();
+					File.WriteAllText(config, lines);
 				}
-				file.Close();
-				File.WriteAllText(config, lines);
 			}
 		}
 	}
