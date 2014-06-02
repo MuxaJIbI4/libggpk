@@ -75,6 +75,9 @@ namespace PoeStrings
 
 				DatTranslation currentDatTranslation = AllDatTranslations[userTranslation.Key];
 
+				if (AllDatTranslations[userTranslation.Key].Translations == null)
+					continue;
+
 				// Mapping of originalText -> Translation pairs to determine if the user translation is already applied, not yet applied, or no longer valid
 				Dictionary<string, Translation> translationsByOriginalHash = AllDatTranslations[userTranslation.Key].Translations.ToDictionary(k => k.OriginalText);
 
@@ -276,7 +279,7 @@ namespace PoeStrings
 			{
 				foreach (var datTranslationTable in AllDatTranslations)
 				{
-					if (datTranslationTable.Value.Translations.Count == 0)
+					if (datTranslationTable.Value.Translations == null || datTranslationTable.Value.Translations.Count == 0)
 						continue;
 
 					DatTranslation newDatTranslation = new DatTranslation()

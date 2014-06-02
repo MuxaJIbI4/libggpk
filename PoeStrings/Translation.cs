@@ -19,6 +19,8 @@ namespace PoeStrings
 
 		private static string TruncateString(string source, int truncationLength)
 		{
+			if (source == null)
+				return string.Empty;
 			return (source.Length < truncationLength ? source : source.Substring(0, truncationLength - 3) + "...").Replace(Environment.NewLine, "");
 		}
 
