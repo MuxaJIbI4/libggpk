@@ -77,6 +77,21 @@ namespace PatchGGPK
 			string contentGGPK = @"\Content.ggpk";
 			string ggpkPath = Directory.GetCurrentDirectory() + contentGGPK;
 
+			// GarenaTW
+			if (!File.Exists(ggpkPath))
+			{
+				if (File.Exists(@"C:\Program Files (x86)\GarenaPoETW\GameData\Apps\POETW" + contentGGPK))
+				{
+					ggpkPath = @"C:\Program Files (x86)\GarenaPoETW\GameData\Apps\POETW" + contentGGPK;
+				}
+			}
+			if (!File.Exists(ggpkPath))
+			{
+				if (File.Exists(@"C:\Program Files\GarenaPoETW\GameData\Apps\POETW" + contentGGPK))
+				{
+					ggpkPath = @"C:\Program Files\GarenaPoETW\GameData\Apps\POETW" + contentGGPK;
+				}
+			}
 			// Search GGG ggpk
 			if (!File.Exists(ggpkPath))
 			{
