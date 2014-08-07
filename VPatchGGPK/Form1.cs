@@ -79,6 +79,47 @@ namespace VPatchGGPK
 		{
 			string contentGGPK = @"\Content.ggpk";
 			string ggpkPath = Directory.GetCurrentDirectory() + contentGGPK;
+			// GarenaTW
+			if (!File.Exists(ggpkPath))
+			{
+				Microsoft.Win32.RegistryKey start = Microsoft.Win32.Registry.LocalMachine;
+				Microsoft.Win32.RegistryKey programName = start.OpenSubKey(@"SOFTWARE\Wow6432Node\Garena\POETW");
+				if (programName != null)
+				{
+					string pathString = (string)programName.GetValue("Path");
+					if (pathString != string.Empty && File.Exists(pathString + contentGGPK))
+					{
+						ggpkPath = pathString + contentGGPK;
+					}
+				}
+			}
+			if (!File.Exists(ggpkPath))
+			{
+				Microsoft.Win32.RegistryKey start = Microsoft.Win32.Registry.LocalMachine;
+				Microsoft.Win32.RegistryKey programName = start.OpenSubKey(@"SOFTWARE\Garena\POETW");
+				if (programName != null)
+				{
+					string pathString = (string)programName.GetValue("Path");
+					if (pathString != string.Empty && File.Exists(pathString + contentGGPK))
+					{
+						ggpkPath = pathString + contentGGPK;
+					}
+				}
+			}
+			if (!File.Exists(ggpkPath))
+			{
+				if (File.Exists(@"C:\Program Files (x86)\GarenaPoETW\GameData\Apps\POETW" + contentGGPK))
+				{
+					ggpkPath = @"C:\Program Files (x86)\GarenaPoETW\GameData\Apps\POETW" + contentGGPK;
+				}
+			}
+			if (!File.Exists(ggpkPath))
+			{
+				if (File.Exists(@"C:\Program Files\GarenaPoETW\GameData\Apps\POETW" + contentGGPK))
+				{
+					ggpkPath = @"C:\Program Files\GarenaPoETW\GameData\Apps\POETW" + contentGGPK;
+				}
+			}
 			// Search GGG ggpk
 			if (!File.Exists(ggpkPath))
 			{
@@ -112,6 +153,19 @@ namespace VPatchGGPK
 			{
 				Microsoft.Win32.RegistryKey start = Microsoft.Win32.Registry.LocalMachine;
 				Microsoft.Win32.RegistryKey programName = start.OpenSubKey(@"SOFTWARE\Wow6432Node\Garena\PoE");
+				if (programName != null)
+				{
+					string pathString = (string)programName.GetValue("Path");
+					if (pathString != string.Empty && File.Exists(pathString + contentGGPK))
+					{
+						ggpkPath = pathString + contentGGPK;
+					}
+				}
+			}
+			if (!File.Exists(ggpkPath))
+			{
+				Microsoft.Win32.RegistryKey start = Microsoft.Win32.Registry.LocalMachine;
+				Microsoft.Win32.RegistryKey programName = start.OpenSubKey(@"SOFTWARE\Garena\PoE");
 				if (programName != null)
 				{
 					string pathString = (string)programName.GetValue("Path");
