@@ -6,7 +6,7 @@ namespace LibDat.Files
 	public class Characters : BaseDat
 	{
 		[StringIndex]
-		public int OtFile { get; set; }
+		public int Id { get; set; }
 		[StringIndex]
 		public int Name { get; set; }
 		[StringIndex]
@@ -39,10 +39,21 @@ namespace LibDat.Files
 		public int Unknown17 { get; set; }
 		[StringIndex]
 		public int Unknown18 { get; set; }
+		public int Unknown26 { get; set; }
+		public int Unknown27 { get; set; }
+		public Int64 Unknown28 { get; set; }
+		public Int64 Unknown30 { get; set; }
+		public Int64 Unknown32 { get; set; }
+		public Int64 Unknown34 { get; set; }
+		public Int64 Unknown36 { get; set; }
+		public Int64 Unknown38 { get; set; }
+		public Int64 Unknown40 { get; set; }
+		public Int64 Unknown42 { get; set; }
+		public Int64 Unknown44 { get; set; }
 
 		public Characters(BinaryReader inStream)
 		{
-			OtFile = inStream.ReadInt32();
+			Id = inStream.ReadInt32();
 			Name = inStream.ReadInt32();
 			AnimatedObject = inStream.ReadInt32();
 			Actor = inStream.ReadInt32();
@@ -68,11 +79,22 @@ namespace LibDat.Files
 			Unknown16 = inStream.ReadInt32();
 			Unknown17 = inStream.ReadInt32();
 			Unknown18 = inStream.ReadInt32();
+			Unknown26 = inStream.ReadInt32();
+			Unknown27 = inStream.ReadInt32();
+			Unknown28 = inStream.ReadInt64();
+			Unknown30 = inStream.ReadInt64();
+			Unknown32 = inStream.ReadInt64();
+			Unknown34 = inStream.ReadInt64();
+			Unknown36 = inStream.ReadInt64();
+			Unknown38 = inStream.ReadInt64();
+			Unknown40 = inStream.ReadInt64();
+			Unknown42 = inStream.ReadInt64();
+			Unknown44 = inStream.ReadInt64();
 		}
 
 		public override void Save(System.IO.BinaryWriter outStream)
 		{
-			outStream.Write(OtFile);
+			outStream.Write(Id);
 			outStream.Write(Name);
 			outStream.Write(AnimatedObject);
 			outStream.Write(Actor);
@@ -98,11 +120,22 @@ namespace LibDat.Files
 			outStream.Write(Unknown16);
 			outStream.Write(Unknown17);
 			outStream.Write(Unknown18);
+			outStream.Write(Unknown26);
+			outStream.Write(Unknown27);
+			outStream.Write(Unknown28);
+			outStream.Write(Unknown30);
+			outStream.Write(Unknown32);
+			outStream.Write(Unknown34);
+			outStream.Write(Unknown36);
+			outStream.Write(Unknown38);
+			outStream.Write(Unknown40);
+			outStream.Write(Unknown42);
+			outStream.Write(Unknown44);
 		}
 
 		public override int GetSize()
 		{
-			return 0x68;
+			return 0xB8;
 		}
 	}
 }

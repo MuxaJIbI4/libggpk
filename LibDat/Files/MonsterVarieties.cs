@@ -90,6 +90,8 @@ namespace LibDat.Files
 		public int Unknown68 { get; set; }
 		public int Unknown69 { get; set; }
 		public int Unknown70 { get; set; }
+		public int Unknown71 { get; set; }
+		public bool Unknown72 { get; set; }
 
 
 		public MonsterVarieties(BinaryReader inStream)
@@ -160,6 +162,8 @@ namespace LibDat.Files
 			Unknown68 = inStream.ReadInt32();
 			Unknown69 = inStream.ReadInt32();
 			Unknown70 = inStream.ReadInt32();
+			Unknown71 = inStream.ReadInt32();
+			Unknown72 = inStream.ReadBoolean();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -230,11 +234,13 @@ namespace LibDat.Files
 			outStream.Write(Unknown68);
 			outStream.Write(Unknown69);
 			outStream.Write(Unknown70);
+			outStream.Write(Unknown71);
+			outStream.Write(Unknown72);
 		}
 
 		public override int GetSize()
 		{
-			return 0x11D;
+			return 0x122;
 		}
 	}
 }

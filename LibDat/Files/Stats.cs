@@ -14,7 +14,6 @@ namespace LibDat.Files
 		public bool Flag3 { get; set; }
 		[UserStringIndex]
 		public int Text { get; set; }
-		public bool Flag4 { get; set; }
 		public bool Flag5 { get; set; }
 		public bool Flag6 { get; set; }
 		public int StatKey1 { get; set; }
@@ -30,7 +29,6 @@ namespace LibDat.Files
 			Unknown2 = inStream.ReadInt32();
 			Flag3 = inStream.ReadBoolean();
 			Text = inStream.ReadInt32();
-			Flag4 = inStream.ReadBoolean();
 			Flag5 = inStream.ReadBoolean();
 			Flag6 = inStream.ReadBoolean();
 			StatKey1 = inStream.ReadInt32();
@@ -47,7 +45,6 @@ namespace LibDat.Files
 			outStream.Write(Unknown2);
 			outStream.Write(Flag3);
 			outStream.Write(Text);
-			outStream.Write(Flag4);
 			outStream.Write(Flag5);
 			outStream.Write(Flag6);
 			outStream.Write(StatKey1);
@@ -57,7 +54,7 @@ namespace LibDat.Files
 
 		public override int GetSize()
 		{
-			return 0x1C;
+			return 0x1B;
 		}
 	}
 }
