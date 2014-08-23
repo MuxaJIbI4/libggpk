@@ -22,6 +22,11 @@ namespace LibDat.Files
 		[UInt64Index]
 		public int Data2 { get; set; }
 		public int Unknown9 { get; set; }
+		public int Unknown10 { get; set; }
+		public int Unknown11 { get; set; }
+		public int Unknown12 { get; set; }
+		public int Unknown13 { get; set; }
+
 
 		public QuestStates(BinaryReader inStream)
 		{
@@ -37,6 +42,10 @@ namespace LibDat.Files
 			Data2Length = inStream.ReadInt32();
 			Data2 = inStream.ReadInt32();
 			Unknown9 = inStream.ReadInt32();
+			Unknown10 = inStream.ReadInt32();
+			Unknown11 = inStream.ReadInt32();
+			Unknown12 = inStream.ReadInt32();
+			Unknown13 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -53,11 +62,15 @@ namespace LibDat.Files
 			outStream.Write(Data2Length);
 			outStream.Write(Data2);
 			outStream.Write(Unknown9);
+			outStream.Write(Unknown10);
+			outStream.Write(Unknown11);
+			outStream.Write(Unknown12);
+			outStream.Write(Unknown13);
 		}
 
 		public override int GetSize()
 		{
-			return 0x31;
+			return 0x41;
 		}
 	}
 }

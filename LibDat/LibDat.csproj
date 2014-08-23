@@ -55,6 +55,7 @@
     <Compile Include="Files\Attributes.cs" />
     <Compile Include="Files\BackendErrors.cs" />
     <Compile Include="Files\BaseItemTypes.cs" />
+    <Compile Include="Files\BindableVirtualKeys.cs" />
     <Compile Include="Files\BloodTypes.cs" />
     <Compile Include="Files\BuffCategories.cs" />
     <Compile Include="Files\BuffDefinitions.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Files\BuffMergeModes.cs" />
     <Compile Include="Files\BuffVisuals.cs" />
     <Compile Include="Files\CharacterAudioEvents.cs" />
+    <Compile Include="Files\CharacterPanelStats.cs" />
     <Compile Include="Files\Characters.cs" />
     <Compile Include="Files\ChestClusters.cs" />
     <Compile Include="Files\Chests.cs" />
@@ -71,6 +73,7 @@
     <Compile Include="Files\ComponentAttributeRequirements.cs" />
     <Compile Include="Files\ComponentCharges.cs" />
     <Compile Include="Files\CooldownBypassTypes.cs" />
+    <Compile Include="Files\CraftingBenchOptions.cs" />
     <Compile Include="Files\CurrencyItems.cs" />
     <Compile Include="Files\CurrencyUseTypes.cs" />
     <Compile Include="Files\Dances.cs" />
@@ -97,12 +100,14 @@
     <Compile Include="Files\GlobalAudioConfig.cs" />
     <Compile Include="Files\GrantedEffects.cs" />
     <Compile Include="Files\GrantedEffectsPerLevel.cs" />
+    <Compile Include="Files\HideoutDoodads.cs" />
     <Compile Include="Files\ImpactSoundData.cs" />
     <Compile Include="Files\InvasionMonsterGroups.cs" />
     <Compile Include="Files\InvasionMonsterRestrictions.cs" />
     <Compile Include="Files\InvasionMonsterRoles.cs" />
     <Compile Include="Files\InvasionMonstersPerArea.cs" />
     <Compile Include="Files\ItemClasses.cs" />
+    <Compile Include="Files\ItemClassesDisplay.cs" />
     <Compile Include="Files\ItemExperiencePerLevel.cs" />
     <Compile Include="Files\ItemisedVisualEffect.cs" />
     <Compile Include="Files\ItemVisualEffect.cs" />
@@ -116,6 +121,8 @@
     <Compile Include="Files\MicrotransactionSocialFrameVariations.cs" />
     <Compile Include="Files\MiscAnimated.cs" />
     <Compile Include="Files\MiscObjects.cs" />
+    <Compile Include="Files\MissionTileMap.cs" />
+    <Compile Include="Files\MissionTransitionTiles.cs" />
     <Compile Include="Files\ModAuraFlags.cs" />
     <Compile Include="Files\ModDomains.cs" />
     <Compile Include="Files\ModFamily.cs" />
@@ -127,11 +134,13 @@
     <Compile Include="Files\MonsterFleeConditions.cs" />
     <Compile Include="Files\MonsterPackEntries.cs" />
     <Compile Include="Files\MonsterPacks.cs" />
+    <Compile Include="Files\MonsterResistances.cs" />
     <Compile Include="Files\MonsterScalingByLevel.cs" />
     <Compile Include="Files\MonsterSize.cs" />
     <Compile Include="Files\MonsterTypes.cs" />
     <Compile Include="Files\MonsterVarieties.cs" />
     <Compile Include="Files\Music.cs" />
+    <Compile Include="Files\NPCMaster.cs" />
     <Compile Include="Files\NPCs.cs" />
     <Compile Include="Files\NPCTalk.cs" />
     <Compile Include="Files\NPCTalkCategory.cs" />
@@ -160,8 +169,10 @@
     <Compile Include="Files\SoundEffects.cs" />
     <Compile Include="Files\Stats.cs" />
     <Compile Include="Files\StatSemantics.cs" />
+    <Compile Include="Files\StrDexMissions.cs" />
     <Compile Include="Files\StrongBoxEffects.cs" />
     <Compile Include="Files\Tags.cs" />
+    <Compile Include="Files\Tips.cs" />
     <Compile Include="Files\Topologies.cs" />
     <Compile Include="Files\UniqueChests.cs" />
     <Compile Include="Files\UniqueSetNames.cs" />

@@ -9,6 +9,8 @@ namespace LibDat.Files
 		[UserStringIndex]
 		public int Command { get; set; }
 		public bool Flag0 { get; set; }
+		[StringIndex]
+		public int Unknown2 { get; set; } // Duplicate data of 'Command' ?
 
 		public Commands()
 		{
@@ -19,6 +21,7 @@ namespace LibDat.Files
 			Id = inStream.ReadInt32();
 			Command = inStream.ReadInt32();
 			Flag0 = inStream.ReadBoolean();
+			Unknown2 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -26,11 +29,12 @@ namespace LibDat.Files
 			outStream.Write(Id);
 			outStream.Write(Command);
 			outStream.Write(Flag0);
+			outStream.Write(Unknown2);
 		}
 
 		public override int GetSize()
 		{
-			return 0x09;
+			return 0x0D;
 		}
 	}
 }

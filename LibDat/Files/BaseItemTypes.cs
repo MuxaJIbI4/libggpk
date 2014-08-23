@@ -46,8 +46,15 @@ namespace LibDat.Files
 		public int Data6Length { get; set; }
 		[UInt32Index]
 		public int Data6 { get; set; }
-		public Int64 Unknown21 { get; set; }
-
+		public Int64 Unknown34 { get; set; } // unknown 34
+		public int Unknown36 { get; set; }
+		public int Unknown37 { get; set; }
+		public int Unknown38 { get; set; }
+		public int Unknown39 { get; set; }
+		public int Unknown40 { get; set; }
+		public int Unknown41 { get; set; }
+		public int Unknown42 { get; set; }
+		public int Unknown43 { get; set; }	
 
 		public BaseItemTypes(BinaryReader inStream)
 		{
@@ -81,8 +88,15 @@ namespace LibDat.Files
 			Unknown18 = inStream.ReadInt32();
 			Data6Length = inStream.ReadInt32();
 			Data6 = inStream.ReadInt32();
-			Unknown21 = inStream.ReadInt64();
-
+			Unknown34 = inStream.ReadInt64();
+			Unknown36 = inStream.ReadInt32();
+			Unknown37 = inStream.ReadInt32();
+			Unknown38 = inStream.ReadInt32();
+			Unknown39 = inStream.ReadInt32();
+			Unknown40 = inStream.ReadInt32();
+			Unknown41 = inStream.ReadInt32();
+			Unknown42 = inStream.ReadInt32();
+			Unknown43 = inStream.ReadInt32();
 		}
 		public override void Save(BinaryWriter outStream)
 		{
@@ -116,13 +130,21 @@ namespace LibDat.Files
 			outStream.Write(Unknown18);
 			outStream.Write(Data6Length);
 			outStream.Write(Data6);
-			outStream.Write(Unknown21);
+			outStream.Write(Unknown34);
+			outStream.Write(Unknown36);
+			outStream.Write(Unknown37);
+			outStream.Write(Unknown38);
+			outStream.Write(Unknown39);
+			outStream.Write(Unknown40);
+			outStream.Write(Unknown41);
+			outStream.Write(Unknown42);
+			outStream.Write(Unknown43);
 
 		}
 
 		public override int GetSize()
 		{
-			return 0x90;
+			return 0xB0;
 		}
 	}
 }

@@ -14,6 +14,8 @@ namespace LibDat.Files
 		[UInt32Index]
 		public int Data1 { get; set; }
 		public int Unknown6 { get; set; }
+		[StringIndex]
+		public int Unknown7 { get; set; } // duplicate data frm 'Text'? 
 
 		public Words(BinaryReader inStream)
 		{
@@ -24,6 +26,7 @@ namespace LibDat.Files
 			Data1Length = inStream.ReadInt32();
 			Data1 = inStream.ReadInt32();
 			Unknown6 = inStream.ReadInt32();
+			Unknown7 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -35,11 +38,12 @@ namespace LibDat.Files
 			outStream.Write(Data1Length);
 			outStream.Write(Data1);
 			outStream.Write(Unknown6);
+			outStream.Write(Unknown7);
 		}
 
 		public override int GetSize()
 		{
-			return 0x1C;
+			return 0x20;
 		}
 	}
 }

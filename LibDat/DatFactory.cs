@@ -12,8 +12,9 @@ namespace LibDat
 	{
 		public static Type GetTypeName(string fileName)
 		{
-			//return Type.GetType(string.Format("LibDat.Files.{0}, LibDat", fileName));
+			return Type.GetType(string.Format("LibDat.Files.{0}, LibDat", fileName));
 			
+			/*
 			switch (fileName)
 			{
 				case "AchievementItems":
@@ -72,6 +73,8 @@ namespace LibDat
 					return typeof(ComponentCharges);
 				case "CooldownBypassTypes":
 					return typeof(CooldownBypassTypes);
+				case "CraftingBenchOptions":
+					return typeof(CraftingBenchOptions);
 				case "CurrencyItems":
 					return typeof(CurrencyItems);
 				case "CurrencyUseTypes":
@@ -124,13 +127,15 @@ namespace LibDat
 					return typeof(GrantedEffects);
 				case "GrantedEffectsPerLevel":
 					return typeof(GrantedEffectsPerLevel);
+				case "HideoutDoodads":
+					return typeof(HideoutDoodads);
 				case "ImpactSoundData":
 					return typeof(ImpactSoundData);
-					case "InvasionMonsterGroups":
+				case "InvasionMonsterGroups":
 					return typeof(InvasionMonsterGroups);
 				case "InvasionMonsterRestrictions":
 					return typeof(InvasionMonsterRestrictions);
-					case "InvasionMonsterRoles":
+				case "InvasionMonsterRoles":
 					return typeof(InvasionMonsterRoles);
 				case "InvasionMonstersPerArea":
 					return typeof(InvasionMonstersPerArea);
@@ -285,13 +290,13 @@ namespace LibDat
 				case "WorldAreas":
 					return typeof(WorldAreas);
 			}
-
+			*/
 			return null;
 		}
 
 		public static BaseDat Create(string fileName, BinaryReader inStream)
 		{
-			//return (BaseDat) Activator.CreateInstance(GetTypeName(fileName), new object[] {inStream});
+			return (BaseDat) Activator.CreateInstance(GetTypeName(fileName), new object[] {inStream});
 
 			switch (fileName)
 			{

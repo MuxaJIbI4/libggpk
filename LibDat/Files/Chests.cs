@@ -41,6 +41,7 @@ namespace LibDat.Files
 		public int Data4Length { get; set; }
 		[UInt64Index]
 		public int Data4 { get; set; }
+		public int Unknown23 { get; set; }
 
 		public Chests(BinaryReader inStream)
 		{
@@ -71,6 +72,7 @@ namespace LibDat.Files
 			Flag7 = inStream.ReadBoolean();
 			Data4Length = inStream.ReadInt32();
 			Data4 = inStream.ReadInt32();
+			Unknown23 = inStream.ReadInt32();
 		}
 
 		public override void Save(BinaryWriter outStream)
@@ -102,11 +104,12 @@ namespace LibDat.Files
 			outStream.Write(Flag7 );
 			outStream.Write(Data4Length);
 			outStream.Write(Data4);
+			outStream.Write(Unknown23);
 		}
 
 		public override int GetSize()
 		{
-			return 0x5c;
+			return 0x60;
 		}
 	}
 }
