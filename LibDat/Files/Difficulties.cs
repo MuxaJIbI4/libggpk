@@ -8,7 +8,7 @@ namespace LibDat.Files
 		public int Id { get; set; }
 		public int Unknown0 { get; set; }
 		public int Unknown1 { get; set; }
-		[StringIndex] 
+		[UserStringIndex] 
 		public int Text { get; set; }
 		[StringIndex] 
 		public int Prefix { get; set; }

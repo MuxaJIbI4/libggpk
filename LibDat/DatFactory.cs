@@ -338,6 +338,10 @@ namespace LibDat
 					return new BuffVisuals(inStream);
 				case "CharacterAudioEvents":
 					return new CharacterAudioEvents(inStream);
+                case "CharacterPanelStats":
+                    return new CharacterPanelStats(inStream);
+                case "CharacterPanelTabs":
+                    return new CharacterPanelTabs(inStream);
 				case "Characters":
 					return new Characters(inStream);
 				case "ChestClusters":

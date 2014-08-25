@@ -64,6 +64,7 @@
     <Compile Include="Files\BuffVisuals.cs" />
     <Compile Include="Files\CharacterAudioEvents.cs" />
     <Compile Include="Files\CharacterPanelStats.cs" />
+    <Compile Include="Files\CharacterPanelTabs.cs" />
     <Compile Include="Files\Characters.cs" />
     <Compile Include="Files\ChestClusters.cs" />
     <Compile Include="Files\Chests.cs" />

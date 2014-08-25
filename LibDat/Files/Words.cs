@@ -5,7 +5,7 @@ namespace LibDat.Files
 	public class Words : BaseDat
 	{
 		public int Unknown0 { get; set; }
-		[UserStringIndex]
+		[StringIndex]
 		public int Text { get; set; }
 		public int Data0Length { get; set; }
 		[UInt64Index]
@@ -14,8 +14,8 @@ namespace LibDat.Files
 		[UInt32Index]
 		public int Data1 { get; set; }
 		public int Unknown6 { get; set; }
-		[StringIndex]
-		public int Unknown7 { get; set; } // duplicate data frm 'Text'? 
+        [UserStringIndex]
+		public int Unknown7 { get; set; } // translate text
 
 		public Words(BinaryReader inStream)
 		{
