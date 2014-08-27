@@ -77,9 +77,9 @@ namespace LibDat.Files
 		public int Unknown49 { get; set; }
 		public int Unknown50 { get; set; }
 		public int Unknown51 { get; set; }
-		public bool Flag4 { get; set; }
+		public byte Flag4 { get; set; }
 		public int Unknown53 { get; set; }
-		public bool Flag5 { get; set; }
+		public byte Flag5 { get; set; }
 		public int Unknown55 { get; set; }
 
 
@@ -143,9 +143,9 @@ namespace LibDat.Files
 			Unknown49 = inStream.ReadInt32();
 			Unknown50 = inStream.ReadInt32();
 			Unknown51 = inStream.ReadInt32();
-			Flag4 = inStream.ReadBoolean();
+			Flag4 = inStream.ReadByte();
 			Unknown53 = inStream.ReadInt32();
-			Flag5 = inStream.ReadBoolean();
+			Flag5 = inStream.ReadByte();
 			Unknown55 = inStream.ReadInt32();
 		}
 

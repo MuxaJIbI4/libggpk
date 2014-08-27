@@ -7,7 +7,7 @@ namespace LibDat.Files
 	{
 		[StringIndex]
 		public int Id { get; set; }
-		[StringIndex]
+		[UserStringIndex]
 		public int Name { get; set; }
 		[StringIndex]
 		public int AnimatedObject { get; set; }
