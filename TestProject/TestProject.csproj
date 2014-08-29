@@ -37,6 +37,7 @@
     <Reference Include="Ionic.Zip">
       <HintPath>..\Ionic.Zip.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,16 +49,6 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LibDat\LibDat.csproj">
-      <Project>{8f9fc78e-6181-4447-ac45-56173c16a0fa}</Project>
-      <Name>LibDat</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LibGGPK\LibGGPK.csproj">
-      <Project>{6D97AF87-4B0A-4F43-A209-801CC72ABE75}</Project>
-      <Name>LibGGPK</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

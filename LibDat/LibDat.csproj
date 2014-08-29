@@ -55,6 +55,7 @@
     <Compile Include="Files\Attributes.cs" />
     <Compile Include="Files\BackendErrors.cs" />
     <Compile Include="Files\BaseItemTypes.cs" />
+    <Compile Include="Files\BeyondDemons.cs" />
     <Compile Include="Files\BindableVirtualKeys.cs" />
     <Compile Include="Files\BloodTypes.cs" />
     <Compile Include="Files\BuffCategories.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Files\BuffMergeModes.cs" />
     <Compile Include="Files\BuffVisuals.cs" />
     <Compile Include="Files\CharacterAudioEvents.cs" />
+    <Compile Include="Files\CharacterPanelDescriptionModes.cs" />
     <Compile Include="Files\CharacterPanelStats.cs" />
     <Compile Include="Files\CharacterPanelTabs.cs" />
     <Compile Include="Files\Characters.cs" />
@@ -83,6 +85,13 @@
     <Compile Include="Files\DescentExiles.cs" />
     <Compile Include="Files\DescentRewardChests.cs" />
     <Compile Include="Files\DescentStarterChest.cs" />
+    <Compile Include="Files\DexIntMissionGuardMods.cs" />
+    <Compile Include="Files\DexIntMissions.cs" />
+    <Compile Include="Files\DexIntMissionTargets.cs" />
+    <Compile Include="Files\DexMissionMods.cs" />
+    <Compile Include="Files\DexMissionMonsters.cs" />
+    <Compile Include="Files\DexMissions.cs" />
+    <Compile Include="Files\DexMissionTracking.cs" />
     <Compile Include="Files\Difficulties.cs" />
     <Compile Include="Files\DropPool.cs" />
     <Compile Include="Files\Effectiveness.cs" />
@@ -102,7 +111,12 @@
     <Compile Include="Files\GrantedEffects.cs" />
     <Compile Include="Files\GrantedEffectsPerLevel.cs" />
     <Compile Include="Files\HideoutDoodads.cs" />
+    <Compile Include="Files\HideoutInteractable.cs" />
+    <Compile Include="Files\Hideouts.cs" />
     <Compile Include="Files\ImpactSoundData.cs" />
+    <Compile Include="Files\IntMissionMods.cs" />
+    <Compile Include="Files\IntMissionMonsters.cs" />
+    <Compile Include="Files\IntMissions.cs" />
     <Compile Include="Files\InvasionMonsterGroups.cs" />
     <Compile Include="Files\InvasionMonsterRestrictions.cs" />
     <Compile Include="Files\InvasionMonsterRoles.cs" />
@@ -113,6 +127,7 @@
     <Compile Include="Files\ItemisedVisualEffect.cs" />
     <Compile Include="Files\ItemVisualEffect.cs" />
     <Compile Include="Files\ItemVisualIdentity.cs" />
+    <Compile Include="Files\KillstreakThresholds.cs" />
     <Compile Include="Files\LeagueCategory.cs" />
     <Compile Include="Files\LeagueFlag.cs" />
     <Compile Include="Files\MapConnections.cs" />
@@ -141,7 +156,9 @@
     <Compile Include="Files\MonsterTypes.cs" />
     <Compile Include="Files\MonsterVarieties.cs" />
     <Compile Include="Files\Music.cs" />
+    <Compile Include="Files\NormalDifficultyMasterWeights.cs" />
     <Compile Include="Files\NPCMaster.cs" />
+    <Compile Include="Files\NPCMasterExperiencePerLevel.cs" />
     <Compile Include="Files\NPCs.cs" />
     <Compile Include="Files\NPCTalk.cs" />
     <Compile Include="Files\NPCTalkCategory.cs" />
@@ -156,6 +173,7 @@
     <Compile Include="Files\QuestRewards.cs" />
     <Compile Include="Files\QuestStates.cs" />
     <Compile Include="Files\QuestStaticRewards.cs" />
+    <Compile Include="Files\RandomUniqueMonsters.cs" />
     <Compile Include="Files\Rarity.cs" />
     <Compile Include="Files\Realms.cs" />
     <Compile Include="Files\RelativeImportanceConstants.cs" />
@@ -170,7 +188,10 @@
     <Compile Include="Files\SoundEffects.cs" />
     <Compile Include="Files\Stats.cs" />
     <Compile Include="Files\StatSemantics.cs" />
+    <Compile Include="Files\StrDexIntMissionExtraRequirement.cs" />
+    <Compile Include="Files\StrDexIntMissions.cs" />
     <Compile Include="Files\StrDexMissions.cs" />
+    <Compile Include="Files\StrIntMissionMonsterWaves.cs" />
     <Compile Include="Files\StrongBoxEffects.cs" />
     <Compile Include="Files\Tags.cs" />
     <Compile Include="Files\Tips.cs" />

@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Windows;
 using System.Xml;
 using System.Xml.Serialization;
-using LibGGPK;
+//using LibGGPK;
 using System.IO;
 using System.Linq.Expressions;
-using LibDat;
-using LibDat.Files;
+//using LibDat;
+//using LibDat.Files;
 using Ionic.Zip;
+using System.Text.RegularExpressions;
 
 //4 bytes - Number of entries
 //Entry 1
@@ -34,24 +36,125 @@ namespace TestProject
 			public string Name { get; set; }
 		}
 
+		[STAThread]
 		public static void Main(string[] args)
 		{
-			if (args.Length != 1)
+			MakeClass();
+		   // ReadAndDumpStruct();
+			//if (args.Length != 1)
+			//{
+			//	Console.WriteLine("Derp");
+			//	Console.ReadLine();
+			//	return;
+			//}
+			//DumpDat(args[0]);
+			//Console.WriteLine(  "Press any key to continue...");
+			//Console.ReadLine(); //new Program();
+		}
+
+		public static void MakeClass()
+		{
+			Regex patternPropName = new Regex("public (?<type>unsigned short|short|int|unsigned int|Int64|bool) (?<name>[^ ]+) { get; set; }");
+			Regex patternClassName = new Regex("class (?<name>[^ ]+)");
+
+			int size = 0;
+
+			StringBuilder sbReader = new StringBuilder();
+			StringBuilder sbWriter = new StringBuilder();
+			StringBuilder sbHeader = new StringBuilder();
+
+			while(true)
 			{
-				Console.WriteLine("Derp");
-				Console.ReadLine();
-				return;
+				string input = Console.ReadLine().Replace("\t", "    "); ;
+				if (input == "}")
+					break;
+
+				string trimmedInput = input.Trim();
+
+				Match matchClass = patternClassName.Match(trimmedInput);
+				if(matchClass.Success)
+				{
+					sbHeader.AppendFormat("using System;\nusing System.IO;\n\nnamespace LibDat.Files\n{{\n\tpublic class {0} : BaseDat\n", matchClass.Groups["name"].Value);
+					sbReader.AppendFormat(
+						"\n        public {0}()\n" +
+						"        {{\n" +
+						"\n" +
+						"        }}\n\n" +
+						"        public {0}(BinaryReader inStream)\n" +
+						"        {{\n", matchClass.Groups["name"].Value);
+
+					sbWriter.Append(
+						"        public override void Save(BinaryWriter outStream)\n" +
+						"        {\n");
+
+					continue;
+				}
+
+
+
+				Match matchProp = patternPropName.Match(trimmedInput);
+				if (matchProp.Success)
+				{
+					switch (matchProp.Groups["type"].Value)
+					{
+						case "int":
+							sbReader.AppendFormat("           {0} = inStream.ReadInt32();\n", matchProp.Groups["name"].Value);
+							sbWriter.AppendFormat("           outStream.Write({0});\n", matchProp.Groups["name"].Value);
+							size += 4;
+							break;
+						case "unsigned int":
+							sbReader.AppendFormat("           {0} = inStream.ReadUInt32();\n", matchProp.Groups["name"].Value);
+							sbWriter.AppendFormat("           outStream.Write({0});\n", matchProp.Groups["name"].Value);
+							size += 4;
+							break;
+						case "bool":
+							sbReader.AppendFormat("           {0} = inStream.ReadBoolean();\n", matchProp.Groups["name"].Value);
+							sbWriter.AppendFormat("           outStream.Write({0});\n", matchProp.Groups["name"].Value);
+							size += 1;
+							break;
+						case "Int64":
+							sbReader.AppendFormat("           {0} = inStream.ReadInt64();\n", matchProp.Groups["name"].Value);
+							sbWriter.AppendFormat("           outStream.Write({0});\n", matchProp.Groups["name"].Value);
+							size += 8;
+							break;
+						case "short":
+							sbReader.AppendFormat("           {0} = inStream.ReadInt16();\n", matchProp.Groups["name"].Value);
+							sbWriter.AppendFormat("           outStream.Write({0});\n", matchProp.Groups["name"].Value);
+							size += 2;
+							break;
+						case "unsigned short":
+							sbReader.AppendFormat("           {0} = inStream.ReadUInt16();\n", matchProp.Groups["name"].Value);
+							sbWriter.AppendFormat("           outStream.Write({0});\n", matchProp.Groups["name"].Value);
+							size += 2;
+							break;
+					}
+					sbHeader.AppendLine(input);
+					continue;
+				}
+				else
+				{
+					if (sbHeader.Length != 0)
+					{
+						if (!input.Contains("}"))
+						{
+							sbHeader.AppendLine(input);
+						}
+					}
+				}
 			}
-			DumpDat(args[0]);
-			Console.WriteLine(  "Press any key to continue...");
-			Console.ReadLine(); //new Program();
+
+			sbWriter.AppendFormat("        }}\n\n        public override int GetSize()\n        {{\n            return 0x{0:X};\n        }}\n    }}\n}}", size);
+			sbReader.Append("        }\n\n");
+
+			Clipboard.SetText(string.Format("{0}{1}{2}", sbHeader.ToString(), sbReader.ToString(), sbWriter.ToString()));
+			Console.WriteLine("Updated clipboard text");
 		}
 
 		private static string ggpkPath = @"o:\Program Files (x86)\Grinding Gear Games\Path of Exile\content.ggpk";
-		private static Dictionary<string, FileRecord> RecordsByPath;
-		private static GGPK content;
+		//private static Dictionary<string, FileRecord> RecordsByPath;
+		//private static GGPK content;
 
-		private static void InitGGPK()
+		/*private static void InitGGPK()
 		{
 			if (!File.Exists(ggpkPath))
 			{
@@ -83,7 +186,7 @@ namespace TestProject
 				Console.WriteLine(item.Key + " -> " + item.Value.Name);
 			}
 		}
-
+		*/
 
 
 
