@@ -4,12 +4,12 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 
-namespace LibDat
+namespace LibDat.Data
 {
 	/// <summary>
-	/// Represents a list of UInt64 found in the resource section of a .dat file
+	/// Represents a list of Int32 found in the resource section of a .dat file
 	/// </summary>
-	public class UInt64List : BaseData
+	public class Int32List : AbstractData
 	{
 		/// <summary>
 		/// Offset in the dat file with respect to the beginning of the data section
@@ -20,17 +20,13 @@ namespace LibDat
 		/// </summary>
 		public int ListLength { get; private set; }
 		/// <summary>
-		/// The string list
+		/// The Int32 list
 		/// </summary>
-		public List<UInt64> Data { get; private set; }
+		public List<Int32> Data { get; private set; }
 		/// <summary>
 		/// The replacement string. If this is set then it will replace the original string when it's saved.
 		/// </summary>
 		public string NewData { get; set; }
-		/// <summary>
-		/// Determins if this UnicodeString is a translatable string (eg: not used as an id, path, etc)
-		/// </summary>
-		public bool IsUserString { get; set; }
 		/// <summary>
 		/// Offset of the new string with respect to the beginning of the data section. This will be invalid until save is called.
 		/// </summary>
@@ -40,14 +36,13 @@ namespace LibDat
 		/// </summary>
 		public long dataTableOffset;
 
-		public UInt64List(BinaryReader inStream, long offset, long dataTableOffset, int listLength)
+		public Int32List(BinaryReader inStream, long offset, long dataTableOffset, int listLength)
 		{
-			this.Data = new List<UInt64>(listLength);
+			this.Data = new List<Int32>(listLength);
 			this.dataTableOffset = dataTableOffset;
 			this.Offset = offset;
 			this.ListLength = listLength;
 			this.NewData = null;
-			this.IsUserString = false;
 			if (listLength == 0) return;
 
 			inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
@@ -65,7 +60,7 @@ namespace LibDat
 		{
 			while (inStream.BaseStream.Position < inStream.BaseStream.Length)
 			{
-				UInt64 u = inStream.ReadUInt64();
+				Int32 u = inStream.ReadInt32();
 				this.Data.Add(u);
 				break;
 			}

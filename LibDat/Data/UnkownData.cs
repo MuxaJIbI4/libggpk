@@ -1,11 +1,11 @@
 using System.IO;
 
-namespace LibDat
+namespace LibDat.Data
 {
 	/// <summary>
 	/// Represents unknown data  found in the data section of a .dat file. None of this is tested and is probably incorrect.
 	/// </summary>
-	public class UnkownData : BaseData
+	public class UnkownData : AbstractData
 	{
 		/// <summary>
 		/// Offset in the dat file with respect to the beginning of the data section

@@ -1,8 +1,8 @@
 using System.IO;
 
-namespace LibDat
+namespace LibDat.Data
 {
-	public abstract class BaseData
+	public abstract class AbstractData
 	{
 		/// <summary>
 		/// Save this record to the specified stream. Stream position is not preserved.
