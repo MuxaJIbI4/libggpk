@@ -1,4 +1,5 @@
 ﻿using LibDat;
+using LibDat.Data;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,8 @@ using System.Windows;
 using System.Windows.Controls;
 using VisualGGPK.Properties;
 using System.Windows.Data;
+
+
 
 namespace VisualGGPK
 {
@@ -163,11 +166,11 @@ namespace VisualGGPK
 		private readonly List<UnicodeString> _dataStrings = new List<UnicodeString>();
 
 		public DatContainer Dat { get; protected set; }
-		public List<BaseDat> Entries 
+		public List<Record> Entries 
 		{
-			get { return Dat.Entries; }
+			get { return Dat.Records; }
 		}
-		public Dictionary<int, BaseData> DataEntries 
+		public Dictionary<int, AbstractData> DataEntries 
 		{
 			get { return Dat.DataEntries; }
 		}

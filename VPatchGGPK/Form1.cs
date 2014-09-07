@@ -12,7 +12,6 @@ using LibGGPK;
 using System.IO;
 using System.Linq.Expressions;
 using LibDat;
-using LibDat.Files;
 using Ionic.Zip;
 using System.Globalization;
 

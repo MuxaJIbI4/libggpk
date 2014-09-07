@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using LibDat;
+using LibDat.Data;
 using LibGGPK;
 using PoeStrings.Properties;
 
@@ -186,7 +187,7 @@ namespace PoeStrings
 				}
 
 				// Make sure parser for .dat type actually exists
-				if (DatFactory.GetTypeName(Path.GetFileNameWithoutExtension(record.Name)) == null)
+				if (!RecordFactory.HasParser(record.Name))
 				{
 					continue;
 				}
@@ -238,16 +239,19 @@ namespace PoeStrings
 				DatContainer container = new DatContainer(datStream, record.Name);
 
 				// Any properties with the UserStringIndex attribute are translatable
-				foreach (var propInfo in container.DatType.GetProperties())
+				foreach (var fieldInfo in container.recordInfo.Fields)
 				{
-					if (!propInfo.GetCustomAttributes(false).Any(n => n is UserStringIndex))
+					if (!fieldInfo.IsUserString() )
 					{
 						continue;
 					}
 
-					foreach (var entry in container.Entries)
+                    // get fielda value for each record
+                    int index = fieldInfo.Index;
+					foreach (var r in container.Records)
 					{
-						int stringIndex = (int)propInfo.GetValue(entry, null);
+
+                        int stringIndex = (int)container.GetFieldValue(r, index);
 						string stringValue = container.DataEntries[stringIndex].ToString();
 
 						if (string.IsNullOrWhiteSpace(stringValue))
