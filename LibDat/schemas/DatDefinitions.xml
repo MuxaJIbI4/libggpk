@@ -514,7 +514,7 @@
 		</field>
 		<field>
 			<description>Name</description>
-			<type>byte</type>
+			<type>int</type>
 			<pointer>UserStringIndex</pointer>
 		</field>
 		<field>
