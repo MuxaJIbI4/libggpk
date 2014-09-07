@@ -218,6 +218,17 @@
     <Compile Include="UnicodeString.cs" />
     <Compile Include="UnkownData.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="schemas\DatDefinitions.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="schemas\DatDefinitions.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 	   Other similar extension points exist, see Microsoft.Common.targets.
