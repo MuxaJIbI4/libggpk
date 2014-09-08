@@ -224,7 +224,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>Unknown3</description>
+			<description>Item Specific Level (Reqired to use, ?Drop)</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -349,44 +349,44 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown36</description>
+			<description>Data7_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown37</description>
+			<description>Data7</description>
+			<type>int</type>
+			<pointer>StringIndex</pointer>
+		</field>
+		<field>
+			<description>Data8_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown38</description>
+			<description>Data8</description>
+			<type>int</type>
+			<pointer>StringIndex</pointer>
+		</field>
+		<field>
+			<description>Data9_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown39</description>
+			<description>Data9</description>
+			<type>int</type>
+			<pointer>StringIndex</pointer>
+		</field>
+		<field>
+			<description>Data10_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown40</description>
+			<description>Data10</description>
 			<type>int</type>
-			<pointer/>
-		</field>
-		<field>
-			<description>Unknown41</description>
-			<type>int</type>
-			<pointer/>
-		</field>
-		<field>
-			<description>Unknown42</description>
-			<type>int</type>
-			<pointer/>
-		</field>
-		<field>
-			<description>Unknown43</description>
-			<type>int</type>
-			<pointer/>
+			<pointer>StringIndex</pointer>
 		</field>
 	</definition>
 	<definition id="BeyondDemons">
