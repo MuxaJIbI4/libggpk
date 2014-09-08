@@ -9,32 +9,32 @@ using LibDat.Data;
 
 namespace LibDat
 {
-	/// <summary>
-	/// Parses and holds all information found in a specific .dat file.
-	/// </summary>
-	public class DatContainer
-	{
+    /// <summary>
+    /// Parses and holds all information found in a specific .dat file.
+    /// </summary>
+    public class DatContainer
+    {
         /// <summary>
         /// Name of the dat file (without .dat extension)
         /// </summary>
         public readonly string DatName;
 
-        public readonly RecordInfo recordInfo;
+        public DatRecordInfo RecordInfo { get; private set; }
 
         /// <summary>
         /// List of properties for the specified dat type. See code in Files directory.
         /// </summary>
-        public List<Record> Records;
+        public List<DatRecord> Records;
 
-		/// <summary>
-		/// Offset of the data section in the .dat file (Starts with 0xbbbbbbbbbbbbbbbb)
-		/// </summary>
-		public long DataTableBegin;
+        /// <summary>
+        /// Offset of the data section in the .dat file (Starts with 0xbbbbbbbbbbbbbbbb)
+        /// </summary>
+        public long DataTableBegin;
 
-		/// <summary>
-		/// Contains the entire unmodified data section of the .dat file
-		/// </summary>
-		private byte[] originalDataTable;
+        /// <summary>
+        /// Contains the entire unmodified data section of the .dat file
+        /// </summary>
+        private byte[] originalDataTable;
 
         /// <summary>
         /// Mapping of all known strings and other data found in the data section. 
@@ -43,44 +43,39 @@ namespace LibDat
         /// </summary>
         public Dictionary<int, AbstractData> DataEntries = new Dictionary<int, AbstractData>();
 
-
-
-		/// <summary>
-		/// Parses the .dat file contents from inStream.
-		/// </summary>
-		/// <param name="inStream">Unicode binary reader containing ONLY the contents of a single .dat file and nothing more</param>
-		/// <param name="fileName">Name of the dat file (with extension)</param>
-		public DatContainer(Stream inStream, string fileName)
-		{
+        /// <summary>
+        /// Parses the .dat file contents from inStream.
+        /// </summary>
+        /// <param name="inStream">Unicode binary reader containing ONLY the contents of a single .dat file and nothing more</param>
+        /// <param name="fileName">Name of the dat file (with extension)</param>
+        public DatContainer(Stream inStream, string fileName)
+        {
             DatName = Path.GetFileNameWithoutExtension(fileName);
+            RecordInfo = DatRecordInfoFactory.GetRecordInfo(DatName);
+            using (BinaryReader br = new BinaryReader(inStream, Encoding.Unicode))
+            {
+                Read(br);
+            }
+        }
 
-            // TODO
-            // recordInfo = ??????
-
-			using (BinaryReader br = new BinaryReader(inStream, Encoding.Unicode))
-			{
-				Read(br);
-			}
-		}
-
-		/// <summary>
-		/// Parses the .dat file found at path 'fileName'
-		/// </summary>
+        /// <summary>
+        /// Parses the .dat file found at path 'fileName'
+        /// </summary>
         /// <param name="filePath">Path of .dat file to parse</param>
-		public DatContainer(string filePath)
-		{
+        public DatContainer(string filePath)
+        {
             DatName = Path.GetFileNameWithoutExtension(filePath);
 
-			byte[] fileBytes = File.ReadAllBytes(filePath);
+            byte[] fileBytes = File.ReadAllBytes(filePath);
 
-			using (MemoryStream ms = new MemoryStream(fileBytes))
-			{
-				using (BinaryReader br = new BinaryReader(ms, System.Text.Encoding.Unicode))
-				{
-					Read(br);
-				}
-			}
-		}
+            using (MemoryStream ms = new MemoryStream(fileBytes))
+            {
+                using (BinaryReader br = new BinaryReader(ms, System.Text.Encoding.Unicode))
+                {
+                    Read(br);
+                }
+            }
+        }
 
         /// <summary>
         /// Reads the .dat frile from the specified stream
@@ -91,12 +86,12 @@ namespace LibDat
             int numberOfEntries = inStream.ReadInt32();
             if (inStream.ReadUInt64() == 0xBBbbBBbbBBbbBBbb)
             {
-                Records = new List<Record>();
+                Records = new List<DatRecord>();
                 return;
             }
             inStream.BaseStream.Seek(-8, SeekOrigin.Current);
 
-            Records = new List<Record>(numberOfEntries);
+            Records = new List<DatRecord>(numberOfEntries);
 
             if (DatName.Length == 0)
             {
@@ -105,7 +100,7 @@ namespace LibDat
 
             for (int i = 0; i < numberOfEntries; i++)
             {
-                Records.Add(RecordFactory.Create(DatName, inStream));
+                Records.Add(new DatRecord(RecordInfo, inStream));
             }
 
             if (inStream.ReadUInt64() != 0xBBbbBBbbBBbbBBbb)
@@ -118,222 +113,220 @@ namespace LibDat
             originalDataTable = inStream.ReadBytes((int)(inStream.BaseStream.Length - inStream.BaseStream.Position));
 
             // Read all referenced string and data entries from the data following the entries (starting at magic number)
-            foreach (var item in Records)
+            foreach (var r in Records)
             {
-                AddDataToTable(item, inStream);
+                ReadRecordData(r, inStream);
             }
         }
 
-
-        public object GetFieldValue(Record record, int index)
+        /// <summary>
+        /// Finds all known references to strings and other data in the data section and adds them to the DataEntries. 
+        /// Accomplished by reading the [StringIndex] and [DataIndex] attributes of our dat structure.
+        /// </summary>
+        /// <param name="entry">Dat parser created from parsing a single entry of the .dat file.</param>
+        /// <param name="inStream">Stream containing contents of .dat file. Stream position not preserved.</param>
+        private void ReadRecordData(DatRecord record, BinaryReader inStream)
         {
-            return record.GetField(index);
+            var fields = RecordInfo.Fields;
+
+            if (!RecordInfo.HasPointers)
+            {
+                return;
+            }
+
+            foreach (var field in fields)
+            {
+                if (!field.HasPointer)
+                {
+                    continue;
+                }
+
+                int offset = (int)record.GetFieldValue(field);
+
+                if (DataEntries.ContainsKey(offset) && !DataEntries[offset].ToString().Equals(""))
+                {
+                    continue;
+                }
+
+                DatRecordFieldInfo fieldLength = null;
+                switch (field.PointerType)
+                {
+                    case "StringIndex": DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, false); break;
+                    case "IndirectStringIndex": DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, true); break;
+                    case "UserStringIndex": DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, true); break;
+                    case "DataIndex": DataEntries[offset] = new UnkownData(inStream, offset, DataTableBegin); break;
+                    case "UInt64Index":
+                        fieldLength = fields.Where(x => x.Description == field.Description + "_Length").FirstOrDefault();
+                        if (fieldLength == null)
+                            throw new Exception("Couldn't find length field for field: " + field.Description);
+                        DataEntries[offset] = new UInt64List(inStream, offset, DataTableBegin, (int)(record.GetFieldValue(fieldLength)));
+                        break;
+                    case "UInt32Index":
+                        fieldLength = fields.Where(x => x.Description == field.Description + "_Length").FirstOrDefault();
+                        if (fieldLength == null)
+                            throw new Exception("Couldn't find length field for field: " + field.Description);
+                        DataEntries[offset] = new UInt32List(inStream, offset, DataTableBegin, (int)(record.GetFieldValue(fieldLength)));
+                        break;
+                    case "Int32Index":
+                        fieldLength = fields.Where(x => x.Description == field.Description + "_Length").FirstOrDefault();
+                        if (fieldLength == null)
+                            throw new Exception("Couldn't find length field for field: " + field.Description);
+                        DataEntries[offset] = new Int32List(inStream, offset, DataTableBegin, (int)(record.GetFieldValue(fieldLength)));
+                        break;
+                    default:
+                        throw new Exception("Unknown pointer type: " + field.PointerType);
+                }
+            }
         }
 
-		/// <summary>
-		/// Finds all known references to strings and other data in the data section and adds them to the DataEntries. 
-		/// Accomplished by reading the [StringIndex] and [DataIndex] attributes of our dat structure.
-		/// </summary>
-		/// <param name="entry">Dat parser created from parsing a single entry of the .dat file.</param>
-		/// <param name="inStream">Stream containing contents of .dat file. Stream position not preserved.</param>
-		private void AddDataToTable(Record entry, BinaryReader inStream)
-		{
-			var properties = entry.GetType().GetProperties();
+        /// <summary>
+        /// Saves parsed data to specified path
+        /// </summary>
+        /// <param name="filePath">Path to write contents to</param>
+        public void Save(string filePath)
+        {
+            using (FileStream outStream = File.Open(filePath, FileMode.Create))
+            {
+                Save(outStream);
+            }
+        }
 
-			foreach (var prop in properties)
-			{
-				object[] customAttributes = prop.GetCustomAttributes(false);
+        /// <summary>
+        /// Saves parsed data to specified stream
+        /// </summary>
+        /// <param name="outStream">Stream to write contents to</param>
+        public void Save(Stream rawOutStream)
+        {
+            // Mapping of the new string and data offsets
+            Dictionary<long, long> changedOffsets = new Dictionary<long, long>();
 
-				if (customAttributes.Length == 0)
-					continue;
+            BinaryWriter outStream = new BinaryWriter(rawOutStream, System.Text.Encoding.Unicode);
+            outStream.Write(Records.Count);
 
-				int offset = (int)prop.GetValue(entry, null);
-				if (DataEntries.ContainsKey(offset) && !DataEntries[offset].ToString().Equals(""))
-				{
-					continue;
-				}
+            if (Records.Count > 0)
+            {
+                // Pretty ugly way to zero out the for sizeof(Entry) * EntryCount bytes
+                outStream.Write(new byte[RecordInfo.Length * Records.Count]);
+            }
 
-				if (customAttributes.Any(n => n is StringIndex))
-				{
-					DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, (customAttributes.Any(n => n is UserStringIndex)));
-					//	Console.WriteLine("{0} -> {1}", offset, DataEntries[offset]);
-				}
-				else if (customAttributes.Any(n => n is DataIndex))
-				{
-					DataEntries[offset] = new UnkownData(inStream, offset, DataTableBegin);
-				}
-				else if (customAttributes.Any(n => n is UInt64Index))
-				{
-					var propLength = entry.GetType().GetProperties().Where(x => x.Name == prop.Name+"Length").FirstOrDefault();
-					DataEntries[offset] = new UInt64List(inStream, offset, DataTableBegin, (int)(propLength.GetValue(entry, null)));
-				}
-				else if (customAttributes.Any(n => n is UInt32Index))
-				{
-					var propLength = entry.GetType().GetProperties().Where(x => x.Name == prop.Name + "Length").FirstOrDefault();
-					DataEntries[offset] = new UInt32List(inStream, offset, DataTableBegin, (int)(propLength.GetValue(entry, null)));
-				}
-				else if (customAttributes.Any(n => n is Int32Index))
-				{
-					var propLength = entry.GetType().GetProperties().Where(x => x.Name == prop.Name + "Length").FirstOrDefault();
-					DataEntries[offset] = new Int32List(inStream, offset, DataTableBegin, (int)(propLength.GetValue(entry, null)));
-				}
-			}
-		}
+            int newStartOfDataSection = (int)outStream.BaseStream.Position;
+            outStream.Write(originalDataTable);
 
+            foreach (var item in DataEntries)
+            {
+                if (item.Value is UnicodeString)
+                {
+                    UnicodeString str = item.Value as UnicodeString;
+                    if (!string.IsNullOrWhiteSpace(str.NewData))
+                    {
+                        str.Save(outStream);
+                        changedOffsets[str.Offset] = str.NewOffset;
+                    }
+                }
+            }
 
+            // Go back to the beginning and write the real entries
+            outStream.BaseStream.Seek(4, SeekOrigin.Begin);
 
-
-
-		public byte[] GetBytes()
-		{
-			MemoryStream ms = new MemoryStream();
-			Save(ms);
-
-			return ms.ToArray();
-		}
-
-		/// <summary>
-		/// Saves parsed data to specified path
-		/// </summary>
-		/// <param name="filePath">Path to write contents to</param>
-		public void Save(string filePath)
-		{
-			using (FileStream outStream = File.Open(filePath, FileMode.Create))
-			{
-				Save(outStream);
-			}
-		}
-
-		/// <summary>
-		/// Saves parsed data to specified stream
-		/// </summary>
-		/// <param name="outStream">Stream to write contents to</param>
-		public void Save(Stream rawOutStream)
-		{
-			// Mapping of the new string and data offsets
-			Dictionary<long, long> changedOffsets = new Dictionary<long, long>();
-
-			BinaryWriter outStream = new BinaryWriter(rawOutStream, System.Text.Encoding.Unicode);
-			outStream.Write(Records.Count);
-
-			if (Records.Count > 0)
-			{
-				// Pretty ugly way to zero out the for sizeof(Entry) * EntryCount bytes
-				outStream.Write(new byte[recordInfo.Length * Records.Count]);
-			}
-
-			int newStartOfDataSection = (int)outStream.BaseStream.Position;
-			outStream.Write(originalDataTable);
-
-			foreach (var item in DataEntries)
-			{
-				if (item.Value is UnicodeString)
-				{
-					UnicodeString str = item.Value as UnicodeString;
-					if (!string.IsNullOrWhiteSpace(str.NewData))
-					{
-						str.Save(outStream);
-						changedOffsets[str.Offset] = str.NewOffset;
-					}
-				}
-			}
-
-			// Go back to the beginning and write the real entries
-			outStream.BaseStream.Seek(4, SeekOrigin.Begin);
-
-			// Now we must go through each StringIndex and DataIndex and update the index then save it
-			foreach (var item in Records)
-			{
-				UpdateDataOffsets(item, changedOffsets);
-				item.Save(outStream);
-			}
-		}
+            // Now we must go through each StringIndex and DataIndex and update the index then save it
+            foreach (var r in Records)
+            {
+                UpdateDataOffsets(r, changedOffsets);
+                r.Save(outStream);
+            }
+        }
 
         /// <summary>
         /// Updates references to modified strings/data in the data section for the specified entry.
         /// </summary>
         /// <param name="entry">Entry being updated</param>
         /// <param name="updatedOffsets">Mapping of all changed offsets. Key = original offset, Value = new offset.</param>
-        private void UpdateDataOffsets(Record entry, Dictionary<long, long> updatedOffsets)
+        private void UpdateDataOffsets(DatRecord record, Dictionary<long, long> updatedOffsets)
         {
-            var properties = entry.GetType().GetProperties();
-            foreach (var prop in properties)
+            var fields = RecordInfo.Fields;
+
+            if (!RecordInfo.HasPointers)
             {
-                object[] customAttributes = prop.GetCustomAttributes(false);
+                return;
+            }
 
-                if (customAttributes.Length == 0)
+            foreach (var field in fields)
+            {
+                if (!field.HasPointer || (!field.PointerType.Equals("UserStringIndex") && !field.PointerType.Equals("StringIndex")))
                     continue;
 
-                if (customAttributes.Any(n => n is UInt64Index) || customAttributes.Any(n => n is UInt32Index) ||
-                    customAttributes.Any(n => n is Int32Index))
-                    continue;
-
-                int offset = (int)prop.GetValue(entry, null);
+                int offset = (int)record.GetFieldValue(field);
                 if (updatedOffsets.ContainsKey(offset))
                 {
                     //Console.WriteLine("Updating offset {0} for {1} (now {2})", offset, prop.Name, updatedOffsets[offset]);
-                    prop.SetValue(entry, (int)updatedOffsets[offset], null);
+                    record.SetFieldValue(field, (int)updatedOffsets[offset]);
                 }
             }
         }
 
-		/// <summary>
-		/// Returns a CSV table with the contents of this dat container.
-		/// </summary>
-		/// <returns></returns>
-		public string GetCSV()
-		{
-			const char seperator = ',';
-			StringBuilder sb = new StringBuilder();
+        /// <summary>
+        /// Returns a CSV table with the contents of this dat container.
+        /// </summary>
+        /// <returns></returns>
+        public string GetCSV()
+        {
+            const char separator = ',';
+            StringBuilder sb = new StringBuilder();
+            var fields = RecordInfo.Fields;
 
-			bool displayedHeader = false;
-			foreach (var item in Records)
-			{
-				var properties = item.GetType().GetProperties();
+            // add header
+            sb.AppendFormat("Rows{0}", separator);
+            foreach (var field in fields)
+            {
+                sb.AppendFormat("{0}{1}", field.Description, separator);
+            }
+            sb.Remove(sb.Length - 1, 1);
+            sb.AppendLine();
 
-				if (!displayedHeader)
-				{
-					foreach (var propertyInfo in properties)
-					{
-						sb.AppendFormat("{0}{1}", propertyInfo.Name, seperator);
-					}
-					sb.Remove(sb.Length - 1, 1);
-					sb.AppendLine();
-					displayedHeader = true;
-				}
+            // add records
+            foreach (var record in Records)
+            {
+                foreach (var field in fields)
+                {
+                    sb.AppendFormat("{0}{1}", field.Index, separator);
 
-				foreach (var propertyInfo in properties)
-				{
-					object fieldValue = propertyInfo.GetValue(item, null);
-					object[] customAttributes = propertyInfo.GetCustomAttributes(false);
+                    object fieldValue = record.GetFieldValue(field);
+                    if (!field.HasPointer)
+                    {
+                        sb.AppendFormat("{0}{1}", fieldValue, separator);
+                        continue;
+                    }
 
-					if (customAttributes.Length > 0)
-					{
-						if (customAttributes.Any(n => n is UInt64Index) || customAttributes.Any(n => n is UInt32Index) || customAttributes.Any(n => n is Int32Index))
-						{
-							sb.AppendFormat("{0}{1}", fieldValue, seperator);
-						}
-						else if (customAttributes.Any(n => n is StringIndex))
-						{
-							sb.AppendFormat("\"{0}\"{1}", DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""), seperator);
-						}
-						else
-						{
-							sb.AppendFormat("{0}{1}", DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""), seperator);
-						}
-					}
-					else
-					{
-						sb.AppendFormat("{0}{1}", fieldValue, seperator);
-					}
-				}
-				sb.Remove(sb.Length - 1, 1);
-				sb.AppendLine();
-			}
+                    // has pointers
+                    string pointerType = field.PointerType;
+                    switch (pointerType)
+                    {
+                        case "UInt64Index":
+                        case "UInt32Index":
+                        case "Int32Index":
+                            sb.AppendFormat("{0}{1}", fieldValue, separator); break;
+                        case "StringIndex":
+                        case "UserStringIndex":
+                            sb.AppendFormat("\"{0}\"{1}", DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""), separator); break;
+                        case "DataIndex":
+                            sb.AppendFormat("{0}{1}", DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""), separator); break;
+                        default:
+                            throw new Exception("Unknown field pointer type: " + pointerType);
+                    }
+                }
+                sb.Remove(sb.Length - 1, 1);
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
 
-			return sb.ToString();
-		}
+        public byte[] GetBytes()
+        {
+            MemoryStream ms = new MemoryStream();
+            Save(ms);
 
+            return ms.ToArray();
+        }
 
     }
 }

@@ -12,7 +12,7 @@
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
-		<DataGrid Grid.Row="0" Name="dataGridEntries" AutoGenerateColumns="False"/>
+		<DataGrid Grid.Row="0" Name="dataGridRecords" AutoGenerateColumns="False"/>
 		<GridSplitter Grid.Row="1" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Height="4" />
 		<DataGrid Grid.Row="2" Name="dataGridData" AutoGenerateColumns="True" ItemsSource="{Binding DataStrings}" />
 		<StackPanel Grid.Row="3" HorizontalAlignment="Center" Orientation="Horizontal">

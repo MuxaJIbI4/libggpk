@@ -182,15 +182,11 @@ namespace PoeStrings
 				FileRecord record = recordOffset.Value as FileRecord;
 
 				if (record == null || record.ContainingDirectory == null || Path.GetExtension(record.Name) != ".dat")
-				{
 					continue;
-				}
 
 				// Make sure parser for .dat type actually exists
-				if (!RecordFactory.HasParser(record.Name))
-				{
+				if (!DatRecordInfoFactory.HasParser(record.Name))
 					continue;
-				}
 
 				// We'll need this .dat FileRecord later on so we're storing it in a map of fileName -> FileRecord
 				fileRecordMap.Add(record.Name, record);
@@ -239,7 +235,7 @@ namespace PoeStrings
 				DatContainer container = new DatContainer(datStream, record.Name);
 
 				// Any properties with the UserStringIndex attribute are translatable
-				foreach (var fieldInfo in container.recordInfo.Fields)
+				foreach (var fieldInfo in container.RecordInfo.Fields)
 				{
 					if (!fieldInfo.IsUserString() )
 					{
@@ -247,11 +243,9 @@ namespace PoeStrings
 					}
 
                     // get fielda value for each record
-                    int index = fieldInfo.Index;
 					foreach (var r in container.Records)
 					{
-
-                        int stringIndex = (int)container.GetFieldValue(r, index);
+                        int stringIndex = (int)r.GetFieldValue(fieldInfo);
 						string stringValue = container.DataEntries[stringIndex].ToString();
 
 						if (string.IsNullOrWhiteSpace(stringValue))

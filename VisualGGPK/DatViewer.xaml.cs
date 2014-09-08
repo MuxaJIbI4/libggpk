@@ -10,258 +10,181 @@ using System.Windows;
 using System.Windows.Controls;
 using VisualGGPK.Properties;
 using System.Windows.Data;
-
-
+using System.Collections;
 
 namespace VisualGGPK
 {
-	/// <summary>
-	/// Interaction logic for DatViewer.xaml
-	/// </summary>
-	public partial class DatViewer : UserControl
-	{
-		private DatWrapper data;
-		public string FileName { get; set; }
-		public List<UnicodeString> DataStrings
-		{
-			get
-			{
-				if (data != null)
-					return data.Strings;
-				else
-					return new List<UnicodeString>();
-			}
-		}
+    /// <summary>
+    /// Interaction logic for DatViewer.xaml
+    /// </summary>
+    public partial class DatViewer : UserControl
+    {
+        private DatWrapper _wrapper;
+        public string FileName { get; set; }
+        public List<UnicodeString> DataStrings
+        {
+            get
+            {
+                if (_wrapper != null)
+                    return _wrapper.Strings;
+                else
+                    return new List<UnicodeString>();
+            }
+        }
 
-		public System.Collections.IEnumerable Entries
-		{
-			get
-			{
-				return data.Entries;
-			}
-		}
+        public System.Collections.IEnumerable Records
+        {
+            get
+            {
+                return _wrapper.Records;
+            }
+        }
 
-		public DatViewer(string filename, Stream inStream)
-		{
-			this.FileName = filename;
-			data = new DatWrapper(inStream, filename);
-			InitializeComponent();
-			DataContext = this;
+        public DatViewer(string filename, Stream inStream)
+        {
+            this.FileName = filename;
+            _wrapper = new DatWrapper(inStream, filename);
+            InitializeComponent();
+            DataContext = this;
 
-			buttonSave.Content = Settings.Strings["DatViewer_Button_Save"];
-			buttonExportCSV.Content = Settings.Strings["DatViewer_Button_Export"];
-		}
+            buttonSave.Content = Settings.Strings["DatViewer_Button_Save"];
+            buttonExportCSV.Content = Settings.Strings["DatViewer_Button_Export"];
+        }
 
-		public DatViewer(string filename)
-		{
-			this.FileName = filename;
-			data = new DatWrapper(filename);
-			InitializeComponent();
-			DataContext = this;
+        public DatViewer(string filename)
+        {
+            this.FileName = filename;
+            _wrapper = new DatWrapper(filename);
+            InitializeComponent();
+            DataContext = this;
 
-			buttonSave.Content = Settings.Strings["DatViewer_Button_Save"];
-			buttonExportCSV.Content = Settings.Strings["DatViewer_Button_Export"];
-		}
+            buttonSave.Content = Settings.Strings["DatViewer_Button_Save"];
+            buttonExportCSV.Content = Settings.Strings["DatViewer_Button_Export"];
+        }
 
-		public DatViewer()
-		{
-			InitializeComponent();
-			DataContext = this;
+        public DatViewer()
+        {
+            InitializeComponent();
+            DataContext = this;
 
-			buttonSave.Content = Settings.Strings["DatViewer_Button_Save"];
-			buttonExportCSV.Content = Settings.Strings["DatViewer_Button_ExportCSV"];
-		}
+            buttonSave.Content = Settings.Strings["DatViewer_Button_Save"];
+            buttonExportCSV.Content = Settings.Strings["DatViewer_Button_ExportCSV"];
+        }
 
-		public void Reset(string filename, Stream inStream)
-		{
-			this.FileName = filename;
-			data = new DatWrapper(inStream, filename);
-			DataContext = null;
-			dataGridEntries.ItemsSource = null;
-			dataGridEntries.Columns.Clear();
+        public void Reset(string filename, Stream inStream)
+        {
+            this.FileName = filename;
+            _wrapper = new DatWrapper(inStream, filename);
+            DataContext = null;
+            dataGridRecords.ItemsSource = null;
+            dataGridRecords.Columns.Clear();
 
-			// 
-			if (data.Entries.Count <= 0)
-			{
-				return;
-			}
+            // 
+            if (_wrapper.Records.Count <= 0)
+            {
+                return;
+            }
 
-			BuildGrid(data.Entries[0].GetType());
+            BuildGrid(_wrapper.RecordInfo);
 
-			DataContext = this;
-		}
+            DataContext = this;
+        }
 
-		private void SaveDat()
-		{
-			SaveFileDialog sfd = new SaveFileDialog();
-			sfd.DefaultExt = ".dat";
-			sfd.FileName = Path.GetFileNameWithoutExtension(FileName) + "_NEW.dat";
+        private void SaveDat()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.DefaultExt = ".dat";
+            sfd.FileName = Path.GetFileNameWithoutExtension(FileName) + "_NEW.dat";
 
-			if (sfd.ShowDialog() == true)
-			{
-				data.Save(sfd.FileName);
-			}
-		}
+            if (sfd.ShowDialog() == true)
+            {
+                _wrapper.Save(sfd.FileName);
+            }
+        }
 
-		private void ExportCSV()
-		{
-			SaveFileDialog sfd = new SaveFileDialog();
-			sfd.FileName = Path.GetFileNameWithoutExtension(FileName) + ".csv";
+        private void ExportCSV()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.FileName = Path.GetFileNameWithoutExtension(FileName) + ".csv";
 
-			if (sfd.ShowDialog() == true)
-			{
-				try
-				{
-					File.WriteAllText(sfd.FileName, data.Dat.GetCSV());
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(string.Format(Settings.Strings["DatViewer_ExportCSV_Failed"], ex.Message), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
-					return;
-				}
+            if (sfd.ShowDialog() == true)
+            {
+                try
+                {
+                    File.WriteAllText(sfd.FileName, _wrapper.GetCSV());
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(Settings.Strings["DatViewer_ExportCSV_Failed"], ex.Message), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
-				MessageBox.Show(string.Format(Settings.Strings["DatViewer_ExportCSV_Successful"], sfd.FileName), Settings.Strings["DatViewer_ExportCSV_Successful_Caption"], MessageBoxButton.OK, MessageBoxImage.Information);
-			}
-		}
+                MessageBox.Show(string.Format(Settings.Strings["DatViewer_ExportCSV_Successful"], sfd.FileName), Settings.Strings["DatViewer_ExportCSV_Successful_Caption"], MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
 
-		private void BuildGrid(Type datType)
-		{
-			// Add columns
-			foreach (var propInfo in datType.GetProperties())
-			{
-				DataGridTextColumn col = new DataGridTextColumn();
-				string colHeader = propInfo.Name;
-				if (propInfo.GetCustomAttributes(false).Any(n => n is UInt64Index))
-					colHeader += "\n[UInt64Index]";
-				else if (propInfo.GetCustomAttributes(false).Any(n => n is UInt32Index))
-					colHeader += "\n[UInt32Index]";
-				else if (propInfo.GetCustomAttributes(false).Any(n => n is Int32Index))
-					colHeader += "\n[Int32Index]";
-				else if (propInfo.GetCustomAttributes(false).Any(n => n is StringIndex))
-					colHeader += "\n[StringIndex]";
-				else
-					colHeader += "\n[" + propInfo.PropertyType.Name + "]";
-				col.Header = colHeader;
-				col.Binding = new Binding(propInfo.Name);
-				dataGridEntries.Columns.Add(col);
-			}
+        private void BuildGrid(DatRecordInfo recordInfo)
+        {
+            // first column: row index
+            DataGridTextColumn col_first = new DataGridTextColumn();
+            col_first.Header = "Row";
+            col_first.Binding = new Binding("column_0");
+            dataGridRecords.Columns.Add(col_first);
 
-			dataGridEntries.ItemsSource = Entries;
-		}
+            // field columns 
+            int i = 1;
+            foreach (var field in recordInfo.Fields)
+            {
+                DataGridTextColumn col = new DataGridTextColumn();
+                col.Header = field.ToString("\n");
+                col.Binding = new Binding("column_" + i++);
+                dataGridRecords.Columns.Add(col);
+            }
+            dataGridRecords.ItemsSource = GenerateData(Records, recordInfo.Fields.Count).ToDataSource();
+        }
 
-		private void buttonSave_Click_1(object sender, RoutedEventArgs e)
-		{
-			SaveDat();
-		}
+        public IEnumerable<IDictionary> GenerateData(IEnumerable records, int columnsCount)
+        {
+            IEnumerator iter = records.GetEnumerator();
+            int row_index = 0;
+            while (iter.MoveNext())
+            {
+                DatRecord record = (DatRecord)iter.Current;
+                var dict = new Dictionary<string, object>();
+                dict["column_0"] = row_index;
+                for (int i = 0; i < columnsCount; i++)
+                {
+                    DatRecordFieldInfo field = record.RecordInfo.Fields[i];
+                    if ( field.HasPointer )
+                    {
+                        int offset = (int)record.GetFieldValue(i);
+                        if (_wrapper.DataEntries.ContainsKey(offset))
+                        {
+                            dict["column_" + (i+1) ] = "*" + offset + " = " + _wrapper.DataEntries[offset].ToString();
+                        }
+                        else
+                        {
+                            dict["column_" + (i + 1)] = record.GetFieldValue(i);
+                        }
+                    }
+                    else
+                    {
+                        dict["column_" + (i + 1)] = record.GetFieldValue(i);
+                    }
+                }
+                row_index++;
+                yield return dict;
+            }
+        }
 
-		private void buttonExportCSV_Click_1(object sender, RoutedEventArgs e)
-		{
-			ExportCSV();
-		}
-	}
-	public class DatWrapper
-	{
-		private string fileName;
-		private string datName;
-		private readonly List<UnicodeString> _dataStrings = new List<UnicodeString>();
+        private void buttonSave_Click_1(object sender, RoutedEventArgs e)
+        {
+            SaveDat();
+        }
 
-		public DatContainer Dat { get; protected set; }
-		public List<Record> Entries 
-		{
-			get { return Dat.Records; }
-		}
-		public Dictionary<int, AbstractData> DataEntries 
-		{
-			get { return Dat.DataEntries; }
-		}
-
-		public List<UnicodeString> Strings
-		{
-			get
-			{
-				return _dataStrings;
-			}
-		}
-
-		public DatWrapper(string fileName)
-		{
-			this.fileName = fileName;
-			this.datName = Path.GetFileNameWithoutExtension(fileName);
-
-			byte[] fileBytes = File.ReadAllBytes(fileName);
-
-			using (MemoryStream ms = new MemoryStream(fileBytes))
-			{
-				ParseDatFile(ms);
-			}
-		}
-
-		public DatWrapper(Stream inStream, string fileName)
-		{
-			this.fileName = fileName;
-			this.datName = Path.GetFileNameWithoutExtension(fileName);
-			ParseDatFile(inStream);
-		}
-
-
-		private void ParseDatFile(Stream inStream)
-		{
-			Dat = new DatContainer(inStream, datName);
-
-			try
-			{
-				var containerData = DataEntries.ToList();
-
-				foreach (var keyValuePair in containerData)
-				{
-					if (keyValuePair.Value is UnicodeString)
-					{
-						Strings.Add((UnicodeString)keyValuePair.Value);
-					}
-					else if (keyValuePair.Value is UInt64List)
-					{
-						UInt64List ul = (UInt64List)keyValuePair.Value;
-						Strings.Add((UnicodeString)new UnicodeString(ul.Offset, ul.dataTableOffset, ul.ToString()));
-					}
-					else if (keyValuePair.Value is UInt32List)
-					{
-						UInt32List ul = (UInt32List)keyValuePair.Value;
-						Strings.Add((UnicodeString)new UnicodeString(ul.Offset, ul.dataTableOffset, ul.ToString()));
-					}
-					else if (keyValuePair.Value is Int32List)
-					{
-						Int32List ul = (Int32List)keyValuePair.Value;
-						Strings.Add((UnicodeString)new UnicodeString(ul.Offset, ul.dataTableOffset, ul.ToString()));
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(string.Format(Settings.Strings["DatWrapper_ParseDatFile_Failed"], ex.Message), ex);
-			}
-		}
-
-		public void Save(string savePath)
-		{
-			try
-			{
-				Dat.Save(savePath);
-			}
-			catch (Exception ex)
-			{
-				StringBuilder errorString = new StringBuilder();
-
-				Exception temp = ex;
-				while (temp != null)
-				{
-					errorString.AppendLine(temp.Message);
-					temp = temp.InnerException;
-				}
-
-				MessageBox.Show(string.Format(Settings.Strings["DatWrapper_Save_Failed"], errorString), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
-			}
-
-			MessageBox.Show(string.Format(Settings.Strings["DatWrapper_Save_Successful"], savePath), Settings.Strings["DatWrapper_Save_Successful_Caption"], MessageBoxButton.OK, MessageBoxImage.Information);
-		}
-	}
+        private void buttonExportCSV_Click_1(object sender, RoutedEventArgs e)
+        {
+            ExportCSV();
+        }
+    }
 }

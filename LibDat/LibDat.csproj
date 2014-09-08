@@ -41,27 +41,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\AbstractData.cs" />
-    <Compile Include="Record.cs" />
-    <Compile Include="RecordFactory.cs" />
+    <Compile Include="DatRecord.cs" />
     <Compile Include="Data\Int32List.cs" />
+    <Compile Include="DatRecordInfoFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DatContainer.cs" />
-    <Compile Include="RecordFieldInfo.cs" />
-    <Compile Include="RecordInfo.cs" />
+    <Compile Include="DatRecordFieldInfo.cs" />
     <Compile Include="Data\UInt32List.cs" />
     <Compile Include="Data\UInt64List.cs" />
     <Compile Include="Data\UnicodeString.cs" />
     <Compile Include="Data\UnkownData.cs" />
+    <Compile Include="DatRecordInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="schemas\DatDefinitions.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="DatDefinitions.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="schemas\DatDefinitions.xsd">
+    <None Include="DatDefinitions.xsd">
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

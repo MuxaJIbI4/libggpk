@@ -59,6 +59,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataSourceCreator.cs" />
+    <Compile Include="DatWrapper.cs" />
     <Compile Include="DDSImage.cs" />
     <Compile Include="Settings.cs" />
     <Page Include="DatViewer.xaml">
