@@ -103,7 +103,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -118,7 +118,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -128,7 +128,7 @@
 			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
-			<description>Data2Length</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -234,7 +234,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -269,7 +269,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -279,7 +279,7 @@
 			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
-			<description>Data2Length</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -289,7 +289,7 @@
 			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
-			<description>Data3Length</description>
+			<description>Data3_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -299,7 +299,7 @@
 			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
-			<description>Data4Length</description>
+			<description>Data4_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -309,7 +309,7 @@
 			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
-			<description>Data5Length</description>
+			<description>Data5_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -334,7 +334,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data6Length</description>
+			<description>Data6_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -475,7 +475,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -518,7 +518,7 @@
 			<pointer>UserStringIndex</pointer>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -892,7 +892,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -1009,7 +1009,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -1019,7 +1019,7 @@
 			<pointer>UInt64Index</pointer>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -1101,7 +1101,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -1111,7 +1111,7 @@
 			<pointer>UInt64Index</pointer>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -1131,7 +1131,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data2Length</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -1146,7 +1146,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data3Length</description>
+			<description>Data3_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -1171,7 +1171,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data4Length</description>
+			<description>Data4_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2100,7 +2100,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2127,7 +2127,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2147,7 +2147,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2220,32 +2220,37 @@
 	</definition>
 	<definition id="Flasks" record_length="44">
 		<field>
-			<description>Unknown0</description>
-			<type>Int64</type>
+			<description>Id</description>
+			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Index0</description>
+			<description>Null0</description>
+			<type>int</type>
+			<pointer/>
+		</field>
+		<field>
+			<description>Name</description>
 			<type>int</type>
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>Unknown1</description>
+			<description>Group</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown2</description>
+			<description>HP per Use</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown3</description>
+			<description>Mana per Use</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown4</description>
+			<description>10*Revovery Time</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2255,12 +2260,12 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Next Flask/Stats_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0</description>
+			<description>Next Flask/Stats</description>
 			<type>int</type>
 			<pointer>UInt32Index</pointer>
 		</field>
@@ -2332,7 +2337,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2352,7 +2357,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2362,7 +2367,7 @@
 			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
-			<description>Data2Length</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2389,7 +2394,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2464,7 +2469,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2474,7 +2479,7 @@
 			<pointer>UInt64Index</pointer>
 		</field>
 		<field>
-			<description>Data2Length</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2514,7 +2519,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data3Length</description>
+			<description>Data3_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2901,7 +2906,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2929,7 +2934,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2939,7 +2944,7 @@
 			<pointer>Int32Index</pointer>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -2949,7 +2954,7 @@
 			<pointer>UInt64Index</pointer>
 		</field>
 		<field>
-			<description>Data2Length</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3026,7 +3031,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3036,7 +3041,7 @@
 			<pointer>UInt64Index</pointer>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3046,7 +3051,7 @@
 			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
-			<description>Data2Length</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3061,7 +3066,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data3Length</description>
+			<description>Data3_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3374,7 +3379,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3394,7 +3399,7 @@
 			<pointer>UserStringIndex</pointer>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3414,7 +3419,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data2Length</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3424,7 +3429,7 @@
 			<pointer>UInt64Index</pointer>
 		</field>
 		<field>
-			<description>Data3Length</description>
+			<description>Data3_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3471,7 +3476,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3699,7 +3704,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3709,7 +3714,7 @@
 			<pointer>UInt64Index</pointer>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3729,7 +3734,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data2Length</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3744,7 +3749,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data3Length</description>
+			<description>Data3_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3754,7 +3759,7 @@
 			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
-			<description>Data4Length</description>
+			<description>Data4_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3806,7 +3811,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3816,7 +3821,7 @@
 			<pointer>UInt64Index</pointer>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3898,7 +3903,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3918,7 +3923,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -3928,7 +3933,7 @@
 			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
-			<description>Data2Length</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4111,7 +4116,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4176,7 +4181,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4191,7 +4196,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data2Length</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4226,7 +4231,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data3Length</description>
+			<description>Data3_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4241,7 +4246,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data4Length</description>
+			<description>Data4_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4286,7 +4291,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data5Length</description>
+			<description>Data5_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4296,7 +4301,7 @@
 			<pointer>UInt64Index</pointer>
 		</field>
 		<field>
-			<description>Data6Length</description>
+			<description>Data6_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4341,7 +4346,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data7Length</description>
+			<description>Data7_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4728,7 +4733,7 @@
 			<pointer>UserStringIndex</pointer>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4738,7 +4743,7 @@
 			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4748,7 +4753,7 @@
 			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
-			<description>Data2Length</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4788,7 +4793,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data3Length</description>
+			<description>Data3_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4798,7 +4803,7 @@
 			<pointer>UInt64Index</pointer>
 		</field>
 		<field>
-			<description>Data4Length</description>
+			<description>Data4_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4913,7 +4918,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -4953,7 +4958,7 @@
 			<pointer>UserStringIndex</pointer>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -5171,7 +5176,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -5181,7 +5186,7 @@
 			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -5206,7 +5211,7 @@
 			<pointer>UserStringIndex</pointer>
 		</field>
 		<field>
-			<description>Data2Length</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -5308,7 +5313,7 @@
 			<pointer>UserStringIndex</pointer>
 		</field>
 		<field>
-			<description>ServerLength</description>
+			<description>Server_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -5323,7 +5328,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Server2Length</description>
+			<description>Server2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -5400,7 +5405,7 @@
 			<pointer>UserStringIndex</pointer>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -5415,7 +5420,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -5430,7 +5435,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data2Length</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -5539,7 +5544,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -5695,7 +5700,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6127,7 +6132,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>Unknown1</description>
+			<description>UnknownData</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6218,7 +6223,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6233,7 +6238,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6396,7 +6401,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>Data0Length</description>
+			<description>Data0_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6406,7 +6411,7 @@
 			<pointer>UInt64Index</pointer>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6453,7 +6458,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>ConnectionsLength</description>
+			<description>Connections_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6498,7 +6503,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data1Length</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6513,7 +6518,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>TopologiesLength</description>
+			<description>Topologies_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6558,7 +6563,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>BossVarietiesLength</description>
+			<description>BossVarieties_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6568,7 +6573,7 @@
 			<pointer>UInt64Index</pointer>
 		</field>
 		<field>
-			<description>MonsterVarietiesLength</description>
+			<description>MonsterVarieties_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6583,7 +6588,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>DropTagsLength</description>
+			<description>DropTags_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6593,7 +6598,7 @@
 			<pointer>UInt64Index</pointer>
 		</field>
 		<field>
-			<description>Data6Length</description>
+			<description>Data6_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6608,7 +6613,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data7Length</description>
+			<description>Data7_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6633,7 +6638,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Data8Length</description>
+			<description>Data8_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6738,17 +6743,4 @@
 			<pointer/>
 		</field>
 	</definition>
-	<definition/>
-	<definition/>
-	<definition/>
-	<definition/>
-	<definition/>
-	<definition/>
-	<definition/>
-	<definition/>
-	<definition/>
-	<definition/>
-	<definition/>
-	<definition/>
-	<definition/>
 </definitions>
