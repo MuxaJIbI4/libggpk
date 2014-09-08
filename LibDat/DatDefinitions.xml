@@ -356,7 +356,7 @@
 		<field>
 			<description>Data7</description>
 			<type>int</type>
-			<pointer>StringIndex</pointer>
+			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
 			<description>Data8_Length</description>
@@ -366,7 +366,7 @@
 		<field>
 			<description>Data8</description>
 			<type>int</type>
-			<pointer>StringIndex</pointer>
+			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
 			<description>Data9_Length</description>
@@ -376,7 +376,7 @@
 		<field>
 			<description>Data9</description>
 			<type>int</type>
-			<pointer>StringIndex</pointer>
+			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
 			<description>Data10_Length</description>
@@ -386,7 +386,7 @@
 		<field>
 			<description>Data10</description>
 			<type>int</type>
-			<pointer>StringIndex</pointer>
+			<pointer>UInt32Index</pointer>
 		</field>
 	</definition>
 	<definition id="BeyondDemons">
@@ -6383,7 +6383,7 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown6</description>
+			<description>Null6</description>
 			<type>int</type>
 			<pointer/>
 		</field>
