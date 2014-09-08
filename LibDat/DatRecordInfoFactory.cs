@@ -11,11 +11,17 @@ namespace LibDat
     public static class DatRecordInfoFactory
     {
         // TODO this property should be initialized on application start from external XML file
-        private static Dictionary<string, DatRecordInfo> parsers;
+        private static Dictionary<string, DatRecordInfo> records;
 
         static DatRecordInfoFactory()
         {
-            parsers = new Dictionary<string, DatRecordInfo>();
+            updateRecordsInfo();
+            
+        }
+
+        public static void updateRecordsInfo () 
+        {
+            records = new Dictionary<string, DatRecordInfo>();
 
             // load XML
             XmlDocument doc = new XmlDocument();
@@ -82,26 +88,26 @@ namespace LibDat
                 
             }
 
-            parsers.Add(id, new DatRecordInfo(length, fields));
+            records.Add(id, new DatRecordInfo(length, fields));
         }
 
         // returns true if record's info for file fileName is defined
-        public static bool HasParser(string fileName)
+        public static bool HasRecordInfo(string fileName)
         {
             if (fileName.EndsWith(".dat")) // is it necessary ??
             {
                 fileName = Path.GetFileNameWithoutExtension(fileName);
             }
-            return parsers.ContainsKey(fileName);
+            return records.ContainsKey(fileName);
         }
 
         public static DatRecordInfo GetRecordInfo(string DatName)
         {
-            if (!parsers.ContainsKey(DatName))
+            if (!records.ContainsKey(DatName))
             {
                 throw new Exception("Not defined parser for filename: " + DatName);
             }
-            return parsers[DatName];
+            return records[DatName];
         }
     }
 }
