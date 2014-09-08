@@ -22,6 +22,11 @@ namespace VisualGGPK
             get { return _dat.RecordInfo; }
         }
 
+        public long DataSectionffset
+        {
+            get { return _dat.DataTableBegin; }
+        }
+
         public List<DatRecord> Records
         {
             get { return _dat.Records; }

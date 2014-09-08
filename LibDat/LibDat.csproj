@@ -50,7 +50,7 @@
     <Compile Include="Data\UInt32List.cs" />
     <Compile Include="Data\UInt64List.cs" />
     <Compile Include="Data\UnicodeString.cs" />
-    <Compile Include="Data\UnkownData.cs" />
+    <Compile Include="Data\UnknownData.cs" />
     <Compile Include="DatRecordInfo.cs" />
   </ItemGroup>
   <ItemGroup>

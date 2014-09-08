@@ -264,10 +264,7 @@ namespace VisualGGPK
             byte[] data = selectedRecord.ReadData(ggpkPath);
             datViewerOutput.Visibility = System.Windows.Visibility.Visible;
 
-            using (MemoryStream ms = new MemoryStream(data))
-            {
-                datViewerOutput.Reset(selectedRecord.Name, ms);
-            }
+            datViewerOutput.Reset(selectedRecord.Name, data);
         }
 
         /// <summary>

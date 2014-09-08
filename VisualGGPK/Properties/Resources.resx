@@ -266,4 +266,10 @@ Details: {0}</value>
   <data name="MainWindow_Label_FileNameHash" xml:space="preserve">
     <value>Name Hash:</value>
   </data>
+  <data name="DatViewer_Button_Reload_XML" xml:space="preserve">
+    <value>Reload XML</value>
+  </data>
+  <data name="DatViewer_ShowPointerDataDesciption" xml:space="preserve">
+    <value>Show dereferenced value at pointer offset</value>
+  </data>
 </root>

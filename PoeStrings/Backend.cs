@@ -185,7 +185,7 @@ namespace PoeStrings
 					continue;
 
 				// Make sure parser for .dat type actually exists
-				if (!DatRecordInfoFactory.HasParser(record.Name))
+				if (!DatRecordInfoFactory.HasRecordInfo(record.Name))
 					continue;
 
 				// We'll need this .dat FileRecord later on so we're storing it in a map of fileName -> FileRecord
