@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
-
 namespace LibDat
 {
     // contains info about single record in *.dat file

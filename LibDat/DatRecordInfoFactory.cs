@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Linq;
 using System.Xml;
 using System.IO;
 
@@ -46,9 +45,41 @@ namespace LibDat
             int index = 0;
             foreach (XmlNode node in nodes) {
                 string desc = node.SelectSingleNode("description").InnerText;
-                string type = node.SelectSingleNode("type").InnerText;
-                string pointerType = node.SelectSingleNode("pointer").InnerText;
-                fields.Add(new DatRecordFieldInfo(index, desc, type, pointerType));
+                string typeString = node.SelectSingleNode("type").InnerText;
+                FieldTypes fieldType;
+                switch (typeString)
+                {
+                    case "bool":    fieldType = FieldTypes._01bit; break;
+                    case "byte":    fieldType = FieldTypes._08bit; break;
+                    case "short":   fieldType = FieldTypes._16bit; break;
+                    case "int":     fieldType = FieldTypes._32bit; break;
+                    case "Int64":   fieldType = FieldTypes._64bit; break;
+                    default:
+                        throw new Exception("Unknown field type: " + typeString);
+                }
+                string pointerTypeString = node.SelectSingleNode("pointer").InnerText;
+                if (!String.IsNullOrEmpty(pointerTypeString))
+                {
+                    PointerTypes pointerType;
+                    switch (pointerTypeString)
+                    {
+                        case "StringIndex": pointerType = PointerTypes.StringIndex; break;
+                        case "IndirectStringIndex": pointerType = PointerTypes.IndirectStringIndex; break;
+                        case "UserStringIndex": pointerType = PointerTypes.UserStringIndex; break;
+                        case "UInt64Index": pointerType = PointerTypes.UInt64Index; break;
+                        case "UInt32Index": pointerType = PointerTypes.UInt32Index; break;
+                        case "Int32Index": pointerType = PointerTypes.Int32Index; break;
+                        case "DataIndex": pointerType = PointerTypes.DataIndex; break;
+                        default:
+                            throw new Exception("Unknown pointer type: " + pointerTypeString);
+                    }
+                    fields.Add(new DatRecordFieldInfo(index, desc, fieldType, pointerType));
+                }
+                else
+                {
+                    fields.Add(new DatRecordFieldInfo(index, desc, fieldType));
+                }
+                
             }
 
             parsers.Add(id, new DatRecordInfo(length, fields));

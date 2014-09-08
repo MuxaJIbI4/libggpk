@@ -151,30 +151,33 @@ namespace LibDat
                 DatRecordFieldInfo fieldLength = null;
                 switch (field.PointerType)
                 {
-                    case "StringIndex": DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, false); break;
-                    case "IndirectStringIndex": DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, true); break;
-                    case "UserStringIndex": DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, true); break;
-                    case "DataIndex": DataEntries[offset] = new UnkownData(inStream, offset, DataTableBegin); break;
-                    case "UInt64Index":
+                    case PointerTypes.StringIndex: 
+                        DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, false); break;
+                    case PointerTypes.IndirectStringIndex:
+                    case PointerTypes.UserStringIndex: 
+                        DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, true); break;
+                    case PointerTypes.DataIndex: 
+                        DataEntries[offset] = new UnkownData(inStream, offset, DataTableBegin); break;
+                    // TODO: what if Length == 0 from array pointers ? then backtrack to StringIndex
+                    // TODO: create better approach for handling reference to length of array at pointer offset
+                    case PointerTypes.UInt64Index:
                         fieldLength = fields.Where(x => x.Description == field.Description + "_Length").FirstOrDefault();
                         if (fieldLength == null)
                             throw new Exception("Couldn't find length field for field: " + field.Description);
                         DataEntries[offset] = new UInt64List(inStream, offset, DataTableBegin, (int)(record.GetFieldValue(fieldLength)));
                         break;
-                    case "UInt32Index":
+                    case PointerTypes.UInt32Index:
                         fieldLength = fields.Where(x => x.Description == field.Description + "_Length").FirstOrDefault();
                         if (fieldLength == null)
                             throw new Exception("Couldn't find length field for field: " + field.Description);
                         DataEntries[offset] = new UInt32List(inStream, offset, DataTableBegin, (int)(record.GetFieldValue(fieldLength)));
                         break;
-                    case "Int32Index":
+                    case PointerTypes.Int32Index:
                         fieldLength = fields.Where(x => x.Description == field.Description + "_Length").FirstOrDefault();
                         if (fieldLength == null)
                             throw new Exception("Couldn't find length field for field: " + field.Description);
                         DataEntries[offset] = new Int32List(inStream, offset, DataTableBegin, (int)(record.GetFieldValue(fieldLength)));
                         break;
-                    default:
-                        throw new Exception("Unknown pointer type: " + field.PointerType);
                 }
             }
         }
@@ -252,7 +255,7 @@ namespace LibDat
 
             foreach (var field in fields)
             {
-                if (!field.HasPointer || (!field.PointerType.Equals("UserStringIndex") && !field.PointerType.Equals("StringIndex")))
+                if (!field.HasPointer || !field.IsString() )
                     continue;
 
                 int offset = (int)record.GetFieldValue(field);
@@ -298,20 +301,17 @@ namespace LibDat
                     }
 
                     // has pointers
-                    string pointerType = field.PointerType;
-                    switch (pointerType)
+                    switch (field.PointerType)
                     {
-                        case "UInt64Index":
-                        case "UInt32Index":
-                        case "Int32Index":
+                        case PointerTypes.UInt64Index:
+                        case PointerTypes.UInt32Index:
+                        case PointerTypes.Int32Index:
                             sb.AppendFormat("{0}{1}", fieldValue, separator); break;
-                        case "StringIndex":
-                        case "UserStringIndex":
+                        case PointerTypes.StringIndex:
+                        case PointerTypes.UserStringIndex:
                             sb.AppendFormat("\"{0}\"{1}", DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""), separator); break;
-                        case "DataIndex":
+                        case PointerTypes.DataIndex:
                             sb.AppendFormat("{0}{1}", DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""), separator); break;
-                        default:
-                            throw new Exception("Unknown field pointer type: " + pointerType);
                     }
                 }
                 sb.Remove(sb.Length - 1, 1);

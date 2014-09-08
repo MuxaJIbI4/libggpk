@@ -20,24 +20,25 @@ namespace LibDat
             foreach (DatRecordFieldInfo fi in ri.Fields)
             {
                 Object o = null;
-                string type = fi.Type;
-                switch (type)
+                switch (fi.FieldType)
                 {
-                    case "bool": o = inStream.ReadBoolean(); break;
-                    case "byte": o = inStream.ReadByte(); break;
-                    case "short": o = inStream.ReadInt16(); break;
-                    case "int":
+                    case FieldTypes._01bit: o = inStream.ReadBoolean(); break;
+                    case FieldTypes._08bit: o = inStream.ReadByte(); break;
+                    case FieldTypes._16bit: o = inStream.ReadInt16(); break;
+                    case FieldTypes._32bit:
                         int i = inStream.ReadInt32();
-                        if (i == -16843010) i = -1;             // Int32 -16843010 : FEFE FEFE (hex)
+
+                        // Int32 -16843010 : FEFE FEFE (hex)
+                        if (i == -16843010) i = -1;
                         o = i;
                         break;
-                    case "Int64":
+                    case FieldTypes._64bit:
                         long l = inStream.ReadInt64();
-                        if (l == -72340172838076674) l = -1;             // Int64 -72340172838076674: FEFE FEFE FEFE FEFE (hex)
+
+                        // Int64 -72340172838076674: FEFE FEFE FEFE FEFE (hex)
+                        if (l == -72340172838076674) l = -1;
                         o = l;
                         break;
-                    default:
-                        throw new Exception("Unknown field type: " + type);
                 }
                 values.Add(o);
             }
@@ -54,14 +55,13 @@ namespace LibDat
             {
                 iter.MoveNext();
                 Object o = iter.Current;
-                string type = fi.Type;
-                switch (type)
+                switch (fi.FieldType)
                 {
-                    case "bool": outStream.Write((bool)o); break;
-                    case "byte": outStream.Write((byte)o); break;
-                    case "short": outStream.Write((short)o); break;
-                    case "int": outStream.Write((int)o); break;
-                    case "Int64": outStream.Write((Int64)o); break;
+                    case FieldTypes._01bit: outStream.Write((bool)o); break;
+                    case FieldTypes._08bit: outStream.Write((byte)o); break;
+                    case FieldTypes._16bit: outStream.Write((short)o); break;
+                    case FieldTypes._32bit: outStream.Write((int)o); break;
+                    case FieldTypes._64bit: outStream.Write((Int64)o); break;
                 }
                 values.Add(o);
             }
@@ -112,25 +112,19 @@ namespace LibDat
 
             // test for correct value
             DatRecordFieldInfo field = RecordInfo.Fields[index];
-            string type = field.Type;
             bool error = false;
-            switch (type)
+            switch (field.FieldType)
             {
-                case "bool": if (!(value is bool)) error = true; break;
-                case "byte": if (!(value is byte)) error = true; break;
-                case "short": if (!(value is short)) error = true; break;
-                case "int": if (!(value is int)) error = true; break;
-                case "Int64": if (!(value is Int64)) error = true; break;
-                default:
-                    throw new Exception("Unknown field type: " + type);
+                case FieldTypes._01bit: if (!(value is bool)) error = true; break;
+                case FieldTypes._08bit: if (!(value is byte)) error = true; break;
+                case FieldTypes._16bit: if (!(value is short)) error = true; break;
+                case FieldTypes._32bit: if (!(value is int)) error = true; break;
+                case FieldTypes._64bit: if (!(value is Int64)) error = true; break;
             }
             if (error)
-                throw new Exception("Can't save value of type " + value.GetType() + " into field of type " + field.Type);
-
+                throw new Exception("Can't save value of type " + value.GetType() 
+                    + " into field of type " + Enum.GetName(typeof(FieldTypes), field.FieldType));
             values[index] = value;
         }
-
-
-
     }
 }
