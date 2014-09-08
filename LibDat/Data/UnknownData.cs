@@ -5,7 +5,7 @@ namespace LibDat.Data
 	/// <summary>
 	/// Represents unknown data  found in the data section of a .dat file. None of this is tested and is probably incorrect.
 	/// </summary>
-	public class UnkownData : AbstractData
+	public class UnknownData : AbstractData
 	{
 		/// <summary>
 		/// Offset in the dat file with respect to the beginning of the data section
@@ -16,7 +16,7 @@ namespace LibDat.Data
 		/// </summary>
 		public int Data { get; set; }
 
-		public UnkownData(BinaryReader inStream, long offset, long dataTableOffset)
+		public UnknownData(BinaryReader inStream, long offset, long dataTableOffset)
 		{
 			this.Offset = offset;
 
