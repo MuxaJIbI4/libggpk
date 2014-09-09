@@ -43,7 +43,9 @@ namespace LibDat
         public FieldTypes FieldType { get; private set; }
 
         /// Field value represents an offset to a data in the data section of the .dat file with specific type
-        public PointerTypes PointerType { get; private set; }
+        public PointerTypes PointerTypeString { get; private set; }
+
+        public Type PointerType { get; private set; }
 
         // returns true if fields contains offset to data section of .dat
         public bool IsPointer { get; private set; }
@@ -56,9 +58,10 @@ namespace LibDat
             IsPointer = false;
         }
 
-        public DatRecordFieldInfo(int index, string description, FieldTypes type, PointerTypes pointerType)
+        public DatRecordFieldInfo(int index, string description, FieldTypes type, PointerTypes pointerTypeString, Type pointerType)
             : this(index, description, type)
         {
+            PointerTypeString = pointerTypeString;
             PointerType = pointerType;
             IsPointer = true;
         }
@@ -66,21 +69,21 @@ namespace LibDat
 
         public bool IsString()
         {
-            return PointerType == PointerTypes.StringIndex
-                || PointerType == PointerTypes.UserStringIndex;
+            return PointerTypeString == PointerTypes.StringIndex
+                || PointerTypeString == PointerTypes.UserStringIndex;
         }
 
 
         public bool IsUserString()
         {
-            return PointerType == PointerTypes.UserStringIndex;
+            return PointerTypeString == PointerTypes.UserStringIndex;
         }
 
         public string ToString(string delimiter)
         {
             string s = Description + delimiter;
-            s += (HasPointer 
-                ? "*[" + Enum.GetName(typeof(PointerTypes), PointerType) + "]"
+            s += (IsPointer 
+                ? "*[" + Enum.GetName(typeof(PointerTypes), PointerTypeString) + "]"
                 : Enum.GetName(typeof(FieldTypes), FieldType));
             return s;
         }

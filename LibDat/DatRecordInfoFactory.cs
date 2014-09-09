@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.IO;
+using LibDat.Data;
 
 namespace LibDat
 {
@@ -61,23 +62,46 @@ namespace LibDat
                     default:
                         throw new Exception("Unknown field type: " + typeString);
                 }
-                string pointerTypeString = node.SelectSingleNode("pointer").InnerText;
-                if (!String.IsNullOrEmpty(pointerTypeString))
+                string pointer = node.SelectSingleNode("pointer").InnerText;
+                
+                if (!String.IsNullOrEmpty(pointer))
                 {
-                    PointerTypes pointerType;
-                    switch (pointerTypeString)
+                    PointerTypes pointerTypeString;
+                    Type pointerType;
+                    switch (pointer)
                     {
-                        case "StringIndex": pointerType = PointerTypes.StringIndex; break;
-                        case "IndirectStringIndex": pointerType = PointerTypes.IndirectStringIndex; break;
-                        case "UserStringIndex": pointerType = PointerTypes.UserStringIndex; break;
-                        case "UInt64Index": pointerType = PointerTypes.UInt64Index; break;
-                        case "UInt32Index": pointerType = PointerTypes.UInt32Index; break;
-                        case "Int32Index": pointerType = PointerTypes.Int32Index; break;
-                        case "DataIndex": pointerType = PointerTypes.DataIndex; break;
+                        case "StringIndex": 
+                            pointerTypeString = PointerTypes.StringIndex;
+                            pointerType = typeof(UnicodeString);
+                            break;
+                        case "IndirectStringIndex": 
+                            pointerTypeString = PointerTypes.IndirectStringIndex;
+                            pointerType = typeof(UnicodeString); // TODO: this isn't right
+                            break;
+                        case "UserStringIndex": 
+                            pointerTypeString = PointerTypes.UserStringIndex;
+                            pointerType = typeof(UnicodeString);
+                            break;
+                        case "UInt64Index": 
+                            pointerTypeString = PointerTypes.UInt64Index;
+                            pointerType = typeof(UInt64List);
+                            break;
+                        case "UInt32Index": 
+                            pointerTypeString = PointerTypes.UInt32Index;
+                            pointerType = typeof(UInt32List);
+                            break;
+                        case "Int32Index": 
+                            pointerTypeString = PointerTypes.Int32Index;
+                            pointerType = typeof(Int32List);
+                            break;
+                        case "DataIndex": 
+                            pointerTypeString = PointerTypes.DataIndex;
+                            pointerType = typeof(UnknownData);
+                            break;
                         default:
-                            throw new Exception("Unknown pointer type: " + pointerTypeString);
+                            throw new Exception("Unknown pointer type: " + pointer);
                     }
-                    fields.Add(new DatRecordFieldInfo(index, desc, fieldType, pointerType));
+                    fields.Add(new DatRecordFieldInfo(index, desc, fieldType, pointerTypeString, pointerType));
                 }
                 else
                 {
