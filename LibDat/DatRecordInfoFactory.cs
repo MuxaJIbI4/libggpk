@@ -36,8 +36,6 @@ namespace LibDat
 
         static private void ProcessDatRecordDefinition(XmlNode doc) 
         {
-            // TODO Test summary length ?
-            // TODO Test for not null pointer type should be consistent (int or Int64)
             XmlAttribute attr_id = (XmlAttribute)(doc.Attributes.GetNamedItem("id"));
             if (attr_id == null)
                 throw new Exception("Attribute 'id' is missing in tag: " + doc.Name);
@@ -86,6 +84,29 @@ namespace LibDat
                     fields.Add(new DatRecordFieldInfo(index, desc, fieldType));
                 }
                 
+            }
+
+            // TODO Test summary length ?
+            int total_length = 0;
+            foreach (var field in fields) 
+            {
+                switch(field.FieldType) 
+                {
+                    case FieldTypes._01bit:
+                    case FieldTypes._08bit: total_length += 1; break;
+                    case FieldTypes._16bit: total_length += 2; break;
+                    case FieldTypes._32bit: total_length += 4; break;
+                    case FieldTypes._64bit: total_length += 8; break;
+                    default:
+                        throw new Exception();
+                }
+            }
+            if (total_length != length)
+            {
+                string error = "Total length of fields: " + total_length + " not equal record length: " + length 
+                    + " for file: " + id;
+                Console.WriteLine(error);
+                throw new Exception(error);
             }
 
             records.Add(id, new DatRecordInfo(length, fields));
