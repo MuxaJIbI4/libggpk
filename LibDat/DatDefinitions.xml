@@ -174,7 +174,7 @@
 	<definition id="ArmourSurfaceTypes"/>
 	<definition id="ArmourTypes" record_length="8">
 		<field>
-			<description>ItemKey</description>
+			<description>BaseItemTypes.dat->RowId</description>
 			<type>Int64</type>
 			<pointer/>
 		</field>
@@ -356,7 +356,7 @@
 		<field>
 			<description>Data7</description>
 			<type>int</type>
-			<pointer>UInt32Index</pointer>
+			<pointer>StringIndex</pointer>
 		</field>
 		<field>
 			<description>Data8_Length</description>
@@ -366,7 +366,7 @@
 		<field>
 			<description>Data8</description>
 			<type>int</type>
-			<pointer>UInt32Index</pointer>
+			<pointer>StringIndex</pointer>
 		</field>
 		<field>
 			<description>Data9_Length</description>
@@ -376,7 +376,7 @@
 		<field>
 			<description>Data9</description>
 			<type>int</type>
-			<pointer>UInt32Index</pointer>
+			<pointer>StringIndex</pointer>
 		</field>
 		<field>
 			<description>Data10_Length</description>
@@ -386,12 +386,12 @@
 		<field>
 			<description>Data10</description>
 			<type>int</type>
-			<pointer>UInt32Index</pointer>
+			<pointer>StringIndex</pointer>
 		</field>
 	</definition>
-	<definition id="BeyondDemons">
+	<definition id="BeyondDemons" record_length="10">
 		<field>
-			<description>Unknown0</description>
+			<description>MonsterVarieties.dat->RowID</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -402,12 +402,12 @@
 		</field>
 		<field>
 			<description>Flag0</description>
-			<type>int</type>
+			<type>byte</type>
 			<pointer/>
 		</field>
 		<field>
 			<description>Flag1</description>
-			<type>int</type>
+			<type>byte</type>
 			<pointer/>
 		</field>
 	</definition>
@@ -622,7 +622,7 @@
 			<pointer/>
 		</field>
 	</definition>
-	<definition id="CharacterAudioEvents" record_length="114">
+	<definition id="CharacterAudioEvents" record_length="72">
 		<field>
 			<description>Id</description>
 			<type>int</type>
@@ -636,7 +636,7 @@
 		<field>
 			<description>SoundMaruader</description>
 			<type>int</type>
-			<pointer>IndirectStringIndex</pointer>
+			<pointer>StringIndex</pointer>
 		</field>
 		<field>
 			<description>SoundRangerPrefixCount</description>
@@ -646,7 +646,7 @@
 		<field>
 			<description>SoundRanger</description>
 			<type>int</type>
-			<pointer>IndirectStringIndex</pointer>
+			<pointer>StringIndex</pointer>
 		</field>
 		<field>
 			<description>SoundWitchPrefixCount</description>
@@ -656,7 +656,7 @@
 		<field>
 			<description>SoundWitch</description>
 			<type>int</type>
-			<pointer>IndirectStringIndex</pointer>
+			<pointer>StringIndex</pointer>
 		</field>
 		<field>
 			<description>SoundDualistPrefixCount</description>
@@ -666,7 +666,7 @@
 		<field>
 			<description>SoundDualist</description>
 			<type>int</type>
-			<pointer>IndirectStringIndex</pointer>
+			<pointer>StringIndex</pointer>
 		</field>
 		<field>
 			<description>SoundShadowPrefixCount</description>
@@ -676,7 +676,7 @@
 		<field>
 			<description>SoundShadow</description>
 			<type>int</type>
-			<pointer>IndirectStringIndex</pointer>
+			<pointer>StringIndex</pointer>
 		</field>
 		<field>
 			<description>SoundTemplarPrefixCount</description>
@@ -686,7 +686,7 @@
 		<field>
 			<description>SoundTemplar</description>
 			<type>int</type>
-			<pointer>IndirectStringIndex</pointer>
+			<pointer>StringIndex</pointer>
 		</field>
 		<field>
 			<description>SoundScionPrefixCount</description>
@@ -696,7 +696,7 @@
 		<field>
 			<description>SoundScion</description>
 			<type>int</type>
-			<pointer>IndirectStringIndex</pointer>
+			<pointer/>
 		</field>
 		<field>
 			<description>Unknown0</description>
@@ -726,6 +726,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 	</definition>
+	<definition id="CharacterPanelStatContexts"/>
 	<definition id="CharacterPanelStats" record_length="57">
 		<field>
 			<description>Id</description>
@@ -808,6 +809,11 @@
 			<description>Id</description>
 			<type>int</type>
 			<pointer>StringIndex</pointer>
+		</field>
+		<field>
+			<description>Unknown2</description>
+			<type>int</type>
+			<pointer/>
 		</field>
 		<field>
 			<description>Text</description>
@@ -1282,6 +1288,7 @@
 		</field>
 	</definition>
 	<definition id="CooldownBypassTypes"/>
+	<definition id="CraftingBenchCustomActions"/>
 	<definition id="CraftingBenchOptions" record_length="72">
 		<field>
 			<description>Unknown0</description>
@@ -3320,6 +3327,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 	</definition>
+	<definition id="LeagueQuestFlags"/>
 	<definition id="MapConnections" record_length="36">
 		<field>
 			<description>Unknown0</description>
@@ -5346,7 +5354,7 @@
 	<definition id="RelativeImportanceConstants"/>
 	<definition id="ShieldTypes" record_length="12">
 		<field>
-			<description>ItemKey</description>
+			<description>BaseItemsTypes.dat0>RowID</description>
 			<type>Int64</type>
 			<pointer/>
 		</field>
@@ -5732,6 +5740,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 	</definition>
+	<definition id="StatDescriptionFunctions"/>
 	<definition id="Stats" record_length="27">
 		<field>
 			<description>Id</description>
@@ -6015,8 +6024,13 @@
 			<type>int</type>
 			<pointer/>
 		</field>
+		<field>
+			<description>UnknownIndex</description>
+			<type>int</type>
+			<pointer/>
+		</field>
 	</definition>
-	<definition id="StrIntMissionMonsterWaves" record_length="32">
+	<definition id="StrIntMissionMonsterWaves" record_length="64">
 		<field>
 			<description>Id</description>
 			<type>int</type>
@@ -6054,6 +6068,46 @@
 		</field>
 		<field>
 			<description>Unknown7</description>
+			<type>int</type>
+			<pointer/>
+		</field>
+		<field>
+			<description>Unknown8</description>
+			<type>int</type>
+			<pointer/>
+		</field>
+		<field>
+			<description>Unknown9</description>
+			<type>int</type>
+			<pointer/>
+		</field>
+		<field>
+			<description>Unknown10</description>
+			<type>int</type>
+			<pointer/>
+		</field>
+		<field>
+			<description>Unknown11</description>
+			<type>int</type>
+			<pointer/>
+		</field>
+		<field>
+			<description>Unknown12</description>
+			<type>int</type>
+			<pointer/>
+		</field>
+		<field>
+			<description>Unknown13</description>
+			<type>int</type>
+			<pointer/>
+		</field>
+		<field>
+			<description>Unknown14</description>
+			<type>int</type>
+			<pointer/>
+		</field>
+		<field>
+			<description>Unknown15</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -6728,18 +6782,13 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Flag4</description>
-			<type>byte</type>
+			<description>?Unknown53</description>
+			<type>short</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown53</description>
-			<type>int</type>
-			<pointer/>
-		</field>
-		<field>
-			<description>Flag5</description>
-			<type>byte</type>
+			<description>?Flag5</description>
+			<type>bool</type>
 			<pointer/>
 		</field>
 	</definition>
