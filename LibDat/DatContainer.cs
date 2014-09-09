@@ -310,7 +310,7 @@ namespace LibDat
 
             foreach (var field in fields)
             {
-                if (!field.HasPointer || !field.IsString())
+                if (!field.IsPointer || !field.IsString())
                     continue;
 
                 int offset = (int)record.GetFieldValue(field);

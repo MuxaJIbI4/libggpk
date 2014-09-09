@@ -30,7 +30,7 @@ namespace LibDat
         {
             Length = length;
             this.fields = fields;
-            HasPointers = fields.Any(x => x.HasPointer);
+            HasPointers = fields.Any(x => x.IsPointer);
         }
     }
 }

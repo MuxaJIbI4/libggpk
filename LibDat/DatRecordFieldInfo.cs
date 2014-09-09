@@ -46,21 +46,21 @@ namespace LibDat
         public PointerTypes PointerType { get; private set; }
 
         // returns true if fields contains offset to data section of .dat
-        public bool HasPointer { get; private set; }
+        public bool IsPointer { get; private set; }
 
         public DatRecordFieldInfo(int index, string description, FieldTypes type)
         {
             Index = index;
             Description = description;
             FieldType = type;
-            HasPointer = false;
+            IsPointer = false;
         }
 
         public DatRecordFieldInfo(int index, string description, FieldTypes type, PointerTypes pointerType)
             : this(index, description, type)
         {
             PointerType = pointerType;
-            HasPointer = true;
+            IsPointer = true;
         }
 
 
