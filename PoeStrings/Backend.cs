@@ -158,8 +158,8 @@ namespace PoeStrings
 					translationBeingApplied.Status = Translation.TranslationStatus.AlreadyApplied;
 				}
 
-				// dc.GetBytes() will return the new data for this .dat file after replacing the original strings with whatever's in 'NewData'
-				datRecord.ReplaceContents(ggpkPath, dc.GetBytes(), content.FreeRoot);
+				// dc.SaveAsBytes() will return the new data for this .dat file after replacing the original strings with whatever's in 'NewData'
+				datRecord.ReplaceContents(ggpkPath, dc.SaveAsBytes(), content.FreeRoot);
 			}
 
 			if (outputBuffer.Length > 0)

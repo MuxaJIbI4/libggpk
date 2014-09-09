@@ -184,6 +184,14 @@ namespace LibDat
             }
         }
 
+        public byte[] SaveAsBytes()
+        {
+            MemoryStream ms = new MemoryStream();
+            Save(ms);
+
+            return ms.ToArray();
+        }
+
         /// <summary>
         /// Saves parsed data to specified stream
         /// </summary>
