@@ -4,59 +4,84 @@
 		xmlns:local="clr-namespace:VisualGGPK" xmlns:Properties="clr-namespace:VisualGGPK.Properties"
 		x:Class="VisualGGPK.MainWindow"
 		Title="VisualGGPK" Height="350" Width="525" Loaded="Window_Loaded" AllowDrop="True" Drop="Window_Drop_1" PreviewDrop="Window_PreviewDrop_1" Closing="Window_Closing_1">
-	<Grid >
+    <Grid >
 
-		<Grid.RowDefinitions>
-			<RowDefinition Height="auto" />
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-		<!--<Menu Grid.Row="0">
+        <!--<Menu Grid.Row="0">
 			<MenuItem Header="_File">
 				<MenuItem Header="E_xit" Name="menuItemExit" Click="menuItemExit_Click" />
 			</MenuItem>
 			<MenuItem Header="U_tils" />
 		</Menu>-->
-		<Grid Grid.Row="1">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto" MinWidth="128"/>
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="128"/>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+<!--            <ScrollViewer Grid.Column="0">-->
+<!--                <StackPanel >-->
+                    <TreeView  x:Name="treeView1" 
+                           SelectedItemChanged="treeView1_SelectedItemChanged" 
+                           MouseDown="treeView1_MouseDown"
+                           MouseDoubleClick="treeView1_MouseDoubleClick_1" 
+                           TreeViewItem.Expanded="TreeViewItem_Expanded"
+                           VirtualizingStackPanel.IsVirtualizing="True"
+                           VirtualizingStackPanel.VirtualizationMode="Recycling" >
+                        <TreeView.ContextMenu>
+                            <ContextMenu x:Name="treeView1ContextMenu">
+                                <MenuItem x:Name="menuItemExport" 
+                                  Header="{x:Static Properties:Resources.MainWindow_Menu_Export}"
+                                  Click="menuItemExport_Click" IsEnabled="False" />
+                                <MenuItem x:Name="menuItemReplace" 
+                                  Header="{x:Static Properties:Resources.MainWindow_Menu_Replace}" 
+                                  Click="menuItemReplace_Click" IsEnabled="False"/>
+                                <MenuItem x:Name="menuItemView" 
+                                  Header="{x:Static Properties:Resources.MainWindow_Menu_View}"
+                                  Click="menuItemView_Click" IsEnabled="False" />
+                                <MenuItem x:Name="menuItemDelete" 
+                                  Header="{x:Static Properties:Resources.MainWindow_Menu_Delete}"
+                                  Click="menuItemDelete_Click" IsEnabled="True" />
+                            </ContextMenu>
+                        </TreeView.ContextMenu>
+                    </TreeView>
+<!--                </StackPanel>-->
+<!--            </ScrollViewer>-->
+            <GridSplitter Grid.Column="0"  x:Name="gridSplitter1"  Width="3" Visibility="Visible"  />
 
-			<TreeView Grid.Column="0" x:Name="treeView1" SelectedItemChanged="treeView1_SelectedItemChanged" MouseDoubleClick="treeView1_MouseDoubleClick_1">
-				<TreeView.ContextMenu>
-					<ContextMenu x:Name="treeView1ContextMenu">
-						<MenuItem x:Name="menuItemExport" Header="{x:Static Properties:Resources.MainWindow_Menu_Export}" Click="menuItemExport_Click" IsEnabled="False" />
-						<MenuItem x:Name="menuItemReplace" Header="{x:Static Properties:Resources.MainWindow_Menu_Replace}" Click="menuItemReplace_Click" IsEnabled="False"/>
-						<MenuItem x:Name="menuItemView" Header="{x:Static Properties:Resources.MainWindow_Menu_View}" Click="menuItemView_Click" IsEnabled="False" />
-					</ContextMenu>
-				</TreeView.ContextMenu>
-			</TreeView>
-			<GridSplitter Grid.Column="0"  x:Name="gridSplitter1"  Width="3" Visibility="Visible"  />
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
 
-			<Grid Grid.Column="1">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="*"/>
-					<RowDefinition Height="auto"/>
-				</Grid.RowDefinitions>
+                <local:DatViewer x:Name="datViewerOutput" Visibility="Hidden"/>
 
-				<local:DatViewer x:Name="datViewerOutput" Visibility="Hidden"/>
-				<TextBox  x:Name="textBoxOutput" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Visibility="Visible" FontFamily="Consolas" FontSize="13" IsReadOnly="True"/>
-				<Image  x:Name="imageOutput" Stretch="None" Visibility="Hidden" />
-				<RichTextBox   x:Name="richTextOutput" Visibility="Hidden" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
-				<DataGrid AutoGenerateColumns="False" x:Name="dataGridOutput" Visibility="Hidden" IsReadOnly="True"/>
-				<StackPanel Grid.Row="1" Orientation="Horizontal">
-					<Label Name="labelFileOffset" Content="{x:Static Properties:Resources.MainWindow_Label_FileOffset}"/>
-					<TextBox x:Name="textBoxOffset" Width="100" IsReadOnly="True"/>
-					<Label x:Name="labelFileSize" Content="{x:Static Properties:Resources.MainWindow_Label_FileSize}"/>
-					<TextBox x:Name="textBoxSize" Width="100" IsReadOnly="True"/>
-					<Label x:Name="labelFileNameHash" Content="{x:Static Properties:Resources.MainWindow_Label_FileNameHash}"/>
-					<TextBox x:Name="textBoxNameHash" Width="100" IsReadOnly="True"/>
-					<Label x:Name="labelFileHash" Content="{x:Static Properties:Resources.MainWindow_Label_FileHash}"/>
-					<TextBox x:Name="textBoxHash" Width="100" IsReadOnly="True"/>
-				</StackPanel>
-				
-			</Grid>
-		</Grid>
-	</Grid>
+                <!--different viewers for different types of files-->
+                <TextBox Grid.Row="0" x:Name="textBoxOutput" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Visibility="Visible" FontFamily="Consolas" FontSize="13" IsReadOnly="True"/>
+                <Image Grid.Row="0" x:Name="imageOutput" Stretch="None" Visibility="Hidden" />
+                <RichTextBox Grid.Row="0" x:Name="richTextOutput" Visibility="Hidden" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
+                <DataGrid Grid.Row="0" AutoGenerateColumns="False" x:Name="dataGridOutput" Visibility="Hidden" IsReadOnly="True"/>
+
+                <!--displayed file info-->
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Label Name="labelFileOffset" Content="{x:Static Properties:Resources.MainWindow_Label_FileOffset}"/>
+                    <TextBox x:Name="textBoxOffset" Width="100" IsReadOnly="True"/>
+
+                    <Label x:Name="labelFileSize" Content="{x:Static Properties:Resources.MainWindow_Label_FileSize}"/>
+                    <TextBox x:Name="textBoxSize" Width="100" IsReadOnly="True"/>
+
+                    <Label x:Name="labelFileNameHash" Content="{x:Static Properties:Resources.MainWindow_Label_FileNameHash}"/>
+                    <TextBox x:Name="textBoxNameHash" Width="100" IsReadOnly="True"/>
+
+                    <Label x:Name="labelFileHash" Content="{x:Static Properties:Resources.MainWindow_Label_FileHash}"/>
+                    <TextBox x:Name="textBoxHash" Width="100" IsReadOnly="True"/>
+                </StackPanel>
+
+            </Grid>
+        </Grid>
+    </Grid>
 </Window>

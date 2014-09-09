@@ -358,6 +358,15 @@ namespace VisualGGPK.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string MainWindow_Menu_Delete {
+            get {
+                return ResourceManager.GetString("MainWindow_Menu_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export.
         /// </summary>
         public static string MainWindow_Menu_Export {

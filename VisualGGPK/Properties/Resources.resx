@@ -272,4 +272,7 @@ Details: {0}</value>
   <data name="DatViewer_ShowPointerDataDesciption" xml:space="preserve">
     <value>Show dereferenced value at pointer offset</value>
   </data>
+  <data name="MainWindow_Menu_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
 </root>
