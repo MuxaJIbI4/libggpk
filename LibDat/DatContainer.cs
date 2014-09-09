@@ -287,44 +287,48 @@ namespace LibDat
             // add records
             foreach (var record in Records)
             {
+                // row index
+                sb.AppendFormat("{0}{1}", Records.IndexOf(record), separator);
+
+                // add fields
                 foreach (var field in fields)
                 {
-                    sb.AppendFormat("{0}{1}", field.Index, separator);
-
                     object fieldValue = record.GetFieldValue(field);
-                    if (!field.HasPointer)
-                    {
-                        sb.AppendFormat("{0}{1}", fieldValue, separator);
-                        continue;
-                    }
-
-                    // has pointers
-                    switch (field.PointerType)
-                    {
-                        case PointerTypes.UInt64Index:
-                        case PointerTypes.UInt32Index:
-                        case PointerTypes.Int32Index:
-                            sb.AppendFormat("{0}{1}", fieldValue, separator); break;
-                        case PointerTypes.StringIndex:
-                        case PointerTypes.UserStringIndex:
-                            sb.AppendFormat("\"{0}\"{1}", DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""), separator); break;
-                        case PointerTypes.DataIndex:
-                            sb.AppendFormat("{0}{1}", DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""), separator); break;
-                    }
+                    sb.AppendFormat("{0}{1}", GetCSVString(field, fieldValue), separator);
                 }
+
+                // finish line
                 sb.Remove(sb.Length - 1, 1);
                 sb.AppendLine();
             }
             return sb.ToString();
         }
 
-        public byte[] GetBytes()
+        public string GetCSVString(DatRecordFieldInfo field, object fieldValue)
         {
-            MemoryStream ms = new MemoryStream();
-            Save(ms);
-
-            return ms.ToArray();
+            string str = null;
+            if (field.IsPointer)
+            {
+                switch (field.PointerTypeString)
+                {
+                    case PointerTypes.UInt64Index:
+                    case PointerTypes.UInt32Index:
+                    case PointerTypes.Int32Index:
+                        str = DataEntries[(int)fieldValue].ToString(); break;
+                    case PointerTypes.StringIndex:
+                    case PointerTypes.UserStringIndex:
+                        str = '"' + DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\"") + '"'; 
+                        break;
+                    case PointerTypes.DataIndex:
+                        str = DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""); break;
+                }
+            }
+            if (str == null)
+            {
+                String tmp = fieldValue.ToString();
+                str = (Regex.IsMatch(tmp, ",") ? '"' + tmp.Replace("\"", "\"\"") + '"' : tmp);
+            }
+            return str;
         }
-
     }
 }
