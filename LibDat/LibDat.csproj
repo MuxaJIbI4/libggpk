@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\AbstractDataList.cs" />
     <Compile Include="Data\AbstractData.cs" />
     <Compile Include="DatRecord.cs" />
     <Compile Include="Data\Int32List.cs" />

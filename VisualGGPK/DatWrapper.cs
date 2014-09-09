@@ -82,17 +82,17 @@ namespace VisualGGPK
                     else if (keyValuePair.Value is UInt64List)
                     {
                         UInt64List ul = (UInt64List)keyValuePair.Value;
-                        Strings.Add((UnicodeString)new UnicodeString(ul.Offset, ul.dataTableOffset, ul.ToString()));
+                        Strings.Add((UnicodeString)new UnicodeString(ul.Offset, ul.DataTableOffset, ul.ToString()));
                     }
                     else if (keyValuePair.Value is UInt32List)
                     {
                         UInt32List ul = (UInt32List)keyValuePair.Value;
-                        Strings.Add((UnicodeString)new UnicodeString(ul.Offset, ul.dataTableOffset, ul.ToString()));
+                        Strings.Add((UnicodeString)new UnicodeString(ul.Offset, ul.DataTableOffset, ul.ToString()));
                     }
                     else if (keyValuePair.Value is Int32List)
                     {
                         Int32List ul = (Int32List)keyValuePair.Value;
-                        Strings.Add((UnicodeString)new UnicodeString(ul.Offset, ul.dataTableOffset, ul.ToString()));
+                        Strings.Add((UnicodeString)new UnicodeString(ul.Offset, ul.DataTableOffset, ul.ToString()));
                     }
                 }
             }

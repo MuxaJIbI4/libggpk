@@ -152,13 +152,13 @@ namespace LibDat
                 int length;
                 switch (field.PointerType)
                 {
-                    case PointerTypes.StringIndex: 
-                        DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, false); break;
+                    case PointerTypes.StringIndex:
+                        DataEntries[offset] = new UnicodeString(offset, DataTableBegin, inStream, false); break;
                     case PointerTypes.IndirectStringIndex:
-                    case PointerTypes.UserStringIndex: 
-                        DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, true); break;
-                    case PointerTypes.DataIndex: 
-                        DataEntries[offset] = new UnknownData(inStream, offset, DataTableBegin); break;
+                    case PointerTypes.UserStringIndex:
+                        DataEntries[offset] = new UnicodeString(offset, DataTableBegin, inStream, true); break;
+                    case PointerTypes.DataIndex:
+                        DataEntries[offset] = new UnknownData(offset, DataTableBegin, inStream); break;
                     // TODO: what if Length == 0 from array pointers ? then backtrack to StringIndex
                     // TODO: create better approach for handling reference to length of array at pointer offset
                     case PointerTypes.UInt64Index:
@@ -166,25 +166,25 @@ namespace LibDat
                         if (fieldLength == null)
                             throw new Exception("Couldn't find length field for field: " + field.Description);
                         length = (int)(record.GetFieldValue(fieldLength));
-                        if (length > 0) 
+                        if (length > 0)
                         {
-                            DataEntries[offset] = new UInt64List(inStream, offset, DataTableBegin, length);
+                            DataEntries[offset] = new UInt64List(offset, DataTableBegin, length, inStream);
                         }
-                        else 
+                        else
                         {
-                            DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, false); break;
+                            DataEntries[offset] = new UnicodeString(offset, DataTableBegin, inStream, false); break;
                         }
                         break;
                     case PointerTypes.UInt32Index:
                         fieldLength = fields.Where(x => x.Description == field.Description + "_Length").FirstOrDefault();
                         length = (int)(record.GetFieldValue(fieldLength));
-                        if (length > 0) 
+                        if (length > 0)
                         {
-                            DataEntries[offset] = new UInt32List(inStream, offset, DataTableBegin, length);
+                            DataEntries[offset] = new UInt32List(offset, DataTableBegin, length, inStream);
                         }
-                        else 
+                        else
                         {
-                            DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, false); break;
+                            DataEntries[offset] = new UnicodeString(offset, DataTableBegin, inStream, false); break;
                         }
                         break;
                     case PointerTypes.Int32Index:
@@ -192,13 +192,13 @@ namespace LibDat
                         if (fieldLength == null)
                             throw new Exception("Couldn't find length field for field: " + field.Description);
                         length = (int)(record.GetFieldValue(fieldLength));
-                        if (length > 0) 
+                        if (length > 0)
                         {
-                            DataEntries[offset] = new Int32List(inStream, offset, DataTableBegin, length);
+                            DataEntries[offset] = new Int32List(offset, DataTableBegin, length, inStream);
                         }
-                        else 
+                        else
                         {
-                            DataEntries[offset] = new UnicodeString(inStream, offset, DataTableBegin, false); break;
+                            DataEntries[offset] = new UnicodeString(offset, DataTableBegin, inStream, false); break;
                         }
                         break;
                 }
