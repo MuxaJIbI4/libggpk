@@ -91,9 +91,10 @@ namespace VisualGGPK
             DataContext = null;
             datInfo.Content =
                 filename + " info: " +
-                "\n\tRecord length (bytes) = " + _wrapper.RecordInfo.Length +
-                "\n\tNumber of records     = " + _wrapper.Records.Count +
-                "\n\tData section offset   = " + _wrapper.DataSectionffset;
+                "\n\tRecord length (bytes)      = " + _wrapper.RecordInfo.Length +
+                "\n\tNumber of records          = " + _wrapper.Records.Count +
+                "\n\tData section offset        = " + _wrapper.DataSectionffset +
+                "\n\tLenth of data section data = " + _wrapper.DataSectionDataLength;
 
             // Records DataGrid
             BuildGrid();
@@ -139,7 +140,7 @@ namespace VisualGGPK
                 for (int i = 0; i < columnsCount; i++)
                 {
                     DatRecordFieldInfo field = record.RecordInfo.Fields[i];
-                    if (_showPointerDataValue && field.HasPointer)
+                    if (_showPointerDataValue && field.IsPointer)
                     {
                         int offset = (int)record.GetFieldValue(i);
                         if (_wrapper.DataEntries.ContainsKey(offset))

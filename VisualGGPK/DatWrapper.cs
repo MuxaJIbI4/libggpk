@@ -24,9 +24,14 @@ namespace VisualGGPK
 
         public long DataSectionffset
         {
-            get { return _dat.DataTableBegin; }
+            get { return _dat.DataSectionOffset; }
         }
 
+        public long DataSectionDataLength
+        {
+            get { return _dat.DataSectionDataLength; }
+
+        }
         public List<DatRecord> Records
         {
             get { return _dat.Records; }

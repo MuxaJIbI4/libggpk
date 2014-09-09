@@ -24,7 +24,12 @@ namespace LibDat
         /// <summary>
         /// Offset of the data section in the .dat file (Starts with 0xbbbbbbbbbbbbbbbb)
         /// </summary>
-        public long DataTableBegin;
+        public int DataSectionOffset {get; private set; }
+
+        /// <summary>
+        /// Length of data section of .dat file
+        /// </summary>
+        public int DataSectionDataLength { get; private set; }
 
         /// <summary>
         /// Contains the entire unmodified data section of the .dat file
@@ -113,7 +118,8 @@ namespace LibDat
 
             // read data section
             inStream.BaseStream.Seek(-8, SeekOrigin.Current);
-            DataTableBegin = inStream.BaseStream.Position;
+            DataSectionOffset = (int)inStream.BaseStream.Position;
+            DataSectionDataLength = (int)(inStream.BaseStream.Length) - DataSectionOffset - 8;
             originalDataTable = inStream.ReadBytes((int)(inStream.BaseStream.Length - inStream.BaseStream.Position));
 
             // Read all referenced string and data entries from the data following the entries (starting at magic number)
