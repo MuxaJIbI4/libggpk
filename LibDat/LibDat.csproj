@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Data\AbstractDataList.cs" />
     <Compile Include="Data\AbstractData.cs" />
+    <Compile Include="Data\DataReader.cs" />
     <Compile Include="DatRecord.cs" />
     <Compile Include="Data\Int32List.cs" />
     <Compile Include="DatRecordInfoFactory.cs" />

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 
 using LibDat.Data;
+using System.Text.RegularExpressions;
 
 namespace LibDat
 {
@@ -126,9 +127,19 @@ namespace LibDat
             if (!RecordInfo.HasPointers)
                 return;
 
+            DataReader dr = new DataReader(DataEntries, DataSectionOffset);
             foreach (var r in Records)
             {
-                ReadRecordData(r, inStream);
+                try
+                {
+                    dr.ReadRecordData(inStream, r);
+                }
+                catch (Exception e)
+                {
+                    // for debugging
+                    Console.WriteLine(e.Message);
+                    throw e;
+                }
             }
         }
 
@@ -143,7 +154,7 @@ namespace LibDat
             for (int i = 0; inStream.BaseStream.Position <= StringLength - 8; i++)
             {
                 ulong ul = inStream.ReadUInt64();
-                if ( ul == 0xBBbbBBbbBBbbBBbb)
+                if (ul == 0xBBbbBBbbBBbbBBbb)
                 {
                     record_length = i;
                     break;
@@ -159,82 +170,6 @@ namespace LibDat
 
             inStream.BaseStream.Seek(4, SeekOrigin.Begin);
             return record_length;
-        }
-
-        /// <summary>
-        /// Finds all known references to strings and other data in the data section and adds them to the DataEntries. 
-        /// Accomplished by reading the [StringIndex] and [DataIndex] attributes of our dat structure.
-        /// </summary>
-        /// <param name="entry">Dat parser created from parsing a single entry of the .dat file.</param>
-        /// <param name="inStream">Stream containing contents of .dat file. Stream position not preserved.</param>
-        private void ReadRecordData(DatRecord record, BinaryReader inStream)
-        {
-            var fields = RecordInfo.Fields;
-            foreach (var field in fields)
-            {
-                if (!field.HasPointer)
-                    continue;
-
-                int offset = (int)record.GetFieldValue(field);
-
-                if (DataEntries.ContainsKey(offset) && !DataEntries[offset].ToString().Equals(""))
-                    continue;
-
-                DatRecordFieldInfo fieldLength = null;
-                int length;
-                switch (field.PointerType)
-                {
-                    case PointerTypes.StringIndex:
-                        DataEntries[offset] = new UnicodeString(offset, DataTableBegin, inStream, false); break;
-                    case PointerTypes.IndirectStringIndex:
-                    case PointerTypes.UserStringIndex:
-                        DataEntries[offset] = new UnicodeString(offset, DataTableBegin, inStream, true); break;
-                    case PointerTypes.DataIndex:
-                        DataEntries[offset] = new UnknownData(offset, DataTableBegin, inStream); break;
-                    // TODO: what if Length == 0 from array pointers ? then backtrack to StringIndex
-                    // TODO: create better approach for handling reference to length of array at pointer offset
-                    case PointerTypes.UInt64Index:
-                        fieldLength = fields.Where(x => x.Description == field.Description + "_Length").FirstOrDefault();
-                        if (fieldLength == null)
-                            throw new Exception("Couldn't find length field for field: " + field.Description);
-                        length = (int)(record.GetFieldValue(fieldLength));
-                        if (length > 0)
-                        {
-                            DataEntries[offset] = new UInt64List(offset, DataTableBegin, length, inStream);
-                        }
-                        else
-                        {
-                            DataEntries[offset] = new UnicodeString(offset, DataTableBegin, inStream, false); break;
-                        }
-                        break;
-                    case PointerTypes.UInt32Index:
-                        fieldLength = fields.Where(x => x.Description == field.Description + "_Length").FirstOrDefault();
-                        length = (int)(record.GetFieldValue(fieldLength));
-                        if (length > 0)
-                        {
-                            DataEntries[offset] = new UInt32List(offset, DataTableBegin, length, inStream);
-                        }
-                        else
-                        {
-                            DataEntries[offset] = new UnicodeString(offset, DataTableBegin, inStream, false); break;
-                        }
-                        break;
-                    case PointerTypes.Int32Index:
-                        fieldLength = fields.Where(x => x.Description == field.Description + "_Length").FirstOrDefault();
-                        if (fieldLength == null)
-                            throw new Exception("Couldn't find length field for field: " + field.Description);
-                        length = (int)(record.GetFieldValue(fieldLength));
-                        if (length > 0)
-                        {
-                            DataEntries[offset] = new Int32List(offset, DataTableBegin, length, inStream);
-                        }
-                        else
-                        {
-                            DataEntries[offset] = new UnicodeString(offset, DataTableBegin, inStream, false); break;
-                        }
-                        break;
-                }
-            }
         }
 
         /// <summary>
