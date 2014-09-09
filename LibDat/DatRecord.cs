@@ -83,9 +83,7 @@ namespace LibDat
         public object GetFieldValue(int index)
         {
             if (index < 0 || index >= fieldsCount)
-            {
                 throw new Exception("Field's index out of bounds: " + index + " not in [0," + fieldsCount + "]");
-            }
             return values[index];
         }
 

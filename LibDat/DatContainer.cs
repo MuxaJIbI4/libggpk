@@ -22,11 +22,6 @@ namespace LibDat
         public DatRecordInfo RecordInfo { get; private set; }
 
         /// <summary>
-        /// List of properties for the specified dat type. See code in Files directory.
-        /// </summary>
-        public List<DatRecord> Records;
-
-        /// <summary>
         /// Offset of the data section in the .dat file (Starts with 0xbbbbbbbbbbbbbbbb)
         /// </summary>
         public long DataTableBegin;
@@ -35,6 +30,11 @@ namespace LibDat
         /// Contains the entire unmodified data section of the .dat file
         /// </summary>
         private byte[] originalDataTable;
+
+        /// <summary>
+        /// List of properties for the specified dat type. See code in Files directory.
+        /// </summary>
+        public List<DatRecord> Records;
 
         /// <summary>
         /// Mapping of all known strings and other data found in the data section. 
@@ -83,6 +83,10 @@ namespace LibDat
         /// <param name="inStream">Stream containing contents of .dat file</param>
         private void Read(BinaryReader inStream)
         {
+            // check that record format is defined
+            if (RecordInfo == null)
+                throw new Exception("Missing dat parser for file " + DatName);
+
             int numberOfEntries = inStream.ReadInt32();
             if (inStream.ReadUInt64() == 0xBBbbBBbbBBbbBBbb)
             {
@@ -91,32 +95,64 @@ namespace LibDat
             }
             inStream.BaseStream.Seek(-8, SeekOrigin.Current);
 
+            // find record_length;
+            int length = findRecordLength(inStream, numberOfEntries);
+            if ((numberOfEntries > 0) && length != RecordInfo.Length)
+                throw new Exception("Found record length = " + length + " not equal length defined in XML: " + RecordInfo.Length);
+
+            // read records
             Records = new List<DatRecord>(numberOfEntries);
-
-            if (DatName.Length == 0)
-            {
-                throw new Exception("Missing dat parser for file " + DatName);
-            }
-
             for (int i = 0; i < numberOfEntries; i++)
             {
                 Records.Add(new DatRecord(RecordInfo, inStream));
             }
 
+            // check magic number
             if (inStream.ReadUInt64() != 0xBBbbBBbbBBbbBBbb)
-            {
                 throw new ApplicationException("Missing magic number after records");
-            }
 
-            DataTableBegin = inStream.BaseStream.Position - 8;
+            // read data section
             inStream.BaseStream.Seek(-8, SeekOrigin.Current);
+            DataTableBegin = inStream.BaseStream.Position;
             originalDataTable = inStream.ReadBytes((int)(inStream.BaseStream.Length - inStream.BaseStream.Position));
 
             // Read all referenced string and data entries from the data following the entries (starting at magic number)
+            if (!RecordInfo.HasPointers)
+                return;
+
             foreach (var r in Records)
             {
                 ReadRecordData(r, inStream);
             }
+        }
+
+        private int findRecordLength(BinaryReader inStream, int numberOfEntries)
+        {
+            if (numberOfEntries == 0)
+                return 0;
+
+            inStream.BaseStream.Seek(4, SeekOrigin.Begin);
+            long StringLength = inStream.BaseStream.Length;
+            int record_length = 0;
+            for (int i = 0; inStream.BaseStream.Position <= StringLength - 8; i++)
+            {
+                ulong ul = inStream.ReadUInt64();
+                if ( ul == 0xBBbbBBbbBBbbBBbb)
+                {
+                    record_length = i;
+                    break;
+                }
+                else
+                {
+                    inStream.BaseStream.Seek(-8 + numberOfEntries, SeekOrigin.Current);
+                    Console.WriteLine(inStream.BaseStream.Position);
+                }
+            }
+            if (record_length == 0)
+                throw new Exception("Couldn't find record_length");
+
+            inStream.BaseStream.Seek(4, SeekOrigin.Begin);
+            return record_length;
         }
 
         /// <summary>
@@ -128,25 +164,15 @@ namespace LibDat
         private void ReadRecordData(DatRecord record, BinaryReader inStream)
         {
             var fields = RecordInfo.Fields;
-
-            if (!RecordInfo.HasPointers)
-            {
-                return;
-            }
-
             foreach (var field in fields)
             {
                 if (!field.HasPointer)
-                {
                     continue;
-                }
 
                 int offset = (int)record.GetFieldValue(field);
 
                 if (DataEntries.ContainsKey(offset) && !DataEntries[offset].ToString().Equals(""))
-                {
                     continue;
-                }
 
                 DatRecordFieldInfo fieldLength = null;
                 int length;
@@ -278,7 +304,7 @@ namespace LibDat
 
             foreach (var field in fields)
             {
-                if (!field.HasPointer || !field.IsString() )
+                if (!field.HasPointer || !field.IsString())
                     continue;
 
                 int offset = (int)record.GetFieldValue(field);
