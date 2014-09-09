@@ -24,7 +24,7 @@ namespace LibGGPK
 			{
 				Children = new List<DirectoryTreeNode>(),
 				Files = new List<FileRecord>(),
-				Name = "",
+				Name = "ROOT",
 				Parent = null,
 				Record = null,
 			};
