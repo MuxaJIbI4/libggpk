@@ -256,7 +256,7 @@ namespace LibDat
         public void Save(Stream rawOutStream)
         {
             // Mapping of the new string and data offsets
-            Dictionary<long, long> changedOffsets = new Dictionary<long, long>();
+            Dictionary<int, int> changedOffsets = new Dictionary<int, int>();
 
             BinaryWriter outStream = new BinaryWriter(rawOutStream, System.Text.Encoding.Unicode);
             outStream.Write(Records.Count);
@@ -299,7 +299,7 @@ namespace LibDat
         /// </summary>
         /// <param name="entry">Entry being updated</param>
         /// <param name="updatedOffsets">Mapping of all changed offsets. Key = original offset, Value = new offset.</param>
-        private void UpdateDataOffsets(DatRecord record, Dictionary<long, long> updatedOffsets)
+        private void UpdateDataOffsets(DatRecord record, Dictionary<int, int> updatedOffsets)
         {
             var fields = RecordInfo.Fields;
 

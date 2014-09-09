@@ -13,7 +13,7 @@ namespace LibDat.Data
         /// <summary>
         /// Offset in the dat file with respect to the beginning of the data section
         /// </summary>
-        public long Offset { get; private set; }
+        public int Offset { get; private set; }
 
         /// <summary>
         /// The string
@@ -30,7 +30,7 @@ namespace LibDat.Data
         /// <summary>
         /// Offset of the new string with respect to the beginning of the data section. This will be invalid until save is called.
         /// </summary>
-        public long NewOffset;
+        public int NewOffset;
         /// <summary>
         /// Offset of the data section in the .dat file (Starts with 0xbbbbbbbbbbbbbbbb)
         /// </summary>
@@ -40,7 +40,7 @@ namespace LibDat.Data
         /// </summary>
         private readonly long dataTableOffset;
 
-        public UnicodeString(long offset, long dataTableOffset, string data)
+        public UnicodeString(int offset, long dataTableOffset, string data)
             : base (offset, dataTableOffset)
         {
             this.dataTableOffset = dataTableOffset;
@@ -51,7 +51,7 @@ namespace LibDat.Data
             Data = data;
         }
 
-        public UnicodeString(long offset, long dataTableOffset, BinaryReader inStream, bool isUserString)
+        public UnicodeString(int offset, int dataTableOffset, BinaryReader inStream, bool isUserString)
             : base(offset, dataTableOffset)
         {
             this.dataTableOffset = dataTableOffset;

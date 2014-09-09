@@ -6,7 +6,9 @@ using System.Text;
 
 namespace LibDat.Data
 {
-    public abstract class AbstractDataList<T> : AbstractData
+    public interface IDataList  {}
+
+    public abstract class AbstractDataList<T> : AbstractData, IDataList
     {
         /// <summary>
         /// Number of elements in the list
@@ -18,7 +20,7 @@ namespace LibDat.Data
         /// </summary>
         public List<T> Data { get; protected set; }
 
-        protected AbstractDataList(long offset, long dataTableOffset, int listLength, BinaryReader inStream)
+        protected AbstractDataList(int offset, int dataTableOffset, int listLength, BinaryReader inStream)
             : base(offset, dataTableOffset)
         {
             Data = new List<T>(listLength);

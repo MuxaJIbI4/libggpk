@@ -11,7 +11,7 @@ namespace LibDat.Data
     /// </summary>
     public class UInt32List : AbstractDataList<UInt32>
     {
-        public UInt32List(long offset, long dataTableOffset, int listLength, BinaryReader inStream)
+        public UInt32List(int offset, int dataTableOffset, int listLength, BinaryReader inStream)
             : base(offset, dataTableOffset, listLength, inStream) { }
 
         public override void ReadData(BinaryReader inStream)

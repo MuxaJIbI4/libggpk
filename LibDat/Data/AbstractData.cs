@@ -7,7 +7,7 @@ namespace LibDat.Data
         /// <summary>
         /// Offset in the dat file with respect to the beginning of the data section
         /// </summary>
-        public long Offset { get; protected set; }
+        public int Offset { get; protected set; }
 
         /// <summary>
         /// Offset of the data section in the .dat file (Starts with 0xbbbbbbbbbbbbbbbb)
@@ -18,7 +18,7 @@ namespace LibDat.Data
         {
         }
 
-        protected AbstractData(long offset, long dataTableOffset)
+        protected AbstractData(int offset, long dataTableOffset)
         {
             DataTableOffset = dataTableOffset;
             Offset = offset;

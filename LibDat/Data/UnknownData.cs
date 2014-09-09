@@ -12,7 +12,7 @@ namespace LibDat.Data
         /// </summary>
         public int Data { get; set; }
 
-        public UnknownData(long offset, long dataTableOffset, BinaryReader inStream)
+        public UnknownData(int offset, int dataTableOffset, BinaryReader inStream)
             : base(offset, dataTableOffset)
         {
             inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
