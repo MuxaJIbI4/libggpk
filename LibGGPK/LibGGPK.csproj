@@ -40,11 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DirectoryTreeMaker.cs" />
     <Compile Include="DirectoryTreeNode.cs" />
-    <Compile Include="FreeListMaker.cs" />
     <Compile Include="GGPK_Records\BaseRecord.cs" />
-    <Compile Include="GGPK.cs" />
+    <Compile Include="GrindingGearsPackageContainer.cs" />
     <Compile Include="GGPK_Records\DirectoryRecord.cs" />
     <Compile Include="GGPK_Records\FileRecord.cs" />
     <Compile Include="GGPK_Records\FreeRecord.cs" />
