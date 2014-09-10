@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPatchGGPK", "VPatchGGPK\VP
 		{8F9FC78E-6181-4447-AC45-56173C16A0FA} = {8F9FC78E-6181-4447-AC45-56173C16A0FA}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefragmentGPPK", "DefragmentGPPK\DefragmentGPPK.csproj", "{934527B9-FBEB-4867-B4C8-DC4048D7B6DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,16 @@ Global
 		{4620BED1-A273-4286-B7AC-700639C31832}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4620BED1-A273-4286-B7AC-700639C31832}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4620BED1-A273-4286-B7AC-700639C31832}.Release|x86.ActiveCfg = Release|Any CPU
+		{934527B9-FBEB-4867-B4C8-DC4048D7B6DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{934527B9-FBEB-4867-B4C8-DC4048D7B6DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{934527B9-FBEB-4867-B4C8-DC4048D7B6DD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{934527B9-FBEB-4867-B4C8-DC4048D7B6DD}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{934527B9-FBEB-4867-B4C8-DC4048D7B6DD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{934527B9-FBEB-4867-B4C8-DC4048D7B6DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{934527B9-FBEB-4867-B4C8-DC4048D7B6DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{934527B9-FBEB-4867-B4C8-DC4048D7B6DD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{934527B9-FBEB-4867-B4C8-DC4048D7B6DD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{934527B9-FBEB-4867-B4C8-DC4048D7B6DD}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
