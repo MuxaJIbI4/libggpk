@@ -33,6 +33,8 @@ namespace LibGGPK
 
         public bool IsReadOnly { get { return _isReadOnly; } }
         private bool _isReadOnly;
+
+        private string _pathToGppk;
         private readonly List<FileRecord> _files;
         private readonly List<DirectoryRecord> _directories;
         private readonly List<FreeRecord> _freeRecords;
@@ -45,6 +47,10 @@ namespace LibGGPK
             _freeRecords = new List<FreeRecord>();
         }
 
+        #region Read GGPK
+
+
+
         /// <summary>
         /// Parses the GGPK pack file and builds a directory tree from it.
         /// </summary>
@@ -52,10 +58,11 @@ namespace LibGGPK
         /// <param name="output">Output function</param>
         public void Read(string pathToGgpk, Action<string> output)
         {
+            _pathToGppk = pathToGgpk;
             if (output != null)
             {
                 output("Parsing GGPK..." + Environment.NewLine);
-                output("Searching file for records:" + Environment.NewLine);
+                output("Reading GGPK file records:" + Environment.NewLine);
             }
 
             ReadRecordOffsets(pathToGgpk, output);
@@ -153,6 +160,8 @@ namespace LibGGPK
             output(String.Format("Found {0} FREE records", _freeRecords.Count) + Environment.NewLine);
         }
 
+        #endregion
+
         #region DirectoryTreeMaker
 
         /// <summary>
@@ -181,7 +190,7 @@ namespace LibGGPK
                 Files = new List<FileRecord>(),
                 Name = "ROOT",
                 Parent = null,
-                Record = null,
+                Record = firstDirectory,
             };
 
             // start building files tree
@@ -278,6 +287,73 @@ namespace LibGGPK
 
             return freeList;
         }
+        #endregion
+
+        #region Save GGPK
+
+        public void Save(string pathToGgpkNew, Action<string> output)
+        {
+            if (output != null)
+                output("Saving GGPK..." + Environment.NewLine);
+
+            FileStream readStream;
+            FileStream writeStream;
+            using (readStream = File.OpenRead(_pathToGppk))
+            using (writeStream = File.Open(pathToGgpkNew, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            {
+                var reader = new BinaryReader(readStream);
+                var writer = new BinaryWriter(writeStream);
+
+                var ggpkRecord = RecordOffsets[0] as GgpkRecord;
+                if (ggpkRecord == null)
+                    throw new Exception("First record isn't GGPK record");
+
+                // Skip GGPK record for now
+                writer.Seek((int) ggpkRecord.Length, SeekOrigin.Begin);
+
+                // recursively write files and folders records
+                var changedOffsets = new Dictionary<long, long>();
+                var previousPercentComplete = 0.0;
+                var fileCopied = 0.0;
+                DirectoryTreeNode.TraverseTreePostorder(
+                    DirectoryRoot,
+                    dir => dir.Record.Write(writer, changedOffsets),
+                    file =>
+                    {
+                        var data = file.ReadFileContent(reader);
+                        file.Write(writer, changedOffsets);
+                        writer.Write(data);
+
+                        fileCopied++;
+                        var percentComplete = fileCopied/_files.Count;
+                        if (!(percentComplete - previousPercentComplete >= 0.05f)) return;
+
+                        if (output != null)
+                            output(String.Format("  {0:00.00}%", 100.0*percentComplete));
+                        previousPercentComplete = percentComplete;
+                    });
+                if (output != null) output("  100%");
+                
+                // write root directory
+                var rootDirectoryOffset = writer.BaseStream.Position;
+                DirectoryRoot.Record.Write(writer, changedOffsets);
+
+                // write single Free record
+                var firstFreeRecordOffset = writer.BaseStream.Position;
+                var freeRecord = new FreeRecord(16, firstFreeRecordOffset, 0);
+                freeRecord.Write(writer, null);
+
+                // write GGPK record
+                writer.Seek(0, SeekOrigin.Begin);
+                var ggpkRecordNew = new GgpkRecord(ggpkRecord.Length);
+                ggpkRecordNew.RecordOffsets[0] = rootDirectoryOffset;
+                ggpkRecordNew.RecordOffsets[1] = firstFreeRecordOffset;
+                ggpkRecordNew.Write(writer, changedOffsets);
+                if (output != null) 
+                    output("Finished !!!");
+            }
+        }
+
         #endregion
     }
 }
