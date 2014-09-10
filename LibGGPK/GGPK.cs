@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace LibGGPK
@@ -13,8 +11,9 @@ namespace LibGGPK
     {
         /// <summary>
         /// Map of every records offsets in the pack file
+        /// TODO make it immutable to other classes
         /// </summary>
-        public Dictionary<long, BaseRecord> RecordOffsets;
+        public Dictionary<long, BaseRecord> RecordOffsets { get; private set; }
         /// <summary>
         /// Root of the directory tree
         /// </summary>
@@ -29,8 +28,8 @@ namespace LibGGPK
         /// </summary>
         private const int EstimatedFileCount = 175000;
 
-        public bool IsReadOnly { get { return isReadOnly; } }
-        private bool isReadOnly = false;
+        public bool IsReadOnly { get { return _isReadOnly; } }
+        private bool _isReadOnly;
 
         public GGPK()
         {
@@ -44,20 +43,20 @@ namespace LibGGPK
         /// <param name="output">Output function</param>
         private void ReadRecordOffsets(string pathToGgpk, Action<string> output)
         {
-            float previousPercentComplete = 0.0f;
+            var previousPercentComplete = 0.0f;
 
-            using (FileStream fs = Utils.OpenFile(pathToGgpk, out isReadOnly))
+            using (var fs = OpenFile(pathToGgpk, out _isReadOnly))
             {
-                BinaryReader br = new BinaryReader(fs);
-                long streamLength = br.BaseStream.Length;
+                var br = new BinaryReader(fs);
+                var streamLength = br.BaseStream.Length;
 
                 while (br.BaseStream.Position < streamLength)
                 {
-                    long currentOffset = br.BaseStream.Position;
-                    BaseRecord record = RecordFactory.ReadRecord(br);
+                    var currentOffset = br.BaseStream.Position;
+                    var record = RecordFactory.ReadRecord(br);
                     RecordOffsets.Add(currentOffset, record);
 
-                    float percentComplete = currentOffset / (float)streamLength;
+                    var percentComplete = currentOffset / (float)streamLength;
                     if (percentComplete - previousPercentComplete >= 0.10f)
                     {
                         if (output != null)
@@ -72,6 +71,22 @@ namespace LibGGPK
                 {
                     output(String.Format("{0:00.00}%{1}", 100.0f * br.BaseStream.Position / (float)br.BaseStream.Length, Environment.NewLine));
                 }
+            }
+        }
+
+        private static FileStream OpenFile(string path, out bool isReadOnly)
+        {
+            isReadOnly = true;
+            try
+            {
+                var ret = File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                isReadOnly = false;
+                return ret;
+            }
+            catch (IOException)
+            {
+                // File can't be written to, since it's being used (either by the program, or by the game itself)
+                return File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             }
         }
 
