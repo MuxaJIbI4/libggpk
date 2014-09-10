@@ -299,7 +299,7 @@ namespace LibGGPK
             FileStream readStream;
             FileStream writeStream;
             using (readStream = File.OpenRead(_pathToGppk))
-            using (writeStream = File.Open(pathToGgpkNew, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            using (writeStream = File.Open(pathToGgpkNew, FileMode.Truncate, FileAccess.ReadWrite))
             {
                 var reader = new BinaryReader(readStream);
                 var writer = new BinaryWriter(writeStream);
@@ -355,5 +355,19 @@ namespace LibGGPK
         }
 
         #endregion
+
+        public void DeleteFileRecord(FileRecord file)
+        {
+            var parent = file.ContainingDirectory;
+            parent.RemoveFile(file);
+        }
+
+        public void DeleteDirectoryRecord(DirectoryTreeNode dir)
+        {
+            var parent = dir.Parent;
+            if (parent == null) // root directory
+                return;
+            parent.RemoveDirectory(dir);
+        }
     }
 }

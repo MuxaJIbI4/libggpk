@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.IO;
 
@@ -36,7 +37,7 @@ namespace LibGGPK.Records
         /// <summary>
         /// Records this directory contains. Each entry is an offset in the pack file of the record.
         /// </summary>
-        public DirectoryEntry[] Entries;
+        public List<DirectoryEntry> Entries;
         /// <summary>
         /// Offset in pack file where entries list begins. This is only here because it makes rewriting the entries list easier.
         /// </summary>
@@ -46,7 +47,8 @@ namespace LibGGPK.Records
         {
             RecordBegin = br.BaseStream.Position - 8;
             Length = length;
-            Read(br);
+            Entries = new List<DirectoryEntry>();
+            Read(br); 
         }
 
         /// <summary>
@@ -63,14 +65,13 @@ namespace LibGGPK.Records
             br.BaseStream.Seek(2, SeekOrigin.Current); // Null terminator
 
             EntriesBegin = br.BaseStream.Position;
-            Entries = new DirectoryEntry[totalEntries];
             for (var i = 0; i < totalEntries; i++)
             {
-                Entries[i] = new DirectoryEntry
+                Entries.Add(new DirectoryEntry
                 {
                     EntryNameHash = br.ReadUInt32(),
                     Offset = br.ReadInt64(),
-                };
+                });
             }
         }
 
@@ -83,7 +84,7 @@ namespace LibGGPK.Records
             bw.Write(Length);
             bw.Write(Encoding.ASCII.GetBytes(Tag));
             bw.Write(Name.Length + 1);
-            bw.Write(Entries.Length);
+            bw.Write(Entries.Count);
             bw.Write(Hash);
             bw.Write(Encoding.Unicode.GetBytes(Name));
             bw.Write((short)0);
@@ -104,30 +105,18 @@ namespace LibGGPK.Records
         /// <param name="newEntryOffset">New offset of entry</param>
         public void UpdateOffset(string ggpkPath, uint nameHash, long newEntryOffset)
         {
-            var entryIndex = -1;
-
-            for (var i = 0; i < Entries.Length; i++)
-            {
-                if (Entries[i].EntryNameHash == nameHash)
-                {
-                    entryIndex = i;
-                    break;
-                }
-            }
-
-            if (entryIndex == -1)
-            {
+            var entry = Entries.FirstOrDefault(e => e.EntryNameHash == nameHash);
+            if (entry.Offset == 0 )
                 throw new ApplicationException("Entry not found!");
-            }
 
             using (var ggpkFileStream = File.Open(ggpkPath, FileMode.Open))
             {
-                // Jump to the location of 'Entries' in the ggpk file and change the entry for 'previousEntryOffset'
-                //  to 'newEntryOffset'
-                ggpkFileStream.Seek(EntriesBegin + 12 * entryIndex + 4, SeekOrigin.Begin);
+                // Jump to the location of 'Entries' in the ggpk file and 
+                // change the entry for 'previousEntryOffset' to 'newEntryOffset'
+                ggpkFileStream.Seek(EntriesBegin + 12 * Entries.IndexOf(entry) + 4, SeekOrigin.Begin);
                 var bw = new BinaryWriter(ggpkFileStream);
                 bw.Write(newEntryOffset);
-                Entries[entryIndex].Offset = newEntryOffset;
+                entry.Offset = newEntryOffset;
             }
         }
 

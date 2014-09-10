@@ -23,29 +23,40 @@
                 <ColumnDefinition Width="Auto" MinWidth="200"/>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TreeView  x:Name="TreeView1" 
-                           PreviewMouseDown         = "OnTreeViewMouseDown"
-                           SelectedItemChanged      = "OnTreeViewSelectedItemChanged"
-                           TreeViewItem.Expanded    = "OnTreeViewItemExpanded"
-                           VirtualizingStackPanel.IsVirtualizing="True"
-                           VirtualizingStackPanel.VirtualizationMode="Recycling" >
-                <TreeView.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem x:Name="MenuItemExport" 
-                                  Header="{x:Static Properties:Resources.MainWindow_Menu_Export}"
-                                  Click="OnItemContextMenuExportClicked" IsEnabled="False" />
-                        <MenuItem x:Name="MenuItemReplace" 
-                                  Header="{x:Static Properties:Resources.MainWindow_Menu_Replace}" 
-                                  Click="OnItemContextMenuReplaceClicked" IsEnabled="False"/>
-                        <MenuItem x:Name="MenuItemOpen" 
-                                  Header="{x:Static Properties:Resources.MainWindow_Menu_View}"
-                                  Click="OnItemContextMenuOpenClicked" IsEnabled="False" />
-                        <MenuItem x:Name="MenuItemDelete" 
-                                  Header="{x:Static Properties:Resources.MainWindow_Menu_Delete}"
-                                  Click="OnItemContextMenuDeleteClicked" IsEnabled="True" />
-                    </ContextMenu>
-                </TreeView.ContextMenu>
-            </TreeView>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <TreeView  x:Name="TreeView1" 
+        			PreviewMouseDown         = "OnTreeViewMouseDown"
+        			SelectedItemChanged      = "OnTreeViewSelectedItemChanged"
+        			TreeViewItem.Expanded    = "OnTreeViewItemExpanded"
+        			VirtualizingStackPanel.IsVirtualizing="True"
+        			VirtualizingStackPanel.VirtualizationMode="Recycling" >
+                    <TreeView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem x:Name="MenuItemExport" 
+        						Header="{x:Static Properties:Resources.MainWindow_Menu_Export}"
+        						Click="OnItemContextMenuExportClicked" IsEnabled="False" />
+                            <MenuItem x:Name="MenuItemReplace" 
+        						Header="{x:Static Properties:Resources.MainWindow_Menu_Replace}" 
+        						Click="OnItemContextMenuReplaceClicked" IsEnabled="False"/>
+                            <MenuItem x:Name="MenuItemOpen" 
+        						Header="{x:Static Properties:Resources.MainWindow_Menu_View}"
+        						Click="OnItemContextMenuOpenClicked" IsEnabled="False" />
+                            <MenuItem x:Name="MenuItemDelete" 
+        						Header="{x:Static Properties:Resources.MainWindow_Menu_Delete}"
+        						Click="OnItemContextMenuDeleteClicked" IsEnabled="True" />
+                        </ContextMenu>
+                    </TreeView.ContextMenu>
+                </TreeView>
+                <StackPanel Grid.Row="1" >
+                    <Button Content="Save" Click="OnSaveClicked" Width ="50"/>
+                </StackPanel>
+            </Grid>
 
             <GridSplitter Grid.Column="0" Width="3" Visibility="Visible" />
 
@@ -68,7 +79,7 @@
 
                 <!--displayed file info-->
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <Label Name="LabelFileOffset" Content="{x:Static Properties:Resources.MainWindow_Label_FileOffset}"/>
+                    <Label x:Name="LabelFileOffset" Content="{x:Static Properties:Resources.MainWindow_Label_FileOffset}"/>
                     <TextBox x:Name="TextBoxOffset" Width="100" IsReadOnly="True"/>
 
                     <Label x:Name="LabelFileSize" Content="{x:Static Properties:Resources.MainWindow_Label_FileSize}"/>

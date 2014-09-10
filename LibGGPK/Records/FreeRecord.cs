@@ -21,9 +21,9 @@ namespace LibGGPK.Records
 
         public FreeRecord(uint length, long recordBegin, long nextFreeOffset)
         {
+            Length = length;
             RecordBegin = recordBegin;
             NextFreeOffset = nextFreeOffset;
-            Length = length;
         }
 
         public FreeRecord(uint length, BinaryReader br)

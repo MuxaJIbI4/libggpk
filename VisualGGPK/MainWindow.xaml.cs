@@ -172,7 +172,7 @@ namespace VisualGGPK
                     return;
 
                 TextBoxOffset.Text = selectedDirectory.Record.RecordBegin.ToString("X");
-                TextBoxSize.Text = selectedDirectory.Record.Entries.Length.ToString();
+                TextBoxSize.Text = selectedDirectory.Record.Entries.Count.ToString();
                 TextBoxNameHash.Text = selectedDirectory.Record.GetNameHash().ToString("X");
                 TextBoxHash.Text = BitConverter.ToString(selectedDirectory.Record.Hash);
                 return;
@@ -914,12 +914,20 @@ namespace VisualGGPK
             if (ClickedItem == null)
                 return;
 
-            if (ClickedItem.Tag is BaseRecord)
+            var tag = ClickedItem.Tag;
+            if (tag is FileRecord)
             {
-                // TODO actually delete GGPK() records
-                // var file1 = ClickedItem.Tag as BaseRecord;
-                // content.DeleteRecord(file);
+                _content.DeleteFileRecord(tag as FileRecord);
             }
+            else if (tag is DirectoryTreeNode)
+            {
+                _content.DeleteDirectoryRecord(tag as DirectoryTreeNode);
+            }
+            else
+            {
+                return;
+            }
+
             var parent = ClickedItem.Parent;
             if (!(parent is TreeViewItem))
             {
@@ -929,11 +937,28 @@ namespace VisualGGPK
                     parent = VisualTreeHelper.GetParent(parent);
                 }
             }
-            if (!(parent is TreeViewItem))
+            if (parent == null)
                 return;
             var treeParent = parent as TreeViewItem;
             treeParent.Items.Remove(ClickedItem);
             ClickedItem = null;
+        }
+
+        private void OnSaveClicked(object sender, RoutedEventArgs e)
+        {
+            // save GGPK contents
+            var openFileDialog = new OpenFileDialog
+            {
+                FileName = "",
+                CheckFileExists = true,
+                CheckPathExists = true
+            };
+
+            if (openFileDialog.ShowDialog() != true) return;
+            ResetViewer();
+            TextBoxOutput.Visibility = Visibility.Visible;
+            TextBoxOutput.Text = string.Empty;
+            _content.Save(openFileDialog.FileName, OutputLine);
         }
     }
 }

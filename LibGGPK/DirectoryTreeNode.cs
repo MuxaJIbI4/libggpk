@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.IO;
 using LibGGPK.Records;
@@ -133,6 +134,32 @@ namespace LibGGPK
                 throw new Exception("Can only compare DirectoryTreeNodes");
 
             return String.Compare(Name, (obj as DirectoryTreeNode).Name, StringComparison.Ordinal);
+        }
+
+        public void RemoveFile(FileRecord file)
+        {
+            if (!Files.Contains(file))
+                throw new Exception("Tried to removed file than not belong to this directory: " + Name);
+
+            // remove from DirectoryTreeNode
+            Files.Remove(file);
+
+            // remove from DirectoryRecord
+            var entry = Record.Entries.FirstOrDefault(n => n.Offset == file.RecordBegin);
+            Record.Entries.Remove(entry);
+        }
+
+        public void RemoveDirectory(DirectoryTreeNode dir)
+        {
+            if (!Children.Contains(dir))
+                throw new Exception("Tried to removed directory than not belong to this directory: " + Name);
+
+            // remove from DirectoryTreeNode
+            Children.Remove(dir);
+
+            // remove from DirectoryRecord
+            var entry = Record.Entries.FirstOrDefault(n => n.Offset == dir.Record.RecordBegin);
+            Record.Entries.Remove(entry);
         }
     };
 
