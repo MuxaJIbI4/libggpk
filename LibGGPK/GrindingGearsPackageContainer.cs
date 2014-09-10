@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace LibGGPK
 {
@@ -31,9 +32,9 @@ namespace LibGGPK
 
         public bool IsReadOnly { get { return _isReadOnly; } }
         private bool _isReadOnly;
-        private List<FileRecord> _files;
-        private List<DirectoryRecord> _directories;
-        private List<FreeRecord> _freeRecords;
+        private readonly List<FileRecord> _files;
+        private readonly List<DirectoryRecord> _directories;
+        private readonly List<FreeRecord> _freeRecords;
 
         public GrindingGearsPackageContainer()
         {
@@ -41,6 +42,30 @@ namespace LibGGPK
             _files = new List<FileRecord>();
             _directories = new List<DirectoryRecord>();
             _freeRecords = new List<FreeRecord>();
+        }
+
+        /// <summary>
+        /// Parses the GGPK pack file and builds a directory tree from it.
+        /// </summary>
+        /// <param name="pathToGgpk">Path to pack file to read</param>
+        /// <param name="output">Output function</param>
+        public void Read(string pathToGgpk, Action<string> output)
+        {
+            if (output != null)
+            {
+                output("Parsing GGPK..." + Environment.NewLine);
+                output("Searching file for records:" + Environment.NewLine);
+            }
+
+            ReadRecordOffsets(pathToGgpk, output);
+
+            if (output != null)
+            {
+                output(Environment.NewLine);
+                output("Building directory tree..." + Environment.NewLine);
+            }
+
+            CreateDirectoryTree(output);
         }
 
         /// <summary>
@@ -60,7 +85,7 @@ namespace LibGGPK
                 while (br.BaseStream.Position < streamLength)
                 {
                     var currentOffset = br.BaseStream.Position;
-                    var record = RecordFactory.ReadRecord(br);
+                    var record = ReadRecord(br);
                     RecordOffsets.Add(currentOffset, record);
 
                     var percentComplete = currentOffset / (float)streamLength;
@@ -95,28 +120,24 @@ namespace LibGGPK
             }
         }
 
-        /// <summary>
-        /// Parses the GGPK pack file and builds a directory tree from it.
-        /// </summary>
-        /// <param name="pathToGgpk">Path to pack file to read</param>
-        /// <param name="output">Output function</param>
-        public void Read(string pathToGgpk, Action<string> output)
+        private BaseRecord ReadRecord(BinaryReader br)
         {
-            if (output != null)
+            var length = br.ReadUInt32();
+            var tag = Encoding.ASCII.GetString(br.ReadBytes(4));
+
+            switch (tag)
             {
-                output("Parsing GGPK..." + Environment.NewLine);
-                output("Searching file for records:" + Environment.NewLine);
+                case FileRecord.Tag:
+                    return new FileRecord(length, br);
+                case GGPKRecord.Tag:
+                    return new GGPKRecord(length, br);
+                case FreeRecord.Tag:
+                    return new FreeRecord(length, br);
+                case DirectoryRecord.Tag:
+                    return new DirectoryRecord(length, br);
             }
 
-            ReadRecordOffsets(pathToGgpk, output);
-
-            if (output != null)
-            {
-                output(Environment.NewLine);
-                output("Building directory tree..." + Environment.NewLine);
-            }
-
-            CreateDirectoryTree(output);
+            throw new Exception("Invalid tag: " + tag);
         }
 
         /// <summary>
