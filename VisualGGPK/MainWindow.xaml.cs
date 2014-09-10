@@ -834,7 +834,9 @@ namespace VisualGGPK
 
         private void OnTreeViewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            var clickedItem = e.OriginalSource as UIElement;
+            var clickedItem = e.Source as UIElement;
+            if (clickedItem == null)
+                return;
             while ((clickedItem != null) && !(clickedItem is TreeViewItem))
             {
                 clickedItem = VisualTreeHelper.GetParent(clickedItem) as UIElement;
@@ -905,6 +907,7 @@ namespace VisualGGPK
             OpenFileRecord(file);
         }
 
+        // TODO: Fix deleting files
         private void OnItemContextMenuDeleteClicked(object sender, RoutedEventArgs e)
         {
             if (ClickedItem == null)
@@ -917,7 +920,7 @@ namespace VisualGGPK
                 // content.DeleteRecord(file);
             }
             var parent = ClickedItem.Parent;
-            if (parent == null)
+            if (!(parent is TreeViewItem))
             {
                 parent = VisualTreeHelper.GetParent(ClickedItem);
                 while (parent != null && !(parent is TreeViewItem))
