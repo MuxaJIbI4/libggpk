@@ -133,7 +133,7 @@ namespace PoeStrings
 				FileRecord datRecord = fileRecordMap[datTranslation.Value.DatName];
 
 				// Raw bytes of the .dat file we will be translating
-				byte[] datBytes = datRecord.ReadData(ggpkPath);
+				byte[] datBytes = datRecord.ReadFileContent(ggpkPath);
 
 				// Dat parser for changing the actual strings
 				DatContainer dc = new DatContainer(new MemoryStream(datBytes), datTranslation.Value.DatName);
@@ -230,7 +230,7 @@ namespace PoeStrings
 			// Map of all strings that can be safely translated (not used as ID's, paths, etc) stored by their hash
 			HashSet<string> currentStrings = new HashSet<string>();
 
-			byte[] datBytes = record.ReadData(ggpkPath);
+			byte[] datBytes = record.ReadFileContent(ggpkPath);
 			using (MemoryStream datStream = new MemoryStream(datBytes))
 			{
 				DatContainer container = new DatContainer(datStream, record.Name);

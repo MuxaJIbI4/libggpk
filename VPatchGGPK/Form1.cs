@@ -393,7 +393,7 @@ namespace VPatchGGPK
 			string common_ui = "Metadata\\UI\\Common.ui";
 			if (RecordsByPath.ContainsKey(common_ui))
 			{
-				byte[] datBytes = RecordsByPath[common_ui].ReadData(textBoxContentGGPK.Text);
+				byte[] datBytes = RecordsByPath[common_ui].ReadFileContent(textBoxContentGGPK.Text);
 				char c = '\ufeff';
 				string lines = c.ToString();
 				using (MemoryStream datStream = new MemoryStream(datBytes))
@@ -482,7 +482,7 @@ namespace VPatchGGPK
 			string common_ui = "Metadata\\UI\\named_colours.txt";
 			if (RecordsByPath.ContainsKey(common_ui))
 			{
-				byte[] datBytes = RecordsByPath[common_ui].ReadData(textBoxContentGGPK.Text);
+				byte[] datBytes = RecordsByPath[common_ui].ReadFileContent(textBoxContentGGPK.Text);
 				char c = '\ufeff';
 				string lines = c.ToString();
 				using (MemoryStream datStream = new MemoryStream(datBytes))

@@ -238,7 +238,7 @@ namespace VisualGGPK
         /// <param name="selectedRecord">FileRecord to display</param>
         private void DisplayDatFile(FileRecord selectedRecord)
         {
-            var data = selectedRecord.ReadData(_ggpkPath);
+            var data = selectedRecord.ReadFileContent(_ggpkPath);
             DatViewerOutput.Visibility = Visibility.Visible;
 
             DatViewerOutput.Reset(selectedRecord.Name, data);
@@ -250,7 +250,7 @@ namespace VisualGGPK
         /// <param name="selectedRecord">FileRecord to display</param>
         private void DisplayTextFileAsRichText(FileRecord selectedRecord)
         {
-            var buffer = selectedRecord.ReadData(_ggpkPath);
+            var buffer = selectedRecord.ReadFileContent(_ggpkPath);
             RichTextOutput.Visibility = Visibility.Visible;
 
             using (var ms = new MemoryStream(buffer))
@@ -265,7 +265,7 @@ namespace VisualGGPK
         /// <param name="selectedRecord">FileRecord to display</param>
         private void DisplayFileAsUnicode(FileRecord selectedRecord)
         {
-            var buffer = selectedRecord.ReadData(_ggpkPath);
+            var buffer = selectedRecord.ReadFileContent(_ggpkPath);
             TextBoxOutput.Visibility = Visibility.Visible;
 
             TextBoxOutput.Text = Encoding.Unicode.GetString(buffer);
@@ -277,7 +277,7 @@ namespace VisualGGPK
         /// <param name="selectedRecord">FileRecord to display</param>
         private void DisplayTextFileAsAscii(FileRecord selectedRecord)
         {
-            var buffer = selectedRecord.ReadData(_ggpkPath);
+            var buffer = selectedRecord.ReadFileContent(_ggpkPath);
             TextBoxOutput.Visibility = Visibility.Visible;
 
             TextBoxOutput.Text = Encoding.ASCII.GetString(buffer);
@@ -289,7 +289,7 @@ namespace VisualGGPK
         /// <param name="selectedRecord">FileRecord to display</param>
         private void DisplayImageFile(FileRecord selectedRecord)
         {
-            var buffer = selectedRecord.ReadData(_ggpkPath);
+            var buffer = selectedRecord.ReadFileContent(_ggpkPath);
             ImageOutput.Visibility = Visibility.Visible;
 
             using (var ms = new MemoryStream(buffer))
@@ -309,7 +309,7 @@ namespace VisualGGPK
         /// <param name="selectedRecord">FileRecord to display</param>
         private void DisplayDdsFile(FileRecord selectedRecord)
         {
-            var buffer = selectedRecord.ReadData(_ggpkPath);
+            var buffer = selectedRecord.ReadFileContent(_ggpkPath);
             ImageOutput.Visibility = Visibility.Visible;
 
             var dds = new DDSImage(buffer);

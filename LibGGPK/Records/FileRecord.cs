@@ -132,7 +132,7 @@ namespace LibGGPK.Records
         /// Reads the FILE record entry from the specified stream
         /// </summary>
         /// <param name="br">Stream pointing at a FILE record</param>
-        protected override void Read(BinaryReader br)
+        public override void Read(BinaryReader br)
         {
             var nameLength = br.ReadInt32();
             Hash = br.ReadBytes(32);
@@ -143,6 +143,22 @@ namespace LibGGPK.Records
             DataLength = Length - (8 + nameLength * 2 + 32 + 4);
 
             br.BaseStream.Seek(DataLength, SeekOrigin.Current);
+        }
+
+        public override void Write(BinaryWriter bw, Dictionary<long, long> changedOffsets)
+        {
+            var currentOffset = bw.BaseStream.Position;
+            if (currentOffset != RecordBegin)
+                changedOffsets[RecordBegin] = currentOffset;
+
+            bw.Write(Length);
+            bw.Write(Encoding.ASCII.GetBytes(Tag));
+            bw.Write(Name.Length + 1);
+            bw.Write(Hash);
+            bw.Write(Encoding.Unicode.GetBytes(Name));
+            bw.Write((short)0);
+
+            // IMPORTANT: FileRecord's actual file content written not here
         }
 
         /// <summary>
@@ -168,7 +184,7 @@ namespace LibGGPK.Records
         /// <param name="outputPath">Path to extract this file to</param>
         public void ExtractFile(string ggpkPath, string outputPath)
         {
-            var fileData = ReadData(ggpkPath);
+            var fileData = ReadFileContent(ggpkPath);
             File.WriteAllBytes(outputPath, fileData);
         }
 
@@ -179,7 +195,7 @@ namespace LibGGPK.Records
         /// <param name="outputDirectory">Directory to extract this file to</param>
         public void ExtractFileWithDirectoryStructure(string ggpkPath, string outputDirectory)
         {
-            var fileData = ReadData(ggpkPath);
+            var fileData = ReadFileContent(ggpkPath);
             var completeOutputDirectory = outputDirectory + Path.DirectorySeparatorChar + GetDirectoryPath();
 
             Directory.CreateDirectory(completeOutputDirectory);
@@ -191,7 +207,7 @@ namespace LibGGPK.Records
         /// </summary>
         /// <param name="ggpkPath">Path of pack file that contains this record</param>
         /// <returns>Raw file data</returns>
-        public byte[] ReadData(string ggpkPath)
+        public byte[] ReadFileContent(string ggpkPath)
         {
             var buffer = new byte[DataLength];
 
@@ -201,6 +217,14 @@ namespace LibGGPK.Records
                 fs.Read(buffer, 0, buffer.Length);
             }
 
+            return buffer;
+        }
+
+        public byte[] ReadFileContent(BinaryReader fs)
+        {
+            var buffer = new byte[DataLength];
+            fs.BaseStream.Seek(DataBegin, SeekOrigin.Begin);
+            fs.Read(buffer, 0, buffer.Length);
             return buffer;
         }
 

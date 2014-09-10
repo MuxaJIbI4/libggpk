@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace LibGGPK.Records
 {
@@ -7,13 +8,15 @@ namespace LibGGPK.Records
         /// <summary>
         /// Length of the entire record in bytes
         /// </summary>
-        protected uint Length { get; set; }
+        public uint Length { get; protected set; }
 
         /// <summary>
         /// Offset in pack file where record begins
         /// </summary>
         public long RecordBegin { get; protected set; }
 
-        protected abstract void Read(BinaryReader br);
+        public abstract void Read(BinaryReader br);
+
+        public abstract void Write(BinaryWriter bw, Dictionary<long, long> changedOffsets);
     }
 }

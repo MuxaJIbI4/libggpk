@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace LibGGPK.Records
 {
@@ -12,17 +15,16 @@ namespace LibGGPK.Records
         public const string Tag = "FREE";
 
         /// <summary>
-        /// Offset in pack file where the raw data begins
-        /// </summary>
-        public long DataBegin;
-        /// <summary>
-        /// Length of the raw data
-        /// </summary>
-        public long DataLength;
-        /// <summary>
         /// Offset of next FREE record
         /// </summary>
         public long NextFreeOffset;
+
+        public FreeRecord(uint length, long recordBegin, long nextFreeOffset)
+        {
+            RecordBegin = recordBegin;
+            NextFreeOffset = nextFreeOffset;
+            Length = length;
+        }
 
         public FreeRecord(uint length, BinaryReader br)
         {
@@ -35,31 +37,19 @@ namespace LibGGPK.Records
         /// Reads the FREE record entry from the specified stream
         /// </summary>
         /// <param name="br">Stream pointing at a FREE record</param>
-        protected override void Read(BinaryReader br)
+        public override void Read(BinaryReader br)
         {
             NextFreeOffset = br.ReadInt64();
-
-            DataBegin = br.BaseStream.Position;
-            DataLength = Length - 16;
             br.BaseStream.Seek(Length - 16, SeekOrigin.Current);
         }
 
-        /// <summary>
-        /// Reads the data this record contains
-        /// </summary>
-        /// <param name="ggpkPath">Path of pack file that contains this record</param>
-        /// <returns>Garbage data contained in this record</returns>
-        public byte[] ReadData(string ggpkPath)
+        public override void Write(BinaryWriter bw, Dictionary<long, long> changedOffsets)
         {
-            var buffer = new byte[DataLength];
+            bw.Write(Length);                       // 16
+            bw.Write(Encoding.ASCII.GetBytes(Tag)); // FREE
+            bw.Write(NextFreeOffset);
 
-            using (var fs = File.Open(ggpkPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                fs.Seek(DataBegin, SeekOrigin.Begin);
-                fs.Read(buffer, 0, buffer.Length);
-            }
-
-            return buffer;
+            // IMPORTANT: ignore next FREE Record offset value
         }
 
         public override string ToString()

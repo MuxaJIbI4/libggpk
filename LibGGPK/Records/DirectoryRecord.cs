@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
@@ -52,7 +53,7 @@ namespace LibGGPK.Records
         /// Reads the PDIR record entry from the specified stream
         /// </summary>
         /// <param name="br">Stream pointing at a PDIR record</param>
-        protected override void Read(BinaryReader br)
+        public override void Read(BinaryReader br)
         {
             var nameLength = br.ReadInt32();
             var totalEntries = br.ReadInt32();
@@ -70,6 +71,28 @@ namespace LibGGPK.Records
                     EntryNameHash = br.ReadUInt32(),
                     Offset = br.ReadInt64(),
                 };
+            }
+        }
+
+        public override void Write(BinaryWriter bw, Dictionary<long, long> changedOffsets)
+        {
+            var currentOffset = bw.BaseStream.Position;
+            if (currentOffset != RecordBegin)
+                changedOffsets[RecordBegin] = currentOffset;
+
+            bw.Write(Length);
+            bw.Write(Encoding.ASCII.GetBytes(Tag));
+            bw.Write(Name.Length + 1);
+            bw.Write(Entries.Length);
+            bw.Write(Hash);
+            bw.Write(Encoding.Unicode.GetBytes(Name));
+            bw.Write((short)0);
+
+            foreach (var entry in Entries)
+            {
+                bw.Write(entry.EntryNameHash);
+                var offset = entry.Offset;
+                bw.Write(changedOffsets.ContainsKey(offset) ? changedOffsets[offset] : offset);
             }
         }
 

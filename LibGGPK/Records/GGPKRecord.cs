@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace LibGGPK.Records
 {
@@ -15,6 +19,12 @@ namespace LibGGPK.Records
         /// </summary>
         public long[] RecordOffsets;
 
+        public GgpkRecord(uint length)
+        {
+            Length = length;
+            RecordOffsets = new long[2];
+        }
+
         public GgpkRecord(uint length, BinaryReader br)
         {
             RecordBegin = br.BaseStream.Position - 8;
@@ -26,7 +36,7 @@ namespace LibGGPK.Records
         /// Reads the GGPK record entry from the specified stream
         /// </summary>
         /// <param name="br">Stream pointing at a GGPK record</param>
-        protected override void Read(BinaryReader br)
+        public override void Read(BinaryReader br)
         {
             var totalRecordOffsets = br.ReadInt32();
             RecordOffsets = new long[totalRecordOffsets];
@@ -35,6 +45,18 @@ namespace LibGGPK.Records
             {
                 RecordOffsets[i] = br.ReadInt64();
             }
+        }
+
+        public override void Write(BinaryWriter bw, Dictionary<long, long> changedOffsets)
+        {
+            bw.Write(Length);                           // 28
+            bw.Write(Encoding.ASCII.GetBytes(Tag));     // GGPK
+            bw.Write(RecordOffsets.Length);             // 2
+
+            var offset = RecordOffsets[0];
+            bw.Write(changedOffsets.ContainsKey(offset) ? changedOffsets[offset] : offset);
+            offset = RecordOffsets[1];
+            bw.Write(changedOffsets.ContainsKey(offset) ? changedOffsets[offset] : offset);
         }
 
         public override string ToString()
