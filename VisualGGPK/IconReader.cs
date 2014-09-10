@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -24,6 +25,9 @@ namespace VisualGGPK
 //            return icon;
 //        }
 
+        private static Icon _directoryIcon;
+        private static Dictionary<string, Icon> _fileIcons = new Dictionary<string, Icon>();
+
         #region OfExtension
 
         ///<summary>
@@ -34,23 +38,21 @@ namespace VisualGGPK
         ///<returns>Icon</returns>
         public static Icon OfExtension(string filename, bool overlay = false)
         {
-            string filepath;
-            var extension = filename.Split('.');
-            var dirpath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cache");
+            var extension = Path.GetExtension(filename) ?? String.Empty;
+            if (_fileIcons.ContainsKey(extension))
+                return _fileIcons[extension];
+            
+            var testName = (String.IsNullOrEmpty(filename) || String.IsNullOrEmpty(extension))
+                ? "dummy_file"
+                : "dummy" + extension;
+            var dirpath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "_icon_cache");
             Directory.CreateDirectory(dirpath);
-            if (String.IsNullOrEmpty(filename) || extension.Length == 1)
-            {
-                filepath = Path.Combine(dirpath, "dummy_file");
-            }
-            else
-            {
-                filepath = Path.Combine(dirpath, String.Join(".", "dummy", extension[extension.Length - 1]));
-            }
+            string filepath = Path.Combine(dirpath, testName);
+            
             if (File.Exists(filepath) == false)
-            {
                 File.Create(filepath);
-            }
             var icon = OfPath(filepath, true, true, overlay);
+            _fileIcons[extension] = icon;
             return icon;
         }
         #endregion
@@ -64,9 +66,14 @@ namespace VisualGGPK
         ///<param name="overlay">bool symlink overlay</param>
         public static Icon OfFolder(bool overlay = false)
         {
-            var dirpath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cache", "dummy");
+            if (_directoryIcon != null)
+            {
+                return _directoryIcon;
+            }
+            var dirpath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "_icon_cache", "dummy");
             Directory.CreateDirectory(dirpath);
             var icon = OfPath(dirpath, true, true, overlay);
+            _directoryIcon = icon;
             return icon;
         }
         #endregion
@@ -81,7 +88,7 @@ namespace VisualGGPK
         ///<param name="checkdisk">bool fileicon</param>
         ///<param name="overlay">bool symlink overlay</param>
         ///<returns>Icon</returns>
-        public static Icon OfPath(string filepath, bool small = true, bool checkdisk = true, bool overlay = false)
+        private static Icon OfPath(string filepath, bool small = true, bool checkdisk = true, bool overlay = false)
         {
             SHGFI_Flag flags;
             var shinfo = new SHFILEINFO();
