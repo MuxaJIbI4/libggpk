@@ -35,7 +35,7 @@ namespace VisualGGPK
         private Dictionary<string, FileRecord> _recordsByPath;
 
         // contains currently selected file/directory from tree of GGPK files
-        private TreeViewItem TreeRightClickSelectedFile { get; set; }
+        private TreeViewItem ClickedItem { get; set; }
 
         public MainWindow()
         {
@@ -49,9 +49,9 @@ namespace VisualGGPK
 
         private void Output(string msg)
         {
-            textBoxOutput.Dispatcher.BeginInvoke(new Action(() =>
+            TextBoxOutput.Dispatcher.BeginInvoke(new Action(() =>
             {
-                textBoxOutput.Text += msg;
+                TextBoxOutput.Text += msg;
             }), null);
         }
 
@@ -68,10 +68,10 @@ namespace VisualGGPK
         /// </summary>
         private void ReloadGgpkFile()
         {
-            treeView1.Items.Clear();
+            TreeView1.Items.Clear();
             ResetViewer();
-            textBoxOutput.Visibility = Visibility.Visible;
-            textBoxOutput.Text = string.Empty;
+            TextBoxOutput.Visibility = Visibility.Visible;
+            TextBoxOutput.Text = string.Empty;
             _content = null;
 
             _workerThread = new Thread(() =>
@@ -102,12 +102,12 @@ namespace VisualGGPK
                     null,
                     n => _recordsByPath.Add(n.GetDirectoryPath() + n.Name, n));
 
-                treeView1.Dispatcher.BeginInvoke(new Action(() =>
+                TreeView1.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     try
                     {
                         var rootItem = CreateLazyTreeViewItem(_content.DirectoryRoot);
-                        treeView1.Items.Add(rootItem);
+                        TreeView1.Items.Add(rootItem);
                         rootItem.IsExpanded = true;
                         rootItem.RaiseEvent(new RoutedEventArgs(TreeViewItem.ExpandedEvent, rootItem));
                     }
@@ -132,20 +132,20 @@ namespace VisualGGPK
         /// </summary>
         private void ResetViewer()
         {
-            textBoxOutput.Visibility = Visibility.Hidden;
-            imageOutput.Visibility = Visibility.Hidden;
-            richTextOutput.Visibility = Visibility.Hidden;
-            dataGridOutput.Visibility = Visibility.Hidden;
-            datViewerOutput.Visibility = Visibility.Hidden;
+            TextBoxOutput.Visibility = Visibility.Hidden;
+            ImageOutput.Visibility = Visibility.Hidden;
+            RichTextOutput.Visibility = Visibility.Hidden;
+            DataGridOutput.Visibility = Visibility.Hidden;
+            DatViewerOutput.Visibility = Visibility.Hidden;
 
-            textBoxOutput.Clear();
-            imageOutput.Source = null;
-            richTextOutput.Document.Blocks.Clear();
-            dataGridOutput.ItemsSource = null;
-            textBoxOffset.Text = String.Empty;
-            textBoxSize.Text = String.Empty;
-            textBoxNameHash.Text = String.Empty;
-            textBoxHash.Text = String.Empty;
+            TextBoxOutput.Clear();
+            ImageOutput.Source = null;
+            RichTextOutput.Document.Blocks.Clear();
+            DataGridOutput.ItemsSource = null;
+            TextBoxOffset.Text = String.Empty;
+            TextBoxSize.Text = String.Empty;
+            TextBoxNameHash.Text = String.Empty;
+            TextBoxHash.Text = String.Empty;
         }
 
         /// <summary>
@@ -154,33 +154,34 @@ namespace VisualGGPK
         private void UpdateDisplayPanel()
         {
             ResetViewer();
-
-            if (treeView1.SelectedItem == null)
-            {
+            var selectedItem = TreeView1.SelectedItem;
+            if (selectedItem == null)
                 return;
-            }
+            var item = selectedItem as TreeViewItem;
+            if (item == null)
+                return;
 
-            if (treeView1.SelectedItem is TreeViewItem && (treeView1.SelectedItem as TreeViewItem).Header is DirectoryTreeNode)
+            if (item.Header is DirectoryTreeNode)
             {
-                var selectedDirectory = (treeView1.SelectedItem as TreeViewItem).Header as DirectoryTreeNode;
+                var selectedDirectory = item.Header as DirectoryTreeNode;
                 if (selectedDirectory.Record == null)
                     return;
 
-                textBoxOffset.Text = selectedDirectory.Record.RecordBegin.ToString("X");
-                textBoxSize.Text = selectedDirectory.Record.Entries.Length.ToString();
-                textBoxNameHash.Text = selectedDirectory.Record.GetNameHash().ToString("X");
-                textBoxHash.Text = BitConverter.ToString(selectedDirectory.Record.Hash);
+                TextBoxOffset.Text = selectedDirectory.Record.RecordBegin.ToString("X");
+                TextBoxSize.Text = selectedDirectory.Record.Entries.Length.ToString();
+                TextBoxNameHash.Text = selectedDirectory.Record.GetNameHash().ToString("X");
+                TextBoxHash.Text = BitConverter.ToString(selectedDirectory.Record.Hash);
                 return;
             }
+            if (!(item.Header is FileRecord))
+                return; // TODO: this is error, need to report it
 
-            var selectedRecord = treeView1.SelectedItem as FileRecord;
-            if (selectedRecord == null)
-                return;
+            var selectedRecord = item.Header as FileRecord;
 
-            textBoxOffset.Text = selectedRecord.RecordBegin.ToString("X");
-            textBoxSize.Text = selectedRecord.DataLength.ToString();
-            textBoxNameHash.Text = selectedRecord.GetNameHash().ToString("X");
-            textBoxHash.Text = BitConverter.ToString(selectedRecord.Hash);
+            TextBoxOffset.Text = selectedRecord.RecordBegin.ToString("X");
+            TextBoxSize.Text = selectedRecord.DataLength.ToString();
+            TextBoxNameHash.Text = selectedRecord.GetNameHash().ToString("X");
+            TextBoxHash.Text = BitConverter.ToString(selectedRecord.Hash);
 
             try
             {
@@ -209,11 +210,11 @@ namespace VisualGGPK
             catch (Exception ex)
             {
                 ResetViewer();
-                textBoxOffset.Text = selectedRecord.RecordBegin.ToString("X");
-                textBoxSize.Text = selectedRecord.DataLength.ToString();
-                textBoxNameHash.Text = selectedRecord.GetNameHash().ToString("X");
-                textBoxHash.Text = BitConverter.ToString(selectedRecord.Hash);
-                textBoxOutput.Visibility = Visibility.Visible;
+                TextBoxOffset.Text = selectedRecord.RecordBegin.ToString("X");
+                TextBoxSize.Text = selectedRecord.DataLength.ToString();
+                TextBoxNameHash.Text = selectedRecord.GetNameHash().ToString("X");
+                TextBoxHash.Text = BitConverter.ToString(selectedRecord.Hash);
+                TextBoxOutput.Visibility = Visibility.Visible;
 
                 var sb = new StringBuilder();
                 while (ex != null)
@@ -222,7 +223,7 @@ namespace VisualGGPK
                     ex = ex.InnerException;
                 }
 
-                textBoxOutput.Text = string.Format(Settings.Strings["UpdateDisplayPanel_Failed"], sb);
+                TextBoxOutput.Text = string.Format(Settings.Strings["UpdateDisplayPanel_Failed"], sb);
             }
 
         }
@@ -234,9 +235,9 @@ namespace VisualGGPK
         private void DisplayDatFile(FileRecord selectedRecord)
         {
             var data = selectedRecord.ReadData(_ggpkPath);
-            datViewerOutput.Visibility = Visibility.Visible;
+            DatViewerOutput.Visibility = Visibility.Visible;
 
-            datViewerOutput.Reset(selectedRecord.Name, data);
+            DatViewerOutput.Reset(selectedRecord.Name, data);
         }
 
         /// <summary>
@@ -246,11 +247,11 @@ namespace VisualGGPK
         private void DisplayTextFileAsRichText(FileRecord selectedRecord)
         {
             var buffer = selectedRecord.ReadData(_ggpkPath);
-            richTextOutput.Visibility = Visibility.Visible;
+            RichTextOutput.Visibility = Visibility.Visible;
 
             using (var ms = new MemoryStream(buffer))
             {
-                richTextOutput.Selection.Load(ms, DataFormats.Rtf);
+                RichTextOutput.Selection.Load(ms, DataFormats.Rtf);
             }
         }
 
@@ -261,9 +262,9 @@ namespace VisualGGPK
         private void DisplayFileAsUnicode(FileRecord selectedRecord)
         {
             var buffer = selectedRecord.ReadData(_ggpkPath);
-            textBoxOutput.Visibility = Visibility.Visible;
+            TextBoxOutput.Visibility = Visibility.Visible;
 
-            textBoxOutput.Text = Encoding.Unicode.GetString(buffer);
+            TextBoxOutput.Text = Encoding.Unicode.GetString(buffer);
         }
 
         /// <summary>
@@ -273,9 +274,9 @@ namespace VisualGGPK
         private void DisplayTextFileAsAscii(FileRecord selectedRecord)
         {
             var buffer = selectedRecord.ReadData(_ggpkPath);
-            textBoxOutput.Visibility = Visibility.Visible;
+            TextBoxOutput.Visibility = Visibility.Visible;
 
-            textBoxOutput.Text = Encoding.ASCII.GetString(buffer);
+            TextBoxOutput.Text = Encoding.ASCII.GetString(buffer);
         }
 
         /// <summary>
@@ -285,7 +286,7 @@ namespace VisualGGPK
         private void DisplayImageFile(FileRecord selectedRecord)
         {
             var buffer = selectedRecord.ReadData(_ggpkPath);
-            imageOutput.Visibility = Visibility.Visible;
+            ImageOutput.Visibility = Visibility.Visible;
 
             using (var ms = new MemoryStream(buffer))
             {
@@ -294,7 +295,7 @@ namespace VisualGGPK
                 bmp.CacheOption = BitmapCacheOption.OnLoad;
                 bmp.StreamSource = ms;
                 bmp.EndInit();
-                imageOutput.Source = bmp;
+                ImageOutput.Source = bmp;
             }
         }
 
@@ -305,7 +306,7 @@ namespace VisualGGPK
         private void DisplayDdsFile(FileRecord selectedRecord)
         {
             var buffer = selectedRecord.ReadData(_ggpkPath);
-            imageOutput.Visibility = Visibility.Visible;
+            ImageOutput.Visibility = Visibility.Visible;
 
             var dds = new DDSImage(buffer);
 
@@ -318,7 +319,7 @@ namespace VisualGGPK
                 bmp.CacheOption = BitmapCacheOption.OnLoad;
                 bmp.StreamSource = ms;
                 bmp.EndInit();
-                imageOutput.Source = bmp;
+                ImageOutput.Source = bmp;
             }
         }
 
@@ -411,8 +412,10 @@ namespace VisualGGPK
 
             try
             {
-                var saveFileDialog = new SaveFileDialog();
-                saveFileDialog.FileName = Settings.Strings["ExportAllItemsInDirectory_Default_FileName"];
+                var saveFileDialog = new SaveFileDialog
+                {
+                    FileName = Settings.Strings["ExportAllItemsInDirectory_Default_FileName"]
+                };
                 if (saveFileDialog.ShowDialog() == true)
                 {
                     var exportDirectory = Path.GetDirectoryName(saveFileDialog.FileName) + Path.DirectorySeparatorChar;
@@ -433,34 +436,39 @@ namespace VisualGGPK
         /// Replaces selected file with file user selects via MessageBox
         /// </summary>
         /// <param name="recordToReplace"></param>
-        private void ReplaceItem(FileRecord recordToReplace)
+        private void ReplaceFileRecord(FileRecord recordToReplace)
         {
             if (_content.IsReadOnly)
             {
-                MessageBox.Show(Settings.Strings["ReplaceItem_Readonly"], Settings.Strings["ReplaceItem_ReadonlyCaption"]);
+                MessageBox.Show(
+                    Settings.Strings["ReplaceItem_Readonly"], 
+                    Settings.Strings["ReplaceItem_ReadonlyCaption"]);
                 return;
             }
 
             try
             {
-                var openFileDialog = new OpenFileDialog();
-                openFileDialog.FileName = "";
-                openFileDialog.CheckFileExists = true;
-                openFileDialog.CheckPathExists = true;
-
-                if (openFileDialog.ShowDialog() == true)
+                var openFileDialog = new OpenFileDialog
                 {
-                    var previousOffset = recordToReplace.RecordBegin;
+                    FileName = "", 
+                    CheckFileExists = true, 
+                    CheckPathExists = true
+                };
 
-                    recordToReplace.ReplaceContents(_ggpkPath, openFileDialog.FileName, _content.FreeRoot);
-                    MessageBox.Show(String.Format(Settings.Strings["ReplaceItem_Successful"], recordToReplace.Name, recordToReplace.RecordBegin.ToString("X")), Settings.Strings["ReplaceItem_Successful_Caption"], MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    UpdateDisplayPanel();
-                }
+                if (openFileDialog.ShowDialog() != true) return;
+                recordToReplace.ReplaceContents(_ggpkPath, openFileDialog.FileName, _content.FreeRoot);
+                MessageBox.Show(
+                    String.Format(Settings.Strings["ReplaceItem_Successful"], recordToReplace.Name, recordToReplace.RecordBegin.ToString("X")), 
+                    Settings.Strings["ReplaceItem_Successful_Caption"], 
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                UpdateDisplayPanel();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format(Settings.Strings["ReplaceItem_Failed"], ex.Message), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    string.Format(Settings.Strings["ReplaceItem_Failed"], ex.Message), 
+                    Settings.Strings["Error_Caption"], 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -473,7 +481,9 @@ namespace VisualGGPK
         {
             if (_content.IsReadOnly)
             {
-                MessageBox.Show(Settings.Strings["ReplaceItem_Readonly"], Settings.Strings["ReplaceItem_ReadonlyCaption"]);
+                MessageBox.Show(
+                    Settings.Strings["ReplaceItem_Readonly"], 
+                    Settings.Strings["ReplaceItem_ReadonlyCaption"]);
                 return;
             }
 
@@ -495,8 +505,8 @@ namespace VisualGGPK
                             var versionStr = Encoding.UTF8.GetString(versionData, 0, versionData.Length);
                             if (_recordsByPath.ContainsKey("patch_notes.rtf"))
                             {
-                                var Hash = BitConverter.ToString(_recordsByPath["patch_notes.rtf"].Hash);
-                                if (!versionStr.Substring(0, Hash.Length).Equals(Hash))
+                                var hash = BitConverter.ToString(_recordsByPath["patch_notes.rtf"].Hash);
+                                if (!versionStr.Substring(0, hash.Length).Equals(hash))
                                 {
                                     OutputLine(Settings.Strings["MainWindow_VersionCheck_Failed"]);
                                     return;
@@ -554,7 +564,7 @@ namespace VisualGGPK
                 return;
             }
 
-            var record = treeView1.SelectedItem as FileRecord;
+            var record = TreeView1.SelectedItem as FileRecord;
             if (record == null)
             {
                 OutputLine(Settings.Strings["MainWindow_HandleDropFile_Failed"]);
@@ -583,8 +593,10 @@ namespace VisualGGPK
             }
 
             var filesToReplace = Directory.GetFiles(baseDirectory, "*.*", SearchOption.AllDirectories);
-            var baseDirectoryNameLength = Path.GetFileName(baseDirectory).Length;
+            var fileName = Path.GetFileName(baseDirectory);
+            if (fileName == null) return;
 
+            var baseDirectoryNameLength = fileName.Length;
             OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropDirectory_Count"], filesToReplace.Length));
             foreach (var item in filesToReplace)
             {
@@ -600,15 +612,16 @@ namespace VisualGGPK
             }
         }
 
-
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            var ofd = new OpenFileDialog();
-            ofd.CheckFileExists = true;
-            ofd.Filter = Settings.Strings["Load_GGPK_Filter"];
+            var ofd = new OpenFileDialog
+            {
+                CheckFileExists = true,
+                Filter = Settings.Strings["Load_GGPK_Filter"]
+            };
+
             // Get InstallLocation From RegistryKey
-            if ((ofd.InitialDirectory == null) || (ofd.InitialDirectory == string.Empty))
+            if (string.IsNullOrEmpty(ofd.InitialDirectory))
             {
                 var start = Registry.CurrentUser;
                 var programName = start.OpenSubKey(@"Software\GrindingGearGames\Path of Exile");
@@ -621,8 +634,9 @@ namespace VisualGGPK
                     }
                 }
             }
+
             // Get Garena PoE
-            if ((ofd.InitialDirectory == null) || (ofd.InitialDirectory == string.Empty))
+            if (string.IsNullOrEmpty(ofd.InitialDirectory))
             {
                 var start = Registry.LocalMachine;
                 var programName = start.OpenSubKey(@"SOFTWARE\Wow6432Node\Garena\PoE");
@@ -642,11 +656,8 @@ namespace VisualGGPK
                     Close();
                     return;
                 }
-                else
-                {
-                    _ggpkPath = ofd.FileName;
-                    ReloadGgpkFile();
-                }
+                _ggpkPath = ofd.FileName;
+                ReloadGgpkFile();
             }
             else
             {
@@ -654,10 +665,10 @@ namespace VisualGGPK
                 return;
             }
 
-            menuItemExport.Header = Settings.Strings["MainWindow_Menu_Export"];
-            menuItemReplace.Header = Settings.Strings["MainWindow_Menu_Replace"];
-            menuItemView.Header = Settings.Strings["MainWindow_Menu_View"];
-            labelFileOffset.Content = Settings.Strings["MainWindow_Label_FileOffset"];
+            MenuItemExport.Header = Settings.Strings["MainWindow_Menu_Export"];
+            MenuItemReplace.Header = Settings.Strings["MainWindow_Menu_Replace"];
+            MenuItemOpen.Header = Settings.Strings["MainWindow_Menu_View"];
+            LabelFileOffset.Content = Settings.Strings["MainWindow_Label_FileOffset"];
         }
 
         private void Window_PreviewDrop_1(object sender, DragEventArgs e)
@@ -687,13 +698,14 @@ namespace VisualGGPK
 
             // reset viewer to show output message
             ResetViewer();
-            textBoxOutput.Text = string.Empty;
-            textBoxOutput.Visibility = Visibility.Visible;
+            TextBoxOutput.Text = string.Empty;
+            TextBoxOutput.Visibility = Visibility.Visible;
 
-            if (MessageBox.Show(Settings.Strings["MainWindow_Window_Drop_Confirm"], Settings.Strings["MainWindow_Window_Drop_Confirm_Caption"], MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-            {
+            if (MessageBox.Show(
+                Settings.Strings["MainWindow_Window_Drop_Confirm"],
+                Settings.Strings["MainWindow_Window_Drop_Confirm_Caption"],
+                MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
-            }
 
             var fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames == null || fileNames.Length != 1)
@@ -706,9 +718,9 @@ namespace VisualGGPK
             {
                 HandleDropDirectory(fileNames[0]);
             }
-            else if (string.Compare(Path.GetExtension(fileNames[0]), ".zip", true) == 0)
+            var extension = Path.GetExtension(fileNames[0]);
+            if (!String.IsNullOrEmpty(extension) && extension.Equals(".zip")) // Zip file
             {
-                // Zip file
                 HandleDropArchive(fileNames[0]);
             }
             else
@@ -729,22 +741,22 @@ namespace VisualGGPK
         {
             var sourceProcess = sender as Process;
             if (sourceProcess == null)
-            {
                 return;
-            }
 
             try
             {
                 File.Delete(sourceProcess.StartInfo.FileName);
             }
-            catch (Exception /*ex*/)
+            catch (Exception)
             {
                 /* Suppress any exceptions, they're just temporary files */
-                //MessageBox.Show(String.Format("Failed to delete temporary file '{0}': {1}", sourceProcess.StartInfo.FileName, ex.Message)); 
+                //                MessageBox.Show(
+                //                    String.Format("Failed to delete temporary file '{0}': {1}", 
+                //                    sourceProcess.StartInfo.FileName, ex.Message)); 
             }
         }
 
-        private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
+        private void OnTreeViewItemExpanded(object sender, RoutedEventArgs e)
         {
             var item = e.Source as TreeViewItem;
             if (item == null)
@@ -781,119 +793,94 @@ namespace VisualGGPK
             return item;
         }
 
+        private void OnTreeViewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var clickedItem = e.OriginalSource as UIElement;
+            while ((clickedItem != null) && !(clickedItem is TreeViewItem))
+            {
+                clickedItem = VisualTreeHelper.GetParent(clickedItem) as UIElement;
+            }
+            ClickedItem = clickedItem as TreeViewItem;
+            if (ClickedItem == null)
+                return;
 
-        private void treeView1_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+            var header = ClickedItem.Header;
+            MenuItemReplace.IsEnabled = header is FileRecord;
+            MenuItemOpen.IsEnabled = header is FileRecord;
+            MenuItemExport.IsEnabled = (header is FileRecord || header is DirectoryTreeNode);
+
+            if (e.ChangedButton == MouseButton.Right)                           // right-click
+            {
+            }
+            else if (e.ChangedButton == MouseButton.Left && e.ClickCount == 1)  // single left-click
+            {
+            }
+            else if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2)  // double left-click
+            {
+                if (ClickedItem != null && ClickedItem.Header is FileRecord)
+                    OpenFileRecord(ClickedItem.Header as FileRecord);
+            }
+        }
+
+        private void OnTreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             UpdateDisplayPanel();
-
-            menuItemReplace.IsEnabled = treeView1.SelectedItem is FileRecord;
-            menuItemView.IsEnabled = treeView1.SelectedItem is FileRecord;
-
-            if (treeView1.SelectedItem is FileRecord)
-            {
-                // Exporting file
-                menuItemExport.IsEnabled = true;
-            }
-            else if (treeView1.SelectedItem is TreeViewItem && (treeView1.SelectedItem as TreeViewItem).Header is DirectoryTreeNode)
-            {
-                // Exporting entire directory
-                menuItemExport.IsEnabled = true;
-            }
-            else
-            {
-                menuItemExport.IsEnabled = false;
-            }
         }
 
-        private void treeView1_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
+        private void OnItemContextMenuExportClicked(object sender, RoutedEventArgs e)
         {
-            var source = sender as TreeView;
-
-            var hitPoint = e.GetPosition(source);
-            var hitElement = (DependencyObject)source.InputHitTest(hitPoint);
-            while (hitElement != null && !(hitElement is TreeViewItem))
-            {
-                hitElement = VisualTreeHelper.GetParent((DependencyObject)hitElement);
-            }
-
-            if (hitElement != null)
-            {
-                var fileToView = (hitElement as TreeViewItem).DataContext as FileRecord;
-                if (fileToView == null)
-                    return;
-
-                OpenFileRecord(fileToView);
-            }
-        }
-
-        private void treeView1_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.RightButton == MouseButtonState.Pressed)
-            {
-                var clickedItem = e.OriginalSource as UIElement;
-
-                while ((clickedItem != null) && !(clickedItem is TreeViewItem))
-                {
-                    clickedItem = VisualTreeHelper.GetParent(clickedItem) as UIElement;
-                }
-                TreeRightClickSelectedFile = clickedItem as TreeViewItem;
-            }
-            e.Handled = false;
-        }
-
-        private void menuItemExport_Click(object sender, RoutedEventArgs e)
-        {
-            if (treeView1.SelectedItem is TreeViewItem)
-            {
-                var selectedTreeViewItem = treeView1.SelectedItem as TreeViewItem;
-                var selectedDirectoryNode = selectedTreeViewItem.Header as DirectoryTreeNode;
-                if (selectedDirectoryNode != null)
-                {
-                    ExportAllItemsInDirectory(selectedDirectoryNode);
-                }
-            }
-            else if (treeView1.SelectedItem is FileRecord)
-            {
-                ExportFileRecord(treeView1.SelectedItem as FileRecord);
-            }
-        }
-
-        private void menuItemReplace_Click(object sender, RoutedEventArgs e)
-        {
-            var recordToReplace = treeView1.SelectedItem as FileRecord;
-            if (recordToReplace == null)
+            if (ClickedItem == null)
                 return;
 
-            ReplaceItem(recordToReplace);
+            var item = ClickedItem.Header;
+            if (item is DirectoryTreeNode)
+            {
+                ExportAllItemsInDirectory(item as DirectoryTreeNode);
+            }
+            else if (item is FileRecord)
+            {
+                ExportFileRecord(item as FileRecord);
+            }
         }
 
-        private void menuItemView_Click(object sender, RoutedEventArgs e)
+        private void OnItemContextMenuReplaceClicked(object sender, RoutedEventArgs e)
         {
-            var viewItem = treeView1.SelectedItem as TreeViewItem;
-            if (viewItem == null)
-                return;
-            var fileToView = viewItem.DataContext as FileRecord;
-            if (fileToView == null)
+            if (ClickedItem == null)
                 return;
 
-            OpenFileRecord(fileToView);
+            var file = ClickedItem.Header as FileRecord;
+            if (file == null)
+                return;
+
+            ReplaceFileRecord(file);
         }
 
-        private void menuItemDelete_Click(object sender, RoutedEventArgs e)
+        private void OnItemContextMenuOpenClicked(object sender, RoutedEventArgs e)
         {
-            if (TreeRightClickSelectedFile == null)
+            if (ClickedItem == null)
+                return;
+            var file = ClickedItem.Header as FileRecord;
+            if (file == null)
                 return;
 
-            if (TreeRightClickSelectedFile.Header is BaseRecord)
+            OpenFileRecord(file);
+        }
+
+        private void OnItemContextMenuDeleteClicked(object sender, RoutedEventArgs e)
+        {
+            if (ClickedItem == null)
+                return;
+
+            if (ClickedItem.Header is BaseRecord)
             {
                 // TODO actually delete GGPK() records
-                // var file1 = TreeRightClickSelectedFile.Header as BaseRecord;
+                // var file1 = ClickedItem.Header as BaseRecord;
                 // content.DeleteRecord(file);
             }
-            var parent = TreeRightClickSelectedFile.Parent;
+            var parent = ClickedItem.Parent;
             if (parent == null)
             {
-                parent = VisualTreeHelper.GetParent(TreeRightClickSelectedFile);
+                parent = VisualTreeHelper.GetParent(ClickedItem);
                 while (parent != null && !(parent is TreeViewItem))
                 {
                     parent = VisualTreeHelper.GetParent(parent);
@@ -902,8 +889,8 @@ namespace VisualGGPK
             if (!(parent is TreeViewItem))
                 return;
             var treeParent = parent as TreeViewItem;
-            treeParent.Items.Remove(TreeRightClickSelectedFile);
-            TreeRightClickSelectedFile = null;
+            treeParent.Items.Remove(ClickedItem);
+            ClickedItem = null;
         }
     }
 }
