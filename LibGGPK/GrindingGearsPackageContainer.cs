@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using LibGGPK.Records;
 
 namespace LibGGPK
 {
@@ -129,8 +130,8 @@ namespace LibGGPK
             {
                 case FileRecord.Tag:
                     return new FileRecord(length, br);
-                case GGPKRecord.Tag:
-                    return new GGPKRecord(length, br);
+                case GgpkRecord.Tag:
+                    return new GgpkRecord(length, br);
                 case FreeRecord.Tag:
                     return new FreeRecord(length, br);
                 case DirectoryRecord.Tag:
@@ -160,7 +161,7 @@ namespace LibGGPK
         /// <returns>Root node of directory tree</returns>
         private DirectoryTreeNode BuildDirectoryTree()
         {
-            var ggpkRecord = RecordOffsets[0] as GGPKRecord;
+            var ggpkRecord = RecordOffsets[0] as GgpkRecord;
             if (ggpkRecord == null)
                 throw new Exception("First record isn't GGPK record");
 
@@ -242,7 +243,7 @@ namespace LibGGPK
         /// <returns>Linked list containing list of FREE records</returns>
         private LinkedList<FreeRecord> BuildFreeList()
         {
-            var ggpkRecord = RecordOffsets[0] as GGPKRecord;
+            var ggpkRecord = RecordOffsets[0] as GgpkRecord;
             if (ggpkRecord == null)
                 throw new Exception("First record isn't GGPK record");
 

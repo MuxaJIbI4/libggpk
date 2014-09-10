@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using Ionic.Zip;
 using KUtility;
 using LibGGPK;
+using LibGGPK.Records;
 using Microsoft.Win32;
 using Image = System.Windows.Controls.Image;
 
@@ -193,7 +194,7 @@ namespace VisualGGPK
                     case FileRecord.DataFormat.Image:
                         DisplayImageFile(selectedRecord);
                         break;
-                    case FileRecord.DataFormat.TextureDDS:
+                    case FileRecord.DataFormat.TextureDds:
                         DisplayDdsFile(selectedRecord);
                         break;
                     case FileRecord.DataFormat.Ascii:

@@ -14,6 +14,7 @@ using System.Linq.Expressions;
 using LibDat;
 using Ionic.Zip;
 using System.Globalization;
+using LibGGPK.Records;
 
 namespace VPatchGGPK
 {

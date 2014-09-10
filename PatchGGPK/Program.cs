@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq.Expressions;
 using LibDat;
 using Ionic.Zip;
+using LibGGPK.Records;
 
 namespace PatchGGPK
 {

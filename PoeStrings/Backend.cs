@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using LibDat;
 using LibDat.Data;
 using LibGGPK;
+using LibGGPK.Records;
 using PoeStrings.Properties;
 
 namespace PoeStrings
