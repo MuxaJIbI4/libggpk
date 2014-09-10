@@ -69,6 +69,8 @@
     <Compile Include="DataSourceCreator.cs" />
     <Compile Include="DatWrapper.cs" />
     <Compile Include="DDSImage.cs" />
+    <Compile Include="IconNativeMethods.cs" />
+    <Compile Include="IconReader.cs" />
     <Compile Include="Settings.cs" />
     <Page Include="DatViewer.xaml">
       <SubType>Designer</SubType>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
@@ -9,6 +10,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -16,6 +18,7 @@ using Ionic.Zip;
 using KUtility;
 using LibGGPK;
 using Microsoft.Win32;
+using Image = System.Windows.Controls.Image;
 
 namespace VisualGGPK
 {
@@ -161,9 +164,9 @@ namespace VisualGGPK
             if (item == null)
                 return;
 
-            if (item.Header is DirectoryTreeNode)
+            if (item.Tag is DirectoryTreeNode)
             {
-                var selectedDirectory = item.Header as DirectoryTreeNode;
+                var selectedDirectory = item.Tag as DirectoryTreeNode;
                 if (selectedDirectory.Record == null)
                     return;
 
@@ -173,10 +176,10 @@ namespace VisualGGPK
                 TextBoxHash.Text = BitConverter.ToString(selectedDirectory.Record.Hash);
                 return;
             }
-            if (!(item.Header is FileRecord))
+            if (!(item.Tag is FileRecord))
                 return; // TODO: this is error, need to report it
 
-            var selectedRecord = item.Header as FileRecord;
+            var selectedRecord = item.Tag as FileRecord;
 
             TextBoxOffset.Text = selectedRecord.RecordBegin.ToString("X");
             TextBoxSize.Text = selectedRecord.DataLength.ToString();
@@ -761,13 +764,13 @@ namespace VisualGGPK
             var item = e.Source as TreeViewItem;
             if (item == null)
                 return;
-            if (!(item.Header is DirectoryTreeNode))
+            if (!(item.Tag is DirectoryTreeNode))
                 return;
             if ((item.Items.Count != 1) || (!(item.Items[0] is string)))
                 return;
             item.Items.Clear();
 
-            var directoryTreeNode = item.Header as DirectoryTreeNode;
+            var directoryTreeNode = item.Tag as DirectoryTreeNode;
             directoryTreeNode.Children.Sort();
             directoryTreeNode.Files.Sort();
 
@@ -778,7 +781,7 @@ namespace VisualGGPK
 
             foreach (var file in directoryTreeNode.Files)
             {
-                item.Items.Add(new TreeViewItem { Header = file });
+                item.Items.Add(CreateLazyTreeViewItem(file));
             }
         }
 
@@ -786,10 +789,46 @@ namespace VisualGGPK
         {
             var item = new TreeViewItem
             {
-                Header = o,
                 Tag = o
             };
-            item.Items.Add("Loading...");
+
+            Icon icon;
+            string text;
+            if (o is FileRecord)
+            {
+                icon = IconReader.OfExtension(o.ToString());
+                text = o.ToString();
+            }
+            else if (o is DirectoryTreeNode)
+            {
+                icon = IconReader.OfFolder(false);
+                item.Items.Add("Loading...");
+                text = o.ToString();
+            }
+            else 
+                throw new Exception("Unknown tree view item type: " + o.GetType());
+            
+            // create stack panel
+            var stack = new StackPanel {Orientation = Orientation.Horizontal};
+            // create Image
+            var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(
+                icon.ToBitmap().GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            var img = new Image
+            {
+                Source = bitmapSource, Width = 10, Height = 10
+            };
+            // Label
+            var lbl = new Label
+            {
+                Content = text
+            };
+
+            // Add into stack
+            stack.Children.Add(img);
+            stack.Children.Add(lbl);
+
+            // assign stack to header
+            item.Header = stack;
             return item;
         }
 
@@ -804,7 +843,7 @@ namespace VisualGGPK
             if (ClickedItem == null)
                 return;
 
-            var header = ClickedItem.Header;
+            var header = ClickedItem.Tag;
             MenuItemReplace.IsEnabled = header is FileRecord;
             MenuItemOpen.IsEnabled = header is FileRecord;
             MenuItemExport.IsEnabled = (header is FileRecord || header is DirectoryTreeNode);
@@ -817,8 +856,8 @@ namespace VisualGGPK
             }
             else if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2)  // double left-click
             {
-                if (ClickedItem != null && ClickedItem.Header is FileRecord)
-                    OpenFileRecord(ClickedItem.Header as FileRecord);
+                if (ClickedItem != null && ClickedItem.Tag is FileRecord)
+                    OpenFileRecord(ClickedItem.Tag as FileRecord);
             }
         }
 
@@ -832,7 +871,7 @@ namespace VisualGGPK
             if (ClickedItem == null)
                 return;
 
-            var item = ClickedItem.Header;
+            var item = ClickedItem.Tag;
             if (item is DirectoryTreeNode)
             {
                 ExportAllItemsInDirectory(item as DirectoryTreeNode);
@@ -848,7 +887,7 @@ namespace VisualGGPK
             if (ClickedItem == null)
                 return;
 
-            var file = ClickedItem.Header as FileRecord;
+            var file = ClickedItem.Tag as FileRecord;
             if (file == null)
                 return;
 
@@ -859,7 +898,7 @@ namespace VisualGGPK
         {
             if (ClickedItem == null)
                 return;
-            var file = ClickedItem.Header as FileRecord;
+            var file = ClickedItem.Tag as FileRecord;
             if (file == null)
                 return;
 
@@ -871,10 +910,10 @@ namespace VisualGGPK
             if (ClickedItem == null)
                 return;
 
-            if (ClickedItem.Header is BaseRecord)
+            if (ClickedItem.Tag is BaseRecord)
             {
                 // TODO actually delete GGPK() records
-                // var file1 = ClickedItem.Header as BaseRecord;
+                // var file1 = ClickedItem.Tag as BaseRecord;
                 // content.DeleteRecord(file);
             }
             var parent = ClickedItem.Parent;
