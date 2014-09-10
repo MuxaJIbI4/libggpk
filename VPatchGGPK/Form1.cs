@@ -19,7 +19,7 @@ namespace VPatchGGPK
 {
 	public partial class Form1 : Form
 	{
-		private static GGPK content = null;
+		private static GrindingGearsPackageContainer content = null;
 		private static Dictionary<string, FileRecord> RecordsByPath;
 
 		public Form1()
@@ -214,7 +214,7 @@ namespace VPatchGGPK
 			}
 			OutputLine(string.Format("Parsing {0}", ggpkPath));
 
-			content = new GGPK();
+			content = new GrindingGearsPackageContainer();
 			content.Read(ggpkPath, Output);
 
 			RecordsByPath = new Dictionary<string, FileRecord>(content.RecordOffsets.Count);

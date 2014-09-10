@@ -28,7 +28,7 @@ namespace VisualGGPK
     public partial class MainWindow
     {
         private string _ggpkPath = String.Empty;
-        private GGPK _content;
+        private GrindingGearsPackageContainer _content;
         private Thread _workerThread;
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace VisualGGPK
 
             _workerThread = new Thread(() =>
             {
-                _content = new GGPK();
+                _content = new GrindingGearsPackageContainer();
                 try
                 {
                     _content.Read(_ggpkPath, Output);

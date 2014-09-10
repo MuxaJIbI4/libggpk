@@ -26,7 +26,7 @@ namespace PatchGGPK
 		private static string contentGGPK = @"\Content.ggpk";
 		private static string ggpkPath = Directory.GetCurrentDirectory() + contentGGPK;
 		private static Dictionary<string, FileRecord> RecordsByPath;
-		private static GGPK content = null;
+		private static GrindingGearsPackageContainer content = null;
         private static List<string> ggpkPaths = new List<string>();
 
 		public static void Main(string[] args)
@@ -230,7 +230,7 @@ namespace PatchGGPK
 
 			OutputLine(string.Format("Parsing {0}", ggpkPath));
 
-			content = new GGPK();
+			content = new GrindingGearsPackageContainer();
 			content.Read(ggpkPath, Output);
 
 			RecordsByPath = new Dictionary<string, FileRecord>(content.RecordOffsets.Count);

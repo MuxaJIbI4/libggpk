@@ -18,7 +18,7 @@ namespace PoeStrings
 	{
 		//private const string settingsPath = ".\\translation.xml";
 		private readonly Action<string> outputFunc;
-		private GGPK content = new GGPK();
+		private GrindingGearsPackageContainer content = new GrindingGearsPackageContainer();
 		private string ggpkPath;
 		private string settingsPath;
 
@@ -38,7 +38,7 @@ namespace PoeStrings
 		public void ReloadAllData(string ggpkPath)
 		{
 			this.ggpkPath = ggpkPath;
-			content = new GGPK();
+			content = new GrindingGearsPackageContainer();
 			content.Read(ggpkPath, outputFunc);
 
 			CollectTranslatableStrings();

@@ -7,7 +7,7 @@ namespace LibGGPK
     /// <summary>
     /// Handles parsing the GGPK pack file.
     /// </summary>
-    public class GGPK
+    public class GrindingGearsPackageContainer
     {
         /// <summary>
         /// Map of every records offsets in the pack file
@@ -31,7 +31,7 @@ namespace LibGGPK
         public bool IsReadOnly { get { return _isReadOnly; } }
         private bool _isReadOnly;
 
-        public GGPK()
+        public GrindingGearsPackageContainer()
         {
             RecordOffsets = new Dictionary<long, BaseRecord>(EstimatedFileCount);
         }
@@ -60,16 +60,14 @@ namespace LibGGPK
                     if (percentComplete - previousPercentComplete >= 0.10f)
                     {
                         if (output != null)
-                        {
                             output(String.Format("{0:00.00}%{1}", 100.0 * percentComplete, Environment.NewLine));
-                        }
-
                         previousPercentComplete = percentComplete;
                     }
                 }
                 if (output != null)
                 {
-                    output(String.Format("{0:00.00}%{1}", 100.0f * br.BaseStream.Position / (float)br.BaseStream.Length, Environment.NewLine));
+                    float percentReady = 100.0f*br.BaseStream.Position/br.BaseStream.Length;
+                    output(String.Format("{0:00.00}%{1}", percentReady , Environment.NewLine));
                 }
             }
         }
@@ -98,9 +96,7 @@ namespace LibGGPK
         public void Read(string pathToGgpk, Action<string> output)
         {
             if (output != null)
-            {
                 output("Parsing GGPK..." + Environment.NewLine);
-            }
 
             ReadRecordOffsets(pathToGgpk, output);
 
