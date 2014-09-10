@@ -91,16 +91,6 @@ namespace LibGGPK
         }
 
         /// <summary>
-        /// Creates a directory tree using the parsed record headers and offsets
-        /// </summary>
-        /// <param name="output">Output function</param>
-        private void CreateDirectoryTree(Action<string> output)
-        {
-            DirectoryRoot = DirectoryTreeMaker.BuildDirectoryTree(RecordOffsets);
-            FreeRoot = FreeListMaker.BuildFreeList(RecordOffsets);
-        }
-
-        /// <summary>
         /// Parses the GGPK pack file and builds a directory tree from it.
         /// </summary>
         /// <param name="pathToGgpk">Path to pack file to read</param>
@@ -121,6 +111,16 @@ namespace LibGGPK
             }
 
             CreateDirectoryTree(output);
+        }
+
+        /// <summary>
+        /// Creates a directory tree using the parsed record headers and offsets
+        /// </summary>
+        /// <param name="output">Output function</param>
+        private void CreateDirectoryTree(Action<string> output)
+        {
+            DirectoryRoot = DirectoryTreeMaker.BuildDirectoryTree(RecordOffsets);
+            FreeRoot = FreeListMaker.BuildFreeList(RecordOffsets);
         }
     }
 }
