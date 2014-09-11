@@ -629,7 +629,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>SoundMaruaderPrefixCount</description>
+			<description>SoundMaruader_Prefix</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -639,7 +639,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>SoundRangerPrefixCount</description>
+			<description>SoundRanger_Prefix</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -649,7 +649,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>SoundWitchPrefixCount</description>
+			<description>SoundWitch_Prefix</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -659,7 +659,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>SoundDualistPrefixCount</description>
+			<description>SoundDualist_Prefix</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -669,7 +669,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>SoundShadowPrefixCount</description>
+			<description>SoundShadow_Prefix</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -679,7 +679,7 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>SoundTemplarPrefixCount</description>
+			<description>SoundTemplar_Prefix</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -689,14 +689,14 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>SoundScionPrefixCount</description>
+			<description>SoundScion_Prefix</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
 			<description>SoundScion</description>
 			<type>int</type>
-			<pointer/>
+			<pointer>StringIndex</pointer>
 		</field>
 		<field>
 			<description>Unknown0</description>
@@ -739,44 +739,44 @@
 			<pointer>UserStringIndex</pointer>
 		</field>
 		<field>
-			<description>Unknown2</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown3</description>
+			<description>Data1</description>
+			<type>int</type>
+			<pointer>UInt64Index</pointer>
+		</field>
+		<field>
+			<description>0-7 Group?</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown4</description>
+			<description>Null1</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown5</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown6</description>
+			<description>Data2</description>
+			<type>int</type>
+			<pointer>UInt32Index</pointer>
+		</field>
+		<field>
+			<description>Data3_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown7</description>
+			<description>Data3</description>
 			<type>int</type>
-			<pointer/>
-		</field>
-		<field>
-			<description>Unknown8</description>
-			<type>int</type>
-			<pointer/>
-		</field>
-		<field>
-			<description>Unknown9</description>
-			<type>int</type>
-			<pointer/>
+			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
 			<description>Unknown10</description>
@@ -794,14 +794,14 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown12</description>
+			<description>Data4_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown13</description>
+			<description>Data4</description>
 			<type>int</type>
-			<pointer/>
+			<pointer>UInt32Index</pointer>
 		</field>
 	</definition>
 	<definition id="CharacterPanelTabs" record_length="12">
@@ -1291,17 +1291,17 @@
 	<definition id="CraftingBenchCustomActions"/>
 	<definition id="CraftingBenchOptions" record_length="72">
 		<field>
-			<description>Unknown0</description>
+			<description>Group?</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown1</description>
+			<description>Null1</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown2</description>
+			<description>Order in Group</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -1311,24 +1311,24 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown5</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown6</description>
+			<description>Data1</description>
+			<type>int</type>
+			<pointer>UInt64Index</pointer>
+		</field>
+		<field>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown7</description>
+			<description>Data2</description>
 			<type>int</type>
-			<pointer/>
-		</field>
-		<field>
-			<description>Unknown8</description>
-			<type>int</type>
-			<pointer/>
+			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
 			<description>Unknown9</description>
@@ -1346,14 +1346,14 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown12</description>
+			<description>Data3_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown13</description>
+			<description>Data3</description>
 			<type>int</type>
-			<pointer/>
+			<pointer>UInt32Index</pointer>
 		</field>
 		<field>
 			<description>Unknown14</description>
@@ -1361,9 +1361,9 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown15</description>
+			<description>Sockets</description>
 			<type>int</type>
-			<pointer/>
+			<pointer>DataIndex</pointer>
 		</field>
 		<field>
 			<description>Unknown16</description>
@@ -1400,7 +1400,7 @@
 		<field>
 			<description>Directions</description>
 			<type>int</type>
-			<pointer/>
+			<pointer>StringIndex</pointer>
 		</field>
 		<field>
 			<description>Unknown3</description>
@@ -1440,7 +1440,7 @@
 		<field>
 			<description>Unknown15</description>
 			<type>int</type>
-			<pointer/>
+			<pointer>StringIndex</pointer>
 		</field>
 		<field>
 			<description>Unknown16</description>
@@ -1469,47 +1469,47 @@
 	<definition id="Default"/>
 	<definition id="DefaultMonsterStats" record_length="36">
 		<field>
-			<description>Index0</description>
+			<description>Level?</description>
 			<type>int</type>
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>Unknown0</description>
+			<description>Stat1</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown1</description>
+			<description>Stat2</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown2</description>
+			<description>Stat3</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown3</description>
+			<description>Stat4</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown4</description>
+			<description>Stat5</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown5</description>
+			<description>Stat6</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown6</description>
+			<description>Act? (0-2)</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown7</description>
+			<description>Null1</description>
 			<type>int</type>
 			<pointer/>
 		</field>
@@ -1518,7 +1518,7 @@
 		<field>
 			<description>Id</description>
 			<type>int</type>
-			<pointer/>
+			<pointer>StringIndex</pointer>
 		</field>
 		<field>
 			<description>AreaKey</description>
@@ -1757,6 +1757,38 @@
 			<pointer/>
 		</field>
 	</definition>
+	<definition id="DexIntMissionGuards" record_length="24">
+		<field>
+			<description>f1</description>
+			<type>int</type>
+			<pointer>StringIndex</pointer>
+		</field>
+		<field>
+			<description>f2</description>
+			<type>int</type>
+			<pointer/>
+		</field>
+		<field>
+			<description>f3</description>
+			<type>int</type>
+			<pointer/>
+		</field>
+		<field>
+			<description>f3</description>
+			<type>int</type>
+			<pointer/>
+		</field>
+		<field>
+			<description>f5</description>
+			<type>int</type>
+			<pointer/>
+		</field>
+		<field>
+			<description>f6</description>
+			<type>int</type>
+			<pointer/>
+		</field>
+	</definition>
 	<definition id="DexIntMissions" record_length="47">
 		<field>
 			<description>Id</description>
@@ -1915,14 +1947,14 @@
 			<pointer>StringIndex</pointer>
 		</field>
 		<field>
-			<description>Unknown1</description>
+			<description>Data1_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown2</description>
+			<description>Data1</description>
 			<type>int</type>
-			<pointer/>
+			<pointer>UInt64Index</pointer>
 		</field>
 		<field>
 			<description>Unknown3</description>
@@ -1940,14 +1972,14 @@
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown6</description>
+			<description>Data2_Length</description>
 			<type>int</type>
 			<pointer/>
 		</field>
 		<field>
-			<description>Unknown7</description>
+			<description>Data2</description>
 			<type>int</type>
-			<pointer/>
+			<pointer>UInt64Index</pointer>
 		</field>
 	</definition>
 	<definition id="DexMissions" record_length="36">
@@ -2570,7 +2602,7 @@
 		<field>
 			<description>AnimationStringPtr</description>
 			<type>int</type>
-			<pointer/>
+			<pointer>DataIndex</pointer>
 		</field>
 		<field>
 			<description>Unknown4</description>
