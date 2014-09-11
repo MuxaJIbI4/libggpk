@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace LibDat.Data
@@ -18,7 +16,7 @@ namespace LibDat.Data
         /// <summary>
         /// list of objects
         /// </summary>
-        public List<T> Data { get; protected set; }
+        protected List<T> Data { get; set; }
 
         protected AbstractDataList(int offset, int dataTableOffset, int listLength, BinaryReader inStream)
             : base(offset, dataTableOffset)

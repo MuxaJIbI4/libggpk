@@ -29,7 +29,7 @@ namespace LibDat.Data
         /// Stream position is not preserved and will be at the end of the data upon successful read.
         /// </summary>
         /// <param name="inStream">Stream containing the unicode string</param>
-        public abstract void ReadData(BinaryReader inStream);
+        protected abstract void ReadData(BinaryReader inStream);
 
         /// <summary>
         /// Save this data to the specified stream. Stream position is not preserved.

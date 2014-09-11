@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Text;
 
 namespace LibDat.Data
 {
@@ -14,12 +11,12 @@ namespace LibDat.Data
         public UInt32List(int offset, int dataTableOffset, int listLength, BinaryReader inStream)
             : base(offset, dataTableOffset, listLength, inStream) { }
 
-        public override void ReadData(BinaryReader inStream)
+        protected override void ReadData(BinaryReader inStream)
         {
             while (inStream.BaseStream.Position < inStream.BaseStream.Length)
             {
-                UInt32 u = inStream.ReadUInt32();
-                this.Data.Add(u);
+                var u = inStream.ReadUInt32();
+                Data.Add(u);
                 break;
             }
         }

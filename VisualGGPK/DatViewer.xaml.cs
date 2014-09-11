@@ -145,7 +145,7 @@ namespace VisualGGPK
                         int offset = (int)record.GetFieldValue(i);
                         if (_wrapper.DataEntries.ContainsKey(offset))
                         {
-                            dict["column_" + (i + 1)] = "*" + offset + " = " + _wrapper.DataEntries[offset].ToString();
+                            dict["column_" + (i + 1)] = "*" + offset + " = " + _wrapper.DataEntries[offset];
                         }
                         else
                         {

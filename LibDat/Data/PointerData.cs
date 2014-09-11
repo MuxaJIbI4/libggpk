@@ -1,18 +1,19 @@
+﻿using System;
 using System.IO;
+using System.Text;
 
 namespace LibDat.Data
 {
-    /// <summary>
-    /// Represents unknown data  found in the data section of a .dat file. None of this is tested and is probably incorrect.
-    /// </summary>
-    public class UnknownData : AbstractData
+    sealed class PointerData : AbstractData
     {
         /// <summary>
         /// The unknown data
         /// </summary>
-        private int Data { get; set; }
+        public int PointerOffset { get; private set; }
 
-        public UnknownData(int offset, int dataTableOffset, BinaryReader inStream)
+        public object Data { get; set; }
+
+        public PointerData(int offset, int dataTableOffset, BinaryReader inStream)
             : base(offset, dataTableOffset)
         {
             inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
@@ -21,16 +22,13 @@ namespace LibDat.Data
 
         protected override void ReadData(BinaryReader inStream)
         {
-            Data = inStream.ReadInt32();
+            PointerOffset = inStream.ReadInt32();
         }
 
-        /// <summary>
-        /// Saves the data to the specified stream.
-        /// </summary>
-        /// <param name="outStream"></param>
         public override void Save(BinaryWriter outStream)
         {
-            outStream.Write(Data);
+            // TODO write Data instead of offset to Data
+            outStream.Write(PointerOffset);
         }
 
         public override string ToString()

@@ -25,7 +25,7 @@ namespace LibDat
         /// <summary>
         /// Offset of the data section in the .dat file (Starts with 0xbbbbbbbbbbbbbbbb)
         /// </summary>
-        public int DataSectionOffset {get; private set; }
+        public int DataSectionOffset { get; private set; }
 
         /// <summary>
         /// Length of data section of .dat file
@@ -58,7 +58,7 @@ namespace LibDat
         {
             DatName = Path.GetFileNameWithoutExtension(fileName);
             RecordInfo = DatRecordInfoFactory.GetRecordInfo(DatName);
-            using (BinaryReader br = new BinaryReader(inStream, Encoding.Unicode))
+            using (var br = new BinaryReader(inStream, Encoding.Unicode))
             {
                 Read(br);
             }
@@ -72,11 +72,11 @@ namespace LibDat
         {
             DatName = Path.GetFileNameWithoutExtension(filePath);
 
-            byte[] fileBytes = File.ReadAllBytes(filePath);
+            var fileBytes = File.ReadAllBytes(filePath);
 
-            using (MemoryStream ms = new MemoryStream(fileBytes))
+            using (var ms = new MemoryStream(fileBytes))
             {
-                using (BinaryReader br = new BinaryReader(ms, System.Text.Encoding.Unicode))
+                using (var br = new BinaryReader(ms, System.Text.Encoding.Unicode))
                 {
                     Read(br);
                 }
@@ -93,7 +93,7 @@ namespace LibDat
             if (RecordInfo == null)
                 throw new Exception("Missing dat parser for file " + DatName);
 
-            int numberOfEntries = inStream.ReadInt32();
+            var numberOfEntries = inStream.ReadInt32();
             if (inStream.ReadUInt64() == 0xBBbbBBbbBBbbBBbb)
             {
                 Records = new List<DatRecord>();
@@ -102,13 +102,13 @@ namespace LibDat
             inStream.BaseStream.Seek(-8, SeekOrigin.Current);
 
             // find record_length;
-            int length = findRecordLength(inStream, numberOfEntries);
+            var length = findRecordLength(inStream, numberOfEntries);
             if ((numberOfEntries > 0) && length != RecordInfo.Length)
                 throw new Exception("Found record length = " + length + " not equal length defined in XML: " + RecordInfo.Length);
 
             // read records
             Records = new List<DatRecord>(numberOfEntries);
-            for (int i = 0; i < numberOfEntries; i++)
+            for (var i = 0; i < numberOfEntries; i++)
             {
                 Records.Add(new DatRecord(RecordInfo, inStream));
             }
@@ -127,7 +127,7 @@ namespace LibDat
             if (!RecordInfo.HasPointers)
                 return;
 
-            DataReader dr = new DataReader(DataEntries, DataSectionOffset);
+            var dr = new DataReader(DataEntries, DataSectionOffset);
             foreach (var r in Records)
             {
                 try
@@ -138,7 +138,7 @@ namespace LibDat
                 {
                     // for debugging
                     Console.WriteLine(e.Message);
-                    throw e;
+                    throw;
                 }
             }
         }
@@ -149,11 +149,11 @@ namespace LibDat
                 return 0;
 
             inStream.BaseStream.Seek(4, SeekOrigin.Begin);
-            long StringLength = inStream.BaseStream.Length;
-            int record_length = 0;
-            for (int i = 0; inStream.BaseStream.Position <= StringLength - 8; i++)
+            var StringLength = inStream.BaseStream.Length;
+            var record_length = 0;
+            for (var i = 0; inStream.BaseStream.Position <= StringLength - 8; i++)
             {
-                ulong ul = inStream.ReadUInt64();
+                var ul = inStream.ReadUInt64();
                 if (ul == 0xBBbbBBbbBBbbBBbb)
                 {
                     record_length = i;
@@ -178,7 +178,7 @@ namespace LibDat
         /// <param name="filePath">Path to write contents to</param>
         public void Save(string filePath)
         {
-            using (FileStream outStream = File.Open(filePath, FileMode.Create))
+            using (var outStream = File.Open(filePath, FileMode.Create))
             {
                 Save(outStream);
             }
@@ -186,7 +186,7 @@ namespace LibDat
 
         public byte[] SaveAsBytes()
         {
-            MemoryStream ms = new MemoryStream();
+            var ms = new MemoryStream();
             Save(ms);
 
             return ms.ToArray();
@@ -199,9 +199,9 @@ namespace LibDat
         public void Save(Stream rawOutStream)
         {
             // Mapping of the new string and data offsets
-            Dictionary<int, int> changedOffsets = new Dictionary<int, int>();
+            var changedOffsets = new Dictionary<int, int>();
 
-            BinaryWriter outStream = new BinaryWriter(rawOutStream, System.Text.Encoding.Unicode);
+            var outStream = new BinaryWriter(rawOutStream, System.Text.Encoding.Unicode);
             outStream.Write(Records.Count);
 
             if (Records.Count > 0)
@@ -210,14 +210,14 @@ namespace LibDat
                 outStream.Write(new byte[RecordInfo.Length * Records.Count]);
             }
 
-            int newStartOfDataSection = (int)outStream.BaseStream.Position;
+            var newStartOfDataSection = (int)outStream.BaseStream.Position;
             outStream.Write(originalDataTable);
 
             foreach (var item in DataEntries)
             {
                 if (item.Value is UnicodeString)
                 {
-                    UnicodeString str = item.Value as UnicodeString;
+                    var str = item.Value as UnicodeString;
                     if (!string.IsNullOrWhiteSpace(str.NewData))
                     {
                         str.Save(outStream);
@@ -256,7 +256,7 @@ namespace LibDat
                 if (!field.IsPointer || !field.IsString())
                     continue;
 
-                int offset = (int)record.GetFieldValue(field);
+                var offset = (int)record.GetFieldValue(field);
                 if (updatedOffsets.ContainsKey(offset))
                 {
                     //Console.WriteLine("Updating offset {0} for {1} (now {2})", offset, prop.Name, updatedOffsets[offset]);
@@ -272,7 +272,7 @@ namespace LibDat
         public string GetCSV()
         {
             const char separator = ',';
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             var fields = RecordInfo.Fields;
 
             // add header
@@ -293,7 +293,7 @@ namespace LibDat
                 // add fields
                 foreach (var field in fields)
                 {
-                    object fieldValue = record.GetFieldValue(field);
+                    var fieldValue = record.GetFieldValue(field);
                     sb.AppendFormat("{0}{1}", GetCSVString(field, fieldValue), separator);
                 }
 
@@ -317,7 +317,7 @@ namespace LibDat
                         str = DataEntries[(int)fieldValue].ToString(); break;
                     case PointerTypes.StringIndex:
                     case PointerTypes.UserStringIndex:
-                        str = '"' + DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\"") + '"'; 
+                        str = '"' + DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\"") + '"';
                         break;
                     case PointerTypes.DataIndex:
                         str = DataEntries[(int)fieldValue].ToString().Replace("\"", "\"\""); break;
@@ -325,7 +325,7 @@ namespace LibDat
             }
             if (str == null)
             {
-                String tmp = fieldValue.ToString();
+                var tmp = fieldValue.ToString();
                 str = (Regex.IsMatch(tmp, ",") ? '"' + tmp.Replace("\"", "\"\"") + '"' : tmp);
             }
             return str;
