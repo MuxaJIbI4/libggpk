@@ -16,11 +16,8 @@
 	<xs:simpleType name="pointerTypes">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="String"/>
-			<xs:enumeration value="UserString"/>
-			<xs:enumeration value="Int32"/>
-			<xs:enumeration value="UInt32"/>
-			<xs:enumeration value="UInt64"/>
 			<xs:enumeration value="StringPointer"/>
+			<xs:enumeration value="Int32"/>
 			<xs:enumeration value="Int32List"/>
 			<xs:enumeration value="UInt32List"/>
 			<xs:enumeration value="UInt64List"/>
@@ -48,6 +45,7 @@
 		<xs:complexType>
 			<xs:attributeGroup ref="fieldAttributes"/>
 			<xs:attribute name="type" type="pointerTypes" use="required"/>
+			<xs:attribute name="isUser" type="xs:boolean"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:group name="fieldGroup">

@@ -3,34 +3,31 @@
 <definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="./DatDefinitions.xsd">
 	<pointerTypes>
 		<typeDef name="String" width="4" pointerType="*string"/>
-		<typeDef name="UserString" width="4" pointerType="*string"/>
 		<typeDef name="StringPointer" width="4" pointerType="**string"/>
 		<typeDef name="Int32" width="4" pointerType="*Int32"/>
-		<typeDef name="UInt2" width="4" pointerType="*UInt32"/>
-		<typeDef name="UInt64" width="4" pointerType="*UInt64"/>
 		<typeDef name="Int32List" width="8" pointerType="int,*Int32[]"/>
 		<typeDef name="UInt32List" width="8" pointerType="int,*UInt32[]"/>
 		<typeDef name="UInt64List" width="8" pointerType="int,*UInt64[]"/>
 		<typeDef name="StringOrInt32List" width="8" pointerType="int,(*Int32[]|*String)"/>
 		<typeDef name="StringOrUInt32List" width="8" pointerType="int,(*UInt32[]|*String)"/>
 		<typeDef name="StringOrUInt64List" width="8" pointerType="int,(*UInt64[]|*String)"/>
-		<typeDef name="StringOrString2Byte" width="8" pointerType="int,(String|*String)"/>
+		<typeDef name="StringOrStringPointer2Byte" width="8" pointerType="int,(String|*String)"/>
 	</pointerTypes>
 	<records>
 		<record id="AchievementItems" length="28">
 			<pointer id="Id" type="String"/>
 			<value id="Unknown1" type="int"/>
 			<value id="Unknown2" type="int"/>
-			<pointer id="Name" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
 			<value id="Unknown4" type="int"/>
 			<value id="Unknown5" type="int"/>
 			<value id="Unknown6" type="int"/>
 		</record>
 		<record id="Achievements" length="22">
 			<pointer id="Id" type="String"/>
-			<pointer id="Description" type="UserString"/>
+			<pointer id="Description" type="String" isUser="1"/>
 			<value id="Unknown2" type="int"/>
-			<pointer id="Objective" type="UserString"/>
+			<pointer id="Objective" type="String" isUser="1"/>
 			<value id="Unknown4" type="int"/>
 			<value id="Flag0" type="bool"/>
 			<value id="Flag1" type="bool"/>
@@ -38,8 +35,8 @@
 		<record id="AchievementSets" length="0"/>
 		<record id="ActiveSkills" length="70">
 			<pointer id="NameIndex" type="String"/>
-			<pointer id="DisplayedName" type="UserString"/>
-			<pointer id="Description" type="UserString"/>
+			<pointer id="DisplayedName" type="String" isUser="1"/>
+			<pointer id="Description" type="String" isUser="1"/>
 			<pointer id="Index3" type="String"/>
 			<pointer id="IconPath" type="String"/>
 			<pointer id="Data0" type="UInt32List"/>
@@ -63,14 +60,14 @@
 		<record id="Attributes" length="0"/>
 		<record id="BackendErrors" length="8">
 			<pointer id="Id" type="String"/>
-			<pointer id="Text" type="UserString"/>
+			<pointer id="Text" type="String" isUser="1"/>
 		</record>
 		<record id="BaseItemTypes" length="176">
 			<pointer id="Index0" type="String"/>
 			<value id="ItemClass" type="int"/>
 			<value id="Width" type="int"/>
 			<value id="Height" type="int"/>
-			<pointer id="Name" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
 			<pointer id="InheritsFrom" type="String"/>
 			<value id="Item Specific Level (Reqired to use, ?Drop)" type="int"/>
 			<value id="Unknown4" type="Int64"/>
@@ -103,7 +100,7 @@
 		</record>
 		<record id="BindableVirtualKeys" length="12">
 			<value id="KeyCode" type="int"/>
-			<pointer id="Name" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
 			<pointer id="Id" type="String"/>
 		</record>
 		<record id="BloodTypes" length="60">
@@ -122,10 +119,10 @@
 		<record id="BuffCategories" length="0"/>
 		<record id="BuffDefinitions" length="64">
 			<pointer id="Id" type="String"/>
-			<pointer id="Description" type="UserString"/>
+			<pointer id="Description" type="String" isUser="1"/>
 			<value id="Invisible" type="bool"/>
 			<value id="Removable" type="bool"/>
-			<pointer id="Name" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
 			<pointer id="Data0" type="UInt64List"/>
 			<value id="Flag0" type="bool"/>
 			<value id="Unknown2" type="int"/>
@@ -170,7 +167,7 @@
 		<record id="CharacterPanelStatContexts" length="0"/>
 		<record id="CharacterPanelStats" length="57">
 			<pointer id="Id" type="String"/>
-			<pointer id="Text" type="UserString"/>
+			<pointer id="Text" type="String" isUser="1"/>
 			<pointer id="Data1" type="UInt64List"/>
 			<value id="0-7 Group?" type="int"/>
 			<value id="Null1" type="int"/>
@@ -184,11 +181,11 @@
 		<record id="CharacterPanelTabs" length="12">
 			<pointer id="Id" type="String"/>
 			<value id="Unknown2" type="int"/>
-			<pointer id="Text" type="UserString"/>
+			<pointer id="Text" type="String" isUser="1"/>
 		</record>
 		<record id="Characters" length="184">
 			<pointer id="Id" type="String"/>
-			<pointer id="Name" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
 			<pointer id="AnimatedObject" type="String"/>
 			<pointer id="Actor" type="String"/>
 			<value id="BaseMaxLife" type="int"/>
@@ -203,7 +200,7 @@
 			<value id="BaseDexterity" type="int"/>
 			<value id="BaseIntelligence" type="int"/>
 			<pointer id="Data0" type="UInt64List"/>
-			<pointer id="Description" type="UserString"/>
+			<pointer id="Description" type="String" isUser="1"/>
 			<value id="Unknown11" type="int"/>
 			<value id="Unknown12" type="int"/>
 			<value id="Unknown13" type="int"/>
@@ -236,7 +233,7 @@
 			<pointer id="Id" type="String"/>
 			<value id="Flag0" type="bool"/>
 			<value id="Unknown0" type="int"/>
-			<pointer id="Name" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
 			<pointer id="AnimatedObject" type="String"/>
 			<value id="Flag1" type="bool"/>
 			<value id="Flag2" type="bool"/>
@@ -259,11 +256,11 @@
 		</record>
 		<record id="ClientStrings" length="8">
 			<pointer id="Id" type="String"/>
-			<pointer id="Text" type="UserString"/>
+			<pointer id="Text" type="String" isUser="1"/>
 		</record>
 		<record id="Commands" length="13">
 			<pointer id="Id" type="String"/>
-			<pointer id="Command" type="UserString"/>
+			<pointer id="Command" type="String" isUser="1"/>
 			<value id="Flag0" type="bool"/>
 			<pointer id="Unknown2" type="String"/>
 		</record>
@@ -294,7 +291,7 @@
 			<pointer id="Data1" type="UInt64List"/>
 			<pointer id="Data2" type="UInt32List"/>
 			<value id="Unknown9" type="int"/>
-			<pointer id="Name" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
 			<value id="Unknown11" type="int"/>
 			<pointer id="Data3" type="UInt32List"/>
 			<value id="Unknown14" type="int"/>
@@ -309,10 +306,10 @@
 			<pointer id="Action" type="String"/>
 			<pointer id="Directions" type="String"/>
 			<value id="Unknown3" type="Int64"/>
-			<pointer id="Description" type="UserString"/>
+			<pointer id="Description" type="String" isUser="1"/>
 			<value id="Unknown4" type="Int64"/>
 			<value id="Flag1" type="bool"/>
-			<pointer id="CosmeticTypeName" type="UserString"/>
+			<pointer id="CosmeticTypeName" type="String" isUser="1"/>
 			<value id="Unknown5" type="Int64"/>
 			<value id="Unknown14" type="int"/>
 			<pointer id="Unknown15" type="String"/>
@@ -470,7 +467,7 @@
 			<pointer id="Id" type="String"/>
 			<value id="Unknown0" type="int"/>
 			<value id="Unknown1" type="int"/>
-			<pointer id="Text" type="UserString"/>
+			<pointer id="Text" type="String" isUser="1"/>
 			<pointer id="Prefix" type="String"/>
 		</record>
 		<record id="DropPool" length="8">
@@ -525,7 +522,7 @@
 		<record id="FlavourText" length="12">
 			<pointer id="Index0" type="String"/>
 			<value id="Unknown0" type="int"/>
-			<pointer id="Index1" type="UserString"/>
+			<pointer id="Index1" type="String" isUser="1"/>
 		</record>
 		<record id="GameConstants" length="8">
 			<pointer id="Index0" type="String"/>
@@ -533,7 +530,7 @@
 		</record>
 		<record id="GemTags" length="8">
 			<pointer id="Id" type="String"/>
-			<pointer id="Tag" type="UserString"/>
+			<pointer id="Tag" type="String" isUser="1"/>
 		</record>
 		<record id="GemTypes" length="0"/>
 		<record id="GlobalAudioConfig" length="8">
@@ -681,7 +678,7 @@
 		<record id="ItemClasses" length="0"/>
 		<record id="ItemClassesDisplay" length="12">
 			<pointer id="Id" type="String"/>
-			<pointer id="Name" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
 			<value id="Unknown3" type="int"/>
 		</record>
 		<record id="ItemExperiencePerLevel" length="16">
@@ -761,7 +758,7 @@
 			<value id="Unknown0" type="Int64"/>
 			<value id="Unknown1" type="Int64"/>
 			<value id="Unknown2" type="int"/>
-			<pointer id="RestrictedAreaText" type="UserString"/>
+			<pointer id="RestrictedAreaText" type="String" isUser="1"/>
 			<value id="Unknown3" type="int"/>
 			<value id="Unknown4" type="int"/>
 			<value id="Unknown5" type="int"/>
@@ -772,8 +769,8 @@
 			<value id="Unknown1" type="int"/>
 			<value id="Unknown2" type="Int64"/>
 			<pointer id="Data0" type="UInt64List"/>
-			<pointer id="Name" type="UserString"/>
-			<pointer id="Notes" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
+			<pointer id="Notes" type="String" isUser="1"/>
 			<pointer id="Data1" type="UInt32List"/>
 			<value id="Unknown7" type="int"/>
 			<value id="Act" type="int"/>
@@ -836,7 +833,7 @@
 			<value id="Stat3Group" type="Int64"/>
 			<value id="Stat4Group" type="Int64"/>
 			<value id="Domain" type="int"/>
-			<pointer id="Name" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
 			<value id="GenerationType" type="int"/>
 			<pointer id="CorrectGroup" type="String"/>
 			<value id="Stat1Min" type="int"/>
@@ -959,7 +956,7 @@
 			<value id="Unknown38" type="int"/>
 			<value id="Unknown39" type="int"/>
 			<value id="Unknown40" type="int"/>
-			<pointer id="Unknown41" type="UserString"/>
+			<pointer id="Unknown41" type="String" isUser="1"/>
 			<value id="Unknown42" type="int"/>
 			<value id="Unknown43" type="int"/>
 			<value id="Unknown44" type="int"/>
@@ -1057,7 +1054,7 @@
 		<record id="NPCTalk" length="127">
 			<value id="NPCKey" type="Int64"/>
 			<value id="Unknown2" type="int"/>
-			<pointer id="DialogueOption" type="UserString"/>
+			<pointer id="DialogueOption" type="String" isUser="1"/>
 			<pointer id="Data0" type="UInt32List"/>
 			<pointer id="Data1" type="UInt32List"/>
 			<pointer id="Data2" type="UInt32List"/>
@@ -1088,7 +1085,7 @@
 		<record id="NPCTextAudio" length="20">
 			<pointer id="Id" type="String"/>
 			<value id="Unknown0" type="Int64"/>
-			<pointer id="Text" type="UserString"/>
+			<pointer id="Text" type="String" isUser="1"/>
 			<pointer id="AudioPath" type="String"/>
 		</record>
 		<record id="PassiveSkills" length="63">
@@ -1100,7 +1097,7 @@
 			<value id="Stat3" type="int"/>
 			<value id="Stat4" type="int"/>
 			<value id="Unknown8" type="int"/>
-			<pointer id="Name" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
 			<pointer id="Data1" type="UInt64List"/>
 			<value id="IsKeystone" type="bool"/>
 			<value id="IsNotable" type="bool"/>
@@ -1130,7 +1127,7 @@
 		<record id="Quest" length="30">
 			<pointer id="Id" type="String"/>
 			<value id="Act" type="int"/>
-			<pointer id="Title" type="UserString"/>
+			<pointer id="Title" type="String" isUser="1"/>
 			<value id="Unknown3" type="int"/>
 			<pointer id="QuestIcon" type="String"/>
 			<value id="Unknown5" type="int"/>
@@ -1156,9 +1153,9 @@
 			<value id="Unknown2" type="int"/>
 			<pointer id="Data0" type="UInt32List"/>
 			<pointer id="Data1" type="UInt32List"/>
-			<pointer id="Text" type="UserString"/>
+			<pointer id="Text" type="String" isUser="1"/>
 			<value id="Flag0" type="bool"/>
-			<pointer id="Message" type="UserString"/>
+			<pointer id="Message" type="String" isUser="1"/>
 			<pointer id="Data2" type="UInt64List"/>
 			<value id="Unknown9" type="int"/>
 			<value id="Unknown10" type="int"/>
@@ -1183,7 +1180,7 @@
 		<record id="Rarity" length="0"/>
 		<record id="Realms" length="29">
 			<pointer id="Id" type="String"/>
-			<pointer id="Name" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
 			<pointer id="Server" type="UInt32List"/>
 			<value id="Flag0" type="bool"/>
 			<pointer id="Server2" type="UInt32List"/>
@@ -1196,7 +1193,7 @@
 		</record>
 		<record id="ShopCategory" length="24">
 			<pointer id="Id" type="String"/>
-			<pointer id="Unknown1" type="UserString"/>
+			<pointer id="Unknown1" type="String" isUser="1"/>
 			<pointer id="Unknown2" type="String"/>
 			<pointer id="Unknown3" type="String"/>
 			<pointer id="Unknown4" type="String"/>
@@ -1204,8 +1201,8 @@
 		</record>
 		<record id="ShopItem" length="69">
 			<pointer id="Id" type="String"/>
-			<pointer id="Name" type="UserString"/>
-			<pointer id="Description" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
+			<pointer id="Description" type="String" isUser="1"/>
 			<pointer id="Data0" type="UInt32List"/>
 			<value id="Flag0" type="bool"/>
 			<pointer id="Data1" type="UInt32List"/>
@@ -1220,7 +1217,7 @@
 		</record>
 		<record id="ShopPaymentPackage" length="43">
 			<pointer id="Id" type="String"/>
-			<pointer id="Text" type="UserString"/>
+			<pointer id="Text" type="String" isUser="1"/>
 			<value id="Coins" type="int"/>
 			<value id="Price" type="int"/>
 			<value id="AvailableFlag" type="bool"/>
@@ -1241,13 +1238,13 @@
 		<record id="Shrines" length="82">
 			<pointer id="Id" type="String"/>
 			<value id="Unknown0" type="int"/>
-			<pointer id="Name" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
 			<value id="ChargesShared?" type="bool"/>
 			<value id="Unknown2" type="int"/>
 			<value id="Unknown3" type="int"/>
 			<value id="Unknown4" type="int"/>
 			<value id="Unknown5" type="int"/>
-			<pointer id="Description" type="UserString"/>
+			<pointer id="Description" type="String" isUser="1"/>
 			<value id="Unknown7" type="Int64"/>
 			<value id="Unknown8" type="Int64"/>
 			<value id="Unknown9" type="Int64"/>
@@ -1285,7 +1282,7 @@
 			<value id="Flag2" type="bool"/>
 			<value id="Unknown2" type="int"/>
 			<value id="Flag3" type="bool"/>
-			<pointer id="Text" type="UserString"/>
+			<pointer id="Text" type="String" isUser="1"/>
 			<value id="Flag5" type="bool"/>
 			<value id="Flag6" type="bool"/>
 			<value id="StatKey1" type="int"/>
@@ -1382,7 +1379,7 @@
 		</record>
 		<record id="Tips" length="8">
 			<pointer id="Index0" type="String"/>
-			<pointer id="Unknown0" type="UserString"/>
+			<pointer id="Unknown0" type="String" isUser="1"/>
 		</record>
 		<record id="Topologies" length="28">
 			<pointer id="Id" type="String"/>
@@ -1415,13 +1412,13 @@
 		</record>
 		<record id="VoteState" length="8">
 			<pointer id="Id" type="String"/>
-			<pointer id="Text" type="UserString"/>
+			<pointer id="Text" type="String" isUser="1"/>
 		</record>
 		<record id="VoteType" length="20">
 			<pointer id="Id" type="String"/>
-			<pointer id="Text" type="UserString"/>
-			<pointer id="AcceptText" type="UserString"/>
-			<pointer id="RejectText" type="UserString"/>
+			<pointer id="Text" type="String" isUser="1"/>
+			<pointer id="AcceptText" type="String" isUser="1"/>
+			<pointer id="RejectText" type="String" isUser="1"/>
 			<value id="Unknown0" type="int"/>
 		</record>
 		<record id="WeaponArmourCommon" length="0"/>
@@ -1452,11 +1449,11 @@
 			<pointer id="Data0" type="UInt64List"/>
 			<pointer id="Data1" type="UInt32List"/>
 			<value id="Unknown6" type="int"/>
-			<pointer id="Unknown7" type="UserString"/>
+			<pointer id="Unknown7" type="String" isUser="1"/>
 		</record>
 		<record id="WorldAreas" length="235">
 			<pointer id="Id" type="String"/>
-			<pointer id="Name" type="UserString"/>
+			<pointer id="Name" type="String" isUser="1"/>
 			<value id="Act" type="int"/>
 			<value id="IsTown" type="bool"/>
 			<value id="HasWaypoint" type="bool"/>
