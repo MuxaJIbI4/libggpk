@@ -36,5 +36,7 @@ namespace LibDat.Data
         /// </summary>
         /// <param name="outStream">Stream to write contents to</param>
         public abstract void Save(BinaryWriter outStream);
+
+        public new abstract string ToString();
     }
 }

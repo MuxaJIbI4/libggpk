@@ -108,7 +108,7 @@ namespace VisualGGPK
             if (_wrapper.Records.Count <= 0)
                 return;
 
-            DatRecordInfo recordInfo = _wrapper.RecordInfo;
+            RecordInfo recordInfo = _wrapper.RecordInfo;
 
             // first column: row index
             DataGridTextColumn col_first = new DataGridTextColumn();
@@ -134,27 +134,27 @@ namespace VisualGGPK
             int row_index = 0;
             while (iter.MoveNext())
             {
-                DatRecord record = (DatRecord)iter.Current;
+                RecordData recordData = (RecordData)iter.Current;
                 var dict = new Dictionary<string, object>();
                 dict["column_0"] = row_index;
                 for (int i = 0; i < columnsCount; i++)
                 {
-                    DatRecordFieldInfo field = record.RecordInfo.Fields[i];
+                    FieldInfo field = recordData.RecordInfo.Fields[i];
                     if (_showPointerDataValue && field.IsPointer)
                     {
-                        int offset = (int)record.GetFieldValue(i);
+                        int offset = (int)recordData.GetFieldValue(i);
                         if (_wrapper.DataEntries.ContainsKey(offset))
                         {
                             dict["column_" + (i + 1)] = "*" + offset + " = " + _wrapper.DataEntries[offset];
                         }
                         else
                         {
-                            dict["column_" + (i + 1)] = record.GetFieldValue(i) + " (Unknown offset)";
+                            dict["column_" + (i + 1)] = recordData.GetFieldValue(i) + " (Unknown offset)";
                         }
                     }
                     else
                     {
-                        dict["column_" + (i + 1)] = record.GetFieldValue(i);
+                        dict["column_" + (i + 1)] = recordData.GetFieldValue(i);
                     }
                 }
                 row_index++;
@@ -175,7 +175,7 @@ namespace VisualGGPK
         private void reload_XML_Click(object sender, RoutedEventArgs e)
         {
             // update records info
-            DatRecordInfoFactory.updateRecordsInfo();
+            RecordFactory.UpdateRecordsInfo();
             // reset files
             Reset(FileName, _data);
         }

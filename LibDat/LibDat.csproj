@@ -42,19 +42,20 @@
   <ItemGroup>
     <Compile Include="Data\AbstractDataList.cs" />
     <Compile Include="Data\AbstractData.cs" />
-    <Compile Include="Data\DataReader.cs" />
     <Compile Include="Data\PointerData.cs" />
-    <Compile Include="DatRecord.cs" />
+    <Compile Include="FieldData.cs" />
+    <Compile Include="RecordData.cs" />
     <Compile Include="Data\Int32List.cs" />
-    <Compile Include="DatRecordInfoFactory.cs" />
+    <Compile Include="RecordFactory.cs" />
+    <Compile Include="FieldTypeInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DatContainer.cs" />
-    <Compile Include="DatRecordFieldInfo.cs" />
+    <Compile Include="FieldInfo.cs" />
     <Compile Include="Data\UInt32List.cs" />
     <Compile Include="Data\UInt64List.cs" />
     <Compile Include="Data\UnicodeString.cs" />
     <Compile Include="Data\UnknownData.cs" />
-    <Compile Include="DatRecordInfo.cs" />
+    <Compile Include="RecordInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DatDefinitions.xml">

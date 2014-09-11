@@ -17,7 +17,7 @@ namespace VisualGGPK
 
         private DatContainer _dat;
 
-        public DatRecordInfo RecordInfo
+        public RecordInfo RecordInfo
         {
             get { return _dat.RecordInfo; }
         }
@@ -32,7 +32,7 @@ namespace VisualGGPK
             get { return _dat.DataSectionDataLength; }
 
         }
-        public List<DatRecord> Records
+        public List<RecordData> Records
         {
             get { return _dat.Records; }
         }

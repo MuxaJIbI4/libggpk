@@ -21,10 +21,12 @@ namespace LibDat.Data
         /// The replacement string. If this is set then it will replace the original string when it's saved.
         /// </summary>
         public string NewData { get; set; }
-        /// <summary>
-        /// Determins if this UnicodeString is a translatable string (eg: not used as an id, path, etc)
-        /// </summary>
-        public bool IsUserString { get; private set; }
+        
+//        /// <summary>
+//        /// Determins if this UnicodeString is a translatable string (eg: not used as an id, path, etc)
+//        /// </summary>
+//        public bool IsUserString { get; private set; }
+        
         /// <summary>
         /// Offset of the new string with respect to the beginning of the data section. This will be invalid until save is called.
         /// </summary>
@@ -44,19 +46,17 @@ namespace LibDat.Data
             _dataTableOffset = dataTableOffset;
             Offset = offset;
             NewData = null;
-            IsUserString = false;
 
             Data = data;
         }
 
-        public UnicodeString(int offset, int dataTableOffset, BinaryReader inStream, bool isUserString)
+        public UnicodeString(int offset, int dataTableOffset, BinaryReader inStream)
             : base(offset, dataTableOffset)
         {
             _dataTableOffset = dataTableOffset;
             Offset = offset;
 
             NewData = null;
-            IsUserString = isUserString;
 
             inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
             ReadData(inStream);
