@@ -27,7 +27,7 @@
 			<xs:enumeration value="StringOrInt32List"/>
 			<xs:enumeration value="StringOrUInt32List"/>
 			<xs:enumeration value="StringOrUInt64List"/>
-			<xs:enumeration value="StringOrString2Byte"/>
+			<xs:enumeration value="StringOrStringPointer2Byte"/>
 			<!-- 4-byte pointers -->
 			<!-- 8-byte pointers -->
 		</xs:restriction>
@@ -65,25 +65,32 @@
 			<xs:attribute name="length" type="xs:nonNegativeInteger" use="optional"/>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="records">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="record" minOccurs="0" maxOccurs="unbounded"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+	<xs:element name="records"/>
 	<xs:element name="typeDef">
 		<xs:complexType>
 			<xs:attribute name="name" use="required"/>
+			<xs:attribute name="width" use="required"/>
 			<xs:attribute name="pointerType" use="required"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="definitions">
 		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="records"/>
-				<xs:element ref="typeDef" minOccurs="0"/>
-			</xs:sequence>
+			<xs:all>
+				<xs:element name="records" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="record" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="pointerTypes" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="typeDef" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>
