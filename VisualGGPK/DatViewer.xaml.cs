@@ -1,5 +1,4 @@
 ﻿using LibDat;
-using LibDat.Data;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,7 @@ namespace VisualGGPK
     /// <summary>
     /// Interaction logic for DatViewer.xaml
     /// </summary>
-    public partial class DatViewer : UserControl
+    public partial class DatViewer
     {
         private DatWrapper _wrapper;
         private byte[] _data;
@@ -22,19 +21,14 @@ namespace VisualGGPK
 
         private string FileName { get; set; }
 
-        public List<UnicodeString> DataStrings
+        public List<DatString> DataStrings
         {
-            get {
-                return _wrapper == null ? new List<UnicodeString>() :_wrapper.Strings;
-            }
+            get { return _wrapper == null ? new List<DatString>() : _wrapper.Strings; }
         }
 
         private IEnumerable Records
         {
-            get
-            {
-                return _wrapper.Records;
-            }
+            get { return _wrapper.Records; }
         }
 
         public DatViewer(string filename, Stream inStream)
@@ -105,7 +99,7 @@ namespace VisualGGPK
             var recordInfo = _wrapper.RecordInfo;
 
             // first column: row index
-            var colFirst = new DataGridTextColumn {Header = "Row", Binding = new Binding("column_0")};
+            var colFirst = new DataGridTextColumn { Header = "Row", Binding = new Binding("column_0") };
             dataGridRecords.Columns.Add(colFirst);
 
             // field columns 
@@ -146,10 +140,10 @@ namespace VisualGGPK
                     }
                     else
                     {
-                        str = fieldData.FieldInfo.IsPointer 
-                            ? fieldData.GetOffsetPrefix() 
+                        str = fieldData.FieldInfo.IsPointer
+                            ? fieldData.GetOffsetPrefix()
                             : fieldData.Value.ToString();
-                        
+
                     }
                     dict["column_" + (i + 1)] = str;
                 }

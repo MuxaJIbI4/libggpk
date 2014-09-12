@@ -9,10 +9,49 @@ using System.Windows;
 
 namespace VisualGGPK
 {
+    public class DatString
+    {
+        private readonly AbstractData _data;
+        private readonly bool _isUser;
+
+        public string DataType { get { return _data.GetType().ToString().Replace("LibDat.Data.", ""); } }
+
+        public int OffsetStart { get { return _data.Offset; } }
+
+        public int OffsetEnd { get { return _data.Offset + _data.Length; } }
+
+        public int Length { get { return _data.Length; } }
+
+        public string Value { get { return _data.GetValueString(); } }
+
+        public bool IsUser { get { return _isUser; } }
+
+        public string NewValue
+        {
+            get
+            {
+                var str = _data as UnicodeString;
+                return (str == null ? "" : str.NewData);
+            }
+            set
+            {
+                var str = _data as UnicodeString;
+                if (str != null)
+                    str.NewData = value;
+            }
+        }
+
+        public DatString(AbstractData data, bool isUser)
+        {
+            _data = data;
+            _isUser = isUser;
+        }
+    }
+
     public class DatWrapper
     {
         private readonly string _datName;
-        private readonly List<UnicodeString> _dataStrings = new List<UnicodeString>();
+
 
         private DatContainer _dat;
 
@@ -40,7 +79,8 @@ namespace VisualGGPK
             get { return _dat.DataEntries; }
         }
 
-        public List<UnicodeString> Strings
+        private readonly List<DatString> _dataStrings = new List<DatString>();
+        public List<DatString> Strings
         {
             get { return _dataStrings; }
         }
@@ -63,51 +103,19 @@ namespace VisualGGPK
             ParseDatFile(inStream);
         }
 
-
         private void ParseDatFile(Stream inStream)
         {
-            _dat = new DatContainer(inStream, _datName);
-
             try
             {
-                var containerData = DataEntries.ToList();
+                _dat = new DatContainer(inStream, _datName);
 
+                var containerData = DataEntries.ToList();
+                var userStringOffsets = _dat.GetUserStringOffsets();
                 foreach (var keyValuePair in containerData)
                 {
                     var data = keyValuePair.Value;
-                    var s = data as UnicodeString;
-                    if (s != null)
-                    {
-                        Strings.Add(s);
-                        continue;
-                    }
-
-                    var int64 = data as ListUInt64;
-                    if (int64 != null)
-                    {
-                        Strings.Add(
-                            new UnicodeString(int64.Offset, int64.DataTableOffset,
-                                int64.GetValueString(), int64.ListLength * 8));
-                        continue;
-                    }
-
-                    var uInt32 = data as ListUInt32;
-                    if (uInt32 != null)
-                    {
-                        Strings.Add(
-                            new UnicodeString(uInt32.Offset, uInt32.DataTableOffset,
-                                uInt32.GetValueString(), uInt32.ListLength * 4));
-                        continue;
-                    }
-
-                    var int32 = data as ListInt32;
-                    if (int32 != null)
-                    {
-                        var ul = int32;
-                        Strings.Add(
-                            new UnicodeString(int32.Offset, int32.DataTableOffset,
-                                int32.GetValueString(), int32.ListLength * 4));
-                    }
+                    var isUser = userStringOffsets.Contains(keyValuePair.Key);
+                    Strings.Add(new DatString(data, isUser));
                 }
             }
             catch (Exception ex)
