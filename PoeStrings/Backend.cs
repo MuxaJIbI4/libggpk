@@ -12,6 +12,7 @@ using LibDat.Data;
 using LibGGPK;
 using LibGGPK.Records;
 using PoeStrings.Properties;
+using FieldInfo = System.Reflection.FieldInfo;
 
 namespace PoeStrings
 {
@@ -138,28 +139,40 @@ namespace PoeStrings
 				// Dat parser for changing the actual strings
 				DatContainer dc = new DatContainer(new MemoryStream(datBytes), datTranslation.Value.DatName);
 
-				// Replace the actual strings
-				foreach (var item in dc.DataEntries)
-				{
-					UnicodeString currentDatString = (item.Value as UnicodeString);
-					if (currentDatString == null || !currentDatString.IsUserString)
-					{
-						continue;
-					}
+				
+                // Get field which can contain user strings
+			    var indexes = dc.RecordInfo.Fields
+                    .Where(f => f.IsUser).Where(f => f.IsPointer)
+                    .Select(f => f.Index);
 
-					if (!translationsToApply.ContainsKey(currentDatString.Data))
-					{
-						continue;
-					}
+                // Replace the actual strings
+			    foreach (var recordData in dc.Records)
+			    {
+                    foreach (var index in indexes)
+                    {
+                        var fieldData = recordData.FieldsData[index];
+                        // TODO: this will  not work on nested pointers: fieldData.Data == PointerData
+                        var offset = (fieldData.ValueOffset == 0 ? fieldData.Offset : fieldData.ValueOffset);
+                        var currentDatString = dc.DataEntries[offset] as UnicodeString;
+                        if (currentDatString == null)
+                            continue;
 
-					Translation translationBeingApplied = translationsToApply[currentDatString.Data];
-					currentDatString.NewData = translationBeingApplied.TranslatedText;
+                        if (!translationsToApply.ContainsKey(currentDatString.Data))
+                            continue;
 
-					outputBuffer.AppendLine(string.Format(Settings.Strings["ApplyTranslations_TextReplaced"], translationBeingApplied.ShortNameCurrent, translationBeingApplied.ShortNameTranslated));
-					translationBeingApplied.Status = Translation.TranslationStatus.AlreadyApplied;
-				}
+                        // TODO skip already strings already procesed in this loops
+                        var translationBeingApplied = translationsToApply[currentDatString.Data];
+                        currentDatString.NewData = translationBeingApplied.TranslatedText;
 
-				// dc.SaveAsBytes() will return the new data for this .dat file after replacing the original strings with whatever's in 'NewData'
+                        outputBuffer.AppendLine(string.Format(
+                            Settings.Strings["ApplyTranslations_TextReplaced"], 
+                            translationBeingApplied.ShortNameCurrent, 
+                            translationBeingApplied.ShortNameTranslated));
+                        translationBeingApplied.Status = Translation.TranslationStatus.AlreadyApplied;
+                    }
+			    }
+				
+                // dc.SaveAsBytes() will return the new data for this .dat file after replacing the original strings with whatever's in 'NewData'
 				datRecord.ReplaceContents(ggpkPath, dc.SaveAsBytes(), content.FreeRoot);
 			}
 
