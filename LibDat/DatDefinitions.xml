@@ -71,7 +71,7 @@
 			<pointer id="InheritsFrom" type="String"/>
 			<value id="Item Specific Level (Reqired to use, ?Drop)" type="int"/>
 			<value id="Unknown4" type="Int64"/>
-			<pointer id="Data0" type="UInt64List"/>
+			<pointer id="Data0" type="StringOrUInt32List"/>
 			<value id="Unknown6" type="int"/>
 			<value id="Unknown7" type="int"/>
 			<value id="Unknown8" type="int"/>
@@ -79,17 +79,21 @@
 			<value id="Unknown10" type="Int64"/>
 			<pointer id="Data1" type="UInt32List"/>
 			<pointer id="Data2" type="UInt32List"/>
-			<pointer id="Data3" type="UInt32List"/>
-			<pointer id="Data4" type="UInt32List"/>
-			<pointer id="Data5" type="UInt64List"/>
+			<pointer id="Data3" type="StringOrUInt32List"/>
+			<pointer id="Data4" type="StringOrInt32List"/>
+			<pointer id="Data5" type="StringOrUInt32List"/>
 			<value id="Unknown16" type="int"/>
 			<value id="Unknown17" type="Int64"/>
 			<value id="Unknown18" type="int"/>
 			<pointer id="Data6" type="UInt32List"/>
 			<value id="Unknown34" type="Int64"/>
+			<value id="?Data7_Length" type="int"/>
 			<pointer id="Data7" type="String"/>
+			<value id="?Data8_Length" type="int"/>
 			<pointer id="Data8" type="String"/>
+			<value id="?Data9_Length" type="int"/>
 			<pointer id="Data9" type="String"/>
+			<value id="?Data10_Length" type="int"/>
 			<pointer id="Data10" type="String"/>
 		</record>
 		<record id="BeyondDemons" length="10">
@@ -295,7 +299,7 @@
 			<value id="Unknown11" type="int"/>
 			<pointer id="Data3" type="UInt32List"/>
 			<value id="Unknown14" type="int"/>
-			<pointer id="Sockets" type="UInt32"/>
+			<pointer id="Sockets" type="Int32"/>
 			<value id="Unknown16" type="int"/>
 			<value id="Unknown17" type="int"/>
 		</record>
@@ -581,7 +585,7 @@
 			<pointer id="Unknown0" type="String"/>
 			<value id="Unknown1" type="int"/>
 			<value id="Unknown2" type="int"/>
-			<pointer id="AnimationStringPtr" type="UInt32"/>
+			<pointer id="AnimationStringPtr" type="Int32"/>
 			<value id="Unknown4" type="int"/>
 			<value id="Unknown5" type="int"/>
 			<value id="Unknown6" type="Int64"/>
@@ -1400,7 +1404,7 @@
 			<value id="Unknown6" type="int"/>
 			<pointer id="Data0" type="UInt64List"/>
 			<value id="Unknown9" type="int"/>
-			<value id="Data1" type="int"/>
+			<pointer id="Data1" type="UInt32List"/>
 			<pointer id="Unknown12" type="String"/>
 		</record>
 		<record id="UniqueSetNames" length="0"/>
