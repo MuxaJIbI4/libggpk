@@ -175,7 +175,22 @@ namespace LibDat
             foreach (var fieldData in recordData.FieldsData.Where(fieldData => fieldData.FieldInfo.IsPointer))
             {
 //                Console.WriteLine("Processing field " + recordData.FieldsData.IndexOf(fieldData));
-                fieldData.FieldInfo.FieldType.PointerReader(inStream, fieldData, DataSectionOffset, DataEntries);
+                try
+                {
+                    fieldData.FieldInfo.FieldType.PointerReader(inStream, fieldData, DataSectionOffset, DataEntries);
+                }
+                catch (Exception e)
+                {
+                    var error = String.Format(
+                        "Error: Dat={0}, Row Index={1}, Field Id={2}, Field Type Name = {3}, Field Value = {4}" +
+                        "\n Message:{5}\n Stacktrace: {6}" ,
+                        DatName, rIndex, fieldData.FieldInfo.Id, 
+                        fieldData.FieldInfo.FieldType.Name, fieldData.GetOffsetPrefix(),
+                        e.Message, e.StackTrace);
+                    Console.WriteLine(error);
+                    throw new Exception(error);
+                }
+                
             }
         }
 
@@ -201,7 +216,7 @@ namespace LibDat
         }
 
         /// <summary>
-        /// Saves parsed data to specified stream
+        /// Saves possibly changed data to specified stream
         /// </summary>
         /// <param name="rawOutStream">Stream to write contents to</param>
         public void Save(Stream rawOutStream)
@@ -241,6 +256,35 @@ namespace LibDat
                 r.UpdateDataOffsets(changedOffsets);
                 r.Save(outStream);
             }
+        }
+
+        public IList<UnicodeString> GetUserStrings()
+        {
+            var offsets = GetUserStringOffsets();
+            return offsets.Select(offset => DataEntries[offset]).Cast<UnicodeString>().ToList();
+        }
+
+        public IList<int> GetUserStringOffsets()
+        {
+            var result = new List<int>();
+
+            // Get field which can contain user strings
+            var indexes = RecordInfo.Fields.Where(f => f.IsPointer && f.IsUser).Select(f => f.Index).ToList();
+
+            // Replace the actual strings
+            foreach (var recordData in Records)
+            {
+                foreach (var index in indexes)
+                {
+                    var fieldData = recordData.FieldsData[index];
+                    // TODO: this will  not work on nested pointers: fieldData.Data == PointerData
+                    var offset = (fieldData.ValueOffset == 0 ? fieldData.Offset : fieldData.ValueOffset);
+                    var currentDatString = DataEntries[offset] as UnicodeString;
+                    if (currentDatString != null)
+                        result.Add(offset);
+                }
+            }
+            return result;
         }
 
         /// <summary>
@@ -286,7 +330,6 @@ namespace LibDat
             string str;
             if (fieldData.FieldInfo.IsPointer)  
             {
-                // use overrided in AbstractData subclass function ToString;
                 var offset = fieldData.Offset;
                 if (DataEntries.ContainsKey(offset))
                 {
@@ -306,7 +349,7 @@ namespace LibDat
                 str = fieldData.Value.ToString();
             }
 
-            str = (Regex.IsMatch(str, ",") ? String.Format("{0}", str.Replace("\"", "\"\"") ) : str);
+            str = (Regex.IsMatch(str, ",") ? String.Format("\"{0}\"", str.Replace("\"", "\"\"") ) : str);
             return str;
         }
     }
