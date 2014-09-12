@@ -118,6 +118,7 @@ namespace VisualGGPK
                     catch (Exception ex)
                     {
                         Output(string.Format(Settings.Strings["Error_Read_Directory_Tree"], ex.Message));
+                        Output(ex.StackTrace);
                         return;
                     }
 
