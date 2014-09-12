@@ -4,18 +4,18 @@ using System.IO;
 namespace LibDat.Data
 {
     /// <summary>
-    /// Represents a list of UInt64 found in the resource section of a .dat file
+    /// Represents a list of UInt32 found in the resource section of a .dat file
     /// </summary>
-    public class UInt64List : AbstractDataList<UInt64>
+    public class ListUInt32 : AbstractDataList<UInt32>
     {
-        public UInt64List(int offset, int dataTableOffset, int listLength, BinaryReader inStream)
+        public ListUInt32(int offset, int dataTableOffset, int listLength, BinaryReader inStream)
             : base(offset, dataTableOffset, listLength, inStream) { }
 
         protected override void ReadData(BinaryReader inStream)
         {
             while (inStream.BaseStream.Position < inStream.BaseStream.Length)
             {
-                var u = inStream.ReadUInt64();
+                var u = inStream.ReadUInt32();
                 Data.Add(u);
                 break;
             }
