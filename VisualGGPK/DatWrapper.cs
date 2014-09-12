@@ -11,8 +11,7 @@ namespace VisualGGPK
 {
     public class DatWrapper
     {
-        private string fileName;
-        private string datName;
+        private readonly string _datName;
         private readonly List<UnicodeString> _dataStrings = new List<UnicodeString>();
 
         private DatContainer _dat;
@@ -43,20 +42,16 @@ namespace VisualGGPK
 
         public List<UnicodeString> Strings
         {
-            get
-            {
-                return _dataStrings;
-            }
+            get { return _dataStrings; }
         }
 
         public DatWrapper(string fileName)
         {
-            this.fileName = fileName;
-            this.datName = Path.GetFileNameWithoutExtension(fileName);
+            _datName = Path.GetFileNameWithoutExtension(fileName);
 
-            byte[] fileBytes = File.ReadAllBytes(fileName);
+            var fileBytes = File.ReadAllBytes(fileName);
 
-            using (MemoryStream ms = new MemoryStream(fileBytes))
+            using (var ms = new MemoryStream(fileBytes))
             {
                 ParseDatFile(ms);
             }
@@ -64,15 +59,14 @@ namespace VisualGGPK
 
         public DatWrapper(Stream inStream, string fileName)
         {
-            this.fileName = fileName;
-            this.datName = Path.GetFileNameWithoutExtension(fileName);
+            _datName = Path.GetFileNameWithoutExtension(fileName);
             ParseDatFile(inStream);
         }
 
 
         private void ParseDatFile(Stream inStream)
         {
-            _dat = new DatContainer(inStream, datName);
+            _dat = new DatContainer(inStream, _datName);
 
             try
             {
@@ -80,24 +74,39 @@ namespace VisualGGPK
 
                 foreach (var keyValuePair in containerData)
                 {
-                    if (keyValuePair.Value is UnicodeString)
+                    var data = keyValuePair.Value;
+                    var s = data as UnicodeString;
+                    if (s != null)
                     {
-                        Strings.Add((UnicodeString)keyValuePair.Value);
+                        Strings.Add(s);
+                        continue;
                     }
-                    else if (keyValuePair.Value is UInt64List)
+
+                    var int64 = data as ListUInt64;
+                    if (int64 != null)
                     {
-                        UInt64List ul = (UInt64List)keyValuePair.Value;
-                        Strings.Add((UnicodeString)new UnicodeString(ul.Offset, ul.DataTableOffset, ul.ToString()));
+                        Strings.Add(
+                            new UnicodeString(int64.Offset, int64.DataTableOffset,
+                                int64.GetValueString(), int64.ListLength * 8));
+                        continue;
                     }
-                    else if (keyValuePair.Value is UInt32List)
+
+                    var uInt32 = data as ListUInt32;
+                    if (uInt32 != null)
                     {
-                        UInt32List ul = (UInt32List)keyValuePair.Value;
-                        Strings.Add((UnicodeString)new UnicodeString(ul.Offset, ul.DataTableOffset, ul.ToString()));
+                        Strings.Add(
+                            new UnicodeString(uInt32.Offset, uInt32.DataTableOffset,
+                                uInt32.GetValueString(), uInt32.ListLength * 4));
+                        continue;
                     }
-                    else if (keyValuePair.Value is Int32List)
+
+                    var int32 = data as ListInt32;
+                    if (int32 != null)
                     {
-                        Int32List ul = (Int32List)keyValuePair.Value;
-                        Strings.Add((UnicodeString)new UnicodeString(ul.Offset, ul.DataTableOffset, ul.ToString()));
+                        var ul = int32;
+                        Strings.Add(
+                            new UnicodeString(int32.Offset, int32.DataTableOffset,
+                                int32.GetValueString(), int32.ListLength * 4));
                     }
                 }
             }
@@ -115,9 +124,9 @@ namespace VisualGGPK
             }
             catch (Exception ex)
             {
-                StringBuilder errorString = new StringBuilder();
+                var errorString = new StringBuilder();
 
-                Exception temp = ex;
+                var temp = ex;
                 while (temp != null)
                 {
                     errorString.AppendLine(temp.Message);

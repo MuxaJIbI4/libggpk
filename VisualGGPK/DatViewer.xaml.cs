@@ -4,11 +4,8 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using VisualGGPK.Properties;
 using System.Windows.Data;
 using System.Collections;
 
@@ -23,19 +20,16 @@ namespace VisualGGPK
         private byte[] _data;
         private bool _showPointerDataValue;
 
-        public string FileName { get; set; }
+        private string FileName { get; set; }
+
         public List<UnicodeString> DataStrings
         {
-            get
-            {
-                if (_wrapper != null)
-                    return _wrapper.Strings;
-                else
-                    return new List<UnicodeString>();
+            get {
+                return _wrapper == null ? new List<UnicodeString>() :_wrapper.Strings;
             }
         }
 
-        public System.Collections.IEnumerable Records
+        private IEnumerable Records
         {
             get
             {
@@ -83,7 +77,7 @@ namespace VisualGGPK
             FileName = filename;
             _data = data;
 
-            using (MemoryStream ms = new MemoryStream(data))
+            using (var ms = new MemoryStream(data))
             {
                 _wrapper = new DatWrapper(ms, filename);
             }
@@ -108,56 +102,58 @@ namespace VisualGGPK
             if (_wrapper.Records.Count <= 0)
                 return;
 
-            RecordInfo recordInfo = _wrapper.RecordInfo;
+            var recordInfo = _wrapper.RecordInfo;
 
             // first column: row index
-            DataGridTextColumn col_first = new DataGridTextColumn();
-            col_first.Header = "Row";
-            col_first.Binding = new Binding("column_0");
-            dataGridRecords.Columns.Add(col_first);
+            var colFirst = new DataGridTextColumn {Header = "Row", Binding = new Binding("column_0")};
+            dataGridRecords.Columns.Add(colFirst);
 
             // field columns 
-            int i = 1;
-            foreach (var field in recordInfo.Fields)
+            var i = 1;
+            foreach (var fieldInfo in recordInfo.Fields)
             {
-                DataGridTextColumn col = new DataGridTextColumn();
-                col.Header = field.ToString("\n");
+                var col = new DataGridTextColumn();
+                col.Header = fieldInfo.ToString("\n");
                 col.Binding = new Binding("column_" + i++);
                 dataGridRecords.Columns.Add(col);
             }
             dataGridRecords.ItemsSource = GenerateData(Records, recordInfo.Fields.Count).ToDataSource();
         }
 
-        public IEnumerable<IDictionary> GenerateData(IEnumerable records, int columnsCount)
+        private IEnumerable<IDictionary> GenerateData(IEnumerable records, int columnsCount)
         {
-            IEnumerator iter = records.GetEnumerator();
-            int row_index = 0;
+            var iter = records.GetEnumerator();
+            var rowIndex = 0;
             while (iter.MoveNext())
             {
-                RecordData recordData = (RecordData)iter.Current;
+                var recordData = (RecordData)iter.Current;
                 var dict = new Dictionary<string, object>();
-                dict["column_0"] = row_index;
-                for (int i = 0; i < columnsCount; i++)
+                dict["column_0"] = rowIndex;
+                for (var i = 0; i < columnsCount; i++)
                 {
-                    FieldInfo field = recordData.RecordInfo.Fields[i];
-                    if (_showPointerDataValue && field.IsPointer)
+                    // TODO: add offset
+                    var fieldData = recordData.FieldsData[i];
+                    string str;
+                    if (_showPointerDataValue && fieldData.FieldInfo.IsPointer)
                     {
-                        int offset = (int)recordData.GetFieldValue(i);
-                        if (_wrapper.DataEntries.ContainsKey(offset))
-                        {
-                            dict["column_" + (i + 1)] = "*" + offset + " = " + _wrapper.DataEntries[offset];
-                        }
-                        else
-                        {
-                            dict["column_" + (i + 1)] = recordData.GetFieldValue(i) + " (Unknown offset)";
-                        }
+                        var offset = (fieldData.ValueOffset == 0 ? fieldData.Offset : fieldData.ValueOffset);
+                        var prefix = fieldData.GetTypePointerPrefix();
+                        //  TODO: now in case of PointerData prefix contains Offset instead of PointerOffset
+                        var value = _wrapper.DataEntries.ContainsKey(offset)
+                            ? _wrapper.DataEntries[offset].GetValueString()
+                            : "(Error: Unknown Data)";
+                        str = String.Format("{0} = {1}", prefix, value);
                     }
                     else
                     {
-                        dict["column_" + (i + 1)] = recordData.GetFieldValue(i);
+                        str = fieldData.FieldInfo.IsPointer 
+                            ? fieldData.GetTypePointerPrefix() 
+                            : fieldData.Value.ToString();
+                        
                     }
+                    dict["column_" + (i + 1)] = str;
                 }
-                row_index++;
+                rowIndex++;
                 yield return dict;
             }
         }
@@ -193,7 +189,7 @@ namespace VisualGGPK
         void hadnle_showPointerData(CheckBox checkBox)
         {
             // Use IsChecked.
-            bool flag = checkBox.IsChecked.Value;
+            var flag = checkBox.IsChecked.Value;
 
             if (flag != _showPointerDataValue)
             {
@@ -205,7 +201,7 @@ namespace VisualGGPK
 
         private void SaveDat()
         {
-            SaveFileDialog sfd = new SaveFileDialog();
+            var sfd = new SaveFileDialog();
             sfd.DefaultExt = ".dat";
             sfd.FileName = Path.GetFileNameWithoutExtension(FileName) + "_NEW.dat";
 
@@ -217,7 +213,7 @@ namespace VisualGGPK
 
         private void ExportCSV()
         {
-            SaveFileDialog sfd = new SaveFileDialog();
+            var sfd = new SaveFileDialog();
             sfd.FileName = Path.GetFileNameWithoutExtension(FileName) + ".csv";
 
             if (sfd.ShowDialog() == true)
