@@ -5,26 +5,29 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Properties="clr-namespace:VisualGGPK.Properties"
 			 mc:Ignorable="d" 
 			 d:DesignHeight="300" d:DesignWidth="300">
-	<Grid>
-		<Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="auto"/>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="auto"/>
-		</Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical">
-            <Label Name="datInfo"/>
-            <CheckBox Name="showPointerData" Checked="showPointerData_Checked" Unchecked="showPointerData_Unchecked"
-                      Content="{x:Static Properties:Resources.DatViewer_ShowPointerDataDesciption}"/>
+            <Label Name="datName" FontWeight="Bold" FontSize="14"/>
+            <Label Name="datInfo" />
+            <StackPanel Orientation="Horizontal" Height="20">
+                <Button Margin="5 0 5 0" x:Name="reloadXML" Click="reload_XML_Click" Content="{x:Static Properties:Resources.DatViewer_Button_Reload_XML}" />
+                <Button Margin="5 0 5 0" x:Name="buttonSave" Click="buttonSave_Click_1" Content="{x:Static Properties:Resources.DatViewer_Button_Save}" />
+                <Button Margin="5 0 5 0" x:Name="buttonExportCSV" Click="buttonExportCSV_Click_1" Content="{x:Static Properties:Resources.DatViewer_Button_ExportCSV}"/>
+            </StackPanel>
+            <CheckBox x:Name="showPointerData" Margin="5"
+            	Checked="showPointerData_Checked"
+            	Unchecked="showPointerData_Unchecked"
+            	Content="{x:Static Properties:Resources.DatViewer_ShowPointerDataDesciption}"/>
         </StackPanel>
-		<DataGrid Grid.Row="1" Name="dataGridRecords" AutoGenerateColumns="False"/>
-		<GridSplitter Grid.Row="2" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Height="4" />
-		<DataGrid Grid.Row="3" Name="dataGridData" AutoGenerateColumns="True" ItemsSource="{Binding DataStrings}" />
-		<StackPanel Grid.Row="4" HorizontalAlignment="Center" Orientation="Horizontal">
-            <Button Margin="5 0 5 0" Name="reloadXML" Click="reload_XML_Click" Content="{x:Static Properties:Resources.DatViewer_Button_Reload_XML}" />
-			<Button Margin="5 0 5 0" Name="buttonSave" Click="buttonSave_Click_1" Content="{x:Static Properties:Resources.DatViewer_Button_Save}" />
-			<Button Margin="5 0 5 0" Name="buttonExportCSV" Click="buttonExportCSV_Click_1" Content="{x:Static Properties:Resources.DatViewer_Button_ExportCSV}"/>
-		</StackPanel>
-	</Grid>
+        <DataGrid Grid.Row="1" Name="dataGridRecords" AutoGenerateColumns="False"/>
+        <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Height="4" />
+        <DataGrid Grid.Row="3" Name="dataGridData" AutoGenerateColumns="True" ItemsSource="{Binding DataStrings}" />
+    </Grid>
 </UserControl>

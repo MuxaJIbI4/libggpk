@@ -12,87 +12,81 @@
         PreviewDrop="Window_PreviewDrop_1" 
         Closing="Window_Closing_1">
     <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="200"/>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" MinWidth="200"/>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-
-                <TreeView  x:Name="TreeView1" 
+            <TreeView  x:Name="TreeView1" 
         			PreviewMouseDown         = "OnTreeViewMouseDown"
         			SelectedItemChanged      = "OnTreeViewSelectedItemChanged"
         			TreeViewItem.Expanded    = "OnTreeViewItemExpanded"
         			VirtualizingStackPanel.IsVirtualizing="True"
         			VirtualizingStackPanel.VirtualizationMode="Recycling" >
-                    <TreeView.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem x:Name="MenuItemExport" 
+                <TreeView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="MenuItemExport" 
         						Header="{x:Static Properties:Resources.MainWindow_Menu_Export}"
         						Click="OnItemContextMenuExportClicked" IsEnabled="False" />
-                            <MenuItem x:Name="MenuItemReplace" 
+                        <MenuItem x:Name="MenuItemReplace" 
         						Header="{x:Static Properties:Resources.MainWindow_Menu_Replace}" 
         						Click="OnItemContextMenuReplaceClicked" IsEnabled="False"/>
-                            <MenuItem x:Name="MenuItemOpen" 
+                        <MenuItem x:Name="MenuItemOpen" 
         						Header="{x:Static Properties:Resources.MainWindow_Menu_View}"
         						Click="OnItemContextMenuOpenClicked" IsEnabled="False" />
-                            <MenuItem x:Name="MenuItemDelete" 
+                        <MenuItem x:Name="MenuItemDelete" 
         						Header="{x:Static Properties:Resources.MainWindow_Menu_Delete}"
         						Click="OnItemContextMenuDeleteClicked" IsEnabled="True" />
-                        </ContextMenu>
-                    </TreeView.ContextMenu>
-                </TreeView>
-                <StackPanel Grid.Row="1" >
-                    <Button Content="Save" Click="OnSaveClicked" Width ="50"/>
-                </StackPanel>
-            </Grid>
+                    </ContextMenu>
+                </TreeView.ContextMenu>
+            </TreeView>
+            <StackPanel Grid.Row="1" >
+                <Button Content="Save" Click="OnSaveClicked" Width ="50"/>
+            </StackPanel>
+        </Grid>
 
-            <GridSplitter Grid.Column="0" Width="3" Visibility="Visible" />
+        <GridSplitter Grid.Column="0" Width="3" Visibility="Visible" />
 
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                <!--different viewers for different types of files-->
-                <local:DatViewer x:Name="DatViewerOutput" Visibility="Hidden"/>
-                <TextBox Grid.Row="0" x:Name="TextBoxOutput" TextWrapping="Wrap" 
-                        VerticalScrollBarVisibility="Auto" Visibility="Visible" 
-                        FontFamily="Consolas" FontSize="13" IsReadOnly="True"/>
-                <Image Grid.Row="0" x:Name="ImageOutput" Stretch="None" Visibility="Hidden" />
-                <RichTextBox Grid.Row="0" x:Name="RichTextOutput" 
-                        Visibility="Hidden" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
-                <DataGrid Grid.Row="0" AutoGenerateColumns="False" x:Name="DataGridOutput" 
-                          Visibility="Hidden" IsReadOnly="True"/>
+            <!--different viewers for different types of files-->
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <Label x:Name="LabelFileOffset" Content="{x:Static Properties:Resources.MainWindow_Label_FileOffset}"/>
+                <TextBox x:Name="TextBoxOffset" Width="100" IsReadOnly="True"/>
 
-                <!--displayed file info-->
-                <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <Label x:Name="LabelFileOffset" Content="{x:Static Properties:Resources.MainWindow_Label_FileOffset}"/>
-                    <TextBox x:Name="TextBoxOffset" Width="100" IsReadOnly="True"/>
+                <Label x:Name="LabelFileSize" Content="{x:Static Properties:Resources.MainWindow_Label_FileSize}"/>
+                <TextBox x:Name="TextBoxSize" Width="100" IsReadOnly="True"/>
 
-                    <Label x:Name="LabelFileSize" Content="{x:Static Properties:Resources.MainWindow_Label_FileSize}"/>
-                    <TextBox x:Name="TextBoxSize" Width="100" IsReadOnly="True"/>
+                <Label x:Name="LabelFileNameHash" Content="{x:Static Properties:Resources.MainWindow_Label_FileNameHash}"/>
+                <TextBox x:Name="TextBoxNameHash" Width="100" IsReadOnly="True"/>
 
-                    <Label x:Name="LabelFileNameHash" Content="{x:Static Properties:Resources.MainWindow_Label_FileNameHash}"/>
-                    <TextBox x:Name="TextBoxNameHash" Width="100" IsReadOnly="True"/>
+                <Label x:Name="LabelFileHash" Content="{x:Static Properties:Resources.MainWindow_Label_FileHash}"/>
+                <TextBox x:Name="TextBoxHash" Width="100" IsReadOnly="True"/>
+            </StackPanel>
 
-                    <Label x:Name="LabelFileHash" Content="{x:Static Properties:Resources.MainWindow_Label_FileHash}"/>
-                    <TextBox x:Name="TextBoxHash" Width="100" IsReadOnly="True"/>
-                </StackPanel>
+            <!--different viewers for different types of files-->
+            <local:DatViewer Grid.Row="1" x:Name="DatViewerOutput" Visibility="Hidden"/>
+            <TextBox Grid.Row="1" x:Name="TextBoxOutput" TextWrapping="Wrap" 
+        		VerticalScrollBarVisibility="Auto" Visibility="Visible" 
+        		FontFamily="Consolas" FontSize="13" IsReadOnly="True"/>
+            <Image Grid.Row="1" x:Name="ImageOutput" Stretch="None" Visibility="Hidden" />
+            <RichTextBox Grid.Row="1" x:Name="RichTextOutput" 
+        		Visibility="Hidden" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
+            <DataGrid Grid.Row="1" AutoGenerateColumns="False" x:Name="DataGridOutput" 
+        		Visibility="Hidden" IsReadOnly="True"/>
 
-            </Grid>
+            <!--displayed file info-->
+
         </Grid>
     </Grid>
 </Window>

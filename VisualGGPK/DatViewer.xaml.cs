@@ -77,12 +77,12 @@ namespace VisualGGPK
             }
 
             DataContext = null;
+            datName.Content = filename;
             datInfo.Content =
-                filename + " info: " +
-                "\n\tRecord length (bytes)      = " + _wrapper.RecordInfo.Length +
+                "\tSingle record length (bytes) = " + _wrapper.RecordInfo.Length +
                 "\n\tNumber of records          = " + _wrapper.Records.Count +
-                "\n\tData section offset        = " + _wrapper.DataSectionffset +
-                "\n\tLenth of data section data = " + _wrapper.DataSectionDataLength;
+                "\n\tData section start offset  = " + _wrapper.DataSectionffset +
+                "\n\tData section length        = " + _wrapper.DataSectionDataLength;
 
             // Records DataGrid
             BuildGrid();
