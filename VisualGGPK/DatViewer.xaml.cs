@@ -137,7 +137,7 @@ namespace VisualGGPK
                     if (_showPointerDataValue && fieldData.FieldInfo.IsPointer)
                     {
                         var offset = (fieldData.ValueOffset == 0 ? fieldData.Offset : fieldData.ValueOffset);
-                        var prefix = fieldData.GetTypePointerPrefix();
+                        var prefix = fieldData.GetOffsetPrefix();
                         //  TODO: now in case of PointerData prefix contains Offset instead of PointerOffset
                         var value = _wrapper.DataEntries.ContainsKey(offset)
                             ? _wrapper.DataEntries[offset].GetValueString()
@@ -147,7 +147,7 @@ namespace VisualGGPK
                     else
                     {
                         str = fieldData.FieldInfo.IsPointer 
-                            ? fieldData.GetTypePointerPrefix() 
+                            ? fieldData.GetOffsetPrefix() 
                             : fieldData.Value.ToString();
                         
                     }

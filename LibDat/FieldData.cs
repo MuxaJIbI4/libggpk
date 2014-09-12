@@ -45,7 +45,7 @@ namespace LibDat
         ///     "[length]@offset = "    if field's width is 8
         /// </summary>
         /// <returns></returns>
-        public string GetTypePointerPrefix()
+        public string GetOffsetPrefix()
         {
             if (!FieldInfo.FieldType.IsPointer) return String.Empty;
             if (FieldInfo.FieldType.Width != 8) return String.Format("@{0}", Offset);
@@ -59,7 +59,7 @@ namespace LibDat
         
         public override string ToString()
         {
-            return String.Format("{0}{1}", GetTypePointerPrefix(), Value);
+            return String.Format("{0}{1}", GetOffsetPrefix(), Value);
         }
     }
 }
