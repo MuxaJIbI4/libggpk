@@ -160,7 +160,6 @@ namespace LibDat
                     break;
                 }
                 inStream.BaseStream.Seek(-8 + numberOfEntries, SeekOrigin.Current);
-                Console.WriteLine(inStream.BaseStream.Position);
             }
             if (recordLength == 0)
                 throw new Exception("Couldn't find record_length");
@@ -171,8 +170,11 @@ namespace LibDat
 
         private void ReadRecordData(BinaryReader inStream, RecordData recordData)
         {
+            var rIndex = Records.IndexOf(recordData);
+//            Console.WriteLine("Processing record " + rIndex);
             foreach (var fieldData in recordData.FieldsData.Where(fieldData => fieldData.FieldInfo.IsPointer))
             {
+//                Console.WriteLine("Processing field " + recordData.FieldsData.IndexOf(fieldData));
                 fieldData.FieldInfo.FieldType.PointerReader(inStream, fieldData, DataSectionOffset, DataEntries);
             }
         }
@@ -281,13 +283,25 @@ namespace LibDat
 
         public string GetCSVString(FieldData fieldData)
         {
-            string str = null;
+            string str;
             if (fieldData.FieldInfo.IsPointer)  
             {
                 // use overrided in AbstractData subclass function ToString;
-                str = fieldData.Data.ToString();
+                var offset = fieldData.Offset;
+                if (DataEntries.ContainsKey(offset))
+                {
+                    str = DataEntries[offset].GetValueString();
+                }
+                else
+                {
+                    str = "Unknown data at offset " + offset;
+                }
+                if (String.IsNullOrEmpty(str))
+                {
+                    str = "[Empty Data]@" + offset;
+                }
             }
-            if (String.IsNullOrEmpty(str))
+            else // not a pointer type field
             {
                 str = fieldData.Value.ToString();
             }
