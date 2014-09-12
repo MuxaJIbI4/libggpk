@@ -19,21 +19,17 @@ namespace LibDat
     /// <param name="o"></param>
     public delegate void TypeWriter(BinaryWriter writer, object o);
 
-    /// <summary>
-    /// converts field value to actual data
-    /// if field's type is value return field's value
-    /// if field's type is pointer returns value type found after dereferencing all pointers (including nested pointers)
-    /// </summary>
-    /// <param name="fieldValue"></param>
-    /// <param name="dataEntries"></param>
-    /// <returns></returns>
-    public delegate string FieldStringConverter(object fieldValue, IDictionary<int, AbstractData> dataEntries);
-
+//    /// <summary>
+//    /// converts field value to actual data
+//    /// if field's type is value return field's value
+//    /// if field's type is pointer returns value type found after dereferencing all pointers (including nested pointers)
+//    /// </summary>
+//    public delegate string FieldStringConverter(object fieldValue, IDictionary<int, AbstractData> dataEntries);
 
     /// <summary>
-    /// 
+    /// For pointer type field read data at offset and add all found entries to <c>dataEntries</c>
     /// </summary>
-    /// <param name="fieldValue"></param>
+    /// <param name="fieldData"></param>
     /// <param name="dataEntries"></param>
     public delegate void PointerReaderDelegate(
         BinaryReader reader, 
@@ -56,17 +52,16 @@ namespace LibDat
         private readonly string _pointerType;
         public string PointerType { get { return (_isPointer ? _pointerType : null); } }
 
-        private TypeReader _reader;
+        private readonly TypeReader _reader;
         public TypeReader Reader { get { return _reader; } }
 
-        private TypeWriter _writer;
+        private readonly TypeWriter _writer;
         public TypeWriter Writer { get { return _writer; } }
 
-        private PointerReaderDelegate _pointerReader;
+        private readonly PointerReaderDelegate _pointerReader;
         public PointerReaderDelegate PointerReader {
             get { return _pointerReader; }
         }
-        
 
         public FieldTypeInfo(string name, int width,
             TypeReader reader,
@@ -85,10 +80,5 @@ namespace LibDat
             _pointerType = pointerType;
             _pointerReader = pointerReader;
         }
-
-//        public override string ToString()
-//        {
-//            
-//        }
     }
 }

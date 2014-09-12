@@ -1,33 +1,8 @@
 ﻿namespace LibDat
 {
-
-    //    public enum FieldTypes
-    //    {
-    //        _01bit,
-    //        _08bit,
-    //        _16bit,
-    //        _32bit,
-    //        _64bit,
-    //    };
-    //
-    //    ///     StringIndex         unicode string
-    //    ///     UserStringIndex     unicode string (visible to user)
-    //    ///     UInt64Index         uint64 list
-    //    ///     UInt32Index         uint32 list
-    //    ///     Int32Index:         int32 list
-    //    ///     DataIndex           data isn't explored yet and are probably incorrect.
-    //    public enum PointerTypes
-    //    {
-    //        StringIndex,
-    //        IndirectStringIndex, // ???
-    //        UserStringIndex,
-    //        UInt64Index,
-    //        UInt32Index,
-    //        Int32Index,
-    //        DataIndex,
-    //    };
-
-    // contains information about record's fields
+    /// <summary>
+    /// contains information about record field: visible name, description and type of data inside
+    /// </summary>
     public class FieldInfo
     {
         // index of field in record starting from 0
@@ -48,19 +23,19 @@
         // returns true if fields contains offset to data section of .dat
         public bool IsPointer { get; private set; }
 
-        /// Field value represents an offset to a data in the data section of the .dat file with specific type
-        //        public PointerTypes PointerTypeString { get; private set; }
+        // returns true if fields contains user string (data)
+        public bool IsUser { get; private set; }
 
-        //        public Type PointerType { get; private set; }
 
         // index, fieldId, fieldDescription, fieldType, isPointer
-        public FieldInfo(int index, string id, string description, FieldTypeInfo type)
+        public FieldInfo(int index, string id, string description, FieldTypeInfo type, bool isUser = false)
         {
             Index = index;
             Id = id;
             Description = description;
             FieldType = type;
             IsPointer = type.IsPointer;
+            IsUser = isUser;
         }
 
         public bool IsString()
@@ -75,9 +50,7 @@
 
         public string ToString(string delimiter)
         {
-            string s = Description + delimiter;
-            s += (IsPointer ? FieldType.PointerType : FieldType.Name);
-            return s;
+            return Id + delimiter + FieldType.Name + delimiter + FieldType.Width + " byte";
         }
     }
 }

@@ -6,17 +6,18 @@ using LibDat.Data;
 
 namespace LibDat
 {
-    // class read and saves descriptions of records for all .dat files
+    /// <summary>
+    /// this class reads and stores next informations from XML file:
+    /// - definitions of records formats for all .dat files
+    /// - types for pointer type fields
+    /// </summary>
     public static class RecordFactory
     {
-        // TODO this property should be initialized on application start from external XML file
         private static Dictionary<string, RecordInfo> _records;
         private static Dictionary<string, FieldTypeInfo> _types;
 
         static RecordFactory()
         {
-            LoadValueTypes();
-
             UpdateRecordsInfo();
         }
 
@@ -24,6 +25,9 @@ namespace LibDat
         {
             _records = new Dictionary<string, RecordInfo>();
             _types = new Dictionary<string, FieldTypeInfo>();
+
+            // load default value types
+            LoadValueTypes();
 
             // load XML
             var doc = new XmlDocument();
@@ -50,27 +54,27 @@ namespace LibDat
 
         private static void LoadValueTypes()
         {
-            _types.Add("bool", new FieldTypeInfo("bool", 1, br => br.ReadBoolean(), (bw, o) => bw.Write((bool) o)));
-            _types.Add("byte", new FieldTypeInfo("byte", 1, br => br.ReadByte(), (bw, o) => bw.Write((byte) o)));
-            _types.Add("short", new FieldTypeInfo("short", 2, br => br.ReadInt16(), (bw, o) => bw.Write((short) o)));
+            _types.Add("bool", new FieldTypeInfo("bool", 1, br => (object)br.ReadBoolean(), (bw, o) => bw.Write((bool)o)));
+            _types.Add("byte", new FieldTypeInfo("byte", 1, br => (object)br.ReadByte(), (bw, o) => bw.Write((byte)o)));
+            _types.Add("short", new FieldTypeInfo("short", 2, br => (object)br.ReadInt16(), (bw, o) => bw.Write((short)o)));
             _types.Add("int", new FieldTypeInfo("int", 4,
                 br =>
                 {
                     var result = br.ReadInt32();
                     // Int32 -16843010 : FEFE FEFE (hex)
                     if (result == -16843010) result = -1;
-                    return result;
+                    return (object)result;
                 },
-                (bw, o) => bw.Write((int) o)));
+                (bw, o) => bw.Write((int)o)));
             _types.Add("Int64", new FieldTypeInfo("Int64", 8,
                 br =>
                 {
                     var result = br.ReadInt64();
                     // Int64 -72340172838076674: FEFE FEFE FEFE FEFE (hex)
                     if (result == -72340172838076674) result = -1;
-                    return result;
+                    return (object)result;
                 },
-                (bw, o) => bw.Write((int) o)));
+                (bw, o) => bw.Write((int)o)));
         }
 
         /// <summary>
@@ -87,11 +91,16 @@ namespace LibDat
             var name = GetAttributeValue(node, "name");
             if (String.IsNullOrEmpty(name))
                 throw new Exception("Invalid XML: Type definition has wrong 'name' attribute");
+            if (_types.ContainsKey(name))
+                throw new Exception("Invalid XML: Type already defined: " + name);
+
             // get width
             var widthString = GetAttributeValue(node, "width");
             if (String.IsNullOrEmpty(widthString))
                 throw new Exception("Invalid XML: Type definition has wrong 'width' attribute");
             var width = Convert.ToInt32(widthString);
+            if (!(width == 4 || width == 8 ))
+                throw new Exception("Invalid XML: pointer type width should be 4 or 8: " + name);
 
             // get 
             var pointerType = GetAttributeValue(node, "pointerType");
@@ -99,16 +108,23 @@ namespace LibDat
                 throw new Exception("Invalid XML: Type definition has wrong 'pointerType' attribute");
 
             // create readers and writers
-            TypeReader reader = br => width == 4 ? br.ReadInt32() : br.ReadInt64();
+            TypeReader reader = br =>
+            {
+                if (width == 4)
+                {
+                    return (object)br.ReadInt32();
+                }
+                return (object)br.ReadInt64();
+            };
             TypeWriter writer = (bw, o) =>
             {
                 if (width == 4)
                 {
-                    bw.Write((int) o);
+                    bw.Write((int)o);
                 }
                 else
                 {
-                    bw.Write((Int64) o);
+                    bw.Write((Int64)o);
                 }
             };
             // TODO need to apply one or more AbstractData classes to pointerType
@@ -120,29 +136,35 @@ namespace LibDat
                 case "String":
                     pointerReader = (inStream, fieldData, dataTableBegin, dataEntries) =>
                     {
-                        var offset = (int) fieldData.Value;
+                        var offset = (int)fieldData.Value;
                         var data = new UnicodeString(offset, dataTableBegin, inStream);
-                        fieldData.Data = dataEntries[offset] = data;
+                        dataEntries[offset] = data;
+                        fieldData.Offset = fieldData.ValueOffset = offset;
                     };
                     break;
                 case "StringPointer":
                     pointerReader = (inStream, fieldData, dataTableBegin, dataEntries) =>
                     {
-                        var offset = (int) fieldData.Value;
+                        var offset = (int)fieldData.Value;
+                        fieldData.Offset = offset;
+
                         var pointerData = new PointerData(offset, dataTableBegin, inStream);
-                        fieldData.Data = dataEntries[offset] = pointerData;
+                        dataEntries[offset] = pointerData;
 
                         var newOffset = pointerData.PointerOffset;
-                        pointerData.Data =
-                            dataEntries[newOffset] = new UnicodeString(newOffset, dataTableBegin, inStream);
+                        fieldData.ValueOffset = newOffset;
+
+                        pointerData.Data = new UnicodeString(newOffset, dataTableBegin, inStream);
+                        dataEntries[newOffset] = pointerData.Data;
                     };
                     break;
                 case "Int32": // Unknown 32bit data
                     pointerReader = (inStream, fieldData, dataTableBegin, dataEntries) =>
                     {
-                        var offset = (int) fieldData.Value;
-                        // (AbstractData)Activator.CreateInstance(Type, new object[] { ... parameters ... });
-                        fieldData.Data = dataEntries[offset] = new UnknownData(offset, dataTableBegin, inStream);
+                        // (AbstractData)Activator.CreateInstance(Type, new object[] {..params..});
+                        var offset = (int)fieldData.Value;
+                        fieldData.Offset = offset;
+                        dataEntries[offset] = new UnknownData(offset, dataTableBegin, inStream);
                     };
                     break;
                 case "Int32List":
@@ -155,12 +177,13 @@ namespace LibDat
                         GetListLengthAndOffset(fieldData, out length, out offset);
                         IDataList data = null;
                         if (name.Equals("Int32List"))
-                            data = new Int32List(offset, dataTableBegin, length, inStream);
+                            data = new ListInt32(offset, dataTableBegin, length, inStream);
                         if (name.Equals("UInt32List"))
-                            data = new UInt32List(offset, dataTableBegin, length, inStream);
+                            data = new ListUInt32(offset, dataTableBegin, length, inStream);
                         if (name.Equals("UInt64List"))
-                            data = new UInt64List(offset, dataTableBegin, length, inStream);
-                        fieldData.Data = dataEntries[offset] = (AbstractData) data;
+                            data = new ListUInt64(offset, dataTableBegin, length, inStream);
+                        fieldData.Offset = offset;
+                        dataEntries[offset] = (AbstractData)data;
                     };
                     break;
                 case "StringOrInt32List":
@@ -171,20 +194,22 @@ namespace LibDat
                         int length;
                         int offset;
                         GetListLengthAndOffset(fieldData, out length, out offset);
+                        fieldData.Offset = offset;
+
                         if (length > 0)
                         {
                             IDataList data = null;
                             if (name.Equals("StringOrInt32List"))
-                                data = new Int32List(offset, dataTableBegin, length, inStream);
+                                data = new ListInt32(offset, dataTableBegin, length, inStream);
                             if (name.Equals("StringOrUInt32List"))
-                                data = new UInt32List(offset, dataTableBegin, length, inStream);
+                                data = new ListUInt32(offset, dataTableBegin, length, inStream);
                             if (name.Equals("StringOrUInt64List"))
-                                data = new UInt64List(offset, dataTableBegin, length, inStream);
-                            fieldData.Data = dataEntries[offset] = (AbstractData)data;
+                                data = new ListUInt64(offset, dataTableBegin, length, inStream);
+                            dataEntries[offset] = (AbstractData)data;
                         }
                         else
                         {
-                            fieldData.Data = dataEntries[offset] = new UnicodeString(offset, dataTableBegin, inStream);
+                            dataEntries[offset] = new UnicodeString(offset, dataTableBegin, inStream);
                         }
                     };
                     break;
@@ -194,18 +219,22 @@ namespace LibDat
                         int length;
                         int offset;
                         GetListLengthAndOffset(fieldData, out length, out offset);
-                        if (length > 0) // == 1 field is pointer to pointer to string
+                        fieldData.Offset = offset;
+
+                        if (length > 0) // == 1  => field is pointer to pointer to string
                         {
                             var pointerData = new PointerData(offset, dataTableBegin, inStream);
-                            fieldData.Data = dataEntries[offset] = pointerData;
+                            dataEntries[offset] = pointerData;
 
                             var newOffset = pointerData.PointerOffset;
-                            pointerData.Data = 
+                            fieldData.ValueOffset = newOffset;
+
+                            pointerData.Data =
                                 dataEntries[newOffset] = new UnicodeString(newOffset, dataTableBegin, inStream);
                         }
                         else
                         {
-                            fieldData.Data = dataEntries[offset] = new UnicodeString(offset, dataTableBegin, inStream);
+                            dataEntries[offset] = new UnicodeString(offset, dataTableBegin, inStream);
                         }
                     };
                     break;
@@ -214,13 +243,23 @@ namespace LibDat
             }
 
             // save data
-            var type = new FieldTypeInfo(name, Convert.ToInt32(width), reader, writer, true, pointerType, pointerReader);
+            var type = new FieldTypeInfo(
+                name, 
+                Convert.ToInt32(width), 
+                reader, 
+                writer, 
+                true, 
+                pointerType, 
+                pointerReader);
             _types[name] = type;
         }
 
-        private static void GetListLengthAndOffset(FieldData fieldData, out int length, out int offset)
+        public static void GetListLengthAndOffset(FieldData fieldData, out int length, out int offset)
         {
-            var value = (Int64) fieldData.Value;
+            if (fieldData.FieldInfo.FieldType.Width != 8)
+                throw new Exception("Can't extract length and offset from this type: " + 
+                    fieldData.FieldInfo.FieldType.Name);
+            var value = (Int64)fieldData.Value;
             var bytes = BitConverter.GetBytes(value);
             length = BitConverter.ToInt32(bytes, 0);
             offset = BitConverter.ToInt32(bytes, 4);
@@ -254,23 +293,25 @@ namespace LibDat
                     throw new Exception("Invalid XML: field has wrong attribute 'id' :" + field);
 
                 var fieldDescription = GetAttributeValue(field, "description");
-                if (fieldDescription == null)
-                    throw new Exception("Invalid XML: field has wrong attribute 'description' :" + field);
 
                 var fieldType = GetAttributeValue(field, "type");
                 if (fieldType == null)
                     throw new Exception("Invalid XML: field has wrong attribute 'type' :" + field);
+
+                var isUserString = GetAttributeValue(field, "isUser");
+                var isUser = !String.IsNullOrEmpty(isUserString);
+
 
                 if (!HasTypeInfo(fieldType))
                     throw new Exception("Unknown field type: " + fieldType);
                 var isPointer = fieldName.Equals("pointer");
                 var typeInfo = GetTypeInfo(fieldType);
                 if (typeInfo.IsPointer && !isPointer)
-                    throw new Exception("Found pointer type in value field: " + field);
+                    throw new Exception("Found pointer type in value field: " + id + " " + fieldId);
                 if (!typeInfo.IsPointer && isPointer)
-                    throw new Exception("Found value type in pointer field: " + field);
+                    throw new Exception("Found value type in pointer field: " + id + " " + fieldId);
 
-                fields.Add(new FieldInfo(index, fieldId, fieldDescription, typeInfo));
+                fields.Add(new FieldInfo(index, fieldId, fieldDescription, typeInfo, isUser));
                 index++;
                 totalLength += typeInfo.Width;
             }
@@ -330,7 +371,7 @@ namespace LibDat
             if (attributes == null)
                 return null;
 
-            var attribute = (XmlAttribute) (attributes.GetNamedItem(attributeName));
+            var attribute = (XmlAttribute)(attributes.GetNamedItem(attributeName));
             return attribute == null ? null : attribute.Value;
         }
     }

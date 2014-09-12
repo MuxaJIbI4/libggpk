@@ -1,0 +1,97 @@
+This is readme
+
+###########################
+1. Terms and defintions
+
+* .dat file (*.dat, DAT):
+        file with extension 'dat' which contains data that needs to parsed. 
+        It contains 0 or more  'records' and data section.
+
+* record: 
+        contain 1 or more fields, has the same length as other records
+
+* record field (field):
+        part of record, contains data of value or pointer type.
+
+* value type field:
+        field contains value in itself. Values can be of type: bool, byte, short, int, long(Int64)
+
+* pointer type filed (pointer field):
+        contains offset to data section entry and it's metadata
+        
+
+* field id (name): 
+        short "name" of field
+
+* field description: 
+        explains what data this field contain and how and where it used
+
+* user field: 
+        field which reference strings shown to user. Necessary for translating referenced strings
+
+* field type: 
+        contains metadata about field type: 
+            - name, 
+            - width
+            - value or pointer
+            - and specific delegates for pointer type.
+
+* field's type width:
+        number of bytes type (and consequently field) occupies
+        values type: 1-8 (from bool and byte to long)
+        pointer types:
+            4-byte pointer contains just data section offset
+            8-byte pointer contains offset and metadata. For example, for list of integers
+                           it will contain length of list and offset to first number in the list. 
+                           Action on metadata is based on specific pointer field type.
+
+* data section: 
+        contains data of variable sizes (strings, lists of integers, etc...). 
+        It consists of "magic number" followed by 0 or more data section entries
+
+* data section magic number (magic number): 
+        0xBBbbBBbbBBbbBBbb. 
+        It marks start of data section and followed by data section entries if they exist.
+
+* data section entry: 
+        data that contain some data and referenced by "data section entry offset" 
+        in one or more record fields or another data section entries. 
+        NOTE: Well, it may be not referenced but it's a waste of space and it possibly couldn't happen.
+
+* data section entry offset: 
+        offset from start of data section at which start "data section entry".
+        First offet starts equals 8 (after b bytes of "magic word")
+
+* data section types: 
+        data section can contain strings, lists of integers and pointers to another data section entry. 
+        Possibly it also contain other data. 
+        Each type has corresponding derived subclass of AbstractData class.
+
+* string:
+        entry of string of length N consists of N UTF-16 charactes (2*N bytes) followed by 
+        string terminator (4 bytes: (int)0  ). Final length of string entry equals 2*N+4 bytes.
+        If supposedly string type entry doesn't have (int)o at the end it's not a string, 
+        if one tries to read extra \0 UTF-16 character it's possible to read beyond stream end and 
+        that will lead to thrown exception
+
+###########################
+XML defnitions and schema
+
+
+###########################
+ Class Definitions
+
+
+**** DatContainer *****
+Main class for parsing .dat files
+
+It's functions:
+- parse
+- store parsed records and data section data
+- change data section contents
+- save as .csv
+- save as .dat
+
+
+
+

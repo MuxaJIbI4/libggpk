@@ -45,14 +45,14 @@
     <Compile Include="Data\PointerData.cs" />
     <Compile Include="FieldData.cs" />
     <Compile Include="RecordData.cs" />
-    <Compile Include="Data\Int32List.cs" />
+    <Compile Include="Data\ListInt32.cs" />
     <Compile Include="RecordFactory.cs" />
     <Compile Include="FieldTypeInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DatContainer.cs" />
     <Compile Include="FieldInfo.cs" />
-    <Compile Include="Data\UInt32List.cs" />
-    <Compile Include="Data\UInt64List.cs" />
+    <Compile Include="Data\ListUInt32.cs" />
+    <Compile Include="Data\ListUInt64.cs" />
     <Compile Include="Data\UnicodeString.cs" />
     <Compile Include="Data\UnknownData.cs" />
     <Compile Include="RecordInfo.cs" />
@@ -61,6 +61,7 @@
     <Content Include="DatDefinitions.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="LibDat.readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DatDefinitions.xsd">

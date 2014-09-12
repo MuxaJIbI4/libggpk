@@ -4,30 +4,31 @@ using System.Linq;
 
 namespace LibDat
 {
-    // contains info about single record in *.dat file
+    /// <summary>
+    /// contains inforamtion about format of record of .dat file
+    /// </summary>
     public class RecordInfo
     {
         /// <summary>
-        /// Name of .dat file which this record definition belongs to
+        /// name of .dat file (without extension) which this record format belongs to
         /// </summary>
         public string Id { get; private set; }
 
         /// <summary>
-        /// Represents the number of bytes this record will read or write to the DAT file
+        /// contains number of bytes this record will read or write to the .dat file
         /// </summary>
         /// <returns>Number of bytes this record will take in its native format</returns>
         public int Length { get; private set; }
 
-
-
-        // record fields
         private readonly List<FieldInfo> _fields;
         public ReadOnlyCollection<FieldInfo> Fields
         {
             get { return _fields.AsReadOnly(); }
         }
 
-        // returns true if record has fields which contain offset to data section of .dat
+        /// <summary>
+        /// returns true if record has fields of pointer type
+        /// </summary>
         public bool HasPointers { get; private set; }
 
         public RecordInfo(string id, int length = 0, List<FieldInfo> fields = null)

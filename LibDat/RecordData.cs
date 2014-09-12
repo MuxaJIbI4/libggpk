@@ -1,35 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 
 namespace LibDat
 {
     /// <summary>
-    /// Contains data read from single record in .dat file
+    /// Contains list of <c>FieldData</c> read from single record in .dat file
     /// </summary>
     public class RecordData
     {
         public RecordInfo RecordInfo { get; private set; }
 
-        public List<FieldData> FieldsData { get; private set; }
+        private List<FieldData> _fieldsData;
+        public ReadOnlyCollection<FieldData> FieldsData
+        {
+            get { return _fieldsData.AsReadOnly(); }
+        }
 
         private readonly int _fieldsCount;
 
         public RecordData(RecordInfo ri, BinaryReader inStream)
         {
             RecordInfo = ri;
-            FieldsData = new List<FieldData>();
+            _fieldsData = new List<FieldData>();
             _fieldsCount = ri.Fields.Count;
 
             Read(inStream);
         }
 
-
         private void Read(BinaryReader inStream)
         {
             foreach (var fi in RecordInfo.Fields)
             {
-                FieldsData.Add(new FieldData(fi, fi.FieldType.Reader(inStream)));
+                _fieldsData.Add(new FieldData(fi, fi.FieldType.Reader(inStream)));
             }
         }
 
@@ -42,7 +46,7 @@ namespace LibDat
             for (var i = 0; i < _fieldsCount; i++)
             {
                 // TODO This saves fields data as it were at the beginning
-                RecordInfo.Fields[i].FieldType.Writer(outStream, FieldsData[i].Value);
+                RecordInfo.Fields[i].FieldType.Writer(outStream, _fieldsData[i].Value);
             }
         }
 
@@ -60,7 +64,7 @@ namespace LibDat
         {
             if (index < 0 || index >= _fieldsCount)
                 throw new Exception("Field's index out of bounds: " + index + " not in [0," + _fieldsCount + "]");
-            return FieldsData[index].Value;
+            return _fieldsData[index].Value;
         }
 
         /// <summary>
@@ -113,7 +117,7 @@ namespace LibDat
             if (error)
                 throw new Exception("Can't save value of type " + value.GetType()
                     + " into field of type " + fieldInfo.FieldType.Name);
-            FieldsData[index].Value = value;
+            _fieldsData[index].Value = value;
         }
     }
 }
