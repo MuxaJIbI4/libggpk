@@ -15,6 +15,7 @@
 	</pointerTypes>
 	<records>
 		<record id="AchievementItems" length="28">
+			<!--test-->
 			<pointer id="Id" type="String"/>
 			<value id="Unknown1" type="int"/>
 			<value id="Unknown2" type="int"/>
@@ -255,8 +256,9 @@
 			<value id="Unknown3" type="Int64"/>
 			<value id="Unknown4" type="int"/>
 			<value id="Flag7" type="bool"/>
-			<pointer id="Data4" type="UInt64List"/>
-			<value id="Unknown23" type="int"/>
+			<value id="Unknown5" type="int"/>
+			<pointer id="Unknown6" type="Int32"/>
+			<value id="Unknown7" type="int"/>
 		</record>
 		<record id="ClientStrings" length="8">
 			<pointer id="Id" type="String"/>
