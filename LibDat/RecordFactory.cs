@@ -127,16 +127,17 @@ namespace LibDat
                     bw.Write((Int64)o);
                 }
             };
-            // TODO need to apply one or more AbstractData classes to pointerType
-            PointerReaderDelegate pointerReader = null;
+            
 
+            // delegates to read data referenced by pointer field value
+            PointerReaderDelegate pointerReader;
             // pointers with 1-byte width
             switch (name)
             {
                 case "String":
                     pointerReader = (inStream, fieldData, dataTableBegin, dataEntries) =>
                     {
-                        var offset = (int)fieldData.Value;
+                        var offset = fieldData.Offset;
                         var data = new UnicodeString(offset, dataTableBegin, inStream);
                         dataEntries[offset] = data;
                         fieldData.Offset = fieldData.ValueOffset = offset;
@@ -145,9 +146,7 @@ namespace LibDat
                 case "StringPointer":
                     pointerReader = (inStream, fieldData, dataTableBegin, dataEntries) =>
                     {
-                        var offset = (int)fieldData.Value;
-                        fieldData.Offset = offset;
-
+                        var offset = fieldData.Offset;
                         var pointerData = new PointerData(offset, dataTableBegin, inStream);
                         dataEntries[offset] = pointerData;
 
@@ -172,9 +171,8 @@ namespace LibDat
                 case "UInt64List":
                     pointerReader = (inStream, fieldData, dataTableBegin, dataEntries) =>
                     {
-                        int length;
-                        int offset;
-                        GetListLengthAndOffset(fieldData, out length, out offset);
+                        var length = fieldData.Length;
+                        var offset = fieldData.Offset;
                         IDataList data = null;
                         if (name.Equals("Int32List"))
                             data = new ListInt32(offset, dataTableBegin, length, inStream);
@@ -191,11 +189,8 @@ namespace LibDat
                 case "StringOrUInt64List":
                     pointerReader = (inStream, fieldData, dataTableBegin, dataEntries) =>
                     {
-                        int length;
-                        int offset;
-                        GetListLengthAndOffset(fieldData, out length, out offset);
-                        fieldData.Offset = offset;
-
+                        var length = fieldData.Length;
+                        var offset = fieldData.Offset;
                         if (length > 0)
                         {
                             IDataList data = null;
@@ -216,10 +211,8 @@ namespace LibDat
                 case "StringOrStringPointer2Byte":
                     pointerReader = (inStream, fieldData, dataTableBegin, dataEntries) =>
                     {
-                        int length;
-                        int offset;
-                        GetListLengthAndOffset(fieldData, out length, out offset);
-                        fieldData.Offset = offset;
+                        var length = fieldData.Length;
+                        var offset = fieldData.Offset;
 
                         if (length > 0) // == 1  => field is pointer to pointer to string
                         {
@@ -254,17 +247,6 @@ namespace LibDat
             _types[name] = type;
         }
 
-        public static void GetListLengthAndOffset(FieldData fieldData, out int length, out int offset)
-        {
-            if (fieldData.FieldInfo.FieldType.Width != 8)
-                throw new Exception("Can't extract length and offset from this type: " + 
-                    fieldData.FieldInfo.FieldType.Name);
-            var value = (Int64)fieldData.Value;
-            var bytes = BitConverter.GetBytes(value);
-            length = BitConverter.ToInt32(bytes, 0);
-            offset = BitConverter.ToInt32(bytes, 4);
-        }
-
         private static void ProcessRecordDefinition(XmlNode node)
         {
             var id = GetAttributeValue(node, "id");
@@ -286,6 +268,8 @@ namespace LibDat
             var totalLength = 0;
             foreach (XmlNode field in node.ChildNodes)
             {
+                if (field.NodeType == XmlNodeType.Comment)
+                    continue;
                 var fieldName = field.LocalName;
 
                 var fieldId = GetAttributeValue(field, "id");

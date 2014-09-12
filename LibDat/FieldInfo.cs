@@ -50,7 +50,7 @@
 
         public string ToString(string delimiter)
         {
-            return Id + delimiter + FieldType.Name + delimiter + FieldType.Width + " byte";
+            return Id + delimiter + (FieldType.IsPointer?"*":"") + FieldType.Name + delimiter + FieldType.Width + " byte";
         }
     }
 }
