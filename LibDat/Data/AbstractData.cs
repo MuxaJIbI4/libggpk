@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace LibDat.Data
@@ -37,6 +38,19 @@ namespace LibDat.Data
         /// <param name="outStream">Stream to write contents to</param>
         public abstract void Save(BinaryWriter outStream);
 
-        public new abstract string ToString();
+        /// <summary>
+        /// returns string representation of data this data section entry contain
+        /// (in case it points to another data section entry it returns 
+        /// result of <c>GetValueString()</c> call on that data
+        /// </summary>
+        /// <returns></returns>
+        public abstract string GetValueString();
+
+        [Obsolete]
+        public new string ToString()
+        {
+            // TODO: remove later
+            throw new NotImplementedException();
+        }
     }
 }

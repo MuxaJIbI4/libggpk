@@ -33,7 +33,7 @@ namespace LibDat.Data
             outStream.Write(Data);
         }
 
-        public override string ToString()
+        public override string GetValueString()
         {
             return Data.ToString();
         }

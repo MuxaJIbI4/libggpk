@@ -14,6 +14,12 @@ namespace LibDat.Data
         public new int Offset { get; private set; }
 
         /// <summary>
+        /// Offset in the dat file with respect to the beginning of the data section 
+        /// where entry is finished
+        /// </summary>
+        public int OffsetEnd { get; private set; }
+
+        /// <summary>
         /// The string
         /// </summary>
         public string Data { get; private set; }
@@ -40,11 +46,19 @@ namespace LibDat.Data
         /// </summary>
         private readonly long _dataTableOffset;
 
-        public UnicodeString(int offset, long dataTableOffset, string data)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="dataTableOffset"></param>
+        /// <param name="data"></param>
+        /// <param name="length">lengr of string in bytes</param>
+        public UnicodeString(int offset, long dataTableOffset, string data, int length)
             : base(offset, dataTableOffset)
         {
             _dataTableOffset = dataTableOffset;
             Offset = offset;
+            OffsetEnd = offset + length;
             NewData = null;
 
             Data = data;
@@ -59,15 +73,10 @@ namespace LibDat.Data
             NewData = null;
 
             inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
+            
             ReadData(inStream);
-            //            if (Data.Length == 1)
-            //            {
-            //                Console.WriteLine(Data);
-            //                char ch = Data[0];
-            //                int pointer = (int)ch;
-            //                Console.WriteLine(pointer);
-            //                // TODO: this is new pointer ?
-            //            }
+
+            OffsetEnd = Offset + 2*Data.Length + 4;
         }
 
         protected override void ReadData(BinaryReader inStream)
@@ -99,14 +108,14 @@ namespace LibDat.Data
             NewOffset = (int)(outStream.BaseStream.Position - _dataTableOffset);
             var dataToWrite = NewData ?? Data;
 
-            foreach (var t in dataToWrite)
+            foreach (var ch in dataToWrite)
             {
-                outStream.Write(t);
+                outStream.Write(ch);
             }
             outStream.Write(0);
         }
 
-        public override string ToString()
+        public override string GetValueString()
         {
             return Data;
         }

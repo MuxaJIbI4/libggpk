@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -11,41 +12,37 @@ namespace LibDat.Data
         /// <summary>
         /// Number of elements in the list
         /// </summary>
-        public int ListLength { get; protected set; }
+        public int ListLength { get; private set; }
 
         /// <summary>
         /// list of objects
         /// </summary>
-        protected List<T> Data { get; set; }
+        protected List<T> Data { get; private set; }
 
         protected AbstractDataList(int offset, int dataTableOffset, int listLength, BinaryReader inStream)
             : base(offset, dataTableOffset)
         {
             Data = new List<T>(listLength);
             ListLength = listLength;
-            if (listLength == 0) return;
+            if (listLength == 0)
+                listLength = 1; // ignore zero length integer array???
 
             inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
-            for (int i = 0; i < listLength; ++i)
+            for (var i = 0; i < listLength; ++i)
             {
                 ReadData(inStream);
             }
         }
 
-        public override string ToString()
+        public override string GetValueString()
         {
-            if (Data.Count == 0) return "";
-            StringBuilder sb = new StringBuilder();
-            foreach (var s in Data)
-            {
-                sb.Append(s.ToString()).Append(" ");
-            }
-            return sb.Remove(sb.Length - 1, 1).ToString();
+            return String.Join(" ", Data.ToArray());
         }
 
         public override void Save(BinaryWriter outStream)
         {
             //TODO
+            throw new NotImplementedException();
         }
     }
 }
