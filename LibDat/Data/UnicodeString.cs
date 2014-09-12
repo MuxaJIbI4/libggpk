@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 
@@ -12,12 +13,6 @@ namespace LibDat.Data
         /// Offset in the dat file with respect to the beginning of the data section
         /// </summary>
         public new int Offset { get; private set; }
-
-        /// <summary>
-        /// Offset in the dat file with respect to the beginning of the data section 
-        /// where entry is finished
-        /// </summary>
-        public int OffsetEnd { get; private set; }
 
         /// <summary>
         /// The string
@@ -53,30 +48,27 @@ namespace LibDat.Data
         /// <param name="dataTableOffset"></param>
         /// <param name="data"></param>
         /// <param name="length">lengr of string in bytes</param>
-        public UnicodeString(int offset, long dataTableOffset, string data, int length)
-            : base(offset, dataTableOffset)
-        {
-            _dataTableOffset = dataTableOffset;
-            Offset = offset;
-            OffsetEnd = offset + length;
-            NewData = null;
-
-            Data = data;
-        }
+//        public UnicodeString(int offset, long dataTableOffset, string data, int length)
+//            : base(offset, dataTableOffset)
+//        {
+//            _dataTableOffset = dataTableOffset;
+//            Offset = offset;
+//            OffsetEnd = offset + length;
+//            NewData = null;
+//
+//            Data = data;
+//        }
 
         public UnicodeString(int offset, int dataTableOffset, BinaryReader inStream)
             : base(offset, dataTableOffset)
         {
+            NewData = null;
             _dataTableOffset = dataTableOffset;
             Offset = offset;
-
-            NewData = null;
-
             inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
-            
             ReadData(inStream);
-
-            OffsetEnd = Offset + 2*Data.Length + 4;
+            Length = 2*Data.Length + 4;
+            
         }
 
         protected override void ReadData(BinaryReader inStream)
@@ -117,7 +109,7 @@ namespace LibDat.Data
 
         public override string GetValueString()
         {
-            return Data;
+            return String.IsNullOrEmpty(NewData) ? Data : NewData;
         }
     }
 }

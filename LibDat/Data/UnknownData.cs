@@ -5,7 +5,7 @@ namespace LibDat.Data
     /// <summary>
     /// Represents unknown data  found in the data section of a .dat file. None of this is tested and is probably incorrect.
     /// </summary>
-    public class UnknownData : AbstractData
+    public sealed class UnknownData : AbstractData
     {
         /// <summary>
         /// The unknown data
@@ -17,6 +17,8 @@ namespace LibDat.Data
         {
             inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
             ReadData(inStream);
+
+            Length = 4;
         }
 
         protected override void ReadData(BinaryReader inStream)

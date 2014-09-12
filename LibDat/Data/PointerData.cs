@@ -3,7 +3,7 @@ using System.IO;
 
 namespace LibDat.Data
 {
-    sealed class PointerData : AbstractData
+    public sealed class PointerData : AbstractData
     {
         /// <summary>
         /// contains offset to data section entry (Int32 data at this instance <c>Offset</c>)
@@ -18,6 +18,7 @@ namespace LibDat.Data
             Offset = offset;
             inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
             ReadData(inStream);
+            Length = 4;
         }
 
         protected override void ReadData(BinaryReader inStream)

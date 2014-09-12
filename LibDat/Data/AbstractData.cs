@@ -11,6 +11,11 @@ namespace LibDat.Data
         public int Offset { get; protected set; }
 
         /// <summary>
+        /// length of data entry (in bytes)
+        /// </summary>
+        public int Length { get; protected set; }
+
+        /// <summary>
         /// Offset of the data section in the .dat file (Starts with 0xbbbbbbbbbbbbbbbb)
         /// </summary>
         public long DataTableOffset {get; protected set; }

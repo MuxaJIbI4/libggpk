@@ -24,14 +24,14 @@ namespace LibDat.Data
         {
             Data = new List<T>(listLength);
             ListLength = listLength;
-            if (listLength == 0)
-                listLength = 1; // ignore zero length integer array???
 
             inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
             for (var i = 0; i < listLength; ++i)
             {
                 ReadData(inStream);
             }
+
+            Length = (int)inStream.BaseStream.Position - (offset + dataTableOffset);
         }
 
         public override string GetValueString()
