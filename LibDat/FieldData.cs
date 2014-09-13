@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using LibDat.Data;
 
 namespace LibDat
 {
@@ -10,71 +12,14 @@ namespace LibDat
     /// </summary>
     public class FieldData
     {
-        /// <summary>
-        /// contains data from record
-        /// </summary>
-        private object _value;
-        public object Value {
-            get { return _value; }
-            set
-            {
-                var width = FieldInfo.FieldType.Width;
-                var error = false;
-                switch (width)
-                {
-                    case 1: if (!(value is bool || value is byte)) error = true; break;
-                    case 2: if (!(value is short)) error = true; break;
-                    case 4: if (!(value is int)) error = true; break;
-                    case 8: if (!(value is Int64)) error = true; break;
-                }
-                if (error)
-                    throw new Exception("Can't save value of type " + value.GetType()
-                        + " into field of type " + FieldInfo.FieldType.Name);
-                _value = value;
-            }
-        }
+        public AbstractData Data { get; private set; }
         
-        /// <summary>
-        /// Contains offset to AbstractData in data section (only for pointer type fields)
-        /// </summary>
-        public int Offset { get; set; }
-
-        /// <summary>
-        /// Contains offset to value AbstractData in data section (only for pointer type fields).
-        /// If AbstractData at <c>Offset</c> isn't PointerData then <c>>ValueOffset = Offset</c>
-        /// </summary>
-        public int ValueOffset { get; set; }
-
-        public int Length { get; private set; }
-
         public FieldInfo FieldInfo { get; private set; }
 
-        public FieldData(FieldInfo field, object o)
+        public FieldData(FieldInfo fieldInfo, BinaryReader reader)
         {
-            FieldInfo = field;
-            _value = o;
-
-            // init with incorrect value
-            ValueOffset = 0;
-            Length = -1;
-
-            if (!FieldInfo.IsPointer)
-                return;
-
-            if (FieldInfo.FieldType.Width == 8)
-            {
-                int length;
-                int offset;
-                GetListLengthAndOffset(this, out length, out offset);
-                Offset = offset;
-                Length = length;
-            }
-            else if (FieldInfo.FieldType.Width == 4)
-            {
-                Offset = (int) Value;
-            }
-            else
-                throw new Exception("Pointer type field width should 4 or 8, but found: " + FieldInfo.FieldType.Width);
+            FieldInfo = fieldInfo;
+            Data = RecordFactory.ReadType(fieldInfo.FieldType, reader, false);
         }
 
         /// <summary>
@@ -84,23 +29,15 @@ namespace LibDat
         ///     "[length]@offset = "    if field's width is 8
         /// </summary>
         /// <returns></returns>
+
         public string GetOffsetPrefix()
         {
-            if (!FieldInfo.FieldType.IsPointer) return String.Empty;
-            if (FieldInfo.FieldType.Width != 8) return String.Format("@{0}", Offset);
-            
-            return String.Format("[{0}]@{1}", Length, Offset);
-        }
+            if (!FieldInfo.IsPointer) return String.Empty;
 
-        private static void GetListLengthAndOffset(FieldData fieldData, out int length, out int offset)
-        {
-            if (fieldData.FieldInfo.FieldType.Width != 8)
-                throw new Exception("Can't extract length and offset from this type: " +
-                    fieldData.FieldInfo.FieldType.Name);
-            var value = (Int64)fieldData.Value;
-            var bytes = BitConverter.GetBytes(value);
-            length = BitConverter.ToInt32(bytes, 0);
-            offset = BitConverter.ToInt32(bytes, 4);
+            var pData = Data as PointerData;
+            if (FieldInfo.FieldType.Width != 8) return String.Format("@{0}", pData.RefData.Offset);
+
+            return String.Format("[{0}]@{1}", (pData.RefData as ListData).Count, pData.RefData.Offset);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using LibDat;
+using LibDat.Data;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -109,6 +110,7 @@ namespace VisualGGPK
                 var col = new DataGridTextColumn();
                 col.Header = fieldInfo.ToString("\n");
                 col.Binding = new Binding("column_" + i++);
+                col.Width = new DataGridLength(1.0, DataGridLengthUnitType.SizeToHeader);
                 dataGridRecords.Columns.Add(col);
             }
             dataGridRecords.ItemsSource = GenerateData(Records, recordInfo.Fields.Count).ToDataSource();
@@ -130,19 +132,19 @@ namespace VisualGGPK
                     string str;
                     if (_showPointerDataValue && fieldData.FieldInfo.IsPointer)
                     {
-                        var offset = (fieldData.ValueOffset == 0 ? fieldData.Offset : fieldData.ValueOffset);
-                        var prefix = fieldData.GetOffsetPrefix();
                         //  TODO: now in case of PointerData prefix contains Offset instead of PointerOffset
-                        var value = _wrapper.DataEntries.ContainsKey(offset)
-                            ? _wrapper.DataEntries[offset].GetValueString()
-                            : "(Error: Unknown Data)";
+//                        var value = _wrapper.DataEntries.ContainsKey(offset)
+//                            ? _wrapper.DataEntries[offset].GetValueString()
+//                            : "(Error: Unknown Data)";
+                        var prefix = fieldData.GetOffsetPrefix();
+                        var value = fieldData.Data.GetValueString();
                         str = String.Format("{0} = {1}", prefix, value);
                     }
                     else
                     {
                         str = fieldData.FieldInfo.IsPointer
                             ? fieldData.GetOffsetPrefix()
-                            : fieldData.Value.ToString();
+                            : fieldData.Data.GetValueString();
 
                     }
                     dict["column_" + (i + 1)] = str;

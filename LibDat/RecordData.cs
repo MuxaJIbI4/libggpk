@@ -11,6 +11,7 @@ namespace LibDat
     public class RecordData
     {
         private RecordInfo RecordInfo { get; set; }
+        private int Index { get; set; }
 
         private readonly List<FieldData> _fieldsData;
         public ReadOnlyCollection<FieldData> FieldsData
@@ -18,22 +19,35 @@ namespace LibDat
             get { return _fieldsData.AsReadOnly(); }
         }
 
-        private readonly int _fieldsCount;
-
-        public RecordData(RecordInfo ri, BinaryReader inStream)
+        public RecordData(RecordInfo ri, BinaryReader inStream, int index)
         {
             RecordInfo = ri;
+            Index = index;
             _fieldsData = new List<FieldData>();
-            _fieldsCount = ri.Fields.Count;
 
-            Read(inStream);
-        }
-
-        private void Read(BinaryReader inStream)
-        {
+            inStream.BaseStream.Seek(4 + ri.Length*index, SeekOrigin.Begin);
+            var startOffset = (int)inStream.BaseStream.Position;
             foreach (var fi in RecordInfo.Fields)
             {
-                _fieldsData.Add(new FieldData(fi, fi.FieldType.Reader(inStream)));
+                try
+                {
+                    // TODO: seek to correct offset
+                    var fieldData = new FieldData(fi, inStream);
+                    _fieldsData.Add(fieldData);
+
+                    var length = fieldData.Data.Length;
+                    inStream.BaseStream.Seek(startOffset + length, SeekOrigin.Begin);
+                    startOffset = startOffset + length;
+                }
+                catch (Exception e)
+                {
+                    var error = String.Format(
+                        "Error: Row ID = {0} Field Id={1}, Field Type Name = {2},"  +
+                        "\n Message:{3}\n Stacktrace: {4}",
+                        Index, fi.Id, fi.FieldType.Name, e.Message, e.StackTrace);
+                    Console.WriteLine(error);
+                    throw new Exception(error);
+                }
             }
         }
 
@@ -43,30 +57,32 @@ namespace LibDat
         /// <param name="outStream">Stream to write contents to</param>
         public void Save(BinaryWriter outStream)
         {
-            for (var i = 0; i < _fieldsCount; i++)
+            foreach (var fieldData in FieldsData)
             {
                 // TODO This saves fields data as it were at the beginning
-                RecordInfo.Fields[i].FieldType.Writer(outStream, _fieldsData[i].Value);
+                fieldData.Data.Save(outStream);
             }
         }
 
         /// <summary>
         /// Updates references to modified strings/data in the data section for the specified entry.
         /// </summary>
+        [Obsolete("this is deprecated since FieldData doesn't contain Offset, but Data itself", true)]
         public void UpdateDataOffsets(Dictionary<int, int> updatedOffsets)
         {
-            if (!RecordInfo.HasPointers)
-                return;
-
-            foreach (var fieldData in FieldsData)
-            {
-                if (!fieldData.FieldInfo.IsPointer || !fieldData.FieldInfo.IsString())
-                    continue;
-
-                var offset = fieldData.Offset;
-                if (updatedOffsets.ContainsKey(offset))
-                    fieldData.Value = updatedOffsets[offset];
-            }
+            throw new NotImplementedException();
+//            if (!RecordInfo.HasPointers)
+//                return;
+//
+//            foreach (var fieldData in FieldsData)
+//            {
+//                if (!fieldData.FieldInfo.IsPointer || !fieldData.FieldInfo.IsString())
+//                    continue;
+//
+//                var offset = fieldData.Data.Offset;
+//                if (updatedOffsets.ContainsKey(offset))
+//                    fieldData.Value = updatedOffsets[offset];
+//            }
         }
     }
 }

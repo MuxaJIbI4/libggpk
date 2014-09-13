@@ -22,24 +22,24 @@ namespace VisualGGPK
 
         public int Length { get { return _data.Length; } }
 
-        public string Value { get { return _data.GetValueString(); } }
-
         public bool IsUser { get { return _isUser; } }
 
         public string NewValue
         {
             get
             {
-                var str = _data as UnicodeString;
-                return (str == null ? "" : str.NewData);
+                var str = _data as StringData;
+                return (str == null ? "" : str.NewValue);
             }
             set
             {
-                var str = _data as UnicodeString;
+                var str = _data as StringData;
                 if (str != null)
-                    str.NewData = value;
+                    str.NewValue = value;
             }
         }
+
+        public string Value { get { return _data.GetValueString(); } }
 
         public DatString(AbstractData data, bool isUser)
         {
@@ -62,7 +62,7 @@ namespace VisualGGPK
 
         public long DataSectionffset
         {
-            get { return _dat.DataSectionOffset; }
+            get { return DatContainer.DataSectionOffset; }
         }
 
         public long DataSectionDataLength
@@ -76,7 +76,7 @@ namespace VisualGGPK
         }
         public Dictionary<int, AbstractData> DataEntries
         {
-            get { return _dat.DataEntries; }
+            get { return DatContainer.DataEntries; }
         }
 
         private readonly List<DatString> _dataStrings = new List<DatString>();

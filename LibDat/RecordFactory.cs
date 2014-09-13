@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.IO;
 using LibDat.Data;
+using LibDat.Types;
 
 namespace LibDat
 {
@@ -14,7 +17,64 @@ namespace LibDat
     public static class RecordFactory
     {
         private static Dictionary<string, RecordInfo> _records;
-        private static Dictionary<string, FieldTypeInfo> _types;
+        private static Dictionary<string, DataType> _types;
+
+        private static readonly Dictionary<Type, Func<BinaryReader, object>> ReadFuncs =
+            new Dictionary<Type, Func<BinaryReader, object>>
+        {
+            {typeof (bool), s => s.ReadBoolean()},
+            {typeof (byte), s => s.ReadByte()},
+            {typeof (short), s => s.ReadInt16()},
+            {typeof (int), s => s.ReadInt32()},
+            {typeof (uint), s => s.ReadUInt32()},
+            {typeof (long), s => s.ReadInt64()},
+            {typeof (ulong), s => s.ReadUInt64()},
+            {typeof (string), s => 
+            {
+                var sb = new StringBuilder();
+                char ch;
+                while ((ch = s.ReadChar()) != 0) { sb.Append(ch); }
+                ch = s.ReadChar();
+                if (ch != 0)    // string should with int(0)
+                    throw new Exception("Not found int(0) value at the end of the string");
+                return sb.ToString();
+            }}
+        };
+
+        private static readonly Dictionary<Type, Action<BinaryWriter, object>> WriteFuncs =
+            new Dictionary<Type, Action<BinaryWriter, object>>
+        {
+            {typeof (bool), (bw, o) => bw.Write((bool)o)},
+            {typeof (byte), (bw, o) => bw.Write((byte)o) },
+            {typeof (short), (bw, o) => bw.Write((short)o)},
+            {typeof (int), (bw, o) => bw.Write((int)o)},
+            {typeof (uint), (bw, o) => bw.Write((uint)o)},
+            {typeof (long), (bw, o) => bw.Write((long)o)},
+            {typeof (ulong), (bw, o) => bw.Write((ulong)o)},
+            {typeof (string), (bw, o) =>
+            {
+                foreach (var ch in (string)o)
+                {
+                    bw.Write(ch);
+                }
+                bw.Write(0);
+            }},
+        };
+
+
+        public static T Read<T>(this BinaryReader reader)
+        {
+            if (ReadFuncs.ContainsKey(typeof(T)))
+                return (T)ReadFuncs[typeof(T)](reader);
+            throw new NotImplementedException();
+        }
+
+        public static void Write<T>(this BinaryWriter reader, object obj)
+        {
+            if (WriteFuncs.ContainsKey(typeof(T)))
+                WriteFuncs[typeof(T)](reader, (T)obj);
+            throw new NotImplementedException();
+        }
 
         static RecordFactory()
         {
@@ -24,7 +84,7 @@ namespace LibDat
         public static void UpdateRecordsInfo()
         {
             _records = new Dictionary<string, RecordInfo>();
-            _types = new Dictionary<string, FieldTypeInfo>();
+            _types = new Dictionary<string, DataType>();
 
             // load default value types
             LoadValueTypes();
@@ -33,17 +93,8 @@ namespace LibDat
             var doc = new XmlDocument();
             doc.Load("DatDefinitions.xml");
 
-            // load types
-            var nodes = doc.SelectNodes("//typeDef");
-            if (nodes == null)
-                throw new Exception("Not found type definitions");
-            foreach (XmlNode node in nodes)
-            {
-                ProcessPointerTypeDefinition(node);
-            }
-
             // load records
-            nodes = doc.SelectNodes("//record");
+            var nodes = doc.SelectNodes("//record");
             if (nodes == null)
                 throw new Exception("Not found type record definitions");
             foreach (XmlNode node in nodes)
@@ -52,205 +103,10 @@ namespace LibDat
             }
         }
 
-        private static void LoadValueTypes()
-        {
-            _types.Add("bool", new FieldTypeInfo("bool", 1, br => (object)br.ReadBoolean(), (bw, o) => bw.Write((bool)o)));
-            _types.Add("byte", new FieldTypeInfo("byte", 1, br => (object)br.ReadByte(), (bw, o) => bw.Write((byte)o)));
-            _types.Add("short", new FieldTypeInfo("short", 2, br => (object)br.ReadInt16(), (bw, o) => bw.Write((short)o)));
-            _types.Add("int", new FieldTypeInfo("int", 4,
-                br =>
-                {
-                    var result = br.ReadInt32();
-                    // Int32 -16843010 : FEFE FEFE (hex)
-                    if (result == -16843010) result = -1;
-                    return (object)result;
-                },
-                (bw, o) => bw.Write((int)o)));
-            _types.Add("Int64", new FieldTypeInfo("Int64", 8,
-                br =>
-                {
-                    var result = br.ReadInt64();
-                    // Int64 -72340172838076674: FEFE FEFE FEFE FEFE (hex)
-                    if (result == -72340172838076674) result = -1;
-                    return (object)result;
-                },
-                (bw, o) => bw.Write((int)o)));
-        }
-
-        /// <summary>
-        /// Saves pointer type field's definitions found in XML file
-        /// <typeDef name="StringOrUInt32List" width="8" pointerType="int,(*UInt32[]|*String)" /> 
-        /// </summary>
-        /// <param name="node"></param>
-        private static void ProcessPointerTypeDefinition(XmlNode node)
-        {
-            if (node == null)
-                throw new ArgumentNullException();
-
-            // get name
-            var name = GetAttributeValue(node, "name");
-            if (String.IsNullOrEmpty(name))
-                throw new Exception("Invalid XML: Type definition has wrong 'name' attribute");
-            if (_types.ContainsKey(name))
-                throw new Exception("Invalid XML: Type already defined: " + name);
-
-            // get width
-            var widthString = GetAttributeValue(node, "width");
-            if (String.IsNullOrEmpty(widthString))
-                throw new Exception("Invalid XML: Type definition has wrong 'width' attribute");
-            var width = Convert.ToInt32(widthString);
-            if (!(width == 4 || width == 8 ))
-                throw new Exception("Invalid XML: pointer type width should be 4 or 8: " + name);
-
-            // get 
-            var pointerType = GetAttributeValue(node, "pointerType");
-            if (String.IsNullOrEmpty(pointerType))
-                throw new Exception("Invalid XML: Type definition has wrong 'pointerType' attribute");
-
-            // create readers and writers
-            TypeReader reader = br =>
-            {
-                if (width == 4)
-                {
-                    return (object)br.ReadInt32();
-                }
-                return (object)br.ReadInt64();
-            };
-            TypeWriter writer = (bw, o) =>
-            {
-                if (width == 4)
-                {
-                    bw.Write((int)o);
-                }
-                else
-                {
-                    bw.Write((Int64)o);
-                }
-            };
-            
-
-            // delegates to read data referenced by pointer field value
-            PointerReaderDelegate pointerReader;
-            // pointers with 1-byte width
-            switch (name)
-            {
-                case "String":
-                    pointerReader = (inStream, fieldData, dataTableBegin, dataEntries) =>
-                    {
-                        var offset = fieldData.Offset;
-                        var data = new UnicodeString(offset, dataTableBegin, inStream);
-                        dataEntries[offset] = data;
-                        fieldData.Offset = fieldData.ValueOffset = offset;
-                    };
-                    break;
-                case "StringPointer":
-                    pointerReader = (inStream, fieldData, dataTableBegin, dataEntries) =>
-                    {
-                        var offset = fieldData.Offset;
-                        var pointerData = new PointerData(offset, dataTableBegin, inStream);
-                        dataEntries[offset] = pointerData;
-
-                        var newOffset = pointerData.PointerOffset;
-                        fieldData.ValueOffset = newOffset;
-
-                        pointerData.Data = new UnicodeString(newOffset, dataTableBegin, inStream);
-                        dataEntries[newOffset] = pointerData.Data;
-                    };
-                    break;
-                case "Int32": // Unknown 32bit data
-                    pointerReader = (inStream, fieldData, dataTableBegin, dataEntries) =>
-                    {
-                        // (AbstractData)Activator.CreateInstance(Type, new object[] {..params..});
-                        var offset = (int)fieldData.Value;
-                        fieldData.Offset = offset;
-                        dataEntries[offset] = new UnknownData(offset, dataTableBegin, inStream);
-                    };
-                    break;
-                case "Int32List":
-                case "UInt32List":
-                case "UInt64List":
-                    pointerReader = (inStream, fieldData, dataTableBegin, dataEntries) =>
-                    {
-                        var length = fieldData.Length;
-                        var offset = fieldData.Offset;
-                        IDataList data = null;
-                        if (name.Equals("Int32List"))
-                            data = new ListInt32(offset, dataTableBegin, length, inStream);
-                        if (name.Equals("UInt32List"))
-                            data = new ListUInt32(offset, dataTableBegin, length, inStream);
-                        if (name.Equals("UInt64List"))
-                            data = new ListUInt64(offset, dataTableBegin, length, inStream);
-                        fieldData.Offset = offset;
-                        dataEntries[offset] = (AbstractData)data;
-                    };
-                    break;
-                case "StringOrInt32List":
-                case "StringOrUInt32List":
-                case "StringOrUInt64List":
-                    pointerReader = (inStream, fieldData, dataTableBegin, dataEntries) =>
-                    {
-                        var length = fieldData.Length;
-                        var offset = fieldData.Offset;
-                        if (length > 0)
-                        {
-                            IDataList data = null;
-                            if (name.Equals("StringOrInt32List"))
-                                data = new ListInt32(offset, dataTableBegin, length, inStream);
-                            if (name.Equals("StringOrUInt32List"))
-                                data = new ListUInt32(offset, dataTableBegin, length, inStream);
-                            if (name.Equals("StringOrUInt64List"))
-                                data = new ListUInt64(offset, dataTableBegin, length, inStream);
-                            dataEntries[offset] = (AbstractData)data;
-                        }
-                        else
-                        {
-                            dataEntries[offset] = new UnicodeString(offset, dataTableBegin, inStream);
-                        }
-                    };
-                    break;
-                case "StringOrStringPointer2Byte":
-                    pointerReader = (inStream, fieldData, dataTableBegin, dataEntries) =>
-                    {
-                        var length = fieldData.Length;
-                        var offset = fieldData.Offset;
-
-                        if (length > 0) // == 1  => field is pointer to pointer to string
-                        {
-                            var pointerData = new PointerData(offset, dataTableBegin, inStream);
-                            dataEntries[offset] = pointerData;
-
-                            var newOffset = pointerData.PointerOffset;
-                            fieldData.ValueOffset = newOffset;
-
-                            pointerData.Data =
-                                dataEntries[newOffset] = new UnicodeString(newOffset, dataTableBegin, inStream);
-                        }
-                        else
-                        {
-                            dataEntries[offset] = new UnicodeString(offset, dataTableBegin, inStream);
-                        }
-                    };
-                    break;
-                default:
-                    throw new Exception("Unknown pointer type: " + name);
-            }
-
-            // save data
-            var type = new FieldTypeInfo(
-                name, 
-                Convert.ToInt32(width), 
-                reader, 
-                writer, 
-                true, 
-                pointerType, 
-                pointerReader);
-            _types[name] = type;
-        }
-
         private static void ProcessRecordDefinition(XmlNode node)
         {
-            var id = GetAttributeValue(node, "id");
-            if (id == null)
+            var file = GetAttributeValue(node, "file");
+            if (file == null)
                 throw new Exception("Invalid XML: record has wrong attribute 'id' :" + node);
             var lengthString = GetAttributeValue(node, "length");
             if (lengthString == null)
@@ -258,7 +114,7 @@ namespace LibDat
             var length = Convert.ToInt32(lengthString);
             if (length == 0)
             {
-                _records.Add(id, new RecordInfo(id));
+                _records.Add(file, new RecordInfo(file));
                 return;
             }
 
@@ -270,46 +126,43 @@ namespace LibDat
             {
                 if (field.NodeType == XmlNodeType.Comment)
                     continue;
+
                 var fieldName = field.LocalName;
+                if (!fieldName.Equals("field"))
+                    throw new Exception("Invalid XML: <record> contain wrong elemnr: " + fieldName);
 
                 var fieldId = GetAttributeValue(field, "id");
                 if (fieldId == null)
                     throw new Exception("Invalid XML: field has wrong attribute 'id' :" + field);
 
-                var fieldDescription = GetAttributeValue(field, "description");
-
                 var fieldType = GetAttributeValue(field, "type");
                 if (fieldType == null)
-                    throw new Exception("Invalid XML: field has wrong attribute 'type' :" + field);
+                    throw new Exception("Invalid XML: couldn't  find type for field :" + field);
+                var dataType = ParseType(fieldType);
+
+                var fieldDescription = GetAttributeValue(field, "description");
 
                 var isUserString = GetAttributeValue(field, "isUser");
                 var isUser = !String.IsNullOrEmpty(isUserString);
 
-
-                if (!HasTypeInfo(fieldType))
-                    throw new Exception("Unknown field type: " + fieldType);
-                var isPointer = fieldName.Equals("pointer");
-                var typeInfo = GetTypeInfo(fieldType);
-                if (typeInfo.IsPointer && !isPointer)
-                    throw new Exception("Found pointer type in value field: " + id + " " + fieldId);
-                if (!typeInfo.IsPointer && isPointer)
-                    throw new Exception("Found value type in pointer field: " + id + " " + fieldId);
-
-                fields.Add(new FieldInfo(index, fieldId, fieldDescription, typeInfo, isUser));
+                fields.Add(new FieldInfo(dataType, index, fieldId, fieldDescription, isUser));
                 index++;
-                totalLength += typeInfo.Width;
+                totalLength += dataType.Width;
             }
 
             // testing whether record's data is correct
             if (totalLength != length)
             {
                 var error = "Total length of fields: " + totalLength + " not equal record length: " + length
-                            + " for file: " + id;
-                Console.WriteLine(error);
+                            + " for file: " + file;
+                foreach (var field in fields)
+                {
+                    Console.WriteLine("{0} = {1}", field.FieldType.Name, field.FieldType.Width);
+                }
                 throw new Exception(error);
             }
 
-            _records.Add(id, new RecordInfo(id, length, fields));
+            _records.Add(file, new RecordInfo(file, length, fields));
         }
 
         // returns true if record's info for file fileName is defined
@@ -331,21 +184,199 @@ namespace LibDat
             return _records[datName];
         }
 
+
+        /// <summary>
+        /// parser field type and creates type hierarchy
+        /// For example for like "ref|list|ref|string" it will create
+        /// PointerDataType r1;
+        /// r1.RefType = ListDataType l1
+        /// l1.ListType= PointerDataType r2;
+        /// r2.RefType = StringData
+        /// </summary>
+        /// <param name="fieldType"></param>
+        /// <returns></returns>
+        private static DataType ParseType(string fieldType)
+        {
+            if (HasTypeInfo(fieldType))
+                return GetTypeInfo(fieldType);
+
+            DataType type;
+            var match = Regex.Match(fieldType, @"(\w+\|)?(.+)");
+            if (match.Success)
+            {
+                if (String.IsNullOrEmpty(match.Groups[1].Value)) // value type
+                {
+                    type = ParseValueType(match.Groups[2].Value);
+                }
+                else // pointer to other type
+                {
+                    var pointerString = match.Groups[1].Value;
+                    var refTypeString = match.Groups[2].Value;
+
+                    if (pointerString.Equals("ref|")) // pointer
+                    {
+                        var refType = ParseType(refTypeString);
+                        type = new PointerDataType(fieldType, refType.PointerWidth, 4, refType);
+                    }
+                    else if (pointerString.Equals("list|")) // list of data
+                    {
+                        var listType = ParseType(refTypeString);
+                        type = new ListDataType(fieldType, -1, 8, listType);
+                    }
+                    else
+                    {
+                        throw new Exception("Unknown complex type name:" + pointerString);
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception(@"String is not a valid type definition: " + fieldType);
+            }
+
+            if (type != null)
+                _types[fieldType] = type;
+            return type;
+        }
+
+        private static DataType ParseValueType(string fieldType)
+        {
+            var match = Regex.Match(fieldType, @"^(\w+)$");
+            if (match.Success)
+            {
+                return GetTypeInfo(match.Groups[0].Value);
+            }
+            throw new Exception(String.Format("Not a valid value type definition: \"{0}\"", fieldType));
+        }
+
+        private static void LoadValueTypes()
+        {
+            // value types
+            _types.Add("bool", new DataType("bool", 1, 4));
+            _types.Add("byte", new DataType("byte", 1, 4));
+            _types.Add("short", new DataType("short", 2, 4));
+            _types.Add("int", new DataType("int", 4, 4));
+            _types.Add("uint", new DataType("uint", 4, 4));
+            _types.Add("long", new DataType("long", 8, 4));
+            _types.Add("ulong", new DataType("ulong", 8, 4));
+            _types.Add("string", new DataType("string", -1, 4));
+        }
+
+        /// <summary>
+        /// creates new instance of AbstratData derived class from <c>inStream</c>
+        /// inStream position should be in the beginning of data of pointer to data
+        /// </summary>
+        /// <param name="type">type to read</param>
+        /// <param name="inStream">strem to read from</param>
+        /// <param name="isAtPointer">true is inStream positioned on pointer to <c>type</c> data </param>
+        /// <returns></returns>
+        public static AbstractData ReadType(DataType type, BinaryReader inStream, bool isAtPointer)
+        {
+//            Console.WriteLine("ReadType: "  + type.Name + " isAtPointer=" + isAtPointer);
+
+            AbstractData data;
+            var offset = GetOffset(inStream);
+
+            // check if list type
+            var listDataType = type as ListDataType;
+            if (listDataType != null) // list type data
+            {
+//                Console.WriteLine("Found list data type " + listDataType.Name);
+                if (!isAtPointer)
+                    throw new Exception("List data should be referenced by pointer data");
+
+                var count = inStream.ReadInt32();
+                offset = inStream.ReadInt32();
+                inStream.BaseStream.Seek(DatContainer.DataSectionOffset + offset, SeekOrigin.Begin);
+                data = new ListData(listDataType, offset, count, inStream);
+                DatContainer.DataEntries[offset] = data;
+                return data;
+            }
+
+            // check if pointer type
+            var pointerDataType = type as PointerDataType;
+            if (pointerDataType != null) // pointer type data
+            {
+//                Console.WriteLine("Found pointer data type " + pointerDataType.Name);
+                if (isAtPointer)
+                {
+                    offset = inStream.ReadInt32();
+                    inStream.BaseStream.Seek(DatContainer.DataSectionOffset + offset, SeekOrigin.Begin);
+                }
+                data = new PointerData(pointerDataType, offset, inStream);
+                return data;
+            }
+
+            // value type data
+
+            if (isAtPointer)
+            {
+//                Console.WriteLine("Value is at pointer:");
+//                PrintOffsets(inStream);
+                offset = inStream.ReadInt32();
+                inStream.BaseStream.Seek(DatContainer.DataSectionOffset + offset, SeekOrigin.Begin);
+            }
+            switch (type.Name)
+            {
+                case "bool":
+                    data = new ValueData<bool>(type, offset, inStream);
+                    break;
+                case "byte":
+                    data = new ValueData<byte>(type, offset, inStream);
+                    break;
+                case "short":
+                    data = new ValueData<short>(type, offset, inStream);
+                    break;
+                case "int":
+                    data = new Int32Data(type, offset, inStream);
+                    break;
+                case "uint":
+                    data = new ValueData<uint>(type, offset, inStream);
+                    break;
+                case "long":
+                    data = new Int64Data(type, offset, inStream);
+                    break;
+                case "ulong":
+                    data = new ValueData<ulong>(type, offset, inStream);
+                    break;
+                case "string":
+                    data = new StringData(type, offset, inStream);
+                    DatContainer.DataEntries[offset] = data;
+                    break;
+                default:
+                    throw new Exception("Unknown value type name: " + type.Name);
+
+            }
+            return data;
+        }
+
+        public static int GetOffset(BinaryReader reader)
+        {
+            return (int) reader.BaseStream.Position - DatContainer.DataSectionOffset;
+        }
+        public static void PrintOffsets(BinaryReader reader)
+        {
+            var offset1 = (int) reader.BaseStream.Position;
+            var offset2 =  offset1 - DatContainer.DataSectionOffset;
+            Console.WriteLine( offset1+ "\t" + offset2);
+        }
+
         /// <summary>
         /// Returns true if info for type typeName is defined
         /// </summary>
-        /// <param name="typeName"></param>
+        /// <param name="type"></param>
         /// <returns></returns>
-        public static bool HasTypeInfo(string typeName)
+        private static bool HasTypeInfo(string type)
         {
-            return _types.ContainsKey(typeName);
+            return _types.ContainsKey(type);
         }
 
-        public static FieldTypeInfo GetTypeInfo(string typeName)
+        private static DataType GetTypeInfo(string type)
         {
-            return _types[typeName];
+            if (!HasTypeInfo(type))
+                throw new Exception("Unknown data type: " + type);
+            return _types[type];
         }
-
 
         private static string GetAttributeValue(XmlNode node, string attributeName)
         {

@@ -8,10 +8,9 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" MinHeight="100"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*" MinHeight="100"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical">
             <Label Name="datName" FontWeight="Bold" FontSize="14"/>
@@ -26,7 +25,7 @@
             	Unchecked="showPointerData_Unchecked"
             	Content="{x:Static Properties:Resources.DatViewer_ShowPointerDataDesciption}"/>
         </StackPanel>
-        <DataGrid Grid.Row="1" Name="dataGridRecords" AutoGenerateColumns="False"/>
+        <DataGrid Grid.Row="1" Name="dataGridRecords" AutoGenerateColumns="False" />
         <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Height="4" />
         <DataGrid Grid.Row="3" Name="dataGridData" AutoGenerateColumns="True" ItemsSource="{Binding DataStrings}" />
     </Grid>

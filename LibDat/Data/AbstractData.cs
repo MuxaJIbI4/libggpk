@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using LibDat.Types;
 
 namespace LibDat.Data
 {
@@ -11,37 +12,30 @@ namespace LibDat.Data
         public int Offset { get; protected set; }
 
         /// <summary>
-        /// length of data entry (in bytes)
+        /// Contains offset to value AbstractData in data section (only for pointer type fields).
+        /// If AbstractData at <c>Offset</c> isn't PointerData then <c>>ValueOffset = Offset</c>
+        /// </summary>
+//        public int ValueOffset { get; protected set; }
+
+        /// <summary>
+        /// length of data (in bytes)
         /// </summary>
         public int Length { get; protected set; }
 
-        /// <summary>
-        /// Offset of the data section in the .dat file (Starts with 0xbbbbbbbbbbbbbbbb)
-        /// </summary>
-        public long DataTableOffset {get; protected set; }
+        public DataType Type { get; private set; }
 
-        protected AbstractData()
+        protected AbstractData(DataType type, int offset)
         {
-        }
-
-        protected AbstractData(int offset, long dataTableOffset)
-        {
-            DataTableOffset = dataTableOffset;
             Offset = offset;
+            Type = type;
         }
-
-        /// <summary>
-        /// Reads the data directly from the specified stream. 
-        /// Stream position is not preserved and will be at the end of the data upon successful read.
-        /// </summary>
-        /// <param name="inStream">Stream containing the unicode string</param>
-        protected abstract void ReadData(BinaryReader inStream);
 
         /// <summary>
         /// Save this data to the specified stream. Stream position is not preserved.
         /// </summary>
-        /// <param name="outStream">Stream to write contents to</param>
-        public abstract void Save(BinaryWriter outStream);
+        // <param name="outStream">Stream to write contents to</param>
+        /// <returns>offset where data was writter</returns>
+        public abstract int Save(BinaryWriter outStream);
 
         /// <summary>
         /// returns string representation of data this data section entry contain

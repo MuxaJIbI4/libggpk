@@ -143,12 +143,12 @@ namespace PoeStrings
                 var strings = dc.GetUserStrings();
                 foreach (var currentDatString in strings)
                 {
-                    if (!translationsToApply.ContainsKey(currentDatString.Data))
+                    if (!translationsToApply.ContainsKey(currentDatString.Value))
                         continue;
 
                     // TODO skip already strings already procesed in this loops
-                    var translationBeingApplied = translationsToApply[currentDatString.Data];
-                    currentDatString.NewData = translationBeingApplied.TranslatedText;
+                    var translationBeingApplied = translationsToApply[currentDatString.Value];
+                    currentDatString.NewValue = translationBeingApplied.TranslatedText;
 
                     outputBuffer.AppendLine(string.Format(
                         Settings.Strings["ApplyTranslations_TextReplaced"],

@@ -6,6 +6,7 @@ using System.Text;
 
 using LibDat.Data;
 using System.Text.RegularExpressions;
+using LibDat.Types;
 
 namespace LibDat
 {
@@ -19,12 +20,24 @@ namespace LibDat
         /// </summary>
         public readonly string DatName;
 
+        /// <summary>
+        /// Length of .dat file
+        /// </summary>
+        public int Length { get; private set; }
+
         public RecordInfo RecordInfo { get; private set; }
 
         /// <summary>
         /// Offset of the data section in the .dat file (Starts with 0xbbbbbbbbbbbbbbbb)
         /// </summary>
-        public int DataSectionOffset { get; private set; }
+        public static int DataSectionOffset { get; private set; }
+
+        /// <summary>
+        /// Mapping of all known strings and other data found in the data section. 
+        /// Key = offset with respect to beginning of data section.
+        /// 
+        /// </summary>
+        public static Dictionary<int, AbstractData> DataEntries { get; private set; }
 
         /// <summary>
         /// Length of data section of .dat file
@@ -41,12 +54,7 @@ namespace LibDat
         /// </summary>
         public List<RecordData> Records;
 
-        /// <summary>
-        /// Mapping of all known strings and other data found in the data section. 
-        /// Key = offset with respect to beginning of data section.
-        /// 
-        /// </summary>
-        public Dictionary<int, AbstractData> DataEntries { get; private set; }
+        
 
         /// <summary>
         /// Parses the .dat file contents from inStream.
@@ -90,6 +98,9 @@ namespace LibDat
         /// <param name="inStream">Stream containing contents of .dat file</param>
         private void Read(BinaryReader inStream)
         {
+            Length = (int)inStream.BaseStream.Length;
+            DataSectionOffset = 0;
+
             // check that record format is defined
             if (RecordInfo == null)
                 throw new Exception("Missing dat parser for file " + DatName);
@@ -105,41 +116,24 @@ namespace LibDat
             // find record_length;
             var length = FindRecordLength(inStream, numberOfEntries);
             if ((numberOfEntries > 0) && length != RecordInfo.Length)
-                throw new Exception("Found record length = " + length + " not equal length defined in XML: " + RecordInfo.Length);
+                throw new Exception("Found record length = " + length 
+                    + " not equal length defined in XML: " + RecordInfo.Length);
+
+            // read data section
+            DataSectionOffset = numberOfEntries * length + 4;
+            DataSectionDataLength = Length - DataSectionOffset - 8;
+            inStream.BaseStream.Seek(DataSectionOffset, SeekOrigin.Begin);
+            // check magic number
+            if (inStream.ReadUInt64() != 0xBBbbBBbbBBbbBBbb)
+                throw new ApplicationException("Missing magic number after records");
+            inStream.BaseStream.Seek(-8, SeekOrigin.Current);
+            _originalDataTable = inStream.ReadBytes(Length - (int)inStream.BaseStream.Position);
 
             // read records
             Records = new List<RecordData>(numberOfEntries);
             for (var i = 0; i < numberOfEntries; i++)
             {
-                Records.Add(new RecordData(RecordInfo, inStream));
-            }
-
-            // check magic number
-            if (inStream.ReadUInt64() != 0xBBbbBBbbBBbbBBbb)
-                throw new ApplicationException("Missing magic number after records");
-
-            // read data section
-            inStream.BaseStream.Seek(-8, SeekOrigin.Current);
-            DataSectionOffset = (int)inStream.BaseStream.Position;
-            DataSectionDataLength = (int)(inStream.BaseStream.Length) - DataSectionOffset - 8;
-            _originalDataTable = inStream.ReadBytes((int)(inStream.BaseStream.Length - inStream.BaseStream.Position));
-
-            // Read all referenced string and data entries from the data following the entries (starting at magic number)
-            if (!RecordInfo.HasPointers)
-                return;
-
-            foreach (var r in Records)
-            {
-                try
-                {
-                    ReadRecordData(inStream, r);
-                }
-                catch (Exception e)
-                {
-                    // for debugging
-                    Console.WriteLine(e.Message);
-                    throw;
-                }
+                Records.Add(new RecordData(RecordInfo, inStream, i));
             }
         }
 
@@ -166,32 +160,6 @@ namespace LibDat
 
             inStream.BaseStream.Seek(4, SeekOrigin.Begin);
             return recordLength;
-        }
-
-        private void ReadRecordData(BinaryReader inStream, RecordData recordData)
-        {
-            var rIndex = Records.IndexOf(recordData);
-//            Console.WriteLine("Processing record " + rIndex);
-            foreach (var fieldData in recordData.FieldsData.Where(fieldData => fieldData.FieldInfo.IsPointer))
-            {
-//                Console.WriteLine("Processing field " + recordData.FieldsData.IndexOf(fieldData));
-                try
-                {
-                    fieldData.FieldInfo.FieldType.PointerReader(inStream, fieldData, DataSectionOffset, DataEntries);
-                }
-                catch (Exception e)
-                {
-                    var error = String.Format(
-                        "Error: Dat={0}, Row Index={1}, Field Id={2}, Field Type Name = {3}, Field Value = {4}" +
-                        "\n Message:{5}\n Stacktrace: {6}" ,
-                        DatName, rIndex, fieldData.FieldInfo.Id, 
-                        fieldData.FieldInfo.FieldType.Name, fieldData.GetOffsetPrefix(),
-                        e.Message, e.StackTrace);
-                    Console.WriteLine(error);
-                    throw new Exception(error);
-                }
-                
-            }
         }
 
         /// <summary>
@@ -236,13 +204,14 @@ namespace LibDat
 
             foreach (var item in DataEntries)
             {
-                if (item.Value is UnicodeString)
+                if (item.Value is StringData)
                 {
-                    var str = item.Value as UnicodeString;
-                    if (!string.IsNullOrWhiteSpace(str.NewData))
+                    var str = item.Value as StringData;
+                    if (!string.IsNullOrWhiteSpace(str.NewValue))
                     {
-                        str.Save(outStream);
-                        changedOffsets[str.Offset] = str.NewOffset;
+                        var newOffset = str.Save(outStream);
+                        if (newOffset != str.Offset)
+                            changedOffsets[str.Offset] = newOffset;
                     }
                 }
             }
@@ -253,15 +222,15 @@ namespace LibDat
             // Now we must go through each StringIndex and DataIndex and update the index then save it
             foreach (var r in Records)
             {
-                r.UpdateDataOffsets(changedOffsets);
+//                r.UpdateDataOffsets(changedOffsets);
                 r.Save(outStream);
             }
         }
 
-        public IList<UnicodeString> GetUserStrings()
+        public IList<StringData> GetUserStrings()
         {
             var offsets = GetUserStringOffsets();
-            return offsets.Select(offset => DataEntries[offset]).Cast<UnicodeString>().ToList();
+            return offsets.Select(offset => DataEntries[offset]).Cast<StringData>().ToList();
         }
 
         public IList<int> GetUserStringOffsets()
@@ -277,14 +246,38 @@ namespace LibDat
                 foreach (var index in indexes)
                 {
                     var fieldData = recordData.FieldsData[index];
-                    // TODO: this will  not work on nested pointers: fieldData.Data == PointerData
-                    var offset = (fieldData.ValueOffset == 0 ? fieldData.Offset : fieldData.ValueOffset);
-                    var currentDatString = DataEntries[offset] as UnicodeString;
-                    if (currentDatString != null)
-                        result.Add(offset);
+                    // TODO: find all refrenced string recursively
+                    FindUserStrings(fieldData.Data, result);
                 }
             }
             return result;
+        }
+
+        private void FindUserStrings(AbstractData data, List<int> result)
+        {
+            if (data == null)
+                return;
+
+            if (data is PointerData)
+            {
+                var pData = data as PointerData;
+                FindUserStrings(pData.RefData, result);
+            }
+            else if (data is ListData)
+            {
+                var lData = data as ListData;
+                foreach (var listEntry in lData.List)
+                {
+                    FindUserStrings(listEntry, result);
+                }
+            }
+            else if (data is StringData)
+            {
+                var sData = data as StringData;
+                if (!String.IsNullOrEmpty(sData.Value))
+                    result.Add(data.Offset);
+            }
+            // skip any other value data
         }
 
         /// <summary>
@@ -330,7 +323,7 @@ namespace LibDat
             string str;
             if (fieldData.FieldInfo.IsPointer)  
             {
-                var offset = fieldData.Offset;
+                var offset = fieldData.Data.Offset;
                 if (DataEntries.ContainsKey(offset))
                 {
                     str = DataEntries[offset].GetValueString();
@@ -346,7 +339,7 @@ namespace LibDat
             }
             else // not a pointer type field
             {
-                str = fieldData.Value.ToString();
+                str = fieldData.Data.ToString();
             }
 
             str = (Regex.IsMatch(str, ",") ? String.Format("\"{0}\"", str.Replace("\"", "\"\"") ) : str);

@@ -40,22 +40,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\AbstractDataList.cs" />
+    <Compile Include="Data\ListData.cs" />
     <Compile Include="Data\AbstractData.cs" />
     <Compile Include="Data\PointerData.cs" />
+    <Compile Include="Data\ValueData.cs" />
     <Compile Include="FieldData.cs" />
     <Compile Include="RecordData.cs" />
-    <Compile Include="Data\ListInt32.cs" />
     <Compile Include="RecordFactory.cs" />
-    <Compile Include="FieldTypeInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DatContainer.cs" />
     <Compile Include="FieldInfo.cs" />
-    <Compile Include="Data\ListUInt32.cs" />
-    <Compile Include="Data\ListUInt64.cs" />
-    <Compile Include="Data\UnicodeString.cs" />
-    <Compile Include="Data\UnknownData.cs" />
     <Compile Include="RecordInfo.cs" />
+    <Compile Include="Types\DataType.cs" />
+    <Compile Include="Types\ListDataType.cs" />
+    <Compile Include="Types\PointerDataType.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DatDefinitions.xml">
@@ -69,6 +67,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 	   Other similar extension points exist, see Microsoft.Common.targets.

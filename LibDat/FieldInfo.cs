@@ -1,4 +1,6 @@
-﻿namespace LibDat
+﻿using LibDat.Types;
+
+namespace LibDat
 {
     /// <summary>
     /// contains information about record field: visible name, description and type of data inside
@@ -17,40 +19,36 @@
         /// Custom text for field
         /// </summary>
         public string Description { get; private set; }
-
-        public FieldTypeInfo FieldType { get; private set; }
-
-        // returns true if fields contains offset to data section of .dat
-        public bool IsPointer { get; private set; }
-
+        
         // returns true if fields contains user string (data)
         public bool IsUser { get; private set; }
 
+        public DataType FieldType { get; private set; }
+
+        public bool IsPointer { get; private set; }
 
         // index, fieldId, fieldDescription, fieldType, isPointer
-        public FieldInfo(int index, string id, string description, FieldTypeInfo type, bool isUser = false)
+        public FieldInfo(DataType type, int index, string id, string description, bool isUser = false) 
         {
             Index = index;
             Id = id;
             Description = description;
-            FieldType = type;
-            IsPointer = type.IsPointer;
             IsUser = isUser;
+            IsPointer = type is PointerDataType;
+
+            FieldType = type;
         }
 
         public bool IsString()
         {
-            return FieldType.Name.Equals("UserString") || FieldType.Name.Equals("String");
-        }
-
-        public bool IsUserString()
-        {
-            return FieldType.Name.Equals("UserString");
+            return FieldType.Name.Equals("String");
         }
 
         public string ToString(string delimiter)
         {
-            return Id + delimiter + (FieldType.IsPointer?"*":"") + FieldType.Name + delimiter + FieldType.Width + " byte";
+            return    Id                + delimiter 
+                    + FieldType.Name    + delimiter 
+                    + FieldType.Width   + " byte";
         }
     }
 }

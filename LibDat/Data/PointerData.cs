@@ -1,42 +1,50 @@
 ﻿using System;
 using System.IO;
+using LibDat.Types;
 
 namespace LibDat.Data
 {
-    public sealed class PointerData : AbstractData
+    /// <summary>
+    /// Value f
+    /// </summary>
+    public class PointerData : AbstractData
     {
         /// <summary>
-        /// contains offset to data section entry (Int32 data at this instance <c>Offset</c>)
+        /// referenced data
         /// </summary>
-        public int PointerOffset { get; private set; }
+        public AbstractData RefData { get; set; }
 
-        public AbstractData Data { get; set; }
+        /// <summary>
+        /// referenced data's type
+        /// </summary>
+        public DataType RefType { get; private set; }
 
-        public PointerData(int offset, int dataTableOffset, BinaryReader inStream)
-            : base(offset, dataTableOffset)
+        public PointerData(PointerDataType dataType, int offset, BinaryReader inStream) : base(dataType, offset)
         {
-            Offset = offset;
-            inStream.BaseStream.Seek(offset + dataTableOffset, SeekOrigin.Begin);
-            ReadData(inStream);
-            Length = 4;
+//            Console.WriteLine(String.Format("PointerData Constructor: type={0} offset={1} position={2}",
+//                dataType.Name, offset, RecordFactory.GetOffset(inStream)));
+            RefType = dataType.RefType;
+            Length = RefType.PointerWidth;
+            RefData = RecordFactory.ReadType(RefType, inStream, true);
         }
 
-        protected override void ReadData(BinaryReader inStream)
-        {
-            PointerOffset = inStream.ReadInt32();
-        }
-
-        public override void Save(BinaryWriter outStream)
+        public override int Save(BinaryWriter outStream)
         {
             // TODO write Data instead of offset to Data
             // TODO: look for changed offset of data section entry which initially was at PointerOffset
-            throw new NotImplementedException();
-            outStream.Write(PointerOffset);
+            
+            var newOffset = (int)outStream.BaseStream.Position;
+            outStream.Write(RefData.Offset);
+            var listData = RefData as ListData;
+            if (listData != null)
+                outStream.Write(listData.Count);
+            
+            return newOffset;
         }
 
         public override string GetValueString()
         {
-            return Data == null ? "[Error: Pointed Data Not Initialized]" : Data.GetValueString();
+            return RefData == null ? "[Error: Pointed Data Not Initialized]" : RefData.GetValueString();
         }
     }
 }
