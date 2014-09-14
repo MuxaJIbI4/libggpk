@@ -4,27 +4,27 @@ using LibDat.Types;
 
 namespace LibDat.Data
 {
+    /// <summary>
+    /// Base class for all types of data that can be met in .dat file
+    /// </summary>
     public abstract class AbstractData
     {
         /// <summary>
         /// Offset in the dat file with respect to the beginning of the data section
         /// </summary>
-        public int Offset { get; protected set; }
+        public int Offset { get; private set; }
 
         /// <summary>
-        /// Contains offset to value AbstractData in data section (only for pointer type fields).
-        /// If AbstractData at <c>Offset</c> isn't PointerData then <c>>ValueOffset = Offset</c>
-        /// </summary>
-//        public int ValueOffset { get; protected set; }
-
-        /// <summary>
-        /// length of data (in bytes)
+        /// data length in bytes
         /// </summary>
         public int Length { get; protected set; }
 
-        public DataType Type { get; private set; }
+        /// <summary>
+        /// corresponding type of data
+        /// </summary>
+        public BaseDataType Type { get; private set; }
 
-        protected AbstractData(DataType type, int offset)
+        protected AbstractData(BaseDataType type, int offset)
         {
             Offset = offset;
             Type = type;
@@ -34,13 +34,11 @@ namespace LibDat.Data
         /// Save this data to the specified stream. Stream position is not preserved.
         /// </summary>
         // <param name="outStream">Stream to write contents to</param>
-        /// <returns>offset where data was writter</returns>
+        /// <returns>offset where data was written</returns>
         public abstract int Save(BinaryWriter outStream);
 
         /// <summary>
-        /// returns string representation of data this data section entry contain
-        /// (in case it points to another data section entry it returns 
-        /// result of <c>GetValueString()</c> call on that data
+        /// returns visual representation of data including recursively dereferenced pointer and list data 
         /// </summary>
         /// <returns></returns>
         public abstract string GetValueString();
@@ -48,7 +46,8 @@ namespace LibDat.Data
         [Obsolete]
         public new string ToString()
         {
-            // TODO: remove later
+            // TODO: GetValueString() should be used insted
+            // TODO: return ToString() after all bufs will be fixed or call GetValueString() from ToString()
             throw new NotImplementedException();
         }
     }

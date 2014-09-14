@@ -1,43 +1,48 @@
 ﻿using System;
 using System.IO;
 using LibDat.Data;
+using LibDat.Types;
 
 namespace LibDat
 {
     /// <summary>
-    /// contains information about field data:
-    /// * if field is value type it stores in the field value
-    /// * if field is pointer type it stores field value plus offset to value type in data section
-    ///   ( this data can't pointer to other data section )
+    /// contains field data:
+    /// 1) field info
+    /// 2) actual data read from stream
+    /// Basically it's a wrapper around data at field offset
     /// </summary>
     public class FieldData
     {
         public AbstractData Data { get; private set; }
-        
+
         public FieldInfo FieldInfo { get; private set; }
 
         public FieldData(FieldInfo fieldInfo, BinaryReader reader)
         {
             FieldInfo = fieldInfo;
-            Data = RecordFactory.ReadType(fieldInfo.FieldType, reader, false);
+            Data = TypeFactory.ReadType(fieldInfo.FieldType, reader, false);
         }
 
         /// <summary>
-        /// Returns pointer prefi string in format:
+        /// Returns pointer prefix string in format:
         ///     ""                      if field is value type
         ///     "@ = "                  if field's width is 4
         ///     "[length]@offset = "    if field's width is 8
         /// </summary>
         /// <returns></returns>
-
         public string GetOffsetPrefix()
         {
             if (!FieldInfo.IsPointer) return String.Empty;
 
             var pData = Data as PointerData;
+            if (pData == null)
+                throw new Exception("FieldData of pointer type doesn't have data of PointerData class");
             if (FieldInfo.FieldType.Width != 8) return String.Format("@{0}", pData.RefData.Offset);
 
-            return String.Format("[{0}]@{1}", (pData.RefData as ListData).Count, pData.RefData.Offset);
+            var lData = pData.RefData as ListData;
+            if (lData == null)
+                throw new Exception("Didn't find ListData data at offset of FieldData of pointer to list type");
+            return String.Format("[{0}]@{1}", lData.Count, pData.RefData.Offset);
         }
     }
 }

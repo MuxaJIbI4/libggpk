@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using LibDat.Types;
 
 namespace LibDat.Data
@@ -17,7 +16,7 @@ namespace LibDat.Data
         /// <summary>
         /// referenced data's type
         /// </summary>
-        public DataType RefType { get; private set; }
+        public BaseDataType RefType { get; private set; }
 
         public PointerData(PointerDataType dataType, int offset, BinaryReader inStream) : base(dataType, offset)
         {
@@ -25,7 +24,7 @@ namespace LibDat.Data
 //                dataType.Name, offset, RecordFactory.GetOffset(inStream)));
             RefType = dataType.RefType;
             Length = RefType.PointerWidth;
-            RefData = RecordFactory.ReadType(RefType, inStream, true);
+            RefData = TypeFactory.ReadType(RefType, inStream, true);
         }
 
         public override int Save(BinaryWriter outStream)

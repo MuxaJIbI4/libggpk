@@ -6,7 +6,6 @@ using System.Text;
 
 using LibDat.Data;
 using System.Text.RegularExpressions;
-using LibDat.Types;
 
 namespace LibDat
 {
@@ -190,7 +189,7 @@ namespace LibDat
         public void Save(Stream rawOutStream)
         {
             // Mapping of the new string and data offsets
-            var changedOffsets = new Dictionary<int, int>();
+            var changedStringOffsets = new Dictionary<int, int>();
 
             var outStream = new BinaryWriter(rawOutStream, Encoding.Unicode);
             outStream.Write(Records.Count);
@@ -198,28 +197,24 @@ namespace LibDat
             // Pretty ugly way to zero out the for sizeof(Entry) * EntryCount bytes
             if (Records.Count > 0)
                 outStream.Write(new byte[RecordInfo.Length * Records.Count]);
-
-            var newStartOfDataSection = (int)outStream.BaseStream.Position;
             outStream.Write(_originalDataTable);
 
+            // write changed string to end of stream
             foreach (var item in DataEntries)
             {
-                if (item.Value is StringData)
-                {
-                    var str = item.Value as StringData;
-                    if (!string.IsNullOrWhiteSpace(str.NewValue))
-                    {
-                        var newOffset = str.Save(outStream);
-                        if (newOffset != str.Offset)
-                            changedOffsets[str.Offset] = newOffset;
-                    }
-                }
+                if (!(item.Value is StringData)) continue;
+
+                var str = item.Value as StringData;
+                if (string.IsNullOrWhiteSpace(str.NewValue)) continue;
+
+                // actually write changed string
+                var newOffset = (int) outStream.BaseStream.Position - DataSectionOffset;
+                str.Save(outStream);
+                changedStringOffsets[str.Offset] = newOffset;
             }
 
             // Go back to the beginning and write the real entries
             outStream.BaseStream.Seek(4, SeekOrigin.Begin);
-
-            // Now we must go through each StringIndex and DataIndex and update the index then save it
             foreach (var r in Records)
             {
 //                r.UpdateDataOffsets(changedOffsets);

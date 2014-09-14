@@ -51,9 +51,10 @@
     <Compile Include="DatContainer.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="RecordInfo.cs" />
-    <Compile Include="Types\DataType.cs" />
+    <Compile Include="Types\BaseDataType.cs" />
     <Compile Include="Types\ListDataType.cs" />
     <Compile Include="Types\PointerDataType.cs" />
+    <Compile Include="Types\TypeFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DatDefinitions.xml">

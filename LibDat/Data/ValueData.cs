@@ -5,7 +5,9 @@ using LibDat.Types;
 namespace LibDat.Data
 {
     /// <summary>
-    /// for C# value types
+    /// represents simple value data (end node of any tree of pointer or list data)
+    /// Extension methods BinaryWriter.Write<T>(object) and BinaryReader.Read<T>(object) are defined 
+    /// in <c>RecordFactory</c> class.
     /// </summary>
     public class ValueData<T> : AbstractData
     {
@@ -14,7 +16,7 @@ namespace LibDat.Data
         /// </summary>
         public T Value { get; set; }
 
-        public ValueData(DataType type, int offset, BinaryReader reader)
+        public ValueData(BaseDataType type, int offset, BinaryReader reader)
             : base(type, offset)
         {
             Value = reader.Read<T>();
@@ -36,19 +38,29 @@ namespace LibDat.Data
 
     public class Int32Data : ValueData<Int32>
     {
-        public Int32Data(DataType type, int offset, BinaryReader reader) : base(type, offset, reader)
+        public Int32Data(BaseDataType type, int offset, BinaryReader reader) : base(type, offset, reader) { }
+
+        /// <summary>
+        /// returns custom value for specific value of <c>Value</c> property
+        /// </summary>
+        public override string GetValueString()
         {
             // Int32 -16843010 : FEFE FEFE (hex)
-            if (Value == -16843010) Value = -1;
+            return Value == -16843010 ? "-1" : Value.ToString();
         }
     }
 
     public class Int64Data : ValueData<Int64>
     {
-        public Int64Data(DataType type, int offset, BinaryReader reader) : base(type, offset, reader)
+        public Int64Data(BaseDataType type, int offset, BinaryReader reader) : base(type, offset, reader) { }
+
+        /// <summary>
+        /// returns custom value for specific value of <c>Value</c> property
+        /// </summary>
+        public override string GetValueString()
         {
             // Int64 -72340172838076674: FEFE FEFE FEFE FEFE (hex)
-            if (Value == -72340172838076674) Value = -1;
+            return Value == -72340172838076674 ? "-1" : Value.ToString();
         }
     }
 
@@ -62,7 +74,7 @@ namespace LibDat.Data
         /// </summary>
         public string NewValue { get; set; }
 
-        public StringData(DataType type, int offset, BinaryReader inStream)
+        public StringData(BaseDataType type, int offset, BinaryReader inStream)
             : base(type, offset, inStream)
         {
             NewValue = null;

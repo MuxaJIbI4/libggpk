@@ -18,7 +18,7 @@ namespace LibDat.Data
         /// </summary>
         public List<AbstractData> List { get; private set; }
 
-        public DataType ListType { get; private set; }
+        public BaseDataType ListType { get; private set; }
 
         public ListData(ListDataType type, int offset, int count, BinaryReader inStream) : base(type, offset)
         {
@@ -37,7 +37,7 @@ namespace LibDat.Data
             {
                 // given fixed size of ListType
                 inStream.BaseStream.Seek(currentOffset + i*ListType.Width, SeekOrigin.Begin);
-                var data = RecordFactory.ReadType(ListType, inStream, false);
+                var data = TypeFactory.ReadType(ListType, inStream, false);
                 List.Add(data);
             }
         }

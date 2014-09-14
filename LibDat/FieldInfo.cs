@@ -3,7 +3,9 @@
 namespace LibDat
 {
     /// <summary>
-    /// contains information about record field: visible name, description and type of data inside
+    /// contains information about record single field: 
+    /// 1) index of field in the row, visible name, description, whether it's a user field
+    /// 2) underlying type of data
     /// </summary>
     public class FieldInfo
     {
@@ -23,12 +25,12 @@ namespace LibDat
         // returns true if fields contains user string (data)
         public bool IsUser { get; private set; }
 
-        public DataType FieldType { get; private set; }
+        public BaseDataType FieldType { get; private set; }
 
         public bool IsPointer { get; private set; }
 
         // index, fieldId, fieldDescription, fieldType, isPointer
-        public FieldInfo(DataType type, int index, string id, string description, bool isUser = false) 
+        public FieldInfo(BaseDataType type, int index, string id, string description, bool isUser = false) 
         {
             Index = index;
             Id = id;

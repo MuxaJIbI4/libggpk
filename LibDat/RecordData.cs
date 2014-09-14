@@ -31,7 +31,6 @@ namespace LibDat
             {
                 try
                 {
-                    // TODO: seek to correct offset
                     var fieldData = new FieldData(fi, inStream);
                     _fieldsData.Add(fieldData);
 
@@ -53,6 +52,7 @@ namespace LibDat
 
         /// <summary>
         /// Save this record to the specified stream. Stream position is not preserved.
+        /// Called from <c>DatContainer.Save</c> method
         /// </summary>
         /// <param name="outStream">Stream to write contents to</param>
         public void Save(BinaryWriter outStream)

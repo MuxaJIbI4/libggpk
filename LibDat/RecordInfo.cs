@@ -10,12 +10,12 @@ namespace LibDat
     public class RecordInfo
     {
         /// <summary>
-        /// name of .dat file (without extension) which this record format belongs to
+        /// Returns Name (without extension) of .dat file record of which this record describes
         /// </summary>
-        public string Id { get; private set; }
+        public string FileName { get; private set; }
 
         /// <summary>
-        /// contains number of bytes this record will read or write to the .dat file
+        /// Contains number of bytes this record will read or write to the .dat file
         /// </summary>
         /// <returns>Number of bytes this record will take in its native format</returns>
         public int Length { get; private set; }
@@ -31,9 +31,9 @@ namespace LibDat
         /// </summary>
         public bool HasPointers { get; private set; }
 
-        public RecordInfo(string id, int length = 0, List<FieldInfo> fields = null)
+        public RecordInfo(string fileName, int length = 0, List<FieldInfo> fields = null)
         {
-            Id = id;
+            FileName = fileName;
             Length = length;
             _fields = fields ?? new List<FieldInfo>();
             HasPointers = _fields.Any(x => x.IsPointer);
