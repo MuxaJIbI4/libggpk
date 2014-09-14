@@ -20,33 +20,44 @@ namespace LibDat.Data
 
         public BaseDataType ListType { get; private set; }
 
-        public ListData(ListDataType type, int offset, int count, BinaryReader inStream) : base(type, offset)
+        public ListData(ListDataType type, BinaryReader reader, Dictionary<string, object> options)
+            : base(type)
         {
-//            Console.WriteLine(String.Format("ListData Constructor: type={0} offset={1} count={3} position={2}",
-//                type.Name, offset, RecordFactory.GetOffset(inStream), count));
+            if (!options.ContainsKey("count") || !options.ContainsKey("offset"))
+                throw new Exception("Wrong parameters for reading ListData");
 
             ListType = type.ListType;
-            Count = count;
+
+            // moving to start of list
+            Offset = (int)options["offset"];
+            reader.BaseStream.Seek(DatContainer.DataSectionOffset + Offset, SeekOrigin.Begin);
+
+            Count = (int)options["count"];
             List = new List<AbstractData>(Count);
             Length = ListType.Width * Count;
-            if (count == 0)
+            if (Count == 0)
                 return;
 
-            var currentOffset = (int)inStream.BaseStream.Position;
-            for (var i = 0; i < count; ++i)
+            // Count > 0
+            var currentOffset = reader.GetDataSectionOffset();
+            for (var i = 0; i < Count; ++i)
             {
                 // given fixed size of ListType
-                inStream.BaseStream.Seek(currentOffset + i*ListType.Width, SeekOrigin.Begin);
-                var data = TypeFactory.ReadType(ListType, inStream, false);
+                var listEntryOffset = currentOffset + i*ListType.Width; 
+                var dict = new Dictionary<string, object>();
+                dict["offset"] = listEntryOffset;
+                var data = TypeFactory.CreateData(ListType, reader, dict);
                 List.Add(data);
             }
+
+            DatContainer.DataEntries[Offset] = this;
         }
 
         public override int Save(BinaryWriter outStream)
         {
             // TODO: recursive save 
             throw new NotImplementedException();
-            
+
         }
 
         public override string GetValueString()

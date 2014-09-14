@@ -12,7 +12,7 @@ namespace LibDat.Data
         /// <summary>
         /// Offset in the dat file with respect to the beginning of the data section
         /// </summary>
-        public int Offset { get; private set; }
+        public int Offset { get; protected set; }
 
         /// <summary>
         /// data length in bytes
@@ -24,9 +24,8 @@ namespace LibDat.Data
         /// </summary>
         public BaseDataType Type { get; private set; }
 
-        protected AbstractData(BaseDataType type, int offset)
+        protected AbstractData(BaseDataType type)
         {
-            Offset = offset;
             Type = type;
         }
 

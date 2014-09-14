@@ -43,6 +43,7 @@
     <Compile Include="Data\ListData.cs" />
     <Compile Include="Data\AbstractData.cs" />
     <Compile Include="Data\PointerData.cs" />
+    <Compile Include="Data\StringData.cs" />
     <Compile Include="Data\ValueData.cs" />
     <Compile Include="FieldData.cs" />
     <Compile Include="RecordData.cs" />

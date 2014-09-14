@@ -11,7 +11,7 @@ namespace LibDat.Types
     /// helper class for:
     /// 1) parsing and storing types from XML
     /// 2) reading data of speific type
-    /// 3) contain extension methods on BinaryWriter and BinaryReader to facilitate reading of C# value types
+    /// 3) contain extension methods on BinaryWriter and BinaryReader to facilitate reading of data of C# value types
     /// </summary>
     public static class TypeFactory
     {
@@ -72,6 +72,11 @@ namespace LibDat.Types
             if (WriteFuncs.ContainsKey(typeof(T)))
                 WriteFuncs[typeof(T)](reader, (T)obj);
             throw new NotImplementedException();
+        }
+
+        public static int GetDataSectionOffset(this BinaryReader reader)
+        {
+            return (int)reader.BaseStream.Position - DatContainer.DataSectionOffset;
         }
 
         #endregion
@@ -158,92 +163,6 @@ namespace LibDat.Types
         }
 
         /// <summary>
-        /// creates new instance of AbstratData derived class from <c>inStream</c>
-        /// inStream position should be in the beginning of data of pointer to data
-        /// </summary>
-        /// <param name="type">type to read</param>
-        /// <param name="inStream">strem to read from</param>
-        /// <param name="isAtPointer">true is inStream positioned on pointer to <c>type</c> data </param>
-        /// <returns></returns>
-        public static AbstractData ReadType(BaseDataType type, BinaryReader inStream, bool isAtPointer)
-        {
-            AbstractData data;
-            var offset = GetOffset(inStream);
-
-            // check if list type
-            var listDataType = type as ListDataType;
-            if (listDataType != null) // list type data
-            {
-                if (!isAtPointer)
-                    throw new Exception("List data should be referenced by pointer data");
-
-                var count = inStream.ReadInt32();
-                offset = inStream.ReadInt32();
-                inStream.BaseStream.Seek(DatContainer.DataSectionOffset + offset, SeekOrigin.Begin);
-                data = new ListData(listDataType, offset, count, inStream);
-                DatContainer.DataEntries[offset] = data;
-                return data;
-            }
-
-            // check if pointer type
-            var pointerDataType = type as PointerDataType;
-            if (pointerDataType != null) // pointer type data
-            {
-                if (isAtPointer)
-                {
-                    offset = inStream.ReadInt32();
-                    inStream.BaseStream.Seek(DatContainer.DataSectionOffset + offset, SeekOrigin.Begin);
-                }
-                data = new PointerData(pointerDataType, offset, inStream);
-                return data;
-            }
-
-            // value type data
-            if (isAtPointer)
-            {
-                offset = inStream.ReadInt32();
-                inStream.BaseStream.Seek(DatContainer.DataSectionOffset + offset, SeekOrigin.Begin);
-            }
-            switch (type.Name)
-            {
-                case "bool":
-                    data = new ValueData<bool>(type, offset, inStream);
-                    break;
-                case "byte":
-                    data = new ValueData<byte>(type, offset, inStream);
-                    break;
-                case "short":
-                    data = new ValueData<short>(type, offset, inStream);
-                    break;
-                case "int":
-                    data = new Int32Data(type, offset, inStream);
-                    break;
-                case "uint":
-                    data = new ValueData<uint>(type, offset, inStream);
-                    break;
-                case "long":
-                    data = new Int64Data(type, offset, inStream);
-                    break;
-                case "ulong":
-                    data = new ValueData<ulong>(type, offset, inStream);
-                    break;
-                case "string":
-                    data = new StringData(type, offset, inStream);
-                    DatContainer.DataEntries[offset] = data;
-                    break;
-                default:
-                    throw new Exception("Unknown value type name: " + type.Name);
-
-            }
-            return data;
-        }
-
-        public static int GetOffset(BinaryReader reader)
-        {
-            return (int)reader.BaseStream.Position - DatContainer.DataSectionOffset;
-        }
-
-        /// <summary>
         /// Returns true if info for type typeName is defined
         /// </summary>
         /// <param name="type"></param>
@@ -258,6 +177,61 @@ namespace LibDat.Types
             if (!HasTypeInfo(type))
                 throw new Exception("Unknown data type: " + type);
             return _types[type];
+        }
+
+        /// <summary>
+        /// creates new instance of AbstratData derived class from <c>inStream</c>
+        /// inStream position should be in the beginning of data of pointer to data
+        /// </summary>
+        /// <param name="type">type to read</param>
+        /// <param name="inStream">strem to read from</param>
+        /// <param name="options">null or list of params required to read dat aof type <c>type</c></param>
+        /// <returns></returns>
+        public static AbstractData CreateData(BaseDataType type, BinaryReader inStream, Dictionary<string, object> options)
+        {
+            // check if list type
+            var listDataType = type as ListDataType;
+            if (listDataType != null) // list type data
+                return new ListData(listDataType, inStream, options);
+
+            // check if pointer type
+            var pointerDataType = type as PointerDataType;
+            if (pointerDataType != null) // pointer type data
+                return new PointerData(pointerDataType, inStream, options);
+
+            // value type data
+            AbstractData data;
+            switch (type.Name)
+            {
+                case "bool":
+                    data = new ValueData<bool>(type, inStream, options);
+                    break;
+                case "byte":
+                    data = new ValueData<byte>(type, inStream, options);
+                    break;
+                case "short":
+                    data = new ValueData<short>(type, inStream, options);
+                    break;
+                case "int":
+                    data = new Int32Data(type, inStream, options);
+                    break;
+                case "uint":
+                    data = new ValueData<uint>(type, inStream, options);
+                    break;
+                case "long":
+                    data = new Int64Data(type, inStream, options);
+                    break;
+                case "ulong":
+                    data = new ValueData<ulong>(type, inStream, options);
+                    break;
+                case "string":
+                    data = new StringData(type, inStream, options);
+                    break;
+                default:
+                    throw new Exception("Unknown value type name: " + type.Name);
+
+            }
+            return data;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using LibDat.Data;
 using LibDat.Types;
@@ -20,7 +21,11 @@ namespace LibDat
         public FieldData(FieldInfo fieldInfo, BinaryReader reader)
         {
             FieldInfo = fieldInfo;
-            Data = TypeFactory.ReadType(fieldInfo.FieldType, reader, false);
+
+            var offset = reader.GetDataSectionOffset();
+            var dict = new Dictionary<string, object>();
+            dict["offset"] = offset;
+            Data = TypeFactory.CreateData(fieldInfo.FieldType, reader, dict);
         }
 
         /// <summary>

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using LibDat.Types;
 
 namespace LibDat.Data
@@ -11,20 +13,29 @@ namespace LibDat.Data
         /// <summary>
         /// referenced data
         /// </summary>
-        public AbstractData RefData { get; set; }
+        public AbstractData RefData { get; private set; }
 
         /// <summary>
         /// referenced data's type
         /// </summary>
         public BaseDataType RefType { get; private set; }
 
-        public PointerData(PointerDataType dataType, int offset, BinaryReader inStream) : base(dataType, offset)
+        public PointerData(PointerDataType dataType, BinaryReader reader, Dictionary<string, object> options)
+            : base(dataType)
         {
-//            Console.WriteLine(String.Format("PointerData Constructor: type={0} offset={1} position={2}",
-//                dataType.Name, offset, RecordFactory.GetOffset(inStream)));
+            if (!options.ContainsKey("offset"))
+                throw new Exception("Wrong parameters for reading ListData");
+
             RefType = dataType.RefType;
             Length = RefType.PointerWidth;
-            RefData = TypeFactory.ReadType(RefType, inStream, true);
+
+            // moving to start of pointer so that RefType can read it's own options from that point
+            Offset = (int)options["offset"];
+            reader.BaseStream.Seek(DatContainer.DataSectionOffset + Offset, SeekOrigin.Begin);
+
+            // only RefType knows how to read it's parameters
+            var refParams = RefType.ReadPointer(reader);
+            RefData = TypeFactory.CreateData(RefType, reader, refParams);
         }
 
         public override int Save(BinaryWriter outStream)

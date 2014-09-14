@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.IO;
+
 namespace LibDat.Types
 {
     /// <summary>
@@ -25,6 +28,20 @@ namespace LibDat.Types
             Name = name;
             Width = width;
             PointerWidth = pointerWidth;
+        }
+
+        /// <summary>
+        /// reads offset parameters to data of this type
+        /// this method is called from constructor of PointerData instance
+        /// </summary>
+        /// <param name="reader">stream to read from</param>
+        /// <returns>List of parameters required to read data of this type</returns>
+        public virtual Dictionary<string, object> ReadPointer(BinaryReader reader)
+        {
+            var dict = new Dictionary<string, object>();
+            var offset = reader.ReadInt32();
+            dict["offset"] = offset;
+            return dict;
         }
     }
 }

@@ -25,18 +25,16 @@ namespace LibDat
             Index = index;
             _fieldsData = new List<FieldData>();
 
+            // Seek to start of record
             inStream.BaseStream.Seek(4 + ri.Length*index, SeekOrigin.Begin);
             var startOffset = (int)inStream.BaseStream.Position;
             foreach (var fi in RecordInfo.Fields)
             {
                 try
                 {
+                    inStream.BaseStream.Seek(startOffset + fi.RecordOffset, SeekOrigin.Begin);
                     var fieldData = new FieldData(fi, inStream);
                     _fieldsData.Add(fieldData);
-
-                    var length = fieldData.Data.Length;
-                    inStream.BaseStream.Seek(startOffset + length, SeekOrigin.Begin);
-                    startOffset = startOffset + length;
                 }
                 catch (Exception e)
                 {

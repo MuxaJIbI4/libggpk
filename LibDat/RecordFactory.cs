@@ -90,7 +90,7 @@ namespace LibDat
                 var isUserString = GetAttributeValue(field, "isUser");
                 var isUser = !String.IsNullOrEmpty(isUserString);
 
-                fields.Add(new FieldInfo(dataType, index, fieldId, fieldDescription, isUser));
+                fields.Add(new FieldInfo(dataType, index, totalLength, fieldId, fieldDescription, isUser));
                 index++;
                 totalLength += dataType.Width;
             }
