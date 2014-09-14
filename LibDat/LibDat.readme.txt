@@ -8,7 +8,7 @@ This is readme is written to better understand how to work with .dat files in GG
 
 * .dat file (*.dat, DAT):
         file with extension 'dat' which contains data that needs to parsed. 
-        It contains 0 or more  'records' and 'data section'.
+        It contains 0 or more 'records' and 'data section'.
 
 * record: 
         contain 1 or more fields, has the same length as other records
@@ -62,7 +62,7 @@ This is readme is written to better understand how to work with .dat files in GG
 
 * data section entry offset: 
         offset from start of data section at which start "data section entry".
-        First offet starts equals 8 (after b bytes of "magic word")
+        First offset starts equals 8 (after b bytes of "magic word")
 
 * data section types: 
         data section can contain strings, lists of integers and pointers to another data section entry. 
@@ -70,7 +70,7 @@ This is readme is written to better understand how to work with .dat files in GG
         Each type has corresponding derived subclass of AbstractData class.
 
 * string:
-        entry of string of length N consists of N UTF-16 charactes (2*N bytes) followed by 
+        entry of string of length N consists of N UTF-16 characters (2*N bytes) followed by 
         string terminator (4 bytes: (int)0  ). Final length of string entry equals 2*N+4 bytes.
         If supposedly string type entry doesn't have (int)o at the end it's not a string, 
         if one tries to read extra \0 UTF-16 character it's possible to read beyond stream end and 
@@ -86,13 +86,13 @@ This is readme is written to better understand how to work with .dat files in GG
 2) field: <field id="Description" type="ref|string" isUser="1" /> 
     - order of <field> elements is the same as order in which are located in the record
     - "id" - short field id
-    - "decription" [optional] - more detailed field description
+    - "description" [optional] - more detailed field description
     - "isUser" - marks field as seen to the user (or containing "user" strings which is used for translating the game)
     - ""type" = type of field
 
 3) "type" attribute.
 It's pattern is "((list|ref)\|)*(bool|byte|short|int|uint|long|ulong|string)" 
-For those who don't know regexp (and you only want to change XML) it means that string consists of:
+For those who don't know regular expressions (and you only want to change XML) it means that string consists of:
     at the start: zero or more concatenated strings "list|" or "ref|"
     followed by one string of list: bool byte short int uint long ulong string
 In this scenario list and ref are complex types, and bool byte short int uint long ulong string are simple types.
@@ -111,8 +111,8 @@ Examples:
 4) ref|list|long:       field contains pointer to list of long, it's 8 bytes, 
                         first 4 bytes contain number of elements in the list,
                         second 4 bytes contain offset to where list begins
-5) ref|ref|string       pointer ti pointer to string
-6) ref|list|ref|string  pointer of list of pointers to string
+5) ref|ref|string       pointer to pointer to string
+6) ref|list|ref|string  pointer to list of pointers to string
 And so on.
 
 ###########################
@@ -127,12 +127,12 @@ And so on.
  * .dat format related classes
  RecordInfo - contains record definition
  FieldInfo - contains field information
- RecordFactory - static class responsible for parsing XML and storing record defintions
+ RecordFactory - static class responsible for parsing XML and storing record definitions
  
  * data type related classes
  BaseDataType - base class, represents type of simple value
- ListDataType - represents type of list of of the same type data. has property ListData to describe type of list entries
- PointerDataType - represent pointer to another data. has property RefType to desctibe type of referenced data.
+ ListDataType - represents type of list of the same type data. Has property ListData to describe type of list entries
+ PointerDataType - represent pointer to another data. Has property RefType to describe type of referenced data.
  TypeFactory - static class responsible for parsing XML types and creating Data from Type
 
  * data related classes
@@ -162,7 +162,7 @@ Types of Data
 AbstractData derived classes
 ###########################
 
-!!! Everyting in the .dat file is "Data" !!!
+!!! Everything in the .dat file is "Data" !!!
 
 Every Field contains "Data"
 Field's Data differs from Data in data section for this reasons:
