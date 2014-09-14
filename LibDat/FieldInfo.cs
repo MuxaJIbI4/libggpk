@@ -39,16 +39,11 @@ namespace LibDat
             FieldType = type;
         }
 
-        public bool IsString()
-        {
-            return FieldType.Name.Equals("String");
-        }
-
-        public string ToString(string delimiter)
+        public string GetFullName(string delimiter)
         {
             return    Id                + delimiter 
-                    + FieldType.Name    + delimiter 
-                    + FieldType.Width   + " byte";
+                    + FieldType.Name    + delimiter
+                    + (FieldType.Width == 1 ? " byte" : " bytes");
         }
     }
 }

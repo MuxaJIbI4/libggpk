@@ -108,7 +108,7 @@ namespace VisualGGPK
             foreach (var fieldInfo in recordInfo.Fields)
             {
                 var col = new DataGridTextColumn();
-                col.Header = fieldInfo.ToString("\n");
+                col.Header = fieldInfo.GetFullName("\n");
                 col.Binding = new Binding("column_" + i++);
                 col.Width = new DataGridLength(1.0, DataGridLengthUnitType.SizeToHeader);
                 dataGridRecords.Columns.Add(col);
@@ -164,11 +164,25 @@ namespace VisualGGPK
             ExportCSV();
         }
 
+        /// <summary>
+        /// Reload XML file reread .dat file with new definitions
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void reload_XML_Click(object sender, RoutedEventArgs e)
         {
-            // update records info
-            RecordFactory.UpdateRecordsInfo();
-            // reset files
+            try
+            {
+                RecordFactory.UpdateRecordsInfo();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n" + ex.StackTrace, "XML Reload Failed", 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // reset .dat Viewer
             Reset(FileName, _data);
         }
 
@@ -197,9 +211,11 @@ namespace VisualGGPK
 
         private void SaveDat()
         {
-            var sfd = new SaveFileDialog();
-            sfd.DefaultExt = ".dat";
-            sfd.FileName = Path.GetFileNameWithoutExtension(FileName) + "_NEW.dat";
+            var sfd = new SaveFileDialog
+            {
+                DefaultExt = ".dat",
+                FileName = Path.GetFileNameWithoutExtension(FileName) + "_NEW.dat"
+            };
 
             if (sfd.ShowDialog() == true)
             {
