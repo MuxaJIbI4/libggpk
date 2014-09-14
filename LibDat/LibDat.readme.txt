@@ -81,16 +81,60 @@ XML defnitions and schema
 ###########################
  Class Definitions
 
+ * .dat content related classes
+ DatContainer - main class, contains all data for parsed .dat
+ RecordData - contain list of FielData
+ FieldData - contain field data
+ 
+ * .dat format related classes
+ RecordInfo - contains record definition
+ FieldInfo - contains field information
+ RecordFactory - static class responsible for parsing XML and storing record defintions
+ 
+ * data type related classes
+ BaseDataType - base class, represents type of simple value
+ ListDataType - represents type of list of of the same type data. has property ListData to describe type of list entries
+ PointerDataType - represent pointer to another data. has property RefType to desctibe type of referenced data.
+ TypeFactory - static class responsible for parsing XML types and creating Data from Type
 
+ * data related classes
+ AbstractData - base class
+ ValueData - generic class representing simple value data (bool, byte, etc...)
+ StringData - ValueData derived class. Handle strings
+ PointerData - represents data that contains pointer to another data
+ ListData - represents data that contains pointer to another data
+
+ 
 **** DatContainer *****
 Main class for parsing .dat files
 
 It's functions:
-- parse
+- entry point for parsing  .dat files
 - store parsed records and data section data
 - change data section contents
 - save as .csv
 - save as .dat
+
+##########################
+Types of Data
+
+
+##########################
+AbstractData derived classes
+
+
+
+##########################
+
+X. How to create new type?
+1) create new DataType derived type or use existing
+2) create new AbstractData derived class or use existing
+3) link them through TypeFactory.CreateData( ... ) method
+4) add it's name into type pattern XML schema file (.xsd extension)
+
+
+
+
 
 
 
