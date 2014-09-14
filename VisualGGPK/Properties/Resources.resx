@@ -275,4 +275,7 @@ Details: {0}</value>
   <data name="MainWindow_Menu_Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="DatViewer_ShowPointerPrefixDesciption" xml:space="preserve">
+    <value>Show pointer prefix</value>
+  </data>
 </root>

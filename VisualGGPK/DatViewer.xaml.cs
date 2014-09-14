@@ -19,6 +19,7 @@ namespace VisualGGPK
         private DatWrapper _wrapper;
         private byte[] _data;
         private bool _showPointerDataValue;
+        private bool _showPointerPrefixValue;
 
         private string FileName { get; set; }
 
@@ -36,10 +37,10 @@ namespace VisualGGPK
         {
             FileName = filename;
             _showPointerDataValue = false;
+            _showPointerPrefixValue = false;
             _wrapper = new DatWrapper(inStream, filename);
             InitializeComponent();
             DataContext = this;
-
 
             buttonSave.Content = Settings.Strings["DatViewer_Button_Save"];
             buttonExportCSV.Content = Settings.Strings["DatViewer_Button_Export"];
@@ -49,6 +50,7 @@ namespace VisualGGPK
         {
             FileName = filename;
             _showPointerDataValue = false;
+            _showPointerPrefixValue = false;
             _wrapper = new DatWrapper(filename);
             InitializeComponent();
             DataContext = this;
@@ -62,6 +64,7 @@ namespace VisualGGPK
             InitializeComponent();
             DataContext = this;
             _showPointerDataValue = false;
+            _showPointerPrefixValue = false;
 
             buttonSave.Content = Settings.Strings["DatViewer_Button_Save"];
             buttonExportCSV.Content = Settings.Strings["DatViewer_Button_ExportCSV"];
@@ -130,22 +133,21 @@ namespace VisualGGPK
                     // TODO: add offset
                     var fieldData = recordData.FieldsData[i];
                     string str;
-                    if (_showPointerDataValue && fieldData.FieldInfo.IsPointer)
+
+                    if (fieldData.FieldInfo.IsPointer)
                     {
-                        //  TODO: now in case of PointerData prefix contains Offset instead of PointerOffset
-//                        var value = _wrapper.DataEntries.ContainsKey(offset)
-//                            ? _wrapper.DataEntries[offset].GetValueString()
-//                            : "(Error: Unknown Data)";
-                        var prefix = fieldData.GetOffsetPrefix();
-                        var value = fieldData.Data.GetValueString();
-                        str = String.Format("{0} = {1}", prefix, value);
+                        var value = _showPointerDataValue ? fieldData.Data.GetValueString() : "";
+                        var prefix = (!_showPointerDataValue || _showPointerPrefixValue)
+                            ? fieldData.GetOffsetPrefix() : "";
+                        
+                        if (_showPointerPrefixValue && _showPointerDataValue)
+                            prefix += " = ";
+
+                        str = String.Format("{0}{1}", prefix, value);
                     }
                     else
                     {
-                        str = fieldData.FieldInfo.IsPointer
-                            ? fieldData.GetOffsetPrefix()
-                            : fieldData.Data.GetValueString();
-
+                        str = fieldData.Data.GetValueString();
                     }
                     dict["column_" + (i + 1)] = str;
                 }
@@ -198,16 +200,43 @@ namespace VisualGGPK
 
         void hadnle_showPointerData(CheckBox checkBox)
         {
-            // Use IsChecked.
+            if (checkBox == null || checkBox.IsChecked == null)
+                return;
             var flag = checkBox.IsChecked.Value;
 
             if (flag != _showPointerDataValue)
             {
                 _showPointerDataValue = flag;
                 BuildGrid();
-                DataContext = this; // TODO test that it's shown at UI
+                DataContext = this;
             }
         }
+
+
+        private void showPointerPrefix_Checked(object sender, RoutedEventArgs e)
+        {
+            hadnle_showPointerPrefix(sender as CheckBox);
+        }
+
+        private void showPointerPrefix_Unchecked(object sender, RoutedEventArgs e)
+        {
+            hadnle_showPointerPrefix(sender as CheckBox);
+        }
+
+        void hadnle_showPointerPrefix(CheckBox checkBox)
+        {
+            if (checkBox == null || checkBox.IsChecked == null)
+                return;
+            var flag = checkBox.IsChecked.Value;
+
+            if (flag != _showPointerPrefixValue)
+            {
+                _showPointerPrefixValue = flag;
+                BuildGrid();
+                DataContext = this;
+            }
+        }
+
 
         private void SaveDat()
         {

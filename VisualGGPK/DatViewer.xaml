@@ -24,6 +24,10 @@
             	Checked="showPointerData_Checked"
             	Unchecked="showPointerData_Unchecked"
             	Content="{x:Static Properties:Resources.DatViewer_ShowPointerDataDesciption}"/>
+            <CheckBox x:Name="showPointerPrefix" Margin="5"
+            	Checked="showPointerPrefix_Checked"
+            	Unchecked="showPointerPrefix_Unchecked"
+            	Content="{x:Static Properties:Resources.DatViewer_ShowPointerPrefixDesciption}"/>
         </StackPanel>
         <DataGrid Grid.Row="1" Name="dataGridRecords" AutoGenerateColumns="False" />
         <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Height="4" />

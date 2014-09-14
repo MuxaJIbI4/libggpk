@@ -9,6 +9,9 @@
 //------------------------------------------------------------------------------
 
 namespace VisualGGPK.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -117,6 +120,15 @@ namespace VisualGGPK.Properties {
         public static string DatViewer_ShowPointerDataDesciption {
             get {
                 return ResourceManager.GetString("DatViewer_ShowPointerDataDesciption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show pointer prefix.
+        /// </summary>
+        public static string DatViewer_ShowPointerPrefixDesciption {
+            get {
+                return ResourceManager.GetString("DatViewer_ShowPointerPrefixDesciption", resourceCulture);
             }
         }
         
