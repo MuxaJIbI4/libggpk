@@ -1,33 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using LibGGPK;
 using System.IO;
-using System.Linq.Expressions;
-using LibDat;
 using Ionic.Zip;
 using System.Globalization;
 using LibGGPK.Records;
+using Microsoft.Win32;
 
 namespace VPatchGGPK
 {
     public partial class Form1 : Form
     {
-        private static GrindingGearsPackageContainer content = null;
-        private static Dictionary<string, FileRecord> RecordsByPath;
+        private static GrindingGearsPackageContainer content;
+        private static Dictionary<string, FileRecord> _recordsByPath;
 
         public Form1()
         {
             InitializeComponent();
 
-            string ggpkPath = searchContentGGPK();
+            var ggpkPath = SearchContentGgpk();
             if (File.Exists(ggpkPath))
             {
                 textBoxContentGGPK.Text = ggpkPath;
@@ -75,118 +70,118 @@ namespace VPatchGGPK
             Output(msg + "\r\n");
         }
 
-        private static string searchContentGGPK()
+        private static string SearchContentGgpk()
         {
-            string contentGGPK = @"\Content.ggpk";
-            string ggpkPath = Directory.GetCurrentDirectory() + contentGGPK;
+            const string contentGgpk = @"\Content.ggpk";
+            var ggpkPath = Directory.GetCurrentDirectory() + contentGgpk;
             // GarenaTW
             if (!File.Exists(ggpkPath))
             {
-                Microsoft.Win32.RegistryKey start = Microsoft.Win32.Registry.LocalMachine;
-                Microsoft.Win32.RegistryKey programName = start.OpenSubKey(@"SOFTWARE\Wow6432Node\Garena\POETW");
+                var start = Registry.LocalMachine;
+                var programName = start.OpenSubKey(@"SOFTWARE\Wow6432Node\Garena\POETW");
                 if (programName != null)
                 {
-                    string pathString = (string)programName.GetValue("Path");
-                    if (pathString != string.Empty && File.Exists(pathString + contentGGPK))
+                    var pathString = (string)programName.GetValue("Path");
+                    if (pathString != string.Empty && File.Exists(pathString + contentGgpk))
                     {
-                        ggpkPath = pathString + contentGGPK;
+                        ggpkPath = pathString + contentGgpk;
                     }
                 }
             }
             if (!File.Exists(ggpkPath))
             {
-                Microsoft.Win32.RegistryKey start = Microsoft.Win32.Registry.LocalMachine;
-                Microsoft.Win32.RegistryKey programName = start.OpenSubKey(@"SOFTWARE\Garena\POETW");
+                var start = Registry.LocalMachine;
+                var programName = start.OpenSubKey(@"SOFTWARE\Garena\POETW");
                 if (programName != null)
                 {
-                    string pathString = (string)programName.GetValue("Path");
-                    if (pathString != string.Empty && File.Exists(pathString + contentGGPK))
+                    var pathString = (string)programName.GetValue("Path");
+                    if (pathString != string.Empty && File.Exists(pathString + contentGgpk))
                     {
-                        ggpkPath = pathString + contentGGPK;
+                        ggpkPath = pathString + contentGgpk;
                     }
                 }
             }
             if (!File.Exists(ggpkPath))
             {
-                if (File.Exists(@"C:\Program Files (x86)\GarenaPoETW\GameData\Apps\POETW" + contentGGPK))
+                if (File.Exists(@"C:\Program Files (x86)\GarenaPoETW\GameData\Apps\POETW" + contentGgpk))
                 {
-                    ggpkPath = @"C:\Program Files (x86)\GarenaPoETW\GameData\Apps\POETW" + contentGGPK;
+                    ggpkPath = @"C:\Program Files (x86)\GarenaPoETW\GameData\Apps\POETW" + contentGgpk;
                 }
             }
             if (!File.Exists(ggpkPath))
             {
-                if (File.Exists(@"C:\Program Files\GarenaPoETW\GameData\Apps\POETW" + contentGGPK))
+                if (File.Exists(@"C:\Program Files\GarenaPoETW\GameData\Apps\POETW" + contentGgpk))
                 {
-                    ggpkPath = @"C:\Program Files\GarenaPoETW\GameData\Apps\POETW" + contentGGPK;
+                    ggpkPath = @"C:\Program Files\GarenaPoETW\GameData\Apps\POETW" + contentGgpk;
                 }
             }
             // Search GGG ggpk
             if (!File.Exists(ggpkPath))
             {
-                Microsoft.Win32.RegistryKey start = Microsoft.Win32.Registry.CurrentUser;
-                Microsoft.Win32.RegistryKey programName = start.OpenSubKey(@"Software\GrindingGearGames\Path of Exile");
+                var start = Registry.CurrentUser;
+                var programName = start.OpenSubKey(@"Software\GrindingGearGames\Path of Exile");
                 if (programName != null)
                 {
-                    string pathString = (string)programName.GetValue("InstallLocation");
-                    if (pathString != string.Empty && File.Exists(pathString + contentGGPK))
+                    var pathString = (string)programName.GetValue("InstallLocation");
+                    if (pathString != string.Empty && File.Exists(pathString + contentGgpk))
                     {
-                        ggpkPath = pathString + contentGGPK;
+                        ggpkPath = pathString + contentGgpk;
                     }
                 }
             }
             if (!File.Exists(ggpkPath))
             {
-                if (File.Exists(@"C:\Program Files (x86)\Grinding Gear Games\Path of Exile" + contentGGPK))
+                if (File.Exists(@"C:\Program Files (x86)\Grinding Gear Games\Path of Exile" + contentGgpk))
                 {
-                    ggpkPath = @"C:\Program Files (x86)\Grinding Gear Games\Path of Exile" + contentGGPK;
+                    ggpkPath = @"C:\Program Files (x86)\Grinding Gear Games\Path of Exile" + contentGgpk;
                 }
             }
             if (!File.Exists(ggpkPath))
             {
-                if (File.Exists(@"C:\Program Files\Grinding Gear Games\Path of Exile" + contentGGPK))
+                if (File.Exists(@"C:\Program Files\Grinding Gear Games\Path of Exile" + contentGgpk))
                 {
-                    ggpkPath = @"C:\Program Files\Grinding Gear Games\Path of Exile" + contentGGPK;
+                    ggpkPath = @"C:\Program Files\Grinding Gear Games\Path of Exile" + contentGgpk;
                 }
             }
             // Search GGC ggpk
             if (!File.Exists(ggpkPath))
             {
-                Microsoft.Win32.RegistryKey start = Microsoft.Win32.Registry.LocalMachine;
-                Microsoft.Win32.RegistryKey programName = start.OpenSubKey(@"SOFTWARE\Wow6432Node\Garena\PoE");
+                var start = Registry.LocalMachine;
+                var programName = start.OpenSubKey(@"SOFTWARE\Wow6432Node\Garena\PoE");
                 if (programName != null)
                 {
-                    string pathString = (string)programName.GetValue("Path");
-                    if (pathString != string.Empty && File.Exists(pathString + contentGGPK))
+                    var pathString = (string)programName.GetValue("Path");
+                    if (pathString != string.Empty && File.Exists(pathString + contentGgpk))
                     {
-                        ggpkPath = pathString + contentGGPK;
+                        ggpkPath = pathString + contentGgpk;
                     }
                 }
             }
             if (!File.Exists(ggpkPath))
             {
-                Microsoft.Win32.RegistryKey start = Microsoft.Win32.Registry.LocalMachine;
-                Microsoft.Win32.RegistryKey programName = start.OpenSubKey(@"SOFTWARE\Garena\PoE");
+                var start = Registry.LocalMachine;
+                var programName = start.OpenSubKey(@"SOFTWARE\Garena\PoE");
                 if (programName != null)
                 {
-                    string pathString = (string)programName.GetValue("Path");
-                    if (pathString != string.Empty && File.Exists(pathString + contentGGPK))
+                    var pathString = (string)programName.GetValue("Path");
+                    if (pathString != string.Empty && File.Exists(pathString + contentGgpk))
                     {
-                        ggpkPath = pathString + contentGGPK;
+                        ggpkPath = pathString + contentGgpk;
                     }
                 }
             }
             if (!File.Exists(ggpkPath))
             {
-                if (File.Exists(@"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE" + contentGGPK))
+                if (File.Exists(@"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE" + contentGgpk))
                 {
-                    ggpkPath = @"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE" + contentGGPK;
+                    ggpkPath = @"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE" + contentGgpk;
                 }
             }
             if (!File.Exists(ggpkPath))
             {
-                if (File.Exists(@"C:\Program Files\GarenaPoE\GameData\Apps\PoE" + contentGGPK))
+                if (File.Exists(@"C:\Program Files\GarenaPoE\GameData\Apps\PoE" + contentGgpk))
                 {
-                    ggpkPath = @"C:\Program Files\GarenaPoE\GameData\Apps\PoE" + contentGGPK;
+                    ggpkPath = @"C:\Program Files\GarenaPoE\GameData\Apps\PoE" + contentGgpk;
                 }
             }
 
@@ -195,19 +190,19 @@ namespace VPatchGGPK
 
         private void CreateExampleRegistryFile(string ggpkPath)
         {
-            string reg = "Windows Registry Editor Version 5.00" + Environment.NewLine;
+            var reg = "Windows Registry Editor Version 5.00" + Environment.NewLine;
             reg += Environment.NewLine;
             reg += "[HKEY_CURRENT_USER\\Software\\GrindingGearGames\\Path of Exile]" + Environment.NewLine;
             reg += "\"InstallLocation\"=\"" + Path.GetDirectoryName(ggpkPath).Replace("\\", "\\\\") + "\\\\\"" + Environment.NewLine;
             File.WriteAllText("GGG.reg", reg, Encoding.Unicode);
         }
 
-        private void InitGGPK()
+        private void InitGgpk()
         {
             if (content != null)
                 return;
 
-            string ggpkPath = textBoxContentGGPK.Text;
+            var ggpkPath = textBoxContentGGPK.Text;
             if (!File.Exists(ggpkPath))
             {
                 OutputLine(string.Format("GGPK {0} not exists.", ggpkPath));
@@ -218,8 +213,11 @@ namespace VPatchGGPK
             content = new GrindingGearsPackageContainer();
             content.Read(ggpkPath, Output);
 
-            RecordsByPath = new Dictionary<string, FileRecord>(content.RecordOffsets.Count);
-            DirectoryTreeNode.TraverseTreePostorder(content.DirectoryRoot, null, n => RecordsByPath.Add(n.GetDirectoryPath() + n.Name, n as FileRecord));
+            _recordsByPath = new Dictionary<string, FileRecord>(content.RecordOffsets.Count);
+            DirectoryTreeNode.TraverseTreePostorder(
+                content.DirectoryRoot, 
+                null, 
+                n => _recordsByPath.Add(n.GetDirectoryPath() + n.Name, n) );
 
             textBoxContentGGPK.Enabled = false;
             buttonSelectPOE.Enabled = false;
@@ -229,10 +227,10 @@ namespace VPatchGGPK
 
         private void HandlePatchArchive(string archivePath)
         {
-            using (ZipFile zipFile = new ZipFile(archivePath))
+            using (var zipFile = new ZipFile(archivePath))
             {
-                bool VersionCheck = false;
-                bool NeedVersionCheck = false;
+                var versionCheck = false;
+                var needVersionCheck = false;
                 OutputLine(string.Format("Archive {0}", archivePath));
                 foreach (var item in zipFile.Entries)
                 {
@@ -240,15 +238,15 @@ namespace VPatchGGPK
                     {
                         using (var reader = item.OpenReader())
                         {
-                            byte[] versionData = new byte[item.UncompressedSize];
+                            var versionData = new byte[item.UncompressedSize];
                             reader.Read(versionData, 0, versionData.Length);
-                            string versionStr = Encoding.UTF8.GetString(versionData, 0, versionData.Length);
-                            if (RecordsByPath.ContainsKey("patch_notes.rtf"))
+                            var versionStr = Encoding.UTF8.GetString(versionData, 0, versionData.Length);
+                            if (_recordsByPath.ContainsKey("patch_notes.rtf"))
                             {
-                                string Hash = BitConverter.ToString(RecordsByPath["patch_notes.rtf"].Hash);
+                                var Hash = BitConverter.ToString(_recordsByPath["patch_notes.rtf"].Hash);
                                 if (versionStr.Substring(0, Hash.Length).Equals(Hash))
                                 {
-                                    VersionCheck = true;
+                                    versionCheck = true;
                                 }
                             }
                         }
@@ -256,10 +254,10 @@ namespace VPatchGGPK
                     }
                     else if (Path.GetExtension(item.FileName).ToLower() == ".dat" || Path.GetExtension(item.FileName).ToLower() == ".txt")
                     {
-                        NeedVersionCheck = true;
+                        needVersionCheck = true;
                     }
                 }
-                if (NeedVersionCheck && !VersionCheck)
+                if (needVersionCheck && !versionCheck)
                 {
                     OutputLine("Version Check Failed");
                     return;
@@ -276,13 +274,13 @@ namespace VPatchGGPK
                         continue;
                     }
 
-                    string fixedFileName = item.FileName;
+                    var fixedFileName = item.FileName;
                     if (Path.DirectorySeparatorChar != '/')
                     {
                         fixedFileName = fixedFileName.Replace('/', Path.DirectorySeparatorChar);
                     }
 
-                    if (!RecordsByPath.ContainsKey(fixedFileName))
+                    if (!_recordsByPath.ContainsKey(fixedFileName))
                     {
                         OutputLine(string.Format("Failed {0}", fixedFileName));
                         continue;
@@ -291,10 +289,10 @@ namespace VPatchGGPK
 
                     using (var reader = item.OpenReader())
                     {
-                        byte[] replacementData = new byte[item.UncompressedSize];
+                        var replacementData = new byte[item.UncompressedSize];
                         reader.Read(replacementData, 0, replacementData.Length);
 
-                        RecordsByPath[fixedFileName].ReplaceContents(textBoxContentGGPK.Text, replacementData, content.FreeRoot);
+                        _recordsByPath[fixedFileName].ReplaceContents(textBoxContentGGPK.Text, replacementData, content.FreeRoot);
                     }
                 }
                 OutputLine("Content.ggpk is Fine.");
@@ -303,69 +301,61 @@ namespace VPatchGGPK
 
         private void button1_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.CheckFileExists = true;
-            ofd.Filter = "GGPK Pack File|*.ggpk";
+            var ofd = new OpenFileDialog
+            {
+                CheckFileExists = true, 
+                Filter = "GGPK Pack File|*.ggpk"
+            };
             if (textBoxContentGGPK.Text != string.Empty)
                 ofd.InitialDirectory = Path.GetDirectoryName(textBoxContentGGPK.Text);
-            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (ofd.ShowDialog() == DialogResult.OK)
             {
                 if (!File.Exists(ofd.FileName))
                 {
-                    this.Close();
-                    return;
+                    Close();
                 }
                 else
                 {
                     textBoxContentGGPK.Text = ofd.FileName;
                     OutputLine(textBoxContentGGPK.Text);
-                    InitGGPK();
+                    InitGgpk();
                 }
-            }
-            else
-            {
-                return;
             }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
+            var ofd = new OpenFileDialog();
             ofd.CheckFileExists = true;
             ofd.Filter = "ZIP File|*.zip";
-            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (ofd.ShowDialog() == DialogResult.OK)
             {
                 if (!File.Exists(ofd.FileName))
                 {
-                    this.Close();
-                    return;
+                    Close();
                 }
                 else
                 {
                     OutputLine(ofd.FileName);
-                    InitGGPK();
-                    string archivePath = ofd.FileName;
+                    InitGgpk();
+                    var archivePath = ofd.FileName;
                     HandlePatchArchive(archivePath);
                 }
-            }
-            else
-            {
-                return;
             }
         }
 
         private void buttonExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         public static string Utf8ToUtf16(string utf8String)
         {
             // Get UTF8 bytes by reading each byte with ANSI encoding
-            byte[] utf8Bytes = Encoding.Default.GetBytes(utf8String);
+            var utf8Bytes = Encoding.Default.GetBytes(utf8String);
 
             // Convert UTF8 bytes to UTF16 bytes
-            byte[] utf16Bytes = Encoding.Convert(Encoding.UTF8, Encoding.Unicode, utf8Bytes);
+            var utf16Bytes = Encoding.Convert(Encoding.UTF8, Encoding.Unicode, utf8Bytes);
 
             // Return UTF16 bytes as UTF16 string
             return Encoding.Unicode.GetString(utf16Bytes);
@@ -374,10 +364,10 @@ namespace VPatchGGPK
         public string UTF8ToUnicode(string utf8String)
         {
             // Get UTF8 bytes by reading each byte with ANSI encoding
-            byte[] utf8Bytes = Encoding.UTF8.GetBytes(utf8String);
+            var utf8Bytes = Encoding.UTF8.GetBytes(utf8String);
 
             // Convert UTF8 bytes to UTF16 bytes
-            byte[] utf16Bytes = Encoding.Convert(Encoding.UTF8, Encoding.Unicode, utf8Bytes);
+            var utf16Bytes = Encoding.Convert(Encoding.UTF8, Encoding.Unicode, utf8Bytes);
 
             // Return UTF16 bytes as UTF16 string
             return Encoding.Unicode.GetString(utf16Bytes);
@@ -385,18 +375,18 @@ namespace VPatchGGPK
 
         private void buttonApplyFont_Click(object sender, EventArgs e)
         {
-            InitGGPK();
+            InitGgpk();
 
             if (content == null)
                 return;
 
-            string common_ui = "Metadata\\UI\\Common.ui";
-            if (RecordsByPath.ContainsKey(common_ui))
+            const string commonUi = "Metadata\\UI\\Common.ui";
+            if (_recordsByPath.ContainsKey(commonUi))
             {
-                byte[] datBytes = RecordsByPath[common_ui].ReadFileContent(textBoxContentGGPK.Text);
-                char c = '\ufeff';
-                string lines = c.ToString();
-                using (MemoryStream datStream = new MemoryStream(datBytes))
+                var datBytes = _recordsByPath[commonUi].ReadFileContent(textBoxContentGGPK.Text);
+                var c = '\ufeff';
+                var lines = c.ToString();
+                using (var datStream = new MemoryStream(datBytes))
                 {
                     using (var reader = new StreamReader(datStream, Encoding.Unicode))
                     {
@@ -406,7 +396,7 @@ namespace VPatchGGPK
                         {
                             if (line.Contains("const $globalFontSizeSmall  = "))
                             {
-                                int Small = Convert.ToInt32(textBoxSmallFont.Text);
+                                var Small = Convert.ToInt32(textBoxSmallFont.Text);
                                 if (Small > 10 && Small < 100)
                                 {
                                     OutputLine("Small:" + line.Substring(30, 2) + " to " + Small);
@@ -415,7 +405,7 @@ namespace VPatchGGPK
                             }
                             else if (line.Contains("const $globalFontSizeNormal = "))
                             {
-                                int Normal = Convert.ToInt32(textBoxNormalFont.Text);
+                                var Normal = Convert.ToInt32(textBoxNormalFont.Text);
                                 if (Normal > 10 && Normal < 100)
                                 {
                                     OutputLine("Normal:" + line.Substring(30, 2) + " to " + Normal);
@@ -424,7 +414,7 @@ namespace VPatchGGPK
                             }
                             else if (line.Contains("const $globalFontSizeLarge  = "))
                             {
-                                int Large = Convert.ToInt32(textBoxLargeFont.Text);
+                                var Large = Convert.ToInt32(textBoxLargeFont.Text);
                                 if (Large > 10 && Large < 100)
                                 {
                                     OutputLine("Large:" + line.Substring(30, 2) + " to " + Large);
@@ -436,7 +426,7 @@ namespace VPatchGGPK
 
                     }
                 }
-                RecordsByPath[common_ui].ReplaceContents(textBoxContentGGPK.Text, Encoding.Unicode.GetBytes(lines), content.FreeRoot);
+                _recordsByPath[commonUi].ReplaceContents(textBoxContentGGPK.Text, Encoding.Unicode.GetBytes(lines), content.FreeRoot);
                 OutputLine("Font Size Changed.");
             }
         }
@@ -474,58 +464,57 @@ namespace VPatchGGPK
         {
             ApplyLabelColor();
 
-            InitGGPK();
+            InitGgpk();
 
             if (content == null)
                 return;
 
-            string common_ui = "Metadata\\UI\\named_colours.txt";
-            if (RecordsByPath.ContainsKey(common_ui))
+            const string common_ui = "Metadata\\UI\\named_colours.txt";
+            if (!_recordsByPath.ContainsKey(common_ui)) return;
+
+            var datBytes = _recordsByPath[common_ui].ReadFileContent(textBoxContentGGPK.Text);
+            var c = '\ufeff';
+            var lines = c.ToString();
+            using (var datStream = new MemoryStream(datBytes))
             {
-                byte[] datBytes = RecordsByPath[common_ui].ReadFileContent(textBoxContentGGPK.Text);
-                char c = '\ufeff';
-                string lines = c.ToString();
-                using (MemoryStream datStream = new MemoryStream(datBytes))
+                using (var reader = new StreamReader(datStream, Encoding.Unicode))
                 {
-                    using (var reader = new StreamReader(datStream, Encoding.Unicode))
+                    string line;
+
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        string line;
-
-                        while ((line = reader.ReadLine()) != null)
+                        if (line.Contains("uniqueitem rgb"))
                         {
-                            if (line.Contains("uniqueitem rgb"))
-                            {
-                                line = string.Format("uniqueitem rgb({0},{1},{2})", textBoxUniqueR.Text,
-                                    textBoxUniqueG.Text, textBoxUniqueB.Text);
-                            }
-                            else if (line.Contains("rareitem rgb"))
-                            {
-                                line = string.Format("rareitem rgb({0},{1},{2})", textBoxRareR.Text,
-                                    textBoxRareG.Text, textBoxRareB.Text);
-                            }
-                            else if (line.Contains("magicitem rgb"))
-                            {
-                                line = string.Format("magicitem rgb({0},{1},{2})", textBoxMagicR.Text,
-                                    textBoxMagicG.Text, textBoxMagicB.Text);
-                            }
-                            else if (line.Contains("gemitem rgb"))
-                            {
-                                line = string.Format("gemitem rgb({0},{1},{2})", textBoxGemR.Text,
-                                    textBoxGemG.Text, textBoxGemB.Text);
-                            }
-                            else if (line.Contains("currencyitem rgb"))
-                            {
-                                line = string.Format("currencyitem rgb({0},{1},{2})", textBoxCurrencyR.Text,
-                                    textBoxCurrencyG.Text, textBoxCurrencyB.Text);
-                            }
-                            lines += line + "\r\n";
+                            line = string.Format("uniqueitem rgb({0},{1},{2})", textBoxUniqueR.Text,
+                                textBoxUniqueG.Text, textBoxUniqueB.Text);
                         }
-
+                        else if (line.Contains("rareitem rgb"))
+                        {
+                            line = string.Format("rareitem rgb({0},{1},{2})", textBoxRareR.Text,
+                                textBoxRareG.Text, textBoxRareB.Text);
+                        }
+                        else if (line.Contains("magicitem rgb"))
+                        {
+                            line = string.Format("magicitem rgb({0},{1},{2})", textBoxMagicR.Text,
+                                textBoxMagicG.Text, textBoxMagicB.Text);
+                        }
+                        else if (line.Contains("gemitem rgb"))
+                        {
+                            line = string.Format("gemitem rgb({0},{1},{2})", textBoxGemR.Text,
+                                textBoxGemG.Text, textBoxGemB.Text);
+                        }
+                        else if (line.Contains("currencyitem rgb"))
+                        {
+                            line = string.Format("currencyitem rgb({0},{1},{2})", textBoxCurrencyR.Text,
+                                textBoxCurrencyG.Text, textBoxCurrencyB.Text);
+                        }
+                        lines += line + "\r\n";
                     }
+
                 }
-                RecordsByPath[common_ui].ReplaceContents(textBoxContentGGPK.Text, Encoding.Unicode.GetBytes(lines), content.FreeRoot);
-                OutputLine("Color Changed.");
             }
+            _recordsByPath[common_ui].ReplaceContents(textBoxContentGGPK.Text, Encoding.Unicode.GetBytes(lines), content.FreeRoot);
+            OutputLine("Color Changed.");
         }
 
         private void button1_Click_1(object sender, EventArgs e)
@@ -536,22 +525,22 @@ namespace VPatchGGPK
         private void button1_Click_2(object sender, EventArgs e)
         {
             string[] configs = { "production_Config.ini", "garena_sg_production_Config.ini" };
-            foreach (string fname in configs)
+            foreach (var fname in configs)
             {
-                string config = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Path of Exile\" + fname;
+                var config = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Path of Exile\" + fname;
                 if (File.Exists(config))
                 {
                     OutputLine("Loading " + config);
                     string line;
-                    string lines = "";
+                    var lines = "";
 
                     // Read the file and display it line by line.
-                    System.IO.StreamReader file = new System.IO.StreamReader(config);
+                    var file = new StreamReader(config);
                     while ((line = file.ReadLine()) != null)
                     {
                         if (line.Contains("texture_quality="))
                         {
-                            int quality = Convert.ToInt32(textBoxQuality.Text);
+                            var quality = Convert.ToInt32(textBoxQuality.Text);
                             if (quality >= 0 && quality <= 10)
                             {
                                 line = "texture_quality=" + quality;
