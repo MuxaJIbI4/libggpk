@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using LibDat.Types;
 
@@ -30,24 +29,17 @@ namespace LibDat.Data
         }
 
         /// <summary>
-        /// Save this data to the specified stream. Stream position is not preserved.
+        /// Writes to <c>writer</c> pointer to itself
         /// </summary>
-        // <param name="outStream">Stream to write contents to</param>
-        /// <returns>offset where data was written</returns>
-        public abstract int Save(BinaryWriter outStream);
+        /// <param name="writer"></param>
+        public virtual void WritePointer(BinaryWriter writer)
+        {
+            writer.Write(Offset);
+        }
 
         /// <summary>
-        /// returns visual representation of data including recursively dereferenced pointer and list data 
+        /// returns visual representation of data 
         /// </summary>
-        /// <returns></returns>
         public abstract string GetValueString();
-
-        [Obsolete]
-        public new string ToString()
-        {
-            // TODO: GetValueString() should be used insted
-            // TODO: return ToString() after all bufs will be fixed or call GetValueString() from ToString()
-            throw new NotImplementedException();
-        }
     }
 }

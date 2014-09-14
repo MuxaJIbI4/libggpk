@@ -7,8 +7,6 @@ namespace LibDat.Data
 {
     /// <summary>
     /// represents simple value data (end node of any tree of pointer or list data)
-    /// Extension methods BinaryWriter.Write<T>(object) and BinaryReader.Read<T>() are defined 
-    /// in <c>TypeFactory</c> class.
     /// </summary>
     public class ValueData<T> : AbstractData
     {
@@ -29,13 +27,6 @@ namespace LibDat.Data
 
             Value = reader.Read<T>();
             Length = type.Width;
-        }
-
-        public override int Save(BinaryWriter writer)
-        {
-            var newOffset = (int)writer.BaseStream.Position;
-            writer.Write<T>(Value);
-            return newOffset;
         }
 
         public override string GetValueString()

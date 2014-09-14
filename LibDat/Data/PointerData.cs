@@ -14,7 +14,7 @@ namespace LibDat.Data
         /// referenced data
         /// </summary>
         public AbstractData RefData { get; private set; }
-
+        
         /// <summary>
         /// referenced data's type
         /// </summary>
@@ -36,25 +36,13 @@ namespace LibDat.Data
             // only RefType knows how to read it's parameters
             var refParams = RefType.ReadPointer(reader);
             RefData = TypeFactory.CreateData(RefType, reader, refParams);
-        }
 
-        public override int Save(BinaryWriter outStream)
-        {
-            // TODO write Data instead of offset to Data
-            // TODO: look for changed offset of data section entry which initially was at PointerOffset
-            
-            var newOffset = (int)outStream.BaseStream.Position;
-            outStream.Write(RefData.Offset);
-            var listData = RefData as ListData;
-            if (listData != null)
-                outStream.Write(listData.Count);
-            
-            return newOffset;
+            DatContainer.DataPointers[Offset] = this;
         }
 
         public override string GetValueString()
         {
-            return RefData == null ? "[Error: Pointed Data Not Initialized]" : RefData.GetValueString();
+            return RefData.GetValueString();
         }
     }
 }

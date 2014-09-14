@@ -32,28 +32,28 @@ namespace LibDat
         public static int DataSectionOffset { get; private set; }
 
         /// <summary>
-        /// Mapping of all known strings and other data found in the data section. 
-        /// Key = offset with respect to beginning of data section.
-        /// 
-        /// </summary>
-        public static Dictionary<int, AbstractData> DataEntries { get; private set; }
-
-        /// <summary>
         /// Length of data section of .dat file
         /// </summary>
         public int DataSectionDataLength { get; private set; }
 
         /// <summary>
-        /// Contains the entire unmodified data section of the .dat file
+        /// Contains the entire .dat file
         /// </summary>
-        private byte[] _originalDataTable;
+        private byte[] _originalData;
 
         /// <summary>
         /// List of .dat files records' content
         /// </summary>
         public List<RecordData> Records;
 
-        
+        /// <summary>
+        /// Mapping of all known strings and other data found in the data section. 
+        /// Key = offset with respect to beginning of data section.
+        /// 
+        /// </summary>
+        public static Dictionary<int, AbstractData> DataEntries { get; private set; }
+
+        public static Dictionary<int, PointerData> DataPointers { get; private set; }
 
         /// <summary>
         /// Parses the .dat file contents from inStream.
@@ -63,8 +63,9 @@ namespace LibDat
         public DatContainer(Stream inStream, string fileName)
         {
             DatName = Path.GetFileNameWithoutExtension(fileName);
-            DataEntries = new Dictionary<int, AbstractData>();
             RecordInfo = RecordFactory.GetRecordInfo(DatName);
+            DataEntries = new Dictionary<int, AbstractData>();
+            DataPointers = new Dictionary<int, PointerData>();
 
             using (var br = new BinaryReader(inStream, Encoding.Unicode))
             {
@@ -79,6 +80,9 @@ namespace LibDat
         public DatContainer(string filePath)
         {
             DatName = Path.GetFileNameWithoutExtension(filePath);
+            RecordInfo = RecordFactory.GetRecordInfo(DatName);
+            DataEntries = new Dictionary<int, AbstractData>();
+            DataPointers = new Dictionary<int, PointerData>();
 
             var fileBytes = File.ReadAllBytes(filePath);
 
@@ -105,28 +109,26 @@ namespace LibDat
                 throw new Exception("Missing dat parser for file " + DatName);
 
             var numberOfEntries = inStream.ReadInt32();
-            if (inStream.ReadUInt64() == 0xBBbbBBbbBBbbBBbb)
-            {
-                Records = new List<RecordData>();
-                return;
-            }
-            inStream.BaseStream.Seek(-8, SeekOrigin.Current);
 
             // find record_length;
-            var length = FindRecordLength(inStream, numberOfEntries);
-            if ((numberOfEntries > 0) && length != RecordInfo.Length)
-                throw new Exception("Found record length = " + length 
+            var recordLength = FindRecordLength(inStream, numberOfEntries);
+            if ((numberOfEntries > 0) && recordLength != RecordInfo.Length)
+                throw new Exception("Found record length = " + recordLength
                     + " not equal length defined in XML: " + RecordInfo.Length);
+            if (RecordInfo.Length == 0)
+                numberOfEntries = 0;
 
-            // read data section
-            DataSectionOffset = numberOfEntries * length + 4;
+            // Data section offset
+            DataSectionOffset = numberOfEntries * recordLength + 4;
             DataSectionDataLength = Length - DataSectionOffset - 8;
             inStream.BaseStream.Seek(DataSectionOffset, SeekOrigin.Begin);
             // check magic number
             if (inStream.ReadUInt64() != 0xBBbbBBbbBBbbBBbb)
                 throw new ApplicationException("Missing magic number after records");
-            inStream.BaseStream.Seek(-8, SeekOrigin.Current);
-            _originalDataTable = inStream.ReadBytes(Length - (int)inStream.BaseStream.Position);
+
+            // save entire stream
+            inStream.BaseStream.Seek(0, SeekOrigin.Begin);
+            _originalData = inStream.ReadBytes(Length);
 
             // read records
             Records = new List<RecordData>(numberOfEntries);
@@ -154,9 +156,6 @@ namespace LibDat
                 }
                 inStream.BaseStream.Seek(-8 + numberOfEntries, SeekOrigin.Current);
             }
-            if (recordLength == 0)
-                throw new Exception("Couldn't find record_length");
-
             inStream.BaseStream.Seek(4, SeekOrigin.Begin);
             return recordLength;
         }
@@ -192,14 +191,11 @@ namespace LibDat
             var changedStringOffsets = new Dictionary<int, int>();
 
             var outStream = new BinaryWriter(rawOutStream, Encoding.Unicode);
-            outStream.Write(Records.Count);
 
-            // Pretty ugly way to zero out the for sizeof(Entry) * EntryCount bytes
-            if (Records.Count > 0)
-                outStream.Write(new byte[RecordInfo.Length * Records.Count]);
-            outStream.Write(_originalDataTable);
+            // write original data
+            outStream.Write(_originalData);
 
-            // write changed string to end of stream
+            // write changed strings to end of stream
             foreach (var item in DataEntries)
             {
                 if (!(item.Value is StringData)) continue;
@@ -213,12 +209,20 @@ namespace LibDat
                 changedStringOffsets[str.Offset] = newOffset;
             }
 
-            // Go back to the beginning and write the real entries
-            outStream.BaseStream.Seek(4, SeekOrigin.Begin);
-            foreach (var r in Records)
+            // update pointer to string with changed offset
+            foreach (var keyValuePair in DataPointers)
             {
-//                r.UpdateDataOffsets(changedOffsets);
-                r.Save(outStream);
+                var offset = keyValuePair.Key;
+                var pData = keyValuePair.Value;
+                if (!(pData.RefData is StringData))
+                    continue;
+                var pOffset = pData.RefData.Offset;
+                if (!changedStringOffsets.ContainsKey(pOffset)) 
+                    continue;
+
+                // StringData will write pointer to itself to pointer data
+                outStream.Seek(DataSectionOffset + pData.Offset, SeekOrigin.Begin);
+                pData.RefData.WritePointer(outStream);
             }
         }
 
@@ -316,7 +320,7 @@ namespace LibDat
         public string GetCSVString(FieldData fieldData)
         {
             string str;
-            if (fieldData.FieldInfo.IsPointer)  
+            if (fieldData.FieldInfo.IsPointer)
             {
                 var offset = fieldData.Data.Offset;
                 if (DataEntries.ContainsKey(offset))
@@ -337,7 +341,7 @@ namespace LibDat
                 str = fieldData.Data.ToString();
             }
 
-            str = (Regex.IsMatch(str, ",") ? String.Format("\"{0}\"", str.Replace("\"", "\"\"") ) : str);
+            str = (Regex.IsMatch(str, ",") ? String.Format("\"{0}\"", str.Replace("\"", "\"\"")) : str);
             return str;
         }
     }

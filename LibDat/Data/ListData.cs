@@ -53,11 +53,10 @@ namespace LibDat.Data
             DatContainer.DataEntries[Offset] = this;
         }
 
-        public override int Save(BinaryWriter outStream)
+        public override void WritePointer(BinaryWriter writer)
         {
-            // TODO: recursive save 
-            throw new NotImplementedException();
-
+            writer.Write(Count);
+            writer.Write(Offset);
         }
 
         public override string GetValueString()

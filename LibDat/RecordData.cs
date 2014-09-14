@@ -47,40 +47,5 @@ namespace LibDat
                 }
             }
         }
-
-        /// <summary>
-        /// Save this record to the specified stream. Stream position is not preserved.
-        /// Called from <c>DatContainer.Save</c> method
-        /// </summary>
-        /// <param name="outStream">Stream to write contents to</param>
-        public void Save(BinaryWriter outStream)
-        {
-            foreach (var fieldData in FieldsData)
-            {
-                // TODO This saves fields data as it were at the beginning
-                fieldData.Data.Save(outStream);
-            }
-        }
-
-        /// <summary>
-        /// Updates references to modified strings/data in the data section for the specified entry.
-        /// </summary>
-        [Obsolete("this is deprecated since FieldData doesn't contain Offset, but Data itself", true)]
-        public void UpdateDataOffsets(Dictionary<int, int> updatedOffsets)
-        {
-            throw new NotImplementedException();
-//            if (!RecordInfo.HasPointers)
-//                return;
-//
-//            foreach (var fieldData in FieldsData)
-//            {
-//                if (!fieldData.FieldInfo.IsPointer || !fieldData.FieldInfo.IsString())
-//                    continue;
-//
-//                var offset = fieldData.Data.Offset;
-//                if (updatedOffsets.ContainsKey(offset))
-//                    fieldData.Value = updatedOffsets[offset];
-//            }
-        }
     }
 }

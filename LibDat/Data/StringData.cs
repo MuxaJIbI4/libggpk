@@ -29,12 +29,10 @@ namespace LibDat.Data
         /// If 'NewData' has been filled out then it will be written instead of the original data.
         /// </summary>
         /// <param name="outStream"></param>
-        public override int Save(BinaryWriter outStream)
+        public void Save(BinaryWriter outStream)
         {
-            var newOffset = (int)outStream.BaseStream.Position;
             var dataToWrite = NewValue ?? Value;
             outStream.Write<string>(dataToWrite);
-            return newOffset;
         }
 
         public override string GetValueString()
