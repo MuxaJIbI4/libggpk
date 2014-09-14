@@ -195,7 +195,7 @@ namespace LibDat
             // write original data
             outStream.Write(_originalData);
 
-            // write changed strings to end of stream
+            // append changed strings to the end
             foreach (var item in DataEntries)
             {
                 if (!(item.Value is StringData)) continue;
@@ -204,34 +204,41 @@ namespace LibDat
                 if (string.IsNullOrWhiteSpace(str.NewValue)) continue;
 
                 // actually write changed string
-                var newOffset = (int) outStream.BaseStream.Position - DataSectionOffset;
+                var newOffset = (int)outStream.BaseStream.Position - DataSectionOffset;
                 str.Save(outStream);
                 changedStringOffsets[str.Offset] = newOffset;
             }
 
-            // update pointer to string with changed offset
-            foreach (var keyValuePair in DataPointers)
+            // update pointers to changed string
+            foreach (var pData in from keyValuePair in DataPointers
+                                  select keyValuePair.Value into pData
+                                  where pData.RefData is StringData
+                                  let pOffset = pData.RefData.Offset
+                                  where changedStringOffsets.ContainsKey(pOffset)
+                                  select pData)
             {
-                var offset = keyValuePair.Key;
-                var pData = keyValuePair.Value;
-                if (!(pData.RefData is StringData))
-                    continue;
-                var pOffset = pData.RefData.Offset;
-                if (!changedStringOffsets.ContainsKey(pOffset)) 
-                    continue;
-
                 // StringData will write pointer to itself to pointer data
                 outStream.Seek(DataSectionOffset + pData.Offset, SeekOrigin.Begin);
                 pData.RefData.WritePointer(outStream);
             }
         }
 
+        /// <summary>
+        /// returns all non empty StringData referenced from fields marked as "user field" 
+        /// directly or through lists or other pointers
+        /// </summary>
+        /// <returns>list of StringData</returns>
         public IList<StringData> GetUserStrings()
         {
             var offsets = GetUserStringOffsets();
             return offsets.Select(offset => DataEntries[offset]).Cast<StringData>().ToList();
         }
 
+        /// <summary>
+        /// returns offsets to all non empty StringData referenced from fields marked as "user field" 
+        /// directly or through lists or other pointers
+        /// </summary>
+        /// <returns>list of StringData offsets</returns>
         public IList<int> GetUserStringOffsets()
         {
             var result = new List<int>();
@@ -240,19 +247,14 @@ namespace LibDat
             var indexes = RecordInfo.Fields.Where(f => f.IsPointer && f.IsUser).Select(f => f.Index).ToList();
 
             // Replace the actual strings
-            foreach (var recordData in Records)
+            foreach (var fieldData in from recordData in Records from index in indexes select recordData.FieldsData[index])
             {
-                foreach (var index in indexes)
-                {
-                    var fieldData = recordData.FieldsData[index];
-                    // TODO: find all refrenced string recursively
-                    FindUserStrings(fieldData.Data, result);
-                }
+                FindUserStrings(fieldData.Data, result);
             }
             return result;
         }
 
-        private void FindUserStrings(AbstractData data, List<int> result)
+        private static void FindUserStrings(AbstractData data, List<int> result)
         {
             if (data == null)
                 return;
@@ -283,7 +285,7 @@ namespace LibDat
         /// Returns a CSV table with the contents of this dat container.
         /// </summary>
         /// <returns></returns>
-        public string GetCSV()
+        public string GetCsvFormat()
         {
             const char separator = ',';
             var sb = new StringBuilder();
@@ -307,7 +309,7 @@ namespace LibDat
                 // add fields
                 foreach (var fieldData in recordData.FieldsData)
                 {
-                    sb.AppendFormat("{0}{1}", GetCSVString(fieldData), separator);
+                    sb.AppendFormat("{0}{1}", GetCsvString(fieldData), separator);
                 }
 
                 // finish line
@@ -317,31 +319,12 @@ namespace LibDat
             return sb.ToString();
         }
 
-        public string GetCSVString(FieldData fieldData)
+        private static string GetCsvString(FieldData fieldData)
         {
-            string str;
-            if (fieldData.FieldInfo.IsPointer)
-            {
-                var offset = fieldData.Data.Offset;
-                if (DataEntries.ContainsKey(offset))
-                {
-                    str = DataEntries[offset].GetValueString();
-                }
-                else
-                {
-                    str = "Unknown data at offset " + offset;
-                }
-                if (String.IsNullOrEmpty(str))
-                {
-                    str = "[Empty Data]@" + offset;
-                }
-            }
-            else // not a pointer type field
-            {
-                str = fieldData.Data.ToString();
-            }
+            var str = fieldData.Data.GetValueString();
+            if (Regex.IsMatch(str, ","))
+                str = String.Format("\"{0}\"", str.Replace("\"", "\"\""));
 
-            str = (Regex.IsMatch(str, ",") ? String.Format("\"{0}\"", str.Replace("\"", "\"\"")) : str);
             return str;
         }
     }

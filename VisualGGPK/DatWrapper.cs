@@ -149,7 +149,7 @@ namespace VisualGGPK
 
         public string GetCSV()
         {
-            return _dat.GetCSV();
+            return _dat.GetCsvFormat();
         }
     }
 }
