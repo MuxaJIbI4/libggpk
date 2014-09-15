@@ -395,7 +395,7 @@
 			<field id="Unknown3" type="int"/>
 			<field id="Unknown4" type="int"/>
 		</record>
-		<record file="DexMissionMods" length="26">
+		<record file="DexMissionMods" length="27">
 			<field id="Id" type="ref|string"/>
 			<field id="Unknown1" type="int"/>
 			<field id="Data1" type="ref|list|long"/>
@@ -403,6 +403,7 @@
 			<field id="Flag1" type="bool"/>
 			<field id="Unknown4" type="int"/>
 			<field id="Unknown5" type="int"/>
+			<field id="Flag2" type="bool"/>
 		</record>
 		<record file="DexMissionMonsters" length="32">
 			<field id="Id" type="ref|string"/>
@@ -1158,7 +1159,7 @@
 			<field id="Unknown4" type="ref|string"/>
 			<field id="Unknown5" type="ref|int"/>
 		</record>
-		<record file="ShopItem" length="69">
+		<record file="ShopItem" length="73">
 			<field id="Id" type="ref|string"/>
 			<field id="Name" type="ref|string" isUser="1"/>
 			<field id="Description" type="ref|string" isUser="1"/>
@@ -1171,6 +1172,7 @@
 			<field id="Unknown11" type="long"/>
 			<field id="YoutubeVideo" type="ref|string"/>
 			<field id="LargeArtPath" type="ref|string"/>
+			<field id="Description2" type="ref|string"/>
 			<field id="Unknown15" type="int"/>
 			<field id="DailyDealArtPath" type="ref|string"/>
 		</record>
@@ -1437,7 +1439,6 @@
 			<field id="f15" type="long"/>
 			<field id="b1" type="bool"/>
 		</record>
-		
 		<record file="StrMissionSpiritSecondaryEffects" length="48">
 			<field id="Id" type="ref|string"/>
 			<field id="f2" type="int"/>
@@ -1465,8 +1466,7 @@
 			<field id="f11" type="int"/>
 			<field id="f12" type="int"/>
 			<field id="f13" type="int"/>
-		</record>	
-		
+		</record>
 		<record file="StrongBoxEffects" length="52">
 			<field id="Index0" type="ref|string"/>
 			<field id="Unknown0" type="ref|string"/>
