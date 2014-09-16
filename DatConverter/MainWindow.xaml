@@ -1,0 +1,27 @@
+﻿<Window x:Class="DatConverter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DatConverter" Height="500" Width="800">
+    <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Width="795">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" MinHeight="400"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button x:Name="SelefFilesButton"  Content="Select Files" Width="75" 
+                    IsEnabled="{Binding Path=ButtonSelectFilesEnabled}"
+                    Click="OnSelectFileClick"/>
+            <Label Content="Select multiple .dat files that will be converted to CSV format"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button x:Name="SelefFolderButton" Content="Select Folder" Width="75" 
+                    IsEnabled="{Binding Path=ButtonSelectFolderEnnabled}"
+                    Click="OnSelectFolderClick"/>
+            <Label Content="Select folder in which all .dat file will be converted to CSV format"/>
+        </StackPanel>
+        <Border  Grid.Row="2" BorderThickness="1" BorderBrush="Gray" Margin="2">
+                <TextBox x:Name="textBoxOutput" VerticalScrollBarVisibility="Auto" TextWrapping="WrapWithOverflow"/>
+        </Border>
+    </Grid>
+</Window>

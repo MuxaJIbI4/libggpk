@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VPatchGGPK", "VPatchGGPK\VP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualPoEPatcher", "VisualPoEPatcher\VisualPoEPatcher.csproj", "{8E99D250-B9AE-4BA4-85B3-C0521EF34C2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatConverter", "DatConverter\DatConverter.csproj", "{9FE0E2B5-BB5F-430E-960B-132DB794880C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,16 @@ Global
 		{8E99D250-B9AE-4BA4-85B3-C0521EF34C2E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8E99D250-B9AE-4BA4-85B3-C0521EF34C2E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8E99D250-B9AE-4BA4-85B3-C0521EF34C2E}.Release|x86.ActiveCfg = Release|Any CPU
+		{9FE0E2B5-BB5F-430E-960B-132DB794880C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FE0E2B5-BB5F-430E-960B-132DB794880C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FE0E2B5-BB5F-430E-960B-132DB794880C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9FE0E2B5-BB5F-430E-960B-132DB794880C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9FE0E2B5-BB5F-430E-960B-132DB794880C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9FE0E2B5-BB5F-430E-960B-132DB794880C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FE0E2B5-BB5F-430E-960B-132DB794880C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FE0E2B5-BB5F-430E-960B-132DB794880C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9FE0E2B5-BB5F-430E-960B-132DB794880C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9FE0E2B5-BB5F-430E-960B-132DB794880C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
