@@ -24,6 +24,11 @@ namespace LibDat
         /// </summary>
         public int Length { get; private set; }
 
+        /// <summary>
+        /// Returns integer value in first 4 bytes of .dat
+        /// </summary>
+        public int Count { get; private set; }
+
         public RecordInfo RecordInfo { get; private set; }
 
         /// <summary>
@@ -108,31 +113,36 @@ namespace LibDat
             if (RecordInfo == null)
                 throw new Exception("Missing dat parser for file " + DatName);
 
-            var numberOfEntries = inStream.ReadInt32();
+            Count = inStream.ReadInt32();
 
             // find record_length;
-            var recordLength = FindRecordLength(inStream, numberOfEntries);
-            if ((numberOfEntries > 0) && recordLength != RecordInfo.Length)
-                throw new Exception("Found record length = " + recordLength
+            var actualRecordLength = FindRecordLength(inStream, Count);
+            if (actualRecordLength != RecordInfo.Length)
+                throw new Exception("Actual record length = " + actualRecordLength
                     + " not equal length defined in XML: " + RecordInfo.Length);
-            if (RecordInfo.Length == 0)
-                numberOfEntries = 0;
 
             // Data section offset
-            DataSectionOffset = numberOfEntries * recordLength + 4;
+            DataSectionOffset = Count * actualRecordLength + 4;
             DataSectionDataLength = Length - DataSectionOffset - 8;
             inStream.BaseStream.Seek(DataSectionOffset, SeekOrigin.Begin);
             // check magic number
             if (inStream.ReadUInt64() != 0xBBbbBBbbBBbbBBbb)
                 throw new ApplicationException("Missing magic number after records");
 
+
             // save entire stream
             inStream.BaseStream.Seek(0, SeekOrigin.Begin);
             _originalData = inStream.ReadBytes(Length);
 
             // read records
-            Records = new List<RecordData>(numberOfEntries);
-            for (var i = 0; i < numberOfEntries; i++)
+            if (actualRecordLength == 0)
+            {
+                Records = new List<RecordData>();
+                return;
+            }
+
+            Records = new List<RecordData>(Count);
+            for (var i = 0; i < Count; i++)
             {
                 Records.Add(new RecordData(RecordInfo, inStream, i));
             }
@@ -156,7 +166,6 @@ namespace LibDat
                 }
                 inStream.BaseStream.Seek(-8 + numberOfEntries, SeekOrigin.Current);
             }
-            inStream.BaseStream.Seek(4, SeekOrigin.Begin);
             return recordLength;
         }
 
@@ -291,6 +300,11 @@ namespace LibDat
             var sb = new StringBuilder();
             var fieldInfos = RecordInfo.Fields;
 
+            if (RecordInfo.Length == 0)
+            {
+                return sb.AppendFormat("Count").AppendLine().Append(Count).AppendLine().ToString();
+            }
+
             // add header
             sb.AppendFormat("Rows{0}", separator);
             foreach (var field in fieldInfos)
@@ -322,7 +336,7 @@ namespace LibDat
         private static string GetCsvString(FieldData fieldData)
         {
             var str = fieldData.Data.GetValueString();
-            if (Regex.IsMatch(str, ","))
+            if (Regex.IsMatch(str, ",") || Regex.IsMatch(str, "\\n"))
                 str = String.Format("\"{0}\"", str.Replace("\"", "\"\""));
 
             return str;
