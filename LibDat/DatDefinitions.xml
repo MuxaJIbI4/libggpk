@@ -43,7 +43,7 @@
 		<record file="ArmourClasses" length="0"/>
 		<record file="ArmourSurfaceTypes" length="0"/>
 		<record file="ArmourTypes" length="8">
-			<field id="RowId of BaseItemTypes.dat" type="long"/>
+			<field id="Index (BaseItemTypes.dat Row)" type="long"/>
 		</record>
 		<record file="Attributes" length="0"/>
 		<record file="BackendErrors" length="8">
@@ -479,7 +479,7 @@
 		<record file="ExperienceLevels" length="12">
 			<field id="Index0" type="ref|string"/>
 			<field id="Level" type="int"/>
-			<field id="Experience" type="int"/>
+			<field id="Experience" type="uint"/>
 		</record>
 		<record file="Flasks" length="44">
 			<field id="Id" type="int"/>
@@ -522,31 +522,31 @@
 			<field id="Flag1" type="bool"/>
 		</record>
 		<record file="GrantedEffectsPerLevel" length="133">
-			<field id="Unknown0" type="long"/>
-			<field id="Unknown1" type="int"/>
-			<field id="Data0" type="ref|list|ulong"/>
-			<field id="Stat1" type="int"/>
-			<field id="Stat2" type="int"/>
-			<field id="Stat3" type="int"/>
-			<field id="Stat4" type="int"/>
-			<field id="Stat5" type="int"/>
-			<field id="Stat6" type="int"/>
-			<field id="Stat7" type="int"/>
-			<field id="Stat8" type="int"/>
+			<field id="Index [GrantetEffects.dat row]" type="long"/>
+			<field id="Level" type="int"/>
+			<field id="Stats Ids [Stats.dat Row]" type="ref|list|ulong"/>
+			<field id="Stat1 Value" type="int"/>
+			<field id="Stat2 Value" type="int"/>
+			<field id="Stat3 Value" type="int"/>
+			<field id="Stat4 Value" type="int"/>
+			<field id="Stat5 Value" type="int"/>
+			<field id="Stat6 Value" type="int"/>
+			<field id="Stat7 Value" type="int"/>
+			<field id="Stat8 Value" type="int"/>
 			<field id="Unknown12" type="long"/>
-			<field id="Unknown14" type="int"/>
-			<field id="Unknown15" type="int"/>
-			<field id="Unknown16" type="int"/>
-			<field id="Unknown17" type="int"/>
-			<field id="Data1" type="ref|list|ulong"/>
-			<field id="Data2" type="ref|list|uint"/>
-			<field id="Unknown22" type="int"/>
+			<field id="Req. Level" type="int"/>
+			<field id="Mana Multiplier" type="int"/>
+			<field id="Req. Level" type="int"/>
+			<field id="Req. Level" type="int"/>
+			<field id="Quality Stats [Stats.dat row]" type="ref|list|ulong"/>
+			<field id="Quality Stats Vaues" type="ref|list|uint"/>
+			<field id="Critical Strike Chance, %" type="int"/>
 			<field id="Unknown23" type="int"/>
 			<field id="Unknown24" type="int"/>
 			<field id="Unknown25" type="int"/>
 			<field id="Unknown26" type="int"/>
 			<field id="Unknown27" type="int"/>
-			<field id="Data3" type="ref|list|ulong"/>
+			<field id="Modifiers [Stats.dat row]" type="ref|list|ulong"/>
 			<field id="Flag0" type="bool"/>
 			<field id="Unknown28" type="int"/>
 			<field id="Unknown29" type="int"/>
@@ -803,10 +803,10 @@
 			<field id="Id" type="ref|string"/>
 			<field id="Unknown0" type="int"/>
 			<field id="Level" type="int"/>
-			<field id="Stat1Group" type="long"/>
-			<field id="Stat2Group" type="long"/>
-			<field id="Stat3Group" type="long"/>
-			<field id="Stat4Group" type="long"/>
+			<field id="Stat1 (Stats.dat Row)" type="long"/>
+			<field id="Stat2 (Stats.dat Row)" type="long"/>
+			<field id="Stat3 (Stats.dat Row)" type="long"/>
+			<field id="Stat4 (Stats.dat Row)" type="long"/>
 			<field id="Domain" type="int"/>
 			<field id="Name" type="ref|string" isUser="1"/>
 			<field id="GenerationType" type="int"/>
