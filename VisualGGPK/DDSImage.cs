@@ -1,17 +1,29 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-
+using System.Linq;
+using System.Text;
 /*
- * Kons 2012-12-03 Version .1
+ * Kons 2012-12-03 Version .2
+ * 
+ * Changelog:
+ * .3
+ * - Added support for V8U8 (thanks to AmaroK86)
+ * .2
+ * - Fixed a bug computing width/height of mipmaps (thanks to AmaroK86)
+ * .1
+ * - Base implementation
  * 
  * Supported features:
  * - DXT1
  * - DXT5
  * - LinearImage (untested)
+ * - V8U8 (by AmaroK86)
  * 
  * http://code.google.com/p/kprojects/
  * Send me any change/improvement at kons.snok<at>gmail.com
+ * 
  */
 
 namespace KUtility {
@@ -22,7 +34,7 @@ namespace KUtility {
 		private const int DDPF_RGB = 0x00000040;
 		private const int DDPF_YUV = 0x00000200;
 		private const int DDPF_LUMINANCE = 0x00020000;
-		private const int DDSD_MIPMAPCOUNT	=	   0x00020000;
+		private const int DDSD_MIPMAPCOUNT    =       0x00020000;
 		private const int FOURCC_DXT1 = 0x31545844;
 		private const int FOURCC_DX10 = 0x30315844;
 		private const int FOURCC_DXT5 = 0x35545844;
@@ -59,15 +71,22 @@ namespace KUtility {
 					
 
 					for (int i = 0; i < mipMapCount; ++i) {
-						int w = header.dwWidth / (2 * i + 1);
-						int h = header.dwHeight / (2 * i + 1);
-		
+						// Version .2 changes <AmaroK86>
+						int w = (int)(header.dwWidth / Math.Pow(2, i));
+						int h = (int)(header.dwHeight / Math.Pow(2, i));
+
 						if ((header.ddspf.dwFlags & DDPF_RGB) != 0) {
 							images[i]= readLinearImage(bdata, w, h);
 						} else if ((header.ddspf.dwFlags & DDPF_FOURCC) != 0) {
 							images[i] = readBlockImage(bdata, w, h);
+						} else if ((header.ddspf.dwFlags & DDPF_FOURCC) == 0 &&
+									header.ddspf.dwRGBBitCount == 0x10 &&
+									header.ddspf.dwRBitMask == 0xFF &&
+									header.ddspf.dwGBitMask == 0xFF00 &&
+									header.ddspf.dwBBitMask == 0x00 &&
+									header.ddspf.dwABitMask == 0x00) {
+							images[i] = UncompressV8U8(bdata, w, h);// V8U8 normalmap format
 						}
-
 					}
 
 				}
@@ -87,19 +106,12 @@ namespace KUtility {
 
 		#region DXT1
 		private Bitmap UncompressDXT1(byte[] data, int w, int h) {
-			Bitmap res = new Bitmap(w, h);
+			Bitmap res = new Bitmap((w < 4) ? 4 : w, (h < 4) ? 4 : h);
 			using (MemoryStream ms = new MemoryStream(data)) {
 				using (BinaryReader r = new BinaryReader(ms)) {
-					int blockCountX = (w + 3) / 4;
-					int blockCountY = (h + 3) / 4;
-					int blockWidth = (w < 4) ? w : 4;
-					int blockHeight = (h < 4) ? w : 4;
-
-					for (int j = 0; j < blockCountY; j++) {
-						//byte[] blockStorage = r.ReadBytes(blockCountX * 16);
-						for (int i = 0; i < blockCountX; i++) {
-							byte[] blockStorage = r.ReadBytes(8);
-							DecompressBlockDXT1(i * 4, j * 4, w, blockStorage, res);
+					for (int j = 0; j < h; j += 4) {
+						for (int i = 0; i < w; i += 4) {
+							DecompressBlockDXT1(i, j, r.ReadBytes(8), res);
 						}
 					}
 				}
@@ -107,7 +119,7 @@ namespace KUtility {
 			return res;
 		}
 
-		private void DecompressBlockDXT1(int x, int y, int width, byte[] blockStorage, Bitmap image) {
+		private void DecompressBlockDXT1(int x, int y, byte[] blockStorage, Bitmap image) {
 			ushort color0 = (ushort)(blockStorage[0] | blockStorage[1] << 8);
 			ushort color1 = (ushort)(blockStorage[2] | blockStorage[3] << 8);
 
@@ -166,31 +178,19 @@ namespace KUtility {
 						}
 					}
 
-					int px = x + i;
-					int py = y + j;
-					GraphicsUnit u = GraphicsUnit.Pixel;
-					if (image.GetBounds(ref u).Contains(px, py))
-						image.SetPixel(x + i, y + j, finalColor);
+					image.SetPixel(x + i, y + j, finalColor);
 				}
 			}
 		}
 		#endregion
 		#region DXT5
 		private Bitmap UncompressDXT5(byte[] data, int w, int h) {
-			Bitmap res = new Bitmap(w, h);
+			Bitmap res = new Bitmap((w < 4) ? 4 : w, (h < 4) ? 4 : h);
 			using (MemoryStream ms = new MemoryStream(data)) {
 				using (BinaryReader r = new BinaryReader(ms)) {
-					int blockCountX = (w + 3) / 4;
-					int blockCountY = (h + 3) / 4;
-					int blockWidth = (w < 4) ? w : 4;
-					int blockHeight = (h < 4) ? w : 4;
-
-					for (int j = 0; j < blockCountY; j++) {
-						//byte[] blockStorage = r.ReadBytes(blockCountX * 16);
-						for (int i = 0; i < blockCountX; i++) {
-							byte[] blockStorage = r.ReadBytes(16);
-							//DecompressBlockDXT5(i * 4, j * 4, w, blockStorage + i * 16, res);
-							DecompressBlockDXT5(i * 4, j * 4, w, blockStorage, res);
+					for (int j = 0; j < h; j += 4) {
+						for (int i = 0; i < w; i += 4) {
+							DecompressBlockDXT5(i, j, r.ReadBytes(16), res);
 						}
 					}
 				}
@@ -198,7 +198,7 @@ namespace KUtility {
 			return res;
 		}
 
-		void DecompressBlockDXT5(int x, int y, int width, byte[] blockStorage, Bitmap image) {
+		void DecompressBlockDXT5(int x, int y, byte[] blockStorage, Bitmap image) {
 			byte alpha0 = blockStorage[0];
 			byte alpha1 = blockStorage[1];
 
@@ -275,15 +275,29 @@ namespace KUtility {
 							finalColor = Color.FromArgb(finalAlpha, (r0 + 2 * r1) / 3, (g0 + 2 * g1) / 3, (b0 + 2 * b1) / 3);
 							break;
 					}
-
-					int px = x + i;
-					int py = y + j;
-					GraphicsUnit u = GraphicsUnit.Pixel;
-					if (image.GetBounds(ref u).Contains(px, py))
-						image.SetPixel(px, py, finalColor);
-					//image[(y + j)*width + (x + i)] = finalColor;
+					image.SetPixel(x + i, y + j, finalColor);
 				}
 			}
+		}
+		#endregion
+
+		#region V8U8
+		private Bitmap UncompressV8U8(byte[] data, int w, int h) {
+			Bitmap res = new Bitmap(w, h);
+			using (MemoryStream ms = new MemoryStream(data)) {
+				using (BinaryReader r = new BinaryReader(ms)) {
+					for (int y = 0; y < h; y++) {
+						for (int x = 0; x < w; x++) {
+							sbyte red = r.ReadSByte();
+							sbyte green = r.ReadSByte();
+							byte blue = 0xFF;
+
+							res.SetPixel(x, y, Color.FromArgb(0x7F - red, 0x7F - green, blue));
+						}
+					}
+				}
+			}
+			return res;
 		}
 		#endregion
 
