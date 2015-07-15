@@ -635,6 +635,11 @@ namespace VisualGGPK
                     var pathString = (string)programName.GetValue("InstallLocation");
                     if (pathString != string.Empty && File.Exists(pathString + @"\Content.ggpk"))
                     {
+                        pathString = pathString.Trim();
+                        if (pathString.EndsWith("\\"))
+                        {
+                            pathString = pathString.Remove(pathString.Length - 1);
+                        }
                         ofd.InitialDirectory = pathString;
                     }
                 }
