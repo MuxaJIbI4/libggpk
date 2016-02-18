@@ -30,22 +30,23 @@
             <field id="Unknown3" type="int"/>
         </record>
 		<record file="AchievementSets" length="0"/>
-		<record file="ActiveSkills" length="70">
+		<record file="ActiveSkills" length="71">
 			<field id="NameIndex" type="ref|string"/>
 			<field id="DisplayedName" type="ref|string" isUser="1"/>
 			<field id="Description" type="ref|string" isUser="1"/>
 			<field id="Index3" type="ref|string"/>
 			<field id="IconPath" type="ref|string"/>
 			<field id="Data0" type="ref|list|uint"/>
-			<field id="Unknown1" type="int"/>
+			<field id="CastTime" type="int"/>
 			<field id="Data1" type="ref|list|uint"/>
-			<field id="Data2" type="ref|list|uint"/>
+			<field id="Data2" type="ref|list|ulong"/>
 			<field id="WebsiteDescription" type="ref|string"/>
 			<field id="WebsiteImage" type="ref|string"/>
 			<field id="Flag0" type="bool"/>
 			<field id="Unknown4" type="long"/>
 			<field id="Flag1" type="bool"/>
 			<field id="Metadata" type="ref|string"/>
+			<field id="Flag2" type="bool"/>
 		</record>
 		<record file="ActiveSkillTargetTypes" length="0"/>
 		<record file="ActiveSkillType" length="0"/>
@@ -1772,9 +1773,9 @@
 		</record>
 		<record file="Wordlists" length="0"/>
 		<record file="Words" length="36">
-			<field id="Unknown0" type="int"/>
+			<field id="WordType" type="int"/>
 			<field id="Text" type="ref|string"/>
-			<field id="Data0" type="ref|list|ulong"/>
+			<field id="TagsList" type="ref|list|ulong"/>
 			<field id="Data1" type="ref|list|uint"/>
 			<field id="Unknown6" type="int"/>
 			<field id="Unknown7" type="ref|string" isUser="1"/>
