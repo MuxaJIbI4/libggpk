@@ -32,7 +32,12 @@ namespace LibDat.Data
         public void Save(BinaryWriter outStream)
         {
             var dataToWrite = NewValue ?? Value;
-            outStream.Write<string>(dataToWrite);
+            //outStream.Write<string>(dataToWrite);
+            for (int i = 0; i < dataToWrite.Length; i++)
+            {
+                outStream.Write(dataToWrite[i]);
+            }
+            outStream.Write((int)0);
         }
 
         public override string GetValueString()

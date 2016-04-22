@@ -37,6 +37,12 @@ namespace LibDat.Data
             writer.Write(Offset);
         }
 
+        public virtual void WritePointerOffset(BinaryWriter writer, int NewOffset)
+        {
+            Offset = NewOffset;
+            writer.Write(Offset);
+        }
+
         /// <summary>
         /// returns visual representation of data 
         /// </summary>

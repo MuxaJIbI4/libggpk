@@ -220,10 +220,7 @@ namespace PoeStrings
                 if (!exists)
                     System.IO.Directory.CreateDirectory(subPath);
                 string patched = "Data/" + datTranslation.Value.DatName;
-                FileStream patchedFileStream = File.Open(patched, FileMode.Create);
-                patchedFileStream.Write(dc.SaveAsBytes(), 0, dc.SaveAsBytes().Length);
-                patchedFileStream.Close();
-                //dc.Save(patched);
+                dc.Save(patched);
             }
 
             if (outputBuffer.Length > 0)

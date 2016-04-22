@@ -228,7 +228,7 @@ namespace LibDat
             {
                 // StringData will write pointer to itself to pointer data
                 outStream.Seek(DataSectionOffset + pData.Offset, SeekOrigin.Begin);
-                pData.RefData.WritePointer(outStream);
+                pData.RefData.WritePointerOffset(outStream, changedStringOffsets[pData.RefData.Offset]);
             }
         }
 
