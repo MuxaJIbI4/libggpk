@@ -62,6 +62,7 @@ namespace PoeStrings
 
 			buttonApplyAll.Content = Settings.Strings["MainWindow_Button_ApplyAll"];
 			buttonSaveConfig.Content = Settings.Strings["MainWindow_Button_SaveConfig"];
+			buttonApplyAllToFile.Content = Settings.Strings["MainWindow_Button_ApplyAllToFile"];
 
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.FileName = "Content.ggpk";
@@ -163,6 +164,19 @@ namespace PoeStrings
 			UpdateBindings();
 		}
 
+		private void buttonApplyAllToFile_Click_1(object sender, RoutedEventArgs e)
+		{
+			if (hasModifiedData || stringEditorMain.HasModfiedData)
+			{
+				PromptToSave();
+			}
+			hasModifiedData = false;
+			stringEditorMain.HasModfiedData = false;
+
+			backend.ApplyTranslationsToFile();
+			//backend.ReloadAllData(ggpkPath);
+			UpdateBindings();
+		}
 
 		private void PromptToSave()
 		{

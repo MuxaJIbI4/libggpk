@@ -115,6 +115,15 @@ namespace PoeStrings.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Apply all to File.
+        /// </summary>
+        public static string MainWindow_Button_ApplyAllToFile {
+            get {
+                return ResourceManager.GetString("MainWindow_Button_ApplyAllToFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Revert all.
         /// </summary>
         public static string MainWindow_Button_RevertAll {

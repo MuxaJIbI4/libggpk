@@ -174,4 +174,7 @@
   <data name="WindowClosing_Save_Title" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="MainWindow_Button_ApplyAllToFile" xml:space="preserve">
+    <value>Apply all to File</value>
+  </data>
 </root>

@@ -168,6 +168,71 @@ namespace PoeStrings
         }
 
         /// <summary>
+        /// Applies translations to content.ggpk
+        /// </summary>
+        public void ApplyTranslationsToFile()
+        {
+            StringBuilder outputBuffer = new StringBuilder();
+
+            foreach (var datTranslation in AllDatTranslations)
+            {
+                if (datTranslation.Value.Translations == null)
+                    continue;
+                // Map of originalText -> Translation containing all translations to apply
+                var translationsToApply = (from n in datTranslation.Value.Translations
+                                                                       where n.Status == Translation.TranslationStatus.NeedToApply
+                                                                       select n).ToDictionary(k => k.OriginalText);
+                if (translationsToApply.Count == 0)
+                {
+                    continue;
+                }
+
+                // Record we will be translating with data from translationTable
+                var datRecord = fileRecordMap[datTranslation.Value.DatName];
+
+                // Raw bytes of the .dat file we will be translating
+                var datBytes = datRecord.ReadFileContent(ggpkPath);
+
+                // Dat parser for changing the actual strings
+                var dc = new DatContainer(new MemoryStream(datBytes), datTranslation.Value.DatName);
+
+                // Replace the actual strings
+                var strings = dc.GetUserStrings();
+                foreach (var currentDatString in strings)
+                {
+                    if (!translationsToApply.ContainsKey(currentDatString.Value))
+                    {
+                        continue;
+                    }
+
+                    var translationBeingApplied = translationsToApply[currentDatString.Value];
+                    currentDatString.NewValue = translationBeingApplied.TranslatedText;
+
+                    outputBuffer.AppendLine(string.Format(
+                        Settings.Strings["ApplyTranslations_TextReplaced"], 
+                        translationBeingApplied.ShortNameCurrent, 
+                        translationBeingApplied.ShortNameTranslated));
+                    translationBeingApplied.Status = Translation.TranslationStatus.AlreadyApplied;
+                }
+
+                string subPath = "Data";
+                bool exists = System.IO.Directory.Exists(subPath);
+                if (!exists)
+                    System.IO.Directory.CreateDirectory(subPath);
+                string patched = "Data/" + datTranslation.Value.DatName;
+                FileStream patchedFileStream = File.Open(patched, FileMode.Create);
+                patchedFileStream.Write(dc.SaveAsBytes(), 0, dc.SaveAsBytes().Length);
+                patchedFileStream.Close();
+                //dc.Save(patched);
+            }
+
+            if (outputBuffer.Length > 0)
+            {
+                Output(outputBuffer.ToString());
+            }
+        }
+
+        /// <summary>
         /// Searches all of the /data/*.dat files in content.ggpk for user strings that can be translated. Also fills
         /// out 'fileRecordMap' with valid datName -> FileRecord mappings.
         /// </summary>
@@ -180,11 +245,14 @@ namespace PoeStrings
             {
                 var record = recordOffset.Value as FileRecord;
 
-                if (record == null || record.ContainingDirectory == null || Path.GetExtension(record.Name) != ".dat")
+                if (record == null || record.ContainingDirectory == null || record.DataLength == 12 || Path.GetExtension(record.Name) != ".dat")
                     continue;
 
                 // Make sure parser for .dat type actually exists
                 if (!RecordFactory.HasRecordInfo(record.Name))
+                    continue;
+
+                if (record.ContainingDirectory.Name != "Data")
                     continue;
 
                 // We'll need this .dat FileRecord later on so we're storing it in a map of fileName -> FileRecord
