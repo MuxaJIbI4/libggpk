@@ -915,11 +915,11 @@
 			<field id="Unique_GuildCharacter" type="ref|string"/>
             <field id="HigherTierMaps_BaseItemTypesKeys" type="ref|list|ulong"/>
 			<field id="Tier" type="int"/>
-			<field id="Shaped_Base_MapsKey" type="int"/
-			<field id="Shaped_AreaLevel" type="int"/
-			<field id="MapsKey1" type="int"/
-			<field id="MapsKey2" type="int"/
-			<field id="MapsKey3" type="int"/
+			<field id="Shaped_Base_MapsKey" type="int"/>
+			<field id="Shaped_AreaLevel" type="int"/>
+			<field id="MapsKey1" type="int"/>
+			<field id="MapsKey2" type="int"/>
+			<field id="MapsKey3" type="int"/>
 		</record>
 		<record file="MicrotransactionFireworksVariations" length="13">
 			<field id="Id" type="int"/>
@@ -935,26 +935,25 @@
 		<record file="MicrotransactionSocialFrameVariations" length="8">
 			<field id="ItemKey" type="long"/>
 		</record>
-		<record file="MiscAnimated" length="17">
-			<field id="Index0" type="ref|string"/>
-			<field id="Index1" type="ref|string"/>
-            <field id="Unknown0" type="byte"/>
-			<field id="Unknown1" type="ref|list|long"/>
+		<record file="MiscAnimated" length="20">
+			<field id="Id" type="ref|string"/>
+			<field id="AOFile" type="ref|string"/>
+			<field id="PreloadGroupsKeys" type="ref|list|long"/>
+			<field id="Unknown0" type="int"/>
 		</record>
-        <record file="MiscBeams" length="25">
-			<field id="Unknown0" type="ref|string"/>
-			<field id="Unknown1" type="int"/>
-			<field id="Unknown2" type="int"/>
+        <record file="MiscBeams" length="28">
+			<field id="Id" type="ref|string"/>
+			<field id="Key0" type="ulong"/>
 			<field id="Unknown3" type="int"/>
-			<field id="Flag0" type="bool"/>
 			<field id="Unknown4" type="ref|list|long"/>
+			<field id="Unknown5" type="int"/>
 		</record>
-		<record file="MiscObjects" length="21">
+		<record file="MiscObjects" length="24">
 			<field id="Index0" type="ref|string"/>
-			<field id="Index1" type="ref|string"/>
-			<field id="Flag0" type="bool"/>
-			<field id="Unknown3" type="ref|list|long"/>
+			<field id="EffectVirtualPath" type="ref|string"/>
+			<field id="PreloadGroupsKeys" type="ref|list|long"/>
 			<field id="Unknown4" type="int"/>
+			<field id="Unknown5" type="int"/>
 		</record>
 		<record file="MissionTileMap" length="24">
 			<field id="Unknown0" type="int"/>
@@ -1020,6 +1019,10 @@
 		<record file="ModType" length="12">
 			<field id="Unknown0" type="int"/>
 			<field id="Unknown1" type="ref|list|long"/>
+		</record>
+		<record file="MonsterArmours" length="8">
+			<field id="Unknown0" type="ref|string"/>
+			<field id="Unknown1" type="ref|string"/>
 		</record>
 		<record file="MonsterBehavior" length="0"/>
 		<record file="MonsterFleeConditions" length="0"/>
@@ -1107,9 +1110,9 @@
 			<field id="Unknown8" type="int"/>
 			<field id="Unknown9" type="int"/>
 		</record>
-		<record file="MonsterVarieties" length="402">
+		<record file="MonsterVarieties" length="418">
 			<field id="MonsterTypeIndex" type="ref|string"/>
-			<field id="Unknown1" type="long"/>
+			<field id="MonsterTypesKey" type="long"/>
 			<field id="Unknown3" type="int"/>
 			<field id="ObjectSize" type="int"/>
 			<field id="MinimumAttackDistance" type="int"/>
@@ -1119,42 +1122,42 @@
 			<field id="BaseMonsterTypeIndex" type="ref|string"/>
 			<field id="ModsKeys" type="ref|list|ulong"/>
 			<field id="Unknown12" type="int"/>
-			<field id="Unknown13" type="ref|int"/>
-			<field id="Unknown14" type="ref|int"/>
-			<field id="ModelSize" type="int"/>
+			<field id="Unknown13" type="ref|string"/>
+			<field id="Unknown14" type="ref|string"/>
+			<field id="ModelSizeMultiplier" type="int"/>
 			<field id="Unknown17" type="int"/>
 			<field id="Unknown18" type="int"/>
 			<field id="Unknown19" type="int"/>
 			<field id="Unknown20" type="int"/>
 			<field id="Unknown22" type="int"/>
 			<field id="TagsKeys" type="ref|list|ulong"/>
-			<field id="ExpMul" type="int"/>
+			<field id="ExperienceMultiplier" type="int"/>
 			<field id="Data2" type="ref|list|uint"/>
 			<field id="Unknown28" type="int"/>
 			<field id="Unknown29" type="int"/>
 			<field id="Unknown30" type="int"/>
-			<field id="CritChance" type="int"/>
+			<field id="CriticalStrikeChance" type="int"/>
 			<field id="Unknown32" type="int"/>
 			<field id="GrantedEffectsKeys" type="ref|list|ulong"/>
 			<field id="AISFile" type="ref|string"/>
 			<field id="ModsKeys2" type="ref|list|ulong"/>
-			<field id="Unknown38" type="ref|string"/>
+			<field id="Stance" type="ref|string"/>
 			<field id="Unknown39" type="long"/>
 			<field id="Name" type="ref|string" isUser="1"/>
-			<field id="DmgMul" type="int"/>
-			<field id="LifeMul" type="int"/>
-			<field id="AtkSpd" type="int"/>
-			<field id="Data5" type="ref|list|ulong"/>
-			<field id="Data6" type="ref|list|ulong"/>
-			<field id="BackVisual" type="long"/>
-			<field id="MainHand" type="long"/>
-			<field id="OffHand" type="long"/>
+			<field id="DamageMultiplier" type="int"/>
+			<field id="LifeMultiplier" type="int"/>
+			<field id="AttackSpeed" type="int"/>
+			<field id="Weapon1_ItemVisualIdentityKeys" type="ref|list|ulong"/>
+			<field id="Weapon2_ItemVisualIdentityKeys" type="ref|list|ulong"/>
+			<field id="Back_ItemVisualIdentityKey" type="long"/>
+			<field id="MainHand_ItemClassesKey" type="long"/>
+			<field id="OffHand_ItemClassesKey" type="long"/>
 			<field id="Unknown53" type="long"/>
-			<field id="Unknown55" type="long"/>
+			<field id="Helmet_ItemVisualIdentityKey" type="long"/>
 			<field id="Unknown57" type="int"/>
-			<field id="AchievementItemKeys" type="long"/>
-			<field id="SpecialModsKeys" type="ref|list|ulong"/>
-			<field id="AchievementItemKey" type="long"/>
+			<field id="AchievementItemsKeys" type="ref|list|ulong"/>
+			<field id="Special_ModsKeys" type="ref|list|ulong"/>
+			<field id="AchievementItemsKeys2" type="ref|list|ulong"/>
 			<field id="Unknown63" type="bool"/>
 			<field id="Unknown64" type="int"/>
 			<field id="Unknown65" type="int"/>
@@ -1164,21 +1167,23 @@
 			<field id="Unknown69" type="int"/>
 			<field id="Unknown70" type="int"/>
 			<field id="Unknown72" type="bool"/>
-            <field id="Unknown73" type="int"/>
-			<field id="NAchievement" type="long"/>
-			<field id="MAchievement" type="long"/>
-			<field id="CAchievement" type="long"/>
+            <field id="Unknown73" type="ref|string"/>
+			<field id="Normal_AchievementItemsKeys" type="ref|list|ulong"/>
+			<field id="Merciless_AchievementItemsKeys" type="ref|list|ulong"/>
+			<field id="Cruel_AchievementItemsKeys" type="ref|list|ulong"/>
 			<field id="FlashbackAchievement" type="long"/>
-			<field id="Unknown74" type="long"/>
-			<field id="Unknown75" type="long"/>
-			<field id="Unknown76" type="long"/>
-			<field id="Unknown77" type="long"/>
-			<field id="NMods" type="ref|list|long"/>
-			<field id="CMods" type="ref|list|long"/>
-			<field id="MMods" type="ref|list|long"/>
-			<field id="Unknown78" type="long"/>
-			<field id="Unknown79" type="long"/>
-			<field id="Unknown80" type="long"/>
+			<field id="MonsterSegmentsKey" type="long"/>
+			<field id="MonsterArmoursKey" type="long"/>
+			<field id="AchievementItemsKey" type="long"/>
+			<field id="AchievementItemsKey4" type="ref|list|ulong"/>
+			<field id="Normal_ModsKeys" type="ref|list|ulong"/>
+			<field id="Cruel_ModsKeys" type="ref|list|ulong"/>
+			<field id="Merciless_ModsKeys" type="ref|list|ulong"/>
+			<field id="KillRareInNormal_AchievementItemsKeys" type="ref|list|long"/>
+			<field id="KillRareInCruel_AchievementItemsKeys" type="ref|list|long"/>
+			<field id="KillRareInMerciless_AchievementItemsKeys" type="ref|list|long"/>
+			<field id="Key3" type="long"/>
+			<field id="CountKills_AchievementItemsKeys" type="ref|list|ulong"/>
 		</record>
 		<record file="Music" length="8">
 			<field id="Id" type="ref|string"/>
@@ -1230,54 +1235,45 @@
 			<field id="Unknown5" type="int"/>
 			<field id="Unknown6" type="int"/>
 		</record>
-		<record file="NPCs" length="100">
-			<field id="Index0" type="ref|string"/>
+		<record file="NPCs" length="60">
+			<field id="Id" type="ref|string"/>
 			<field id="Name" type="ref|string" isUser="1"/>
-			<field id="Unknown2" type="int"/>
-			<field id="Data1" type="ref|list|uint"/>
-			<field id="Data2" type="ref|list|ulong"/>
+			<field id="Metadata" type="ref|string"/>
+			<field id="Unknown5" type="int"/>
+			<field id="NPCMasterKey" type="ulong"/>
+			<field id="ShortName" type="ref|string"/>
 			<field id="Unknown7" type="int"/>
-			<field id="Data3" type="ref|list|ulong"/>
-			<field id="Data4" type="ref|list|uint"/>
-			<field id="Data5" type="ref|list|ulong"/>
-			<field id="Data6" type="ref|list|ref|string"/>
-			<field id="Unknown16" type="ref|string"/>
-			<field id="Data7" type="ref|list|int"/>
-			<field id="Unknown19" type="int"/>
-			<field id="Unknown20" type="long"/>
-			<field id="ShortName" type="ref|string" isUser="1"/>
-			<field id="Unknown22" type="int"/>
-			<field id="Unknown23" type="int"/>
+			<field id="Unknown8" type="int"/>
+			<field id="NPCShopKey" type="long"/>
+			<field id="NPCAudioKey1" type="ulong"/>
+			<field id="NPCAudioKey2" type="ulong"/>
 		</record>
-		<record file="NPCTalk" length="127">
+		<record file="NPCTalk" length="135">
 			<field id="NPCKey" type="long"/>
 			<field id="Unknown2" type="int"/>
 			<field id="DialogueOption" type="ref|string" isUser="1"/>
 			<field id="Data0" type="ref|list|uint"/>
 			<field id="Data1" type="ref|list|uint"/>
 			<field id="Data2" type="ref|list|uint"/>
-			<field id="Unknown10" type="ref|string"/>
+			<field id="Script" type="ref|string"/>
 			<field id="Unknown11" type="int"/>
 			<field id="Unknown12" type="int"/>
-			<field id="Unknown13" type="int"/>
-			<field id="Unknown14" type="int"/>
+			<field id="QuestKey" type="ulong"/>
 			<field id="Unknown15" type="int"/>
 			<field id="Data3" type="ref|list|ulong"/>
-			<field id="Data4" type="ref|list|ulong"/>
-			<field id="Unknown20" type="ref|string"/>
+			<field id="NPCTextAudioKeys" type="ref|list|ulong"/>
+			<field id="Script2" type="ref|string"/>
 			<field id="Flag0" type="bool"/>
 			<field id="Flag1" type="bool"/>
-			<field id="Flag2" type="bool"/>
-			<field id="Unknown21" type="int"/>
-			<field id="Unknown22" type="int"/>
+			<field id="Unknown21" type="ref|list|int"/>
+			<field id="Unknown22" type="ref|list|int"/>
 			<field id="Unknown23" type="int"/>
 			<field id="Unknown24" type="int"/>
 			<field id="Unknown25" type="int"/>
-			<field id="Unknown26" type="int"/>
+			<field id="Unknown26" type="ref|list|int"/>
 			<field id="Unknown27" type="int"/>
-			<field id="Unknown28" type="int"/>
-			<field id="Unknown29" type="int"/>
-			<field id="Unknown30" type="int"/>
+			<field id="Unknown28" type="bool"/>
+			<field id="Unknown29" type="ref|list|ulong"/>
 		</record>
 		<record file="NPCTalkCategory" length="0"/>
 		<record file="NPCTextAudio" length="26">
@@ -1344,47 +1340,52 @@
 			<field id="Flag2" type="bool"/>
 		</record>
 		<record file="PVPTypes" length="0"/>
-		<record file="Quest" length="34">
+		<record file="Quest" length="36">
 			<field id="Id" type="ref|string"/>
 			<field id="Act" type="int"/>
 			<field id="Title" type="ref|string" isUser="1"/>
 			<field id="Unknown3" type="int"/>
 			<field id="QuestIcon" type="ref|string"/>
-			<field id="Unknown5" type="int"/>
+			<field id="QuestId" type="int"/>
 			<field id="Flag0" type="bool"/>
 			<field id="Unknown6" type="int"/>
 			<field id="Flag1" type="bool"/>
 			<field id="Unknown7" type="int"/>
+			<field id="Flag2" type="bool"/>
+			<field id="Flag3" type="bool"/>
 		</record>
 		<record file="QuestFlags" length="0"/>
-		<record file="QuestRewards" length="64">
+		<record file="QuestRewards" length="69">
 			<field id="QuestKey" type="long"/>
-			<field id="Unknown2" type="int"/>
+			<field id="Difficulty" type="int"/>
 			<field id="Unknown3" type="int"/>
-			<field id="Unknown4" type="long"/>
-			<field id="ItemKey" type="long"/>
-			<field id="Unknown7" type="int"/>
-			<field id="Unknown8" type="int"/>
+			<field id="CharactersKey" type="long"/>
+			<field id="BaseItemTypesKey" type="long"/>
+			<field id="ItemLevel" type="int"/>
+			<field id="Rarity" type="int"/>
 			<field id="Unknown9" type="int"/>
 			<field id="SocketGems" type="ref|string"/>
 			<field id="Unknown11" type="long"/>
-            <field id="Unknown12" type="int"/>
+            <field id="Unknown12" type="long"/>
             <field id="Unknown13" type="int"/>
+			<field id="Unknown14" type="bool"/>
 		</record>
-		<record file="QuestStates" length="77">
+		<record file="QuestStates" length="86">
 			<field id="Group" type="long"/>
 			<field id="Unknown2" type="int"/>
-			<field id="Data0" type="ref|list|uint"/>
+			<field id="QuestStates" type="ref|list|uint"/>
 			<field id="Data1" type="ref|list|uint"/>
 			<field id="Text" type="ref|string" isUser="1"/>
 			<field id="Flag0" type="bool"/>
 			<field id="Message" type="ref|string" isUser="1"/>
-			<field id="Data2" type="ref|list|ulong"/>
+			<field id="MapPinsKeys1" type="ref|list|ulong"/>
 			<field id="Unknown9" type="int"/>
-			<field id="Data3" type="ref|list|int"/>
-			<field id="Data4" type="ref|list|long"/>
+			<field id="MapPinsTexts" type="ref|list|ref|string"/>
+			<field id="MapPinsKeys2" type="ref|list|long"/>
 			<field id="Data5" type="ref|list|long"/>
-			<field id="Unknown10" type="int"/>
+			<field id="QuestFinished_OGGFile" type="ref|string"/>
+			<field id="Unknown2" type="bool"/>
+			<field id="Unknown3" type="ref|list|int"/>
 		</record>
 		<record file="QuestStaticRewards" length="40">
 			<field id="Unknown0" type="int"/>
@@ -1395,12 +1396,13 @@
 			<field id="Unknown5" type="long"/>
 			<field id="Unknown6" type="int"/>
 		</record>
-        <record file="QuestVendorRewards" length="32">
+        <record file="QuestVendorRewards" length="33">
 			<field id="Unknown0" type="int"/>
-			<field id="Unknown0" type="long"/>
-			<field id="Unknown0" type="int"/>
-			<field id="Unknown0" type="ref|list|long"/>
-			<field id="Unknown0" type="ref|list|long"/>
+			<field id="NPCKey" type="long"/>
+			<field id="QuestState" type="int"/>
+			<field id="CharactersKeys" type="ref|list|long"/>
+			<field id="BaseItemTypesKeys" type="ref|list|long"/>
+			<field id="Flag0" type="bool"/>
 		</record>
 		<record file="RandomUniqueMonsters" length="16">
 			<field id="Unknown0" type="int"/>
@@ -1433,28 +1435,30 @@
 			<field id="Unknown4" type="ref|string"/>
 			<field id="Unknown5" type="ref|int"/>
 		</record>
-		<record file="ShopItem" length="69">
+		<record file="ShopItem" length="67">
 			<field id="Id" type="ref|string"/>
 			<field id="Name" type="ref|string" isUser="1"/>
 			<field id="Description" type="ref|string" isUser="1"/>
-			<field id="Data0" type="ref|list|uint"/>
-			<field id="Flag0" type="bool"/>
-			<field id="Data1" type="ref|list|uint"/>
-			<field id="Data2" type="ref|list|ulong"/>
-			<field id="ArtPath" type="ref|string"/>
-			<field id="Unknown11" type="long"/>
+			<field id="Package_ShopItemKeys" type="ref|list|uint"/>
+			<field id="Package_Values" type="ref|list|uint"/>
+			<field id="ShopCategoryKeys" type="ref|list|ulong"/>
+			<field id="SmallArt_JPGFile" type="ref|string"/>
 			<field id="YoutubeVideo" type="ref|string"/>
-			<field id="LargeArtPath" type="ref|string"/>
+			<field id="Unknown11" type="ref|string"/>
+			<field id="LargeArt_JPGFile" type="ref|string"/>
 			<field id="Description2" type="ref|string"/>
-			<field id="DailyDealArtPath" type="ref|string"/>
-			<field id="Unknown16" type="int"/>
+			<field id="DailyDealArt_JPGFile" type="ref|string"/>
+			<field id="Unknown15" type="int"/>
+			<field id="Flag0" type="bool"/>
+			<field id="IsTencentItem" type="bool"/>
+			<field id="IsTradeable" type="bool"/>
 		</record>
         <record file="ShopItemPrice" length="20">
 			<field id="Unknown0" type="long"/>
 			<field id="Unknown1" type="long"/>
 			<field id="Unknown2" type="int"/>
 		</record>
-		<record file="ShopPaymentPackage" length="51">
+		<record file="ShopPaymentPackage" length="60">
 			<field id="Id" type="ref|string"/>
 			<field id="Text" type="ref|string" isUser="1"/>
 			<field id="Coins" type="int"/>
@@ -1462,13 +1466,15 @@
 			<field id="Unknown4" type="int"/>
 			<field id="Unknown5" type="int"/>
 			<field id="Flag0" type="bool"/>
-			<field id="Flag0" type="bool"/>
-			<field id="Unknown6" type="int"/>
-			<field id="Unknown7" type="int"/>
-			<field id="Unknown8" type="ref|string"/>
+			<field id="ContainsBetaKey" type="bool"/>
+			<field id="Unknown6" type="ref|list|int"/>
+			<field id="OverviewMessage" type="ref|string"/>
 			<field id="Unknown9" type="long"/>
-			<field id="Unknown10" type="ref|string"/>
-			<field id="Unknown11" type="ref|string"/>
+			<field id="BackgroundImage" type="ref|string"/>
+			<field id="PurchaseMessage" type="ref|string"/>
+			<field id="Flag1" type="bool"/>
+			<field id="Upgrade_ShopPaymentPackageKey" type="int"/>
+			<field id="Unknown14" type="int"/>
 		</record>
         <record file="ShopRegion" length="4">
             <field id="Id" type="ref|string"/>
@@ -1479,26 +1485,26 @@
 			<field id="Unknown3" type="long"/>
 			<field id="Unknown4" type="long"/>
 		</record>
-		<record file="Shrines" length="83">
+		<record file="Shrines" length="85">
 			<field id="Id" type="ref|string"/>
 			<field id="Unknown0" type="int"/>
 			<field id="Name" type="ref|string" isUser="1"/>
 			<field id="ChargesShared?" type="bool"/>
-			<field id="Unknown2" type="int"/>
-			<field id="Unknown3" type="int"/>
+			<field id="Player_ShrineBuffsKey" type="ulong"/>
 			<field id="Unknown4" type="int"/>
 			<field id="Unknown5" type="int"/>
 			<field id="Description" type="ref|string" isUser="1"/>
-			<field id="Unknown7" type="long"/>
-			<field id="Unknown8" type="long"/>
-			<field id="Unknown9" type="long"/>
+			<field id="Monster_ShrineBuffsKey" type="long"/>
+			<field id="SummonMonster_MonsterVarietiesKey" type="long"/>
+			<field id="SummonPlayer_MonsterVarietiesKey" type="long"/>
 			<field id="Unknown10" type="int"/>
 			<field id="Unknown11" type="int"/>
-			<field id="Unknown12" type="int"/>
-			<field id="Unknown13" type="int"/>
+			<field id="ShrineSoundsKey" type="ulong"/>
 			<field id="Unknown14" type="bool"/>
-			<field id="Unknown15" type="long"/>
-			<field id="Unknown16" type="bool"/>
+			<field id="AchievementItemsKeys" type="long"/>
+			<field id="IsPVPOnly" type="bool"/>
+			<field id="Unknown17" type="bool"/>
+			<field id="IsLesserShrine" type="bool"/>
 		</record>
 		<record file="ShrineSounds" length="12">
 			<field id="Id" type="ref|string"/>
@@ -1515,9 +1521,11 @@
 			<field id="Unknown0" type="long"/>
 			<field id="Flag0" type="bool"/>
 		</record>
-		<record file="SoundEffects" length="8">
+		<record file="SoundEffects" length="13">
 			<field id="Id" type="ref|string"/>
-			<field id="Sound" type="ref|string"/>
+			<field id="SoundFile" type="ref|string"/>
+			<field id="SoundFile_2D" type="ref|string"/>
+			<field id="Unknown3" type="bool"/>
 		</record>
 		<record file="StatDescriptionFunctions" length="0"/>
 		<record file="Stats" length="39">
@@ -1808,22 +1816,18 @@
 			<field id="Unknown16" type="ref|list|int"/>
         </record>
 		<record file="UniqueChests" length="73">
-			<field id="Index0" type="ref|string"/>
-			<field id="Unknown0" type="int"/>
-			<field id="Unknown1" type="int"/>
-			<field id="Unknown2" type="int"/>
-			<field id="Unknown3" type="int"/>
-			<field id="Unknown4" type="int"/>
-			<field id="Unknown5" type="int"/>
-			<field id="Unknown6" type="int"/>
-			<field id="Data0" type="ref|list|ulong"/>
-			<field id="Unknown9" type="int"/>
+			<field id="Id" type="ref|string"/>
+			<field id="ChestsKey" type="long"/>
+			<field id="WordsKey" type="long"/>
+			<field id="MinLevel" type="int"/>
+			<field id="ModsKeys" type="ref|list|ulong"/>
+			<field id="SpawnWeight" type="int"/>
 			<field id="Data1" type="ref|list|uint"/>
-			<field id="Unknown12" type="ref|string"/>
+			<field id="AOFile" type="ref|string"/>
 			<field id="Flag0" type="bool"/>
 			<field id="Data2" type="ref|list|uint"/>
-            <field id="Unknown13" type="int"/>
-            <field id="Unknown14" type="int"/>
+            <field id="Key0" type="ulong"/>
+            <field id="Key1" type="ulong"/>
 		</record>
 		<record file="UniqueSetNames" length="0"/>
 		<record file="UniqueSets" length="21">
