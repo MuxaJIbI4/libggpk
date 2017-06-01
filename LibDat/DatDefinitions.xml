@@ -46,10 +46,10 @@
 			<field id="Unknown4" type="ref|string"/>
 			<field id="Flag1" type="bool"/>
 			<field id="SkillTotemId" type="int"/>
-			<field id="Flag2" type="bool"/>
+			<field id="IsManuallyCasted" type="bool"/>
 			<field id="Input_StatKeys" type="ref|list|ulong"/>
 			<field id="Output_StatKeys" type="ref|list|ulong"/>
-			<field id="Unknown19" type="ref|list|uint"/>
+			<field id="Unknown19" type="ref|list|int"/>
 		</record>
 		<record file="ActiveSkillTargetTypes" length="0"/>
 		<record file="ActiveSkillType" length="0"/>
@@ -386,7 +386,7 @@
 			<field id="Directions" type="ref|string" isUser="1"/>
 			<field id="FullStack_BaseItemTypesKey" type="long"/>
 			<field id="Description" type="ref|string" isUser="1"/>
-			<field id="Usage_AchievementItemsKeys" type="long"/>
+			<field id="Usage_AchievementItemsKeys" type="ref|list|ulong"/>
 			<field id="Flag1" type="bool"/>
 			<field id="CosmeticTypeName" type="ref|string" isUser="1"/>
 			<field id="Possession_AchievementItemsKey" type="long"/>
@@ -956,11 +956,9 @@
 			<field id="Unknown5" type="int"/>
 		</record>
 		<record file="MissionTileMap" length="24">
-			<field id="Unknown0" type="int"/>
-			<field id="Unknown1" type="int"/>
-			<field id="Unknown2" type="int"/>
-			<field id="Unknown3" type="int"/>
-			<field id="Data0" type="ref|list|ulong"/>
+			<field id="NPCMasterKey" type="long"/>
+			<field id="MissionKey" type="long"/>
+			<field id="WorldAreasKeys" type="ref|list|ulong"/>
 		</record>
 		<record file="MissionTransitionTiles" length="20">
 			<field id="Id" type="ref|string"/>
@@ -1212,23 +1210,21 @@
 		<record file="NPCMaster" length="99">
 			<field id="Index0" type="ref|string"/>
 			<field id="Metadata" type="ref|string"/>
-			<field id="Flag0" type="bool"/>
-			<field id="Flag1" type="bool"/>
-			<field id="Unknown2" type="int"/>
-			<field id="Unknown3" type="int"/>
-			<field id="Flag2" type="bool"/>
+			<field id="IsStrMaster" type="bool"/>
+			<field id="IsDexMaster" type="bool"/>
+			<field id="SignatureMod_ModsKey" type="long"/>
+			<field id="IsIntMaster" type="bool"/>
 			<field id="Hideout" type="ref|string"/>
 			<field id="Data0" type="ref|list|ulong"/>
 			<field id="Unknown7" type="int"/>
-			<field id="Unknown8" type="int"/>
-			<field id="Unknown9" type="int"/>
-			<field id="Data1" type="ref|list|ulong"/>
-			<field id="Data2" type="ref|list|uint"/>
-			<field id="Data3" type="ref|list|ulong"/>
-			<field id="Data4" type="ref|list|uint"/>
+			<field id="AchievementItemsKey" type="long"/>
+			<field id="SignatureModSpawnWeight_TagsKeys" type="ref|list|ulong"/>
+			<field id="SignatureModSpawnWeight_Values" type="ref|list|uint"/>
+			<field id="UnknownWeight_TagsKeys" type="ref|list|ulong"/>
+			<field id="UnknownWeight_Values" type="ref|list|uint"/>
 			<field id="Unknown18" type="long"/>
-			<field id="Unknown19" type="long"/>
-			<field id="Unknown20" type="long"/>
+			<field id="Talisman_AchievementItemsKey" type="long"/>
+			<field id="MasterLevel5_AchievementItemsKeys" type="ref|list|ulong"/>
 		</record>
 		<record file="NPCMasterExperiencePerLevel" length="28">
 			<field id="Master Id" type="int"/>
