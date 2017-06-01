@@ -973,7 +973,7 @@
 		<record file="ModDomains" length="0"/>
 		<record file="ModFamily" length="0"/>
 		<record file="ModGenerationType" length="0"/>
-		<record file="Mods" length="220">
+		<record file="Mods" length="245">
 			<field id="Id" type="ref|string"/>
 			<field id="Unknown0" type="int"/>
 			<field id="ModTypeKey" type="long"/>
@@ -1002,15 +1002,19 @@
 			<field id="GrantedEffectsPerLevelKey" type="long"/>
 			<field id="Data3" type="ref|list|uint"/>
 			<field id="Data4" type="ref|list|uint"/>
-			<field id="Metadata" type="ref|string"/>
+			<field id="MonsterMetadata" type="ref|string"/>
 			<field id="Unknown39" type="ref|list|int"/>
 			<field id="Unknown41" type="ref|list|int"/>
 			<field id="Unknown43" type="long"/>
 			<field id="Stat5Min" type="int"/>
 			<field id="Stat5Max" type="int"/>
 			<field id="StatsKey5" type="long"/>
-			<field id="Unknown44" type="long"/>
+			<field id="Keys0" type="ref|list|ulong"/>
 			<field id="AchievementItemsKey" type="long"/>
+			<field id="GenerationWeight_TagsKeys" type="ref|list|ulong"/>
+			<field id="GenerationWeight_Values" type="ref|list|int"/>
+			<field id="Data5" type="ref|list|int"/>
+			<field id="IsEssenceOnlyModifier" type="bool"/>
 		</record>
 		<record file="ModSellPrices" length="16">
 			<field id="Unknown0" type="long"/>
@@ -1879,81 +1883,93 @@
 			<field id="Unknown7" type="ref|string" isUser="1"/>
             <field id="Unknown6" type="int"/>
 		</record>
-		<record file="WorldAreas" length="327">
+		<record file="WorldAreas" length="396">
 			<field id="Id" type="ref|string"/>
 			<field id="Name" type="ref|string" isUser="1"/>
 			<field id="Act" type="int"/>
 			<field id="IsTown" type="bool"/>
 			<field id="HasWaypoint" type="bool"/>
-			<field id="Connections" type="ref|list|uint"/>
+			<field id="Connections_WorldAreasKeys" type="ref|list|uint"/>
 			<field id="MonsterLevel" type="int"/>
-			<field id="Unknown6" type="int"/>
 			<field id="HasDoodads" type="bool"/>
-			<field id="WorldAreaId" type="int"/>
+			<field id="Unknown6" type="int"/>
 			<field id="Unknown7" type="int"/>
 			<field id="Unknown8" type="int"/>
+			<field id="Unknown9" type="int"/>
 			<field id="LoadingScreen" type="ref|string"/>
-			<field id="Unknown10" type="int"/>
+			<field id="Unknown11" type="int"/>
 			<field id="Data1" type="ref|list|uint"/>
-			<field id="Unknown13" type="int"/>
-			<field id="Topologies" type="ref|list|ulong"/>
-			<field id="GoverningTown" type="int"/>
-			<field id="Difficulty" type="int"/>
-			<field id="Unknown18" type="int"/>
-			<field id="Unknown19" type="int"/>
-			<field id="Unknown20" type="int"/>
+			<field id="Unknown15" type="int"/>
+			<field id="TopologiesKeys" type="ref|list|ulong"/>
+			<field id="ParentTown_WorldAreasKey" type="int"/>
+			<field id="DifficultiesKey" type="ulong"/>
 			<field id="Unknown21" type="int"/>
 			<field id="Unknown22" type="int"/>
-			<field id="BossVarieties" type="ref|list|ulong"/>
-			<field id="MonsterVarieties" type="ref|list|ulong"/>
-			<field id="DropTags" type="ref|list|ulong"/>
-			<field id="Data6" type="ref|list|uint"/>
+			<field id="Unknown23" type="int"/>
+			<field id="Bosses_MonsterVarietiesKeys" type="ref|list|ulong"/>
+			<field id="Monsters_MonsterVarietiesKey" type="ref|list|ulong"/>
+			<field id="SpawnWeight_TagsKeys" type="ref|list|ulong"/>
+			<field id="SpawnWeight_Values" type="ref|list|uint"/>
 			<field id="IsMap" type="bool"/>
-			<field id="Data7" type="ref|list|ulong"/>
+			<field id="FullClear_AchievementItemsKeys" type="ref|list|ulong"/>
 			<field id="Unknown33" type="int"/>
 			<field id="Unknown34" type="int"/>
 			<field id="AchievementItemsKey" type="long"/>
-			<field id="Data8" type="ref|list|ulong"/>
-			<field id="MapSound" type="int"/>
+			<field id="ModsKeys" type="ref|list|ulong"/>
 			<field id="Unknown39" type="int"/>
 			<field id="Unknown40" type="int"/>
-			<field id="Data9" type="ref|list|int"/>
-			<field id="Unknown43" type="int"/>
-			<field id="Unknown44" type="int"/>
-			<field id="Unknown45" type="int"/>
-			<field id="Unknown46" type="ref|list|int"/>
+			<field id="VaalArea_WorldAreasKeys" type="ref|list|int"/>
+			<field id="VaalAreaSpawnChance" type="int"/>
+			<field id="StrongboxSpawnChance" type="int"/>
+			<field id="StrongboxMaxCount" type="int"/>
+			<field id="StrongboxRarityDistribution" type="ref|list|int"/>
 			<field id="IsTownArea" type="bool"/>
 			<field id="Unknown48" type="int"/>
-			<field id="Unknown49" type="int"/>
-			<field id="Unknown50" type="int"/>
-			<field id="Unknown51" type="int"/>
+			<field id="MaxLevel" type="int"/>
+			<field id="TagsKeys" type="ref|list|ulong"/>
 			<field id="Unknown52" type="int"/>
-			<field id="Flag5" type="bool"/>
+			<field id="IsMercilessVaalArea" type="bool"/>
 			<field id="Unknown54" type="int"/>
-			<field id="Flag6" type="bool"/>
+			<field id="IsHideout" type="bool"/>
 			<field id="Unknown55" type="int"/>
             <field id="Unknown56" type="int"/>
             <field id="Unknown57" type="int"/>
 			<field id="Unknown58" type="int"/>
-			<field id="Unknown59" type="int"/>
-			<field id="Flag7" type="bool"/>
+			<field id="Unknown59" type="ref|string"/>
 			<field id="Unknown60" type="int"/>
 			<field id="Unknown61" type="int"/>
 			<field id="Unknown62" type="int"/>
-			<field id="Unknown63" type="ref|list|int"/>
-			<field id="Flag8" type="bool"/>
+			<field id="TagsKeys2" type="ref|list|ulong"/>
+			<field id="IsVaalArea" type="bool"/>
 			<field id="Unknown64" type="int"/>
 			<field id="Unknown65" type="int"/>
 			<field id="Unknown66" type="int"/>
-			<field id="Flag9" type="bool"/>
-			<field id="Flag10" type="bool"/>
-			<field id="Unknown67" type="long"/>
-			<field id="Unknown68" type="long"/>
+			<field id="IsLabyrinthAirlock" type="bool"/>
+			<field id="IsLabyrinthArea" type="bool"/>
+			<field id="TwinnedFullClear_AchievementItemsKey" type="long"/>
+			<field id="Enter_AchievementItemsKey" type="long"/>
 			<field id="Unknown69" type="int"/>
 			<field id="Unknown70" type="int"/>
 			<field id="Unknown71" type="int"/>
-			<field id="Unknown72" type="int"/>
-			<field id="Unknown73" type="long"/>
+			<field id="Unknown72" type="ref|string"/>
+			<field id="8ModsFullClear_AchievementItemsKey" type="long"/>
+			<field id="Unknown77" type="int"/>
+			<field id="Unknown78" type="int"/>
+			<field id="Unknown79" type="int"/>
+			<field id="Keys1" type="ref|list|ulong"/>
+			<field id="Flag0" type="bool"/>
+			<field id="Flag1" type="bool"/>
+			<field id="Unknown82" type="int"/>
+			<field id="Unknown83" type="int"/>
+			<field id="Keys2" type="ref|list|ulong"/>
+			<field id="Key0a" type="ulong"/>
+			<field id="Key0b" type="ulong"/>
+			<field id="Unknown88" type="ref|string"/>
+			<field id="Unknown89" type="int"/>
+			<field id="Unknown90" type="int"/>
+			<field id="Unknown91" type="int"/>
+			<field id="Unknown92" type="int"/>
+			<field id="Unknown93" type="int"/>
 		</record>
 		<record file="XPPerLevelForMissions" length="8">
 			<field id="ZoneLevel" type="int"/>
