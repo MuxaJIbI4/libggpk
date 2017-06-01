@@ -533,7 +533,7 @@ namespace VisualGGPK
                         continue;
                     }
 
-                    var fixedFileName = item.FileName;
+                    var fixedFileName = "ROOT" + Path.DirectorySeparatorChar + item.FileName;
                     if (Path.DirectorySeparatorChar != '/')
                     {
                         fixedFileName = fixedFileName.Replace('/', Path.DirectorySeparatorChar);

@@ -260,6 +260,7 @@ namespace PatchGGPK
 				bool VersionCheck = false;
 				bool NeedVersionCheck = false;
 				OutputLine(string.Format("Archive {0}", archivePath));
+                /*
 				foreach (var item in zipFile.Entries)
 				{
 					if (item.FileName.Equals("version.txt"))
@@ -294,6 +295,7 @@ namespace PatchGGPK
 					OutputLine("Version Check Failed");
 					return;
 				}
+                */
 
 				foreach (var item in zipFile.Entries)
 				{
@@ -306,7 +308,7 @@ namespace PatchGGPK
 						continue;
 					}
 
-					string fixedFileName = item.FileName;
+                    string fixedFileName = "ROOT" + Path.DirectorySeparatorChar + item.FileName;
 					if (Path.DirectorySeparatorChar != '/')
 					{
 						fixedFileName = fixedFileName.Replace('/', Path.DirectorySeparatorChar);

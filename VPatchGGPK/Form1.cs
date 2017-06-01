@@ -28,7 +28,6 @@ namespace VPatchGGPK
                 textBoxContentGGPK.Text = ggpkPath;
                 OutputLine(ggpkPath);
             }
-            ApplyLabelColor();
 
             if (CultureInfo.CurrentCulture.Name.Equals("zh-TW"))
             {
@@ -36,24 +35,6 @@ namespace VPatchGGPK
                 buttonSelectPOE.Text = "選擇 POE";
                 buttonApplyZIP.Text = "套用 ZIP";
                 buttonClose.Text = "關閉";
-
-                groupBoxFontSize.Text = "字體大小";
-                labelSmallFont.Text = "小字";
-                labelNormalFont.Text = "中字";
-                labelLargeFont.Text = "大字";
-                buttonApplyFont.Text = "修改字體";
-
-                groupBoxColor.Text = "顏色修改(R, G, B)";
-                labelUnique.Text = "獨特";
-                labelRare.Text = "稀有";
-                labelMagic.Text = "魔法";
-                labelGem.Text = "寶石";
-                labelCurrency.Text = "通貨";
-                buttonTestColor.Text = "測試顏色";
-                buttonApplyColor.Text = "修改顏色";
-
-                groupBoxQuality.Text = "螢幕畫質(0最好,10最差)";
-                buttonApplyQuality.Text = "修改畫質";
             }
         }
 
@@ -215,9 +196,9 @@ namespace VPatchGGPK
 
             _recordsByPath = new Dictionary<string, FileRecord>(content.RecordOffsets.Count);
             DirectoryTreeNode.TraverseTreePostorder(
-                content.DirectoryRoot, 
-                null, 
-                n => _recordsByPath.Add(n.GetDirectoryPath() + n.Name, n) );
+                content.DirectoryRoot,
+                null,
+                n => _recordsByPath.Add(n.GetDirectoryPath() + n.Name, n));
 
             textBoxContentGGPK.Enabled = false;
             buttonSelectPOE.Enabled = false;
@@ -232,6 +213,7 @@ namespace VPatchGGPK
                 var versionCheck = false;
                 var needVersionCheck = false;
                 OutputLine(string.Format("Archive {0}", archivePath));
+                /*
                 foreach (var item in zipFile.Entries)
                 {
                     if (item.FileName.Equals("version.txt"))
@@ -261,7 +243,7 @@ namespace VPatchGGPK
                 {
                     OutputLine("Version Check Failed");
                     return;
-                }
+                }*/
 
                 foreach (var item in zipFile.Entries)
                 {
@@ -274,7 +256,7 @@ namespace VPatchGGPK
                         continue;
                     }
 
-                    var fixedFileName = item.FileName;
+                    var fixedFileName = "ROOT" + Path.DirectorySeparatorChar + item.FileName;
                     if (Path.DirectorySeparatorChar != '/')
                     {
                         fixedFileName = fixedFileName.Replace('/', Path.DirectorySeparatorChar);
@@ -303,7 +285,7 @@ namespace VPatchGGPK
         {
             var ofd = new OpenFileDialog
             {
-                CheckFileExists = true, 
+                CheckFileExists = true,
                 Filter = "GGPK Pack File|*.ggpk"
             };
             if (textBoxContentGGPK.Text != string.Empty)
@@ -371,188 +353,6 @@ namespace VPatchGGPK
 
             // Return UTF16 bytes as UTF16 string
             return Encoding.Unicode.GetString(utf16Bytes);
-        }
-
-        private void buttonApplyFont_Click(object sender, EventArgs e)
-        {
-            InitGgpk();
-
-            if (content == null)
-                return;
-
-            const string commonUi = "Metadata\\UI\\Common.ui";
-            if (_recordsByPath.ContainsKey(commonUi))
-            {
-                var datBytes = _recordsByPath[commonUi].ReadFileContent(textBoxContentGGPK.Text);
-                var c = '\ufeff';
-                var lines = c.ToString();
-                using (var datStream = new MemoryStream(datBytes))
-                {
-                    using (var reader = new StreamReader(datStream, Encoding.Unicode))
-                    {
-                        string line;
-
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            if (line.Contains("const $globalFontSizeSmall  = "))
-                            {
-                                var Small = Convert.ToInt32(textBoxSmallFont.Text);
-                                if (Small > 10 && Small < 100)
-                                {
-                                    OutputLine("Small:" + line.Substring(30, 2) + " to " + Small);
-                                    line = "const $globalFontSizeSmall  = " + Small + ";";
-                                }
-                            }
-                            else if (line.Contains("const $globalFontSizeNormal = "))
-                            {
-                                var Normal = Convert.ToInt32(textBoxNormalFont.Text);
-                                if (Normal > 10 && Normal < 100)
-                                {
-                                    OutputLine("Normal:" + line.Substring(30, 2) + " to " + Normal);
-                                    line = "const $globalFontSizeNormal = " + Normal + ";";
-                                }
-                            }
-                            else if (line.Contains("const $globalFontSizeLarge  = "))
-                            {
-                                var Large = Convert.ToInt32(textBoxLargeFont.Text);
-                                if (Large > 10 && Large < 100)
-                                {
-                                    OutputLine("Large:" + line.Substring(30, 2) + " to " + Large);
-                                    line = "const $globalFontSizeLarge  = " + Large + ";";
-                                }
-                            }
-                            lines += line + "\r\n";
-                        }
-
-                    }
-                }
-                _recordsByPath[commonUi].ReplaceContents(textBoxContentGGPK.Text, Encoding.Unicode.GetBytes(lines), content.FreeRoot);
-                OutputLine("Font Size Changed.");
-            }
-        }
-
-        private void ApplyLabelColor()
-        {
-            labelUnique.BackColor = Color.FromName("black");
-            labelUnique.ForeColor = Color.FromArgb(
-                Convert.ToInt32(textBoxUniqueR.Text),
-                Convert.ToInt32(textBoxUniqueG.Text),
-                Convert.ToInt32(textBoxUniqueB.Text));
-            labelRare.BackColor = Color.FromName("black");
-            labelRare.ForeColor = Color.FromArgb(
-                Convert.ToInt32(textBoxRareR.Text),
-                Convert.ToInt32(textBoxRareG.Text),
-                Convert.ToInt32(textBoxRareB.Text));
-            labelMagic.BackColor = Color.FromName("black");
-            labelMagic.ForeColor = Color.FromArgb(
-                Convert.ToInt32(textBoxMagicR.Text),
-                Convert.ToInt32(textBoxMagicG.Text),
-                Convert.ToInt32(textBoxMagicB.Text));
-            labelGem.BackColor = Color.FromName("black");
-            labelGem.ForeColor = Color.FromArgb(
-                Convert.ToInt32(textBoxGemR.Text),
-                Convert.ToInt32(textBoxGemG.Text),
-                Convert.ToInt32(textBoxGemB.Text));
-            labelCurrency.BackColor = Color.FromName("black");
-            labelCurrency.ForeColor = Color.FromArgb(
-                Convert.ToInt32(textBoxCurrencyR.Text),
-                Convert.ToInt32(textBoxCurrencyG.Text),
-                Convert.ToInt32(textBoxCurrencyB.Text));
-        }
-
-        private void buttonApplyColor_Click(object sender, EventArgs e)
-        {
-            ApplyLabelColor();
-
-            InitGgpk();
-
-            if (content == null)
-                return;
-
-            const string common_ui = "Metadata\\UI\\named_colours.txt";
-            if (!_recordsByPath.ContainsKey(common_ui)) return;
-
-            var datBytes = _recordsByPath[common_ui].ReadFileContent(textBoxContentGGPK.Text);
-            var c = '\ufeff';
-            var lines = c.ToString();
-            using (var datStream = new MemoryStream(datBytes))
-            {
-                using (var reader = new StreamReader(datStream, Encoding.Unicode))
-                {
-                    string line;
-
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        if (line.Contains("uniqueitem rgb"))
-                        {
-                            line = string.Format("uniqueitem rgb({0},{1},{2})", textBoxUniqueR.Text,
-                                textBoxUniqueG.Text, textBoxUniqueB.Text);
-                        }
-                        else if (line.Contains("rareitem rgb"))
-                        {
-                            line = string.Format("rareitem rgb({0},{1},{2})", textBoxRareR.Text,
-                                textBoxRareG.Text, textBoxRareB.Text);
-                        }
-                        else if (line.Contains("magicitem rgb"))
-                        {
-                            line = string.Format("magicitem rgb({0},{1},{2})", textBoxMagicR.Text,
-                                textBoxMagicG.Text, textBoxMagicB.Text);
-                        }
-                        else if (line.Contains("gemitem rgb"))
-                        {
-                            line = string.Format("gemitem rgb({0},{1},{2})", textBoxGemR.Text,
-                                textBoxGemG.Text, textBoxGemB.Text);
-                        }
-                        else if (line.Contains("currencyitem rgb"))
-                        {
-                            line = string.Format("currencyitem rgb({0},{1},{2})", textBoxCurrencyR.Text,
-                                textBoxCurrencyG.Text, textBoxCurrencyB.Text);
-                        }
-                        lines += line + "\r\n";
-                    }
-
-                }
-            }
-            _recordsByPath[common_ui].ReplaceContents(textBoxContentGGPK.Text, Encoding.Unicode.GetBytes(lines), content.FreeRoot);
-            OutputLine("Color Changed.");
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            ApplyLabelColor();
-        }
-
-        private void button1_Click_2(object sender, EventArgs e)
-        {
-            string[] configs = { "production_Config.ini", "garena_sg_production_Config.ini" };
-            foreach (var fname in configs)
-            {
-                var config = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Path of Exile\" + fname;
-                if (File.Exists(config))
-                {
-                    OutputLine("Loading " + config);
-                    string line;
-                    var lines = "";
-
-                    // Read the file and display it line by line.
-                    var file = new StreamReader(config);
-                    while ((line = file.ReadLine()) != null)
-                    {
-                        if (line.Contains("texture_quality="))
-                        {
-                            var quality = Convert.ToInt32(textBoxQuality.Text);
-                            if (quality >= 0 && quality <= 10)
-                            {
-                                line = "texture_quality=" + quality;
-                                OutputLine(line);
-                            }
-                        }
-                        lines += line + "\r\n";
-                    }
-                    file.Close();
-                    File.WriteAllText(config, lines);
-                }
-            }
         }
     }
 }
