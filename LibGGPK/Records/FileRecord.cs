@@ -31,71 +31,82 @@ namespace LibGGPK.Records
         /// A quick and dirty mapping of what type of data is contained in each file type
         /// </summary>
         private static readonly Dictionary<string, DataFormat> KnownFileFormats = new Dictionary<string, DataFormat>()
-		{
-			{"", DataFormat.Unknown},
-			{".act", DataFormat.Unicode},
-			{".ais", DataFormat.Unicode},
-			{".amd", DataFormat.Unicode}, // Animated Meta Data
-			{".ao", DataFormat.Unicode}, // Animated Object
-			{".aoc", DataFormat.Unicode}, // Animated Object Controller
-			{".arl", DataFormat.Unicode},
-			{".arm", DataFormat.Unicode}, // Rooms
-			{".ast", DataFormat.Unknown}, // Skeleton
-			{".atlas", DataFormat.Unicode},
-			{".bat", DataFormat.Unknown},
-			{".cfg", DataFormat.Ascii},
-			{".cht", DataFormat.Unicode}, // ChestData
-			{".clt", DataFormat.Unicode},
-			{".csv", DataFormat.Ascii},
-			{".dat", DataFormat.Dat},
-			{".dct", DataFormat.Unicode}, // Decals
-			{".dds", DataFormat.TextureDds},
-			{".ddt", DataFormat.Unicode}, // Doodads
-			{".dgr", DataFormat.Unicode},
-			{".dlp", DataFormat.Unicode},
-			{".ecf", DataFormat.Unicode},
-			{".env", DataFormat.Unicode}, // Environment
-			{".epk", DataFormat.Unicode},
-			{".et", DataFormat.Unicode},
-			{".ffx", DataFormat.Unicode}, // FFX Render
-			{".fmt", DataFormat.Unknown},
-			{".fx", DataFormat.Ascii}, // Shader
-			{".gft", DataFormat.Unicode},
-			{".gt", DataFormat.Unicode}, // Ground Types
-			{".idl", DataFormat.Unicode},
-			{".idt", DataFormat.Unicode},
-			{".jpg", DataFormat.Image},
-			{".mat", DataFormat.Unicode}, // Materials
-			{".mel", DataFormat.Ascii}, // Maya Embedded Language
-			{".mtd", DataFormat.Unicode},
-			{".mtp", DataFormat.Unknown},
-			{".ogg", DataFormat.Sound},
-			{".ot", DataFormat.Unicode},
-			{".otc", DataFormat.Unicode},
-			{".pet", DataFormat.Unicode},
-			{".png", DataFormat.Image},
-			{".properties", DataFormat.Ascii},
-			{".psg", DataFormat.Unknown},
-			{".red", DataFormat.Unicode},
-			{".rs", DataFormat.Unicode}, // Room Set
-			{".rtf", DataFormat.RichText},
-			{".slt", DataFormat.Ascii},
-			{".sm", DataFormat.Unicode}, // Skin Mesh
-			{".smd", DataFormat.Unknown}, // Skin Mesh Data
-			{".tdt", DataFormat.Unknown},
-			{".tgm", DataFormat.Unknown},
-			{".tgr", DataFormat.Unicode},
-			{".tgt", DataFormat.Unicode},
-			{".tmd", DataFormat.Unknown},
-			{".tsi", DataFormat.Unicode},
-			{".tst", DataFormat.Unicode},
-			{".ttf", DataFormat.Unknown}, // Font
-			{".txt", DataFormat.Unicode},
-			{".ui", DataFormat.Unicode}, // User Interface
-			{".xls", DataFormat.Unknown},
-			{".xlsx", DataFormat.Unknown},
-			{".xml", DataFormat.Unicode},
-		};
+        {
+            {"", DataFormat.Unknown},
+            {".act", DataFormat.Unicode},
+            {".ais", DataFormat.Unicode},
+            {".amd", DataFormat.Unicode}, // Animated Meta Data
+            {".ao", DataFormat.Unicode}, // Animated Object
+            {".aoc", DataFormat.Unicode}, // Animated Object Controller
+            {".arl", DataFormat.Unicode},
+            {".arm", DataFormat.Unicode}, // Rooms
+            {".ast", DataFormat.Unknown}, // Skeleton
+            {".atlas", DataFormat.Unicode},
+            {".bank", DataFormat.Sound}, // FMOD sound bank
+            {".bk2", DataFormat.Unknown},
+            {".bat", DataFormat.Unknown},
+            {".cfg", DataFormat.Ascii},
+            {".cht", DataFormat.Unicode}, // ChestData
+            {".clt", DataFormat.Unicode},
+            {".csv", DataFormat.Ascii},
+            {".dat", DataFormat.Dat},
+            {".dat64", DataFormat.Dat},
+            {".dct", DataFormat.Unicode}, // Decals
+            {".dds", DataFormat.TextureDds},
+            {".ddt", DataFormat.Unicode}, // Doodads
+            {".dgr", DataFormat.Unicode},
+            {".dlp", DataFormat.Unicode},
+            {".ecf", DataFormat.Unicode},
+            {".env", DataFormat.Unicode}, // Environment
+            {".epk", DataFormat.Unicode},
+            {".et", DataFormat.Unicode},
+            {".filter", DataFormat.Ascii}, // Item/loot filter
+            {".ffx", DataFormat.Unicode}, // FFX Render
+            {".fmt", DataFormat.Unknown},
+            {".fx", DataFormat.Ascii}, // Shader
+            {".gft", DataFormat.Unicode},
+            {".gm", DataFormat.Unknown},
+            {".gt", DataFormat.Unicode}, // Ground Types
+            {".hlsl", DataFormat.Ascii}, // Shader
+            {".idl", DataFormat.Unicode},
+            {".idt", DataFormat.Unicode},
+            {".jpg", DataFormat.Image},
+            {".mat", DataFormat.Unicode}, // Materials
+            {".mb", DataFormat.Unknown}, // Maya Binary
+            {".mel", DataFormat.Ascii}, // Maya Embedded Language
+            {".mtd", DataFormat.Unicode},
+            {".mtp", DataFormat.Unknown},
+            {".ogg", DataFormat.Sound},
+            {".ot", DataFormat.Unicode},
+            {".otc", DataFormat.Unicode},
+            {".pet", DataFormat.Unicode},
+            {".pjd", DataFormat.Unknown},
+            {".png", DataFormat.Image},
+            {".properties", DataFormat.Ascii},
+            {".psg", DataFormat.Unknown},
+            {".red", DataFormat.Unicode},
+            {".rs", DataFormat.Unicode}, // Room Set
+            {".rtf", DataFormat.RichText},
+            {".slt", DataFormat.Ascii},
+            {".sm", DataFormat.Unicode}, // Skin Mesh
+            {".smd", DataFormat.Unknown}, // Skin Mesh Data
+            {".spritefont", DataFormat.Unknown}, // Raster font data
+            {".tdt", DataFormat.Unknown},
+            {".tgm", DataFormat.Unknown},
+            {".tgr", DataFormat.Unicode},
+            {".tgt", DataFormat.Unicode},
+            {".tmd", DataFormat.Unknown},
+            {".tsi", DataFormat.Unicode},
+            {".tst", DataFormat.Unicode},
+            {".ttf", DataFormat.Unknown}, // Font
+            {".trl", DataFormat.Ascii}, // Trace log?
+            {".txt", DataFormat.Unicode},
+            {".ui", DataFormat.Unicode}, // User Interface
+            {".xls", DataFormat.Unknown},
+            {".xlsx", DataFormat.Unknown},
+            {".xml", DataFormat.Unicode},
+        };
+
         #endregion
 
         public const string Tag = "FILE";
