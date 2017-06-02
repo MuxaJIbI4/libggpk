@@ -17,33 +17,27 @@ namespace ExportGGPK
 
         static void Main(string[] args)
         {
-            if (args.Length < 2)
+            if (args.Length < 3)
             {
-                Console.WriteLine("Usage: ExportGGPK.exe <path to ggpk> <base output dir>");
+                Console.WriteLine("Usage: ExportGGPK.exe <path to ggpk> <base output dir> <data dir>");
                 return;
             }
 
             contentPath = args[0];
             outputPath = args[1];
+            string data = args[2];
 
             if (!File.Exists(contentPath))
             {
-                Console.WriteLine($"Content pack file is not available at ${contentPath}");
+                Console.WriteLine(string.Format("Content pack file is not available at {0}", contentPath));
                 return;
             }
 
             Container.Read(contentPath, Console.WriteLine);
 
-            var art = GetDirectory(@"Art\2DItems");
-            var gameData = GetDirectory("Data");
-
-            var artItems = RecursiveFindByType(FileRecord.DataFormat.TextureDds, art);
-            var dataItems = RecursiveFindByType(FileRecord.DataFormat.Dat, gameData);
-
-            Console.WriteLine($"Found {artItems.Count} textures!");
-            Console.WriteLine($"Found {dataItems.Count} data files!");
-
-            Extract(artItems);
+            var gameData = GetDirectory(data);
+            var dataItems = RecursiveFindByType(gameData);
+            Console.WriteLine(string.Format("Found {0} data files!", dataItems.Count));
             Extract(dataItems);
         }
 
@@ -79,23 +73,18 @@ namespace ExportGGPK
             return dir == null ? new List<FileRecord>() : dir.Files;
         }
 
-        public static IEnumerable<FileRecord> FilterByType(FileRecord.DataFormat format, List<FileRecord> records)
-        {
-            return records.Where((record) => record.FileFormat.Equals(format));
-        }
-
-        private static List<FileRecord> RecursiveFindByType(FileRecord.DataFormat type, DirectoryTreeNode currentNode, List<FileRecord> roller = null)
+        private static List<FileRecord> RecursiveFindByType(DirectoryTreeNode currentNode, List<FileRecord> roller = null)
         {
             if (roller == null)
             {
                 roller = new List<FileRecord>();
             }
 
-            roller.AddRange(FilterByType(type, currentNode.Files));
+            roller.AddRange(currentNode.Files);
 
             foreach (var subDir in currentNode.Children)
             {
-                RecursiveFindByType(type, subDir, roller);
+                RecursiveFindByType(subDir, roller);
             }
 
             return roller;
