@@ -210,8 +210,6 @@ namespace VPatchGGPK
         {
             using (var zipFile = new ZipFile(archivePath))
             {
-                var versionCheck = false;
-                var needVersionCheck = false;
                 OutputLine(string.Format("Archive {0}", archivePath));
                 /*
                 foreach (var item in zipFile.Entries)

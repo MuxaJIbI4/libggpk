@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:simpleType name="typesDecription">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="((list|ref)\|)*(bool|byte|short|int|uint|long|ulong|string)"/>
+			<xs:pattern value="((list|ref)\|)*(bool|byte|short|int|uint|float|long|ulong|string)"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:element name="field">

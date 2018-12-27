@@ -26,6 +26,7 @@ namespace LibDat.Types
             {typeof (short), s => s.ReadInt16()},
             {typeof (int), s => s.ReadInt32()},
             {typeof (uint), s => s.ReadUInt32()},
+            {typeof (float), s => s.ReadSingle()},
             {typeof (long), s => s.ReadInt64()},
             {typeof (ulong), s => s.ReadUInt64()},
             {typeof (string), s => 
@@ -48,6 +49,7 @@ namespace LibDat.Types
             {typeof (short), (bw, o) => bw.Write((short)o)},
             {typeof (int), (bw, o) => bw.Write((int)o)},
             {typeof (uint), (bw, o) => bw.Write((uint)o)},
+            {typeof (float), (bw, o) => bw.Write((float)o)},
             {typeof (long), (bw, o) => bw.Write((long)o)},
             {typeof (ulong), (bw, o) => bw.Write((ulong)o)},
             {typeof (string), (bw, o) =>
@@ -156,6 +158,7 @@ namespace LibDat.Types
                 {"short", new BaseDataType("short", 2, 4)},
                 {"int", new BaseDataType("int", 4, 4)},
                 {"uint", new BaseDataType("uint", 4, 4)},
+                {"float", new BaseDataType("float", 4, 4)},
                 {"long", new BaseDataType("long", 8, 4)},
                 {"ulong", new BaseDataType("ulong", 8, 4)},
                 {"string", new BaseDataType("string", -1, 4)}
@@ -217,6 +220,9 @@ namespace LibDat.Types
                     break;
                 case "uint":
                     data = new ValueData<uint>(type, inStream, options);
+                    break;
+                case "float":
+                    data = new ValueData<float>(type, inStream, options);
                     break;
                 case "long":
                     data = new Int64Data(type, inStream, options);
