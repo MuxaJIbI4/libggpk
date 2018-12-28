@@ -11,21 +11,24 @@ namespace ExportGGPK
     {
         private static readonly GrindingGearsPackageContainer Container = new GrindingGearsPackageContainer();
         private static readonly Dictionary<string, List<FileRecord>> Data = new Dictionary<string, List<FileRecord>>();
+        private static readonly char[] PathSeperator = { Path.DirectorySeparatorChar };
 
         private static string contentPath;
         private static string outputPath;
 
         static void Main(string[] args)
         {
-            if (args.Length < 3)
+            if (args.Length < 2)
             {
-                Console.WriteLine("Usage: ExportGGPK.exe <path to ggpk> <base output dir> <data dir>");
+                Console.WriteLine("Usage: ExportGGPK.exe <path to ggpk> <base output dir> [ggpk dir to extract]");
                 return;
             }
 
             contentPath = args[0];
             outputPath = args[1];
-            string data = args[2];
+            string data = "";
+            if(args.Length == 3 )
+                data = args[2];
 
             if (!File.Exists(contentPath))
             {
@@ -51,14 +54,13 @@ namespace ExportGGPK
 
         private static DirectoryTreeNode GetDirectory(string path)
         {
-            var dirs = path.Split(Path.DirectorySeparatorChar);
+            var dirs = path.Split(PathSeperator, StringSplitOptions.RemoveEmptyEntries);
             var currDir = Container.DirectoryRoot;
 
             foreach (var dir in dirs)
             {
                 currDir = WalkNode(currDir, dir);
             }
-
             return currDir;
         }
 
