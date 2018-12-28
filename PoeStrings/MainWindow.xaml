@@ -23,8 +23,9 @@
 			</ListBox.ItemTemplate>
 		</ListBox>
 		<local:StringEditor x:Name="stringEditorMain" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-		<StackPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Orientation="Horizontal">
-			<Button Name="buttonApplyAll" Margin="10 0 10 0" Click="buttonApplyAll_Click_1" Content="{x:Static Properties:Resources.MainWindow_Button_ApplyAll}"/>
+		<StackPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Orientation="Horizontal" Margin="224,0,264,0" Width="364">
+			<Button Name="buttonApplyAll" Margin="50 0 10 0" Click="buttonApplyAll_Click_1" Content="{x:Static Properties:Resources.MainWindow_Button_ApplyAll}"/>
+            <Button Name="buttonApplyAllToFile" Margin="10 0 10 0" Click="buttonApplyAllToFile_Click_1" Content="{x:Static Properties:Resources.MainWindow_Button_ApplyAllToFile}"/>
 			<Button Name="buttonSaveConfig" Margin="10 0 10 0" Click="buttonSaveConfig_Click_1" Content="{x:Static Properties:Resources.MainWindow_Button_SaveConfig}"/>
 		</StackPanel>
 		<TextBox Name="textBoxOutput" Grid.Row="2" Grid.ColumnSpan="2" FontFamily="Consolas" Background="Black" Foreground="White" TextWrapping="Wrap" FontSize="12" VerticalScrollBarVisibility="Visible"  Height="128" />

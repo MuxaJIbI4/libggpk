@@ -40,19 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DirectoryTreeMaker.cs" />
     <Compile Include="DirectoryTreeNode.cs" />
-    <Compile Include="FreeListMaker.cs" />
-    <Compile Include="GGPK_Records\BaseRecord.cs" />
-    <Compile Include="GGPK.cs" />
-    <Compile Include="GGPK_Records\DirectoryRecord.cs" />
-    <Compile Include="GGPK_Records\FileRecord.cs" />
-    <Compile Include="GGPK_Records\FreeRecord.cs" />
-    <Compile Include="GGPK_Records\GGPKRecord.cs" />
+    <Compile Include="Records\BaseRecord.cs" />
+    <Compile Include="GrindingGearsPackageContainer.cs" />
+    <Compile Include="Records\DirectoryRecord.cs" />
+    <Compile Include="Records\FileRecord.cs" />
+    <Compile Include="Records\FreeRecord.cs" />
+    <Compile Include="Records\GGPKRecord.cs" />
     <Compile Include="Murmur.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RecordFactory.cs" />
-    <Compile Include="Utils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

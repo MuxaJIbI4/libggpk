@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="typesDecription">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="((list|ref)\|)*(bool|byte|short|int|uint|float|long|ulong|string)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="field">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:string" use="required"/>
+			<xs:attribute name="type" type="typesDecription" use="required"/>
+			<xs:attribute name="description" type="xs:string"/>
+			<xs:attribute name="isUser" type="xs:boolean"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="record">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="field" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="file" type="xs:string" use="required"/>
+			<xs:attribute name="length" type="xs:nonNegativeInteger"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="definitions">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="records" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="record" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

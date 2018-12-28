@@ -1,0 +1,160 @@
+﻿<Window xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"  x:Class="PoEGGPKPatcher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PoEGGPKPatcher"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
+        Title="MainWindow" Height="340" Width="450">
+    <Grid>
+        <DockPanel HorizontalAlignment="Left" Margin="5">
+            <Border BorderThickness="3" Background="GhostWhite" DockPanel.Dock="Top">
+                <DockPanel LastChildFill="True">
+                    <Label x:Name="labelContentGGPKPath" DockPanel.Dock="Left" Content="Content.ggpk Path" />
+                    <TextBox x:Name="textBoxContentGGPK" />
+                </DockPanel>
+            </Border>
+            <Border BorderThickness="3" Background="GhostWhite" DockPanel.Dock="Top">
+                <DockPanel Width="400" LastChildFill="True">
+                    <DockPanel HorizontalAlignment="Right" DockPanel.Dock="Right" LastChildFill="False">
+                        <Button x:Name="buttonSelectPOE" DockPanel.Dock="Top"
+                                Content="Select POE" Click="OnSelectGgpkFileClick" />
+                        <Button x:Name="buttonApplyZIP" DockPanel.Dock="Top"
+                                Content="Apply ZIP" Click="OnApplyZipClick" />
+                        <Button x:Name="buttonClose" DockPanel.Dock="Bottom"
+                                Content="Close" Click="OnExitClick" />
+                    </DockPanel>
+                    <StackPanel>
+                        <TextBox x:Name="textBoxOutput" TextWrapping="WrapWithOverflow" Height="100" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" DockPanel.Dock="Bottom">
+
+                <GroupBox x:Name="groupBoxColor" Header="Color Modify(R, G, B)" HorizontalAlignment="Left">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="labelUnique" Background="Black"  Width="70" Content="Unique">
+                                <Label.Foreground>
+                                    <SolidColorBrush Color="{Binding 
+                                        ElementName=uniqueColorPicker, 
+                                        Path=SelectedColor, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Label.Foreground>
+                            </Label>
+                            <xctk:ColorPicker x:Name="uniqueColorPicker" Width="100" 
+                                              SelectedColor="{Binding Path=UniqueColor}"
+                                              ShowAdvancedButton="True" 
+                                              DisplayColorAndName="False"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="labelRare" Background="Black"  Width="70" Content="Rare">
+                                <Label.Foreground>
+                                    <SolidColorBrush Color="{Binding 
+                                        ElementName=rareColorPicker, 
+                                        Path=SelectedColor, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Label.Foreground>
+                            </Label>
+                            <xctk:ColorPicker x:Name="rareColorPicker" Width="100" 
+                                              SelectedColor="{Binding Path=RareColor}"
+                                              ShowAdvancedButton="True" 
+                                              DisplayColorAndName="False"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="labelMagic" Background="Black"  Width="70" Content="Magic">
+                                <Label.Foreground>
+                                    <SolidColorBrush Color="{Binding 
+                                        ElementName=magicColorPicker, 
+                                        Path=SelectedColor, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Label.Foreground>
+                            </Label>
+                            <xctk:ColorPicker x:Name="magicColorPicker" Width="100" 
+                                              SelectedColor="{Binding Path=MagicColor}"
+                                              ShowAdvancedButton="True" 
+                                              DisplayColorAndName="False"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="labelGem" Background="Black"  Width="70" Content="Gem">
+                                <Label.Foreground>
+                                    <SolidColorBrush Color="{Binding 
+                                        ElementName=gemColorPicker, 
+                                        Path=SelectedColor, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Label.Foreground>
+                            </Label>
+                            <xctk:ColorPicker x:Name="gemColorPicker" Width="100" 
+                                              SelectedColor="{Binding Path=GemColor}"
+                                              ShowAdvancedButton="True" 
+                                              DisplayColorAndName="False"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="labelCurrency" Background="Black"  Width="70" Content="Currency">
+                                <Label.Foreground>
+                                    <SolidColorBrush Color="{Binding 
+                                        ElementName=currencyColorPicker, 
+                                        Path=SelectedColor, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Label.Foreground>
+                            </Label>
+                            <xctk:ColorPicker x:Name="currencyColorPicker" Width="100" 
+                                              SelectedColor="{Binding Path=CurrencyColor}"
+                                              ShowAdvancedButton="True" 
+                                              DisplayColorAndName="False"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="buttonApplyColor"
+                                    Content="Apply Color" Click="OnApplyItemsColorClick" />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox x:Name="groupBoxFontSize" Header="Font Size" Width="100">
+                    <DockPanel LastChildFill="False">
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                            <Label x:Name="labelSmallFont" Width="50" Content="Small" />
+                            <TextBox x:Name="textBoxSmallFont" Width="30" 
+                                PreviewTextInput="NumberValidationTextBox"
+                                Text="{Binding  Path=SmallFontSize, 
+                                                ValidatesOnDataErrors=True, 
+                                                UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                            <Label x:Name="labelNormalFont" Width="50" Content="Normal" />
+                            <TextBox x:Name="textBoxNormalFont" Width="30" 
+                                PreviewTextInput="NumberValidationTextBox"
+                                Text="{Binding  Path=NormalFontSize, 
+                                                ValidatesOnDataErrors=True, 
+                                                UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                            <Label x:Name="labelLargeFont" Width="50" Content="Large" />
+                            <TextBox x:Name="textBoxLargeFont" Width="30"
+                                     PreviewTextInput="NumberValidationTextBox"
+                                     Text="{Binding  Path=LargeFontSize, 
+                                                ValidatesOnDataErrors=True, 
+                                                UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <Button x:Name="buttonApplyFont" DockPanel.Dock="Bottom" Width="70"
+                                Content="Apply Font" Click="OnApplyFontClick" 
+                                IsEnabled="{Binding Path=ButtonApplyFontIsEnabled}"
+                                />
+                    </DockPanel>
+                </GroupBox>
+
+                <GroupBox x:Name="groupBoxQuality" HorizontalAlignment="Left" VerticalAlignment="Top"
+                          Header="Screen Quality (0~10)">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox x:Name="textBoxQuality" Width="39" 
+                                 PreviewTextInput="NumberValidationTextBox"
+                                 Text="{Binding 
+                                            Path=Quality, 
+                                            ValidatesOnDataErrors=True, 
+                                            UpdateSourceTrigger=PropertyChanged}">
+                        </TextBox>
+                        <Button x:Name="buttonApplyQuality" Content="Apply Quality" 
+                                IsEnabled="{Binding Path=ButtonApplyQualityIsEnabled}"
+                                Click="OnApplyQualityClick" />
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</Window>

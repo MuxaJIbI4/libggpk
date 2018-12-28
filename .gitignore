@@ -11,9 +11,8 @@
 *.ipch
 *.DotSettings
 
-/VisualGGPK/VisualGGPK.csproj.DotSettings.user
-/PoeStrings/PoeStrings.csproj.DotSettings.user
-
+/VisualGGPK/*.user
+/PoeStrings/*.user
 /*.Example
 
-/PoeStrings/*.user
+VisualGGPK.sln.DotSettings.user

@@ -1,0 +1,182 @@
+This is readme is written to better understand how to work with .dat files in GGPK package
+
+// MuxaJIbI4
+
+###########################
+1. Terms and defintions
+###########################
+
+* .dat file (*.dat, DAT):
+        file with extension 'dat' which contains data that needs to parsed. 
+        It contains 0 or more 'records' and 'data section'.
+
+* record: 
+        contain 1 or more fields, has the same length as other records
+
+* record field (field):
+        part of record, contains data of value or pointer type.
+
+* value type field:
+        field contains value in itself. Values can be of type: bool, byte, short, int, long(Int64)
+
+* pointer type filed (pointer field):
+        contains offset to data section entry and it's metadata
+
+* field id (name): 
+        short "name" of field
+
+* field description: 
+        explains what data this field contain and how and where it used
+
+* user field: 
+        field which reference strings shown to user. Necessary for translating referenced strings
+
+* field type: 
+        contains metadata about field type: 
+            - name, 
+            - width
+            - value or pointer
+            - and specific delegates for pointer type.
+
+* field's type width:
+        number of bytes type (and consequently field) occupies
+        values type: 1-8 (from bool and byte to long)
+        pointer types:
+            4-byte pointer contains just data section offset
+            8-byte pointer contains offset and metadata. For example, for list of integers
+                           it will contain length of list and offset to first number in the list. 
+                           Action on metadata is based on specific pointer field type.
+
+* data section: 
+        contains data of variable sizes (strings, lists of integers, etc...). 
+        It consists of "magic number" followed by 0 or more data section entries
+
+* data section magic number (magic number): 
+        0xBBbbBBbbBBbbBBbb. 
+        It marks start of data section and followed by data section entries if they exist.
+
+* data section entry: 
+        data that contain some data and referenced by "data section entry offset" 
+        in one or more record fields or another data section entries. 
+        NOTE: Well, it may be not referenced but it's a waste of space and it possibly couldn't happen.
+
+* data section entry offset: 
+        offset from start of data section at which start "data section entry".
+        First offset starts equals 8 (after b bytes of "magic word")
+
+* data section types: 
+        data section can contain strings, lists of integers and pointers to another data section entry. 
+        Possibly it also contain other data. 
+        Each type has corresponding derived subclass of AbstractData class.
+
+* string:
+        entry of string of length N consists of N UTF-16 characters (2*N bytes) followed by 
+        string terminator (4 bytes: (int)0  ). Final length of string entry equals 2*N+4 bytes.
+        If supposedly string type entry doesn't have (int)o at the end it's not a string, 
+        if one tries to read extra \0 UTF-16 character it's possible to read beyond stream end and 
+        that will lead to thrown exception
+
+###########################
+2. XML defnitions and schema
+###########################
+
+1) .dat file record: <record file="Achievements" length="22">
+    - "file" - name without extension, case sensitive
+    - "length" - length or record
+2) field: <field id="Description" type="ref|string" isUser="1" /> 
+    - order of <field> elements is the same as order in which are located in the record
+    - "id" - short field id
+    - "description" [optional] - more detailed field description
+    - "isUser" - marks field as seen to the user (or containing "user" strings which is used for translating the game)
+    - ""type" = type of field
+
+3) "type" attribute.
+It's pattern is "((list|ref)\|)*(bool|byte|short|int|uint|long|ulong|string)" 
+For those who don't know regular expressions (and you only want to change XML) it means that string consists of:
+    at the start: zero or more concatenated strings "list|" or "ref|"
+    followed by one string of list: bool byte short int uint long ulong string
+In this scenario list and ref are complex types, and bool byte short int uint long ulong string are simple types.
+
+What each type means?
+    - ref:      data contains offset to another data. All offsets are calculated from start of data section
+                First offset is always 8.
+    - list:     data is pointer to another data.
+    - string:   data is UTF-16 string
+Other types represent data of C# type with the same name
+
+Examples:
+1) int:                 field contains data of type int, which is 4 bytes
+2) long:                field contains data of type long, which is 8 bytes
+3) ref|string:          field contains pointer to string, 4 bytes in which written offset to where string begins.
+4) ref|list|long:       field contains pointer to list of long, it's 8 bytes, 
+                        first 4 bytes contain number of elements in the list,
+                        second 4 bytes contain offset to where list begins
+5) ref|ref|string       pointer to pointer to string
+6) ref|list|ref|string  pointer to list of pointers to string
+And so on.
+
+###########################
+3. Classes
+###########################
+
+ * .dat content related classes
+ DatContainer - main class, contains all data for parsed .dat
+ RecordData - contain list of FielData
+ FieldData - contain field data
+ 
+ * .dat format related classes
+ RecordInfo - contains record definition
+ FieldInfo - contains field information
+ RecordFactory - static class responsible for parsing XML and storing record definitions
+ 
+ * data type related classes
+ BaseDataType - base class, represents type of simple value
+ ListDataType - represents type of list of the same type data. Has property ListData to describe type of list entries
+ PointerDataType - represent pointer to another data. Has property RefType to describe type of referenced data.
+ TypeFactory - static class responsible for parsing XML types and creating Data from Type
+
+ * data related classes
+ AbstractData - base class
+ ValueData - generic class representing simple value data (bool, byte, etc...)
+ StringData - ValueData derived class. Handle strings
+ PointerData - represents data that contains pointer to another data
+ ListData - represents data that contains pointer to another data
+
+###########################
+DatContainer
+###########################
+Main class for parsing .dat files
+
+It's functions:
+- entry point for parsing  .dat files
+- store parsed records and data section data
+- change data section contents
+- save as .csv
+- save as .dat
+
+##########################
+Types of Data
+###########################
+
+##########################
+AbstractData derived classes
+###########################
+
+!!! Everything in the .dat file is "Data" !!!
+
+Every Field contains "Data"
+Field's Data differs from Data in data section for this reasons:
+    - it's has negative Offset
+    - it can contain only fixed size ValueData and PointerData
+
+##########################
+FAQ
+###########################
+
+X. How to create new type?
+1) create new DataType derived type or use existing
+2) create new AbstractData derived class or use existing
+3) link them through TypeFactory.CreateData( ... ) method
+4) add it's name into type pattern XML schema file (.xsd extension)
+5) don't forget to override WritePointer() method in AbstractData
+
