@@ -384,8 +384,7 @@
 		<record file="BetrayalChoiceActions" length="20">
 			<field id="Id" type="ref|string"/>
 			<field id="BetrayalChoicesKey" type="ulong"/>
-			<field id="Unknown0" type="int"/>
-			<field id="Unknown1" type="int"/>
+			<field id="ClientStringsKey" type="ulong"/>
 		</record>
 		<record file="BetrayalChoices" length="12">
 			<field id="Id" type="ref|string"/>
@@ -1490,8 +1489,7 @@
 		<record file="GeometryAttack" length="102">
 			<field id="Unknown0" type="int"/>
 			<field id="Keys0" type="ref|list|ulong"/>
-			<field id="Unknown3" type="int"/>
-			<field id="Unknown4" type="int"/>
+			<field id="Keys1" type="ref|list|ulong"/>
 			<field id="Unknown5" type="int"/>
 			<field id="Unknown6" type="int"/>
 			<field id="Unknown7" type="int"/>
@@ -2178,6 +2176,11 @@
 			<field id="AOFile" type="ref|string"/>
 			<field id="Flag0" type="bool"/>
 		</record>
+		<record file="MicrotransactionPeriodicCharacterEffectVariations" length="16">
+			<field id="Id" type="ref|string"/>
+			<field id="AOFile" type="ref|string"/>
+			<field id="Key0" type="ulong"/>
+		</record>
 		<record file="MicrotransactionPortalVariations" length="20">
 			<field id="BaseItemTypesKey" type="ulong"/>
 			<field id="AOFile" type="ref|string"/>
@@ -2681,9 +2684,8 @@
 			<field id="Unknown19" type="int"/>
 			<field id="Unknown20" type="ref|list|int"/>
 			<field id="Unknown21" type="int"/>
-			<field id="Unknown22" type="int"/>
 			<field id="Flag2" type="bool"/>
-			<field id="Unknown23" type="int"/>
+			<field id="Keys0" type="ref|list|ulong"/>
 			<field id="Key0" type="ulong"/>
 			<field id="Flag3" type="bool"/>
 			<field id="Flag4" type="bool"/>
@@ -3089,6 +3091,14 @@
 			<field id="Description" type="ref|string"/>
 			<field id="ServerCommand" type="ref|string"/>
 		</record>
+		<record file="SafehouseCraftingSpree" length="44">
+			<field id="BetrayalJobsKey" type="ulong"/>
+			<field id="BetrayalRanksKey" type="ulong"/>
+			<field id="Currency_Values" type="ref|list|int"/>
+			<field id="Chance" type="int"/>
+			<field id="Currency_SafehouseCraftingSpreeCurrenciesKeys" type="ref|list|ulong"/>
+			<field id="Data0" type="ref|list|int"/>
+		</record>
 		<record file="SafehouseCraftingSpreeCurrencies" length="13">
 			<field id="Id" type="ref|string"/>
 			<field id="BaseItemTypesKey" type="ulong"/>
@@ -3400,7 +3410,7 @@
 			<field id="Time0" type="ref|string"/>
 			<field id="Time1" type="ref|string"/>
 			<field id="ShopPackagePlatformKey" type="ref|list|int"/>
-			<field id="Unknown1" type="int"/>
+			<field id="Unknown0" type="ref|string"/>
 		</record>
 		<record file="SurgeTypes" length="12">
 			<field id="Id" type="ref|string"/>
