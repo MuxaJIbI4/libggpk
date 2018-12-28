@@ -257,8 +257,6 @@ namespace PatchGGPK
 		{
 			using (ZipFile zipFile = new ZipFile(archivePath))
 			{
-				bool VersionCheck = false;
-				bool NeedVersionCheck = false;
 				OutputLine(string.Format("Archive {0}", archivePath));
                 /*
 				foreach (var item in zipFile.Entries)
