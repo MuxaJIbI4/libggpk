@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualPoEPatcher", "VisualP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatConverter", "DatConverter\DatConverter.csproj", "{9FE0E2B5-BB5F-430E-960B-132DB794880C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExportGGPK", "ExportGGPK\ExportGGPK.csproj", "{01F3069E-63FD-4053-8B3E-DF683B743605}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +121,18 @@ Global
 		{9FE0E2B5-BB5F-430E-960B-132DB794880C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9FE0E2B5-BB5F-430E-960B-132DB794880C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9FE0E2B5-BB5F-430E-960B-132DB794880C}.Release|x86.ActiveCfg = Release|Any CPU
+		{01F3069E-63FD-4053-8B3E-DF683B743605}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01F3069E-63FD-4053-8B3E-DF683B743605}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01F3069E-63FD-4053-8B3E-DF683B743605}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{01F3069E-63FD-4053-8B3E-DF683B743605}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{01F3069E-63FD-4053-8B3E-DF683B743605}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{01F3069E-63FD-4053-8B3E-DF683B743605}.Debug|x86.Build.0 = Debug|Any CPU
+		{01F3069E-63FD-4053-8B3E-DF683B743605}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01F3069E-63FD-4053-8B3E-DF683B743605}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01F3069E-63FD-4053-8B3E-DF683B743605}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{01F3069E-63FD-4053-8B3E-DF683B743605}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{01F3069E-63FD-4053-8B3E-DF683B743605}.Release|x86.ActiveCfg = Release|Any CPU
+		{01F3069E-63FD-4053-8B3E-DF683B743605}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
