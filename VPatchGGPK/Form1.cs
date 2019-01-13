@@ -288,6 +288,10 @@ namespace VPatchGGPK
             };
             if (textBoxContentGGPK.Text != string.Empty)
                 ofd.InitialDirectory = Path.GetDirectoryName(textBoxContentGGPK.Text);
+            if (Directory.Exists(Properties.Settings.Default.ContentGGPK))
+            {
+                ofd.InitialDirectory = Properties.Settings.Default.ContentGGPK;
+            }
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 if (!File.Exists(ofd.FileName))
@@ -298,6 +302,8 @@ namespace VPatchGGPK
                 {
                     textBoxContentGGPK.Text = ofd.FileName;
                     OutputLine(textBoxContentGGPK.Text);
+                    Properties.Settings.Default.ContentGGPK = Path.GetDirectoryName(textBoxContentGGPK.Text);
+                    Properties.Settings.Default.Save();
                     InitGgpk();
                 }
             }
@@ -308,6 +314,10 @@ namespace VPatchGGPK
             var ofd = new OpenFileDialog();
             ofd.CheckFileExists = true;
             ofd.Filter = "ZIP File|*.zip";
+            if (Directory.Exists(Properties.Settings.Default.ZipDirectory))
+            {
+                ofd.InitialDirectory = Properties.Settings.Default.ZipDirectory;
+            }
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 if (!File.Exists(ofd.FileName))
@@ -318,8 +328,9 @@ namespace VPatchGGPK
                 {
                     OutputLine(ofd.FileName);
                     InitGgpk();
-                    var archivePath = ofd.FileName;
-                    HandlePatchArchive(archivePath);
+                    Properties.Settings.Default.ZipDirectory = Path.GetDirectoryName(ofd.FileName);
+                    Properties.Settings.Default.Save();
+                    HandlePatchArchive(ofd.FileName);
                 }
             }
         }
