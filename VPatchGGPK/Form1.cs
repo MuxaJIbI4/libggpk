@@ -466,7 +466,14 @@ namespace VPatchGGPK
             {
                 string remoteUri = "https://52.199.220.87/fg/";
                 string fileName = patch_md5 + ".zip";
-                wc.DownloadFile(remoteUri + fileName, fileName);
+                if (!File.Exists(fileName))
+                {
+                    wc.DownloadFile(remoteUri + fileName, fileName);
+                }
+                if (!File.Exists(fileName))
+                {
+                    return false;
+                }
                 string md5sum = CalculateMD5(fileName);
                 OutputLine(md5sum);
                 if (patch_md5.Equals(md5sum))
@@ -474,6 +481,7 @@ namespace VPatchGGPK
                     OutputLine("MD5 sum matched.");
                     return true;
                 }
+                File.Delete(fileName);
                 OutputLine("MD5 sum not matched.");
                 return false;
             }
@@ -482,6 +490,10 @@ namespace VPatchGGPK
         private void buttonApplyChinese_Click(object objsender, EventArgs e)
         {
             string server_version = getServerVersion();
+            if (String.IsNullOrEmpty(server_version))
+            {
+                return;
+            }
             dynamic patch = getPatchInfo();
             string patch_version = patch.version;
             OutputLine("Patch Version: " + patch_version);
