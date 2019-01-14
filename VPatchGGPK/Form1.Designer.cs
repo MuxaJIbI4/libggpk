@@ -35,6 +35,7 @@
             this.textBoxOutput = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonClose = new System.Windows.Forms.Button();
+            this.buttonApplyChinese = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonSelectPOE
@@ -100,11 +101,22 @@
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonExit_Click);
             // 
+            // buttonApplyChinese
+            // 
+            this.buttonApplyChinese.Location = new System.Drawing.Point(415, 100);
+            this.buttonApplyChinese.Name = "buttonApplyChinese";
+            this.buttonApplyChinese.Size = new System.Drawing.Size(75, 36);
+            this.buttonApplyChinese.TabIndex = 9;
+            this.buttonApplyChinese.Text = "Apply Chinese";
+            this.buttonApplyChinese.UseVisualStyleBackColor = true;
+            this.buttonApplyChinese.Click += new System.EventHandler(this.buttonApplyChinese_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(499, 260);
+            this.Controls.Add(this.buttonApplyChinese);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBoxOutput);
@@ -128,6 +140,7 @@
 		private System.Windows.Forms.TextBox textBoxOutput;
 		private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonClose;
-	}
+        private System.Windows.Forms.Button buttonApplyChinese;
+    }
 }
 

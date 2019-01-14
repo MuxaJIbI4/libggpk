@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Net;
+using System.Net.Sockets;
+using System.Security.Cryptography;
 
 using LibGGPK;
 using System.IO;
@@ -10,6 +13,8 @@ using Ionic.Zip;
 using System.Globalization;
 using LibGGPK.Records;
 using Microsoft.Win32;
+
+using Newtonsoft.Json.Linq;
 
 namespace VPatchGGPK
 {
@@ -35,6 +40,7 @@ namespace VPatchGGPK
                 buttonSelectPOE.Text = "選擇 POE";
                 buttonApplyZIP.Text = "套用 ZIP";
                 buttonClose.Text = "關閉";
+                buttonApplyChinese.Text = "套用中文化";
             }
         }
 
@@ -53,6 +59,10 @@ namespace VPatchGGPK
 
         private static string SearchContentGgpk()
         {
+            if (File.Exists(Properties.Settings.Default.ContentGGPK))
+            {
+                return Properties.Settings.Default.ContentGGPK;
+            }
             const string contentGgpk = @"\Content.ggpk";
             var ggpkPath = Directory.GetCurrentDirectory() + contentGgpk;
             // GarenaTW
@@ -203,7 +213,7 @@ namespace VPatchGGPK
             textBoxContentGGPK.Enabled = false;
             buttonSelectPOE.Enabled = false;
 
-            CreateExampleRegistryFile(ggpkPath);
+            //CreateExampleRegistryFile(ggpkPath);
         }
 
         private void HandlePatchArchive(string archivePath)
@@ -262,10 +272,10 @@ namespace VPatchGGPK
 
                     if (!_recordsByPath.ContainsKey(fixedFileName))
                     {
-                        OutputLine(string.Format("Failed {0}", fixedFileName));
+                        OutputLine(string.Format("Failed {0}", item.FileName));
                         continue;
                     }
-                    OutputLine(string.Format("Replace {0}", fixedFileName));
+                    OutputLine(string.Format("Replace {0}", item.FileName));
 
                     using (var reader = item.OpenReader())
                     {
@@ -288,9 +298,9 @@ namespace VPatchGGPK
             };
             if (textBoxContentGGPK.Text != string.Empty)
                 ofd.InitialDirectory = Path.GetDirectoryName(textBoxContentGGPK.Text);
-            if (Directory.Exists(Properties.Settings.Default.ContentGGPK))
+            if (File.Exists(Properties.Settings.Default.ContentGGPK))
             {
-                ofd.InitialDirectory = Properties.Settings.Default.ContentGGPK;
+                ofd.InitialDirectory = Path.GetDirectoryName(Properties.Settings.Default.ContentGGPK);
             }
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -302,7 +312,7 @@ namespace VPatchGGPK
                 {
                     textBoxContentGGPK.Text = ofd.FileName;
                     OutputLine(textBoxContentGGPK.Text);
-                    Properties.Settings.Default.ContentGGPK = Path.GetDirectoryName(textBoxContentGGPK.Text);
+                    Properties.Settings.Default.ContentGGPK = textBoxContentGGPK.Text;
                     Properties.Settings.Default.Save();
                     InitGgpk();
                 }
@@ -362,6 +372,130 @@ namespace VPatchGGPK
 
             // Return UTF16 bytes as UTF16 string
             return Encoding.Unicode.GetString(utf16Bytes);
+        }
+
+        string getServerVersion()
+        {
+            string server_version = null;
+
+            try
+            {
+                byte[] bytes = new byte[1024];
+                const string strHostName = "us.login.pathofexile.com";
+                const int port = 12995;
+                IPHostEntry ipHostInfo = Dns.GetHostEntry(strHostName);
+                IPAddress ipAddress = ipHostInfo.AddressList[0];
+                IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
+
+                Socket sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
+                const int patching_protocol_version_opcode = 1;
+                const int patching_protocol_version_number = 4;
+                byte[] msg = new byte[] { patching_protocol_version_opcode, patching_protocol_version_number };
+                const int patching_url_offset = 0x22;
+
+                try
+                {
+                    sender.Connect(remoteEP);
+                    int bytesSent = sender.Send(msg);
+                    int bytesRec = sender.Receive(bytes);
+                    sender.Shutdown(SocketShutdown.Both);
+                    sender.Close();
+                    int size = (int)bytes[patching_url_offset];
+                    String text = Encoding.Unicode.GetString(bytes, patching_url_offset + 1, size * 2);
+                    string[] ary = text.Split('/');
+                    server_version = ary[ary.Length - 2];
+                    OutputLine("Server Version: " + server_version);
+                    return server_version;
+                }
+                catch (ArgumentNullException ane)
+                {
+                    OutputLine(ane.ToString());
+                }
+                catch (SocketException se)
+                {
+                    OutputLine(se.ToString());
+                }
+                catch (Exception ee)
+                {
+                    OutputLine(ee.ToString());
+                }
+            }
+            catch (Exception ee)
+            {
+                OutputLine(ee.ToString());
+            }
+            return server_version;
+        }
+
+        void ignoreCertificateCheckWhenSSL()
+        {
+            ServicePointManager.ServerCertificateValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+        }
+
+        dynamic getPatchInfo()
+        {
+            using (WebClient wc = new WebClient())
+            {
+                ignoreCertificateCheckWhenSSL();
+
+                string remoteUri = "https://52.199.220.87/fg/";
+                string fileName = "version.json";
+                var json = wc.DownloadString(remoteUri + fileName);
+                dynamic patch = JObject.Parse(json);
+
+                return patch;
+            }
+        }
+
+        static string CalculateMD5(string filename)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(filename))
+                {
+                    var hash = md5.ComputeHash(stream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                }
+            }
+        }
+
+        Boolean downloadAndVerifyPatch(string patch_md5)
+        {
+            using (WebClient wc = new WebClient())
+            {
+                string remoteUri = "https://52.199.220.87/fg/";
+                string fileName = patch_md5 + ".zip";
+                wc.DownloadFile(remoteUri + fileName, fileName);
+                string md5sum = CalculateMD5(fileName);
+                OutputLine(md5sum);
+                if (patch_md5.Equals(md5sum))
+                {
+                    OutputLine("MD5 sum matched.");
+                    return true;
+                }
+                OutputLine("MD5 sum not matched.");
+                return false;
+            }
+        }
+
+        private void buttonApplyChinese_Click(object objsender, EventArgs e)
+        {
+            string server_version = getServerVersion();
+            dynamic patch = getPatchInfo();
+            string patch_version = patch.version;
+            OutputLine("Patch Version: " + patch_version);
+            if (server_version != patch_version)
+            {
+                OutputLine("Server Version not match Patch Version");
+                return;
+            }
+            string patch_md5 = patch.md5;
+            if (downloadAndVerifyPatch(patch_md5))
+            {
+                InitGgpk();
+                HandlePatchArchive(patch_md5 + ".zip");
+            }
         }
     }
 }
