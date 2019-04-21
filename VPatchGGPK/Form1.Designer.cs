@@ -125,7 +125,7 @@
             this.Controls.Add(this.buttonApplyZIP);
             this.Controls.Add(this.buttonSelectPOE);
             this.Name = "Form1";
-            this.Text = "VPatchGGPK";
+            this.Text = "VPatchGGPK  v0.3";
             this.ResumeLayout(false);
             this.PerformLayout();
 

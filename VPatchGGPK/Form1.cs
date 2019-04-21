@@ -65,6 +65,35 @@ namespace VPatchGGPK
             }
             const string contentGgpk = @"\Content.ggpk";
             var ggpkPath = Directory.GetCurrentDirectory() + contentGgpk;
+            
+            // Search GGG ggpk
+            if (!File.Exists(ggpkPath))
+            {
+                var start = Registry.CurrentUser;
+                var programName = start.OpenSubKey(@"Software\GrindingGearGames\Path of Exile");
+                if (programName != null)
+                {
+                    var pathString = (string)programName.GetValue("InstallLocation");
+                    if (pathString != string.Empty && File.Exists(pathString + contentGgpk))
+                    {
+                        ggpkPath = pathString + contentGgpk;
+                    }
+                }
+            }
+            if (!File.Exists(ggpkPath))
+            {
+                if (File.Exists(@"C:\Program Files (x86)\Grinding Gear Games\Path of Exile" + contentGgpk))
+                {
+                    ggpkPath = @"C:\Program Files (x86)\Grinding Gear Games\Path of Exile" + contentGgpk;
+                }
+            }
+            if (!File.Exists(ggpkPath))
+            {
+                if (File.Exists(@"C:\Program Files\Grinding Gear Games\Path of Exile" + contentGgpk))
+                {
+                    ggpkPath = @"C:\Program Files\Grinding Gear Games\Path of Exile" + contentGgpk;
+                }
+            }
             // GarenaTW
             if (!File.Exists(ggpkPath))
             {
@@ -106,75 +135,6 @@ namespace VPatchGGPK
                     ggpkPath = @"C:\Program Files\GarenaPoETW\GameData\Apps\POETW" + contentGgpk;
                 }
             }
-            // Search GGG ggpk
-            if (!File.Exists(ggpkPath))
-            {
-                var start = Registry.CurrentUser;
-                var programName = start.OpenSubKey(@"Software\GrindingGearGames\Path of Exile");
-                if (programName != null)
-                {
-                    var pathString = (string)programName.GetValue("InstallLocation");
-                    if (pathString != string.Empty && File.Exists(pathString + contentGgpk))
-                    {
-                        ggpkPath = pathString + contentGgpk;
-                    }
-                }
-            }
-            if (!File.Exists(ggpkPath))
-            {
-                if (File.Exists(@"C:\Program Files (x86)\Grinding Gear Games\Path of Exile" + contentGgpk))
-                {
-                    ggpkPath = @"C:\Program Files (x86)\Grinding Gear Games\Path of Exile" + contentGgpk;
-                }
-            }
-            if (!File.Exists(ggpkPath))
-            {
-                if (File.Exists(@"C:\Program Files\Grinding Gear Games\Path of Exile" + contentGgpk))
-                {
-                    ggpkPath = @"C:\Program Files\Grinding Gear Games\Path of Exile" + contentGgpk;
-                }
-            }
-            // Search GGC ggpk
-            if (!File.Exists(ggpkPath))
-            {
-                var start = Registry.LocalMachine;
-                var programName = start.OpenSubKey(@"SOFTWARE\Wow6432Node\Garena\PoE");
-                if (programName != null)
-                {
-                    var pathString = (string)programName.GetValue("Path");
-                    if (pathString != string.Empty && File.Exists(pathString + contentGgpk))
-                    {
-                        ggpkPath = pathString + contentGgpk;
-                    }
-                }
-            }
-            if (!File.Exists(ggpkPath))
-            {
-                var start = Registry.LocalMachine;
-                var programName = start.OpenSubKey(@"SOFTWARE\Garena\PoE");
-                if (programName != null)
-                {
-                    var pathString = (string)programName.GetValue("Path");
-                    if (pathString != string.Empty && File.Exists(pathString + contentGgpk))
-                    {
-                        ggpkPath = pathString + contentGgpk;
-                    }
-                }
-            }
-            if (!File.Exists(ggpkPath))
-            {
-                if (File.Exists(@"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE" + contentGgpk))
-                {
-                    ggpkPath = @"C:\Program Files (x86)\GarenaPoE\GameData\Apps\PoE" + contentGgpk;
-                }
-            }
-            if (!File.Exists(ggpkPath))
-            {
-                if (File.Exists(@"C:\Program Files\GarenaPoE\GameData\Apps\PoE" + contentGgpk))
-                {
-                    ggpkPath = @"C:\Program Files\GarenaPoE\GameData\Apps\PoE" + contentGgpk;
-                }
-            }
 
             return ggpkPath;
         }
@@ -194,7 +154,7 @@ namespace VPatchGGPK
                 return;
 
             var ggpkPath = textBoxContentGGPK.Text;
-            if (!File.Exists(ggpkPath))
+            if (ggpkPath == String.Empty || !File.Exists(ggpkPath))
             {
                 OutputLine(string.Format("GGPK {0} not exists.", ggpkPath));
                 return;
@@ -289,7 +249,7 @@ namespace VPatchGGPK
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void chooseGgpk()
         {
             var ofd = new OpenFileDialog
             {
@@ -297,7 +257,9 @@ namespace VPatchGGPK
                 Filter = "GGPK Pack File|*.ggpk"
             };
             if (textBoxContentGGPK.Text != string.Empty)
+            {
                 ofd.InitialDirectory = Path.GetDirectoryName(textBoxContentGGPK.Text);
+            }
             if (File.Exists(Properties.Settings.Default.ContentGGPK))
             {
                 ofd.InitialDirectory = Path.GetDirectoryName(Properties.Settings.Default.ContentGGPK);
@@ -317,6 +279,11 @@ namespace VPatchGGPK
                     InitGgpk();
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            chooseGgpk();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -439,7 +406,7 @@ namespace VPatchGGPK
             {
                 ignoreCertificateCheckWhenSSL();
 
-                string remoteUri = "https://52.199.220.87/fg/";
+                string remoteUri = "https://poedb.tw/fg/";
                 string fileName = "version.json";
                 var json = wc.DownloadString(remoteUri + fileName);
                 dynamic patch = JObject.Parse(json);
@@ -464,7 +431,7 @@ namespace VPatchGGPK
         {
             using (WebClient wc = new WebClient())
             {
-                string remoteUri = "https://52.199.220.87/fg/";
+                string remoteUri = "https://poedb.tw/fg/";
                 string fileName = patch_md5 + ".zip";
                 if (!File.Exists(fileName))
                 {
@@ -489,6 +456,10 @@ namespace VPatchGGPK
 
         private void buttonApplyChinese_Click(object objsender, EventArgs e)
         {
+            if (!File.Exists(Properties.Settings.Default.ContentGGPK))
+            {
+                chooseGgpk();
+            }
             string server_version = getServerVersion();
             if (String.IsNullOrEmpty(server_version))
             {
