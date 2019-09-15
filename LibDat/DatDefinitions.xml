@@ -684,7 +684,7 @@
 			<field id="Id" type="ref|string"/>
 			<field id="Data1" type="ref|list|int"/>
 			<field id="Size" type="int"/>
-			<field id="Type" type="ref|string"/>
+			<field id="Type" type="int"/>
 			<field id="Data3" type="ref|list|int"/>
 			<field id="Data4" type="ref|list|int"/>
 			<field id="Data5" type="ref|list|int"/>
