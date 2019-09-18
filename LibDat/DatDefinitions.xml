@@ -3475,9 +3475,8 @@
 		<record file="Orientations" length="0">
 		</record>
 		<record file="PCBangRewardMicros" length="12">
-			<field id="Unknown0" type="ref|string"/>
+			<field id="BaseItemTypesKey" type="ulong"/>
 			<field id="Unknown1" type="int"/>
-			<field id="Unknown2" type="int"/>
 		</record>
 		<record file="PVPTypes" length="0">
 		</record>
