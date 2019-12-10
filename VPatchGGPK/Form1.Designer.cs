@@ -50,7 +50,7 @@
             // 
             // buttonApplyZIP
             // 
-            this.buttonApplyZIP.Location = new System.Drawing.Point(414, 70);
+            this.buttonApplyZIP.Location = new System.Drawing.Point(414, 71);
             this.buttonApplyZIP.Name = "buttonApplyZIP";
             this.buttonApplyZIP.Size = new System.Drawing.Size(75, 23);
             this.buttonApplyZIP.TabIndex = 1;
@@ -85,11 +85,12 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(458, 212);
+            this.label2.Location = new System.Drawing.Point(450, 208);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(34, 12);
             this.label2.TabIndex = 7;
             this.label2.Text = "poedb";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // buttonClose
             // 
@@ -125,7 +126,7 @@
             this.Controls.Add(this.buttonApplyZIP);
             this.Controls.Add(this.buttonSelectPOE);
             this.Name = "Form1";
-            this.Text = "VPatchGGPK  v0.3";
+            this.Text = "VPatchGGPK  v0.4";
             this.ResumeLayout(false);
             this.PerformLayout();
 

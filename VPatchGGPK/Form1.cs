@@ -407,7 +407,7 @@ namespace VPatchGGPK
                 ignoreCertificateCheckWhenSSL();
 
                 string remoteUri = "https://poedb.tw/fg/";
-                string fileName = "version.json";
+                string fileName = "pin.json";
                 var json = wc.DownloadString(remoteUri + fileName);
                 dynamic patch = JObject.Parse(json);
 
@@ -473,12 +473,48 @@ namespace VPatchGGPK
                 OutputLine("Server Version not match Patch Version");
                 return;
             }
+            string promptValue = ShowDialog("https://poedb.tw/tw/chinese", "Pin Code");
+            if (promptValue != (string)patch.pin)
+            {
+                OutputLine("pin code at https://poedb.tw/tw/chinese");
+                return;
+            }
             string patch_md5 = patch.md5;
             if (downloadAndVerifyPatch(patch_md5))
             {
                 InitGgpk();
                 HandlePatchArchive(patch_md5 + ".zip");
             }
+        }
+
+        public static string ShowDialog(string text, string caption)
+        {
+            Form prompt = new Form()
+            {
+                Width = 500,
+                Height = 150,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = caption,
+                StartPosition = FormStartPosition.CenterScreen
+            };
+            Label textLabel = new Label() { Left = 50, Top = 20, Width = 400, Text = text };
+            textLabel.Click += delegate {
+                System.Diagnostics.Process.Start(text);
+            };
+            TextBox textBox = new TextBox() { Left = 50, Top = 40, Width = 400 };
+            Button confirmation = new Button() { Text = "Ok", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK };
+            confirmation.Click += (sender, e) => { prompt.Close(); };
+            prompt.Controls.Add(textBox);
+            prompt.Controls.Add(confirmation);
+            prompt.Controls.Add(textLabel);
+            prompt.AcceptButton = confirmation;
+
+            return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://poedb.tw/tw/chinese");
         }
     }
 }
