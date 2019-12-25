@@ -126,6 +126,7 @@ namespace PoeStrings
 
 		public void UpdateBindings()
 		{
+
 			string previouslySelectedFileName = null;
 
 			if ((listBoxFiles.SelectedItem != null) && (listBoxFiles.SelectedItem is KeyValuePair<string, DatTranslation>))
@@ -195,6 +196,5 @@ namespace PoeStrings
 			hasModifiedData = false;
 			stringEditorMain.HasModfiedData = false;
 		}
-
-	}
+    }
 }

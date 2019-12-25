@@ -249,7 +249,7 @@ namespace PoeStrings
                 if (!RecordFactory.HasRecordInfo(record.Name))
                     continue;
 
-                if (record.ContainingDirectory.Name != "Data")
+                if (record.ContainingDirectory.Name != Settings.Strings["Path"])
                     continue;
 
                 // We'll need this .dat FileRecord later on so we're storing it in a map of fileName -> FileRecord
@@ -267,14 +267,13 @@ namespace PoeStrings
                     continue;
                 }
 
-                var newDatTranslation = new DatTranslation();
-                newDatTranslation.DatName = record.Name;
-                newDatTranslation.Translations = new List<Translation>();
+                var newDatTranslation = new DatTranslation(record.Name);
 
                 foreach (var str in translatableStrings)
                 {
                     newDatTranslation.Translations.Add(new Translation(str));
                 }
+
 
                 if (translatableStrings.Count > 0)
                 {
@@ -292,20 +291,16 @@ namespace PoeStrings
         {
             // Map of all strings that can be safely translated (not used as ID's, paths, etc) stored by their hash
             var resultList = new HashSet<string>();
-
             var datBytes = record.ReadFileContent(ggpkPath);
             using (var datStream = new MemoryStream(datBytes))
             {
                 var dc = new DatContainer(datStream, record.Name);
-
                 var strings = dc.GetUserStrings();
-                foreach (var currentDatString in strings.
-                    Where(s => !resultList.Contains(s.GetValueString())))
+                foreach (var currentDatString in strings)
                 {
                     resultList.Add(currentDatString.GetValueString());
                 }
             }
-
             return resultList.ToList();
         }
 

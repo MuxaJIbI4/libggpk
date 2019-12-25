@@ -177,4 +177,7 @@
   <data name="MainWindow_Button_ApplyAllToFile" xml:space="preserve">
     <value>Apply all to File</value>
   </data>
+  <data name="Directory" xml:space="preserve">
+    <value>Data</value>
+  </data>
 </root>
