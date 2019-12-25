@@ -72,6 +72,7 @@
 
                 <Label x:Name="LabelFileHash" Content="{x:Static Properties:Resources.MainWindow_Label_FileHash}"/>
                 <TextBox x:Name="TextBoxHash" Width="100" IsReadOnly="True"/>
+                <CheckBox x:Name="AutoScrollCheckBox" Content="AutoScroll" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0,0,0" IsChecked="True"/>
             </StackPanel>
 
             <!--different viewers for different types of files-->
