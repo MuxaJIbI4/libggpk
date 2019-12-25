@@ -55,7 +55,11 @@ namespace VisualGGPK
         {
             TextBoxOutput.Dispatcher.BeginInvoke(new Action(() =>
             {
-                TextBoxOutput.Text += msg;
+                TextBoxOutput.AppendText(msg);
+                if (AutoScrollCheckBox.IsChecked.Value)
+                {
+                    TextBoxOutput.ScrollToEnd();
+                }
             }), null);
         }
 
@@ -446,7 +450,7 @@ namespace VisualGGPK
             if (_content.IsReadOnly)
             {
                 MessageBox.Show(
-                    Settings.Strings["ReplaceItem_Readonly"], 
+                    Settings.Strings["ReplaceItem_Readonly"],
                     Settings.Strings["ReplaceItem_ReadonlyCaption"]);
                 return;
             }
@@ -455,24 +459,24 @@ namespace VisualGGPK
             {
                 var openFileDialog = new OpenFileDialog
                 {
-                    FileName = "", 
-                    CheckFileExists = true, 
+                    FileName = "",
+                    CheckFileExists = true,
                     CheckPathExists = true
                 };
 
                 if (openFileDialog.ShowDialog() != true) return;
                 recordToReplace.ReplaceContents(_ggpkPath, openFileDialog.FileName, _content.FreeRoot);
                 MessageBox.Show(
-                    String.Format(Settings.Strings["ReplaceItem_Successful"], recordToReplace.Name, recordToReplace.RecordBegin.ToString("X")), 
-                    Settings.Strings["ReplaceItem_Successful_Caption"], 
+                    String.Format(Settings.Strings["ReplaceItem_Successful"], recordToReplace.Name, recordToReplace.RecordBegin.ToString("X")),
+                    Settings.Strings["ReplaceItem_Successful_Caption"],
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 UpdateDisplayPanel();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    string.Format(Settings.Strings["ReplaceItem_Failed"], ex.Message), 
-                    Settings.Strings["Error_Caption"], 
+                    string.Format(Settings.Strings["ReplaceItem_Failed"], ex.Message),
+                    Settings.Strings["Error_Caption"],
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -487,7 +491,7 @@ namespace VisualGGPK
             if (_content.IsReadOnly)
             {
                 MessageBox.Show(
-                    Settings.Strings["ReplaceItem_Readonly"], 
+                    Settings.Strings["ReplaceItem_Readonly"],
                     Settings.Strings["ReplaceItem_ReadonlyCaption"]);
                 return;
             }
@@ -544,7 +548,6 @@ namespace VisualGGPK
                         OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropDirectory_Failed"], fixedFileName));
                         continue;
                     }
-                    OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropDirectory_Replace"], fixedFileName));
 
                     using (var reader = item.OpenReader())
                     {
@@ -553,6 +556,8 @@ namespace VisualGGPK
 
                         _recordsByPath[fixedFileName].ReplaceContents(_ggpkPath, replacementData, _content.FreeRoot);
                     }
+
+                    OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropDirectory_Replace"], fixedFileName));
                 }
             }
         }
@@ -576,9 +581,10 @@ namespace VisualGGPK
                 return;
             }
 
+            record.ReplaceContents(_ggpkPath, fileName, _content.FreeRoot);
+
             OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropFile_Replace"], record.GetDirectoryPath(), record.Name));
 
-            record.ReplaceContents(_ggpkPath, fileName, _content.FreeRoot);
         }
 
         /// <summary>
@@ -606,14 +612,20 @@ namespace VisualGGPK
             foreach (var item in filesToReplace)
             {
                 var fixedFileName = item.Remove(0, baseDirectory.Length - baseDirectoryNameLength);
+                if (!fixedFileName.StartsWith("ROOT" + Path.DirectorySeparatorChar))
+                {
+                    fixedFileName = "ROOT" + Path.DirectorySeparatorChar + fixedFileName;
+                }
                 if (!_recordsByPath.ContainsKey(fixedFileName))
                 {
                     OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropDirectory_Failed"], fixedFileName));
                     continue;
                 }
-                OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropDirectory_Replace"], fixedFileName));
 
                 _recordsByPath[fixedFileName].ReplaceContents(_ggpkPath, item, _content.FreeRoot);
+
+                OutputLine(string.Format(Settings.Strings["MainWindow_HandleDropDirectory_Replace"], fixedFileName));
+
             }
         }
 
@@ -717,26 +729,35 @@ namespace VisualGGPK
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
 
-            var fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (fileNames == null || fileNames.Length != 1)
+            _workerThread = new Thread(() =>
             {
-                OutputLine(Settings.Strings["MainWindow_Drop_Failed"]);
-                return;
-            }
+                var fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+                if (fileNames == null || fileNames.Length != 1)
+                {
+                    OutputLine(Settings.Strings["MainWindow_Drop_Failed"]);
+                    return;
+                }
 
-            if (Directory.Exists(fileNames[0]))
-            {
-                HandleDropDirectory(fileNames[0]);
-            }
-            var extension = Path.GetExtension(fileNames[0]);
-            if (!String.IsNullOrEmpty(extension) && extension.Equals(".zip")) // Zip file
-            {
-                HandleDropArchive(fileNames[0]);
-            }
-            else
-            {
-                HandleDropFile(fileNames[0]);
-            }
+                var extension = Path.GetExtension(fileNames[0]);
+                if (Directory.Exists(fileNames[0]))
+                {
+                    HandleDropDirectory(fileNames[0]);
+                }
+                else if (!String.IsNullOrEmpty(extension) && extension.Equals(".zip")) // Zip file
+                {
+                    HandleDropArchive(fileNames[0]);
+                }
+                else
+                {
+                    HandleDropFile(fileNames[0]);
+                }
+
+                OutputLine(Environment.NewLine + "Finished!");
+
+                _workerThread = null;
+            });
+
+            _workerThread.Start();
         }
 
         private void Window_Closing_1(object sender, CancelEventArgs e)
@@ -812,17 +833,19 @@ namespace VisualGGPK
                 item.Items.Add("Loading...");
                 text = o.ToString();
             }
-            else 
+            else
                 throw new Exception("Unknown tree view item type: " + o.GetType());
-            
+
             // create stack panel
-            var stack = new StackPanel {Orientation = Orientation.Horizontal};
+            var stack = new StackPanel { Orientation = Orientation.Horizontal };
             // create Image
             var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(
                 icon.ToBitmap().GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
             var img = new Image
             {
-                Source = bitmapSource, Width = 10, Height = 10
+                Source = bitmapSource,
+                Width = 10,
+                Height = 10
             };
             // Label
             var lbl = new Label

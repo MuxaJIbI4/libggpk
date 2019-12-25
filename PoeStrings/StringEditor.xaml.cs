@@ -38,7 +38,9 @@ namespace PoeStrings
 		}
 		private List<Translation> _translations;
 
-		public Translation SelectedTranslation
+        public Translation _selectedTranslation;
+
+        public Translation SelectedTranslation
 		{
 			get
 			{
@@ -50,8 +52,7 @@ namespace PoeStrings
 				UpdateTextBoxes();
 			}
 		}
-		private Translation _selectedTranslation;
-
+		
 		public StringEditor()
 		{
 			HasModfiedData = false;

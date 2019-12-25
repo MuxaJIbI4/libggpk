@@ -79,6 +79,15 @@ namespace PoeStrings.Properties {
         }
         
         /// <summary>
+        ///   查詢類似 Directory 的當地語系化字串。
+        /// </summary>
+        public static string Directory {
+            get {
+                return ResourceManager.GetString("Directory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查詢類似 Error 的當地語系化字串。
         /// </summary>
         public static string Error {
