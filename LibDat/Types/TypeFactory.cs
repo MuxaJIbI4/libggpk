@@ -161,7 +161,8 @@ namespace LibDat.Types
                 {"float", new BaseDataType("float", 4, 4)},
                 {"long", new BaseDataType("long", 8, 4)},
                 {"ulong", new BaseDataType("ulong", 8, 4)},
-                {"string", new BaseDataType("string", -1, 4)}
+                {"string", new BaseDataType("string", -1, 4)},
+                {"ref|generic", new BaseDataType("ref|generic", 4, 4)}
             };
         }
 
@@ -192,10 +193,16 @@ namespace LibDat.Types
         /// <returns></returns>
         public static AbstractData CreateData(BaseDataType type, BinaryReader inStream, Dictionary<string, object> options)
         {
+
             // check if list type
             var listDataType = type as ListDataType;
             if (listDataType != null) // list type data
                 return new ListData(listDataType, inStream, options);
+            
+            if(type.Name == "ref|generic") //Temporary until dat64 is supported
+            {
+                return new Int32Data(type, inStream, options);
+            }
 
             // check if pointer type
             var pointerDataType = type as PointerDataType;
@@ -235,7 +242,6 @@ namespace LibDat.Types
                     break;
                 default:
                     throw new Exception("Unknown value type name: " + type.Name);
-
             }
             return data;
         }
