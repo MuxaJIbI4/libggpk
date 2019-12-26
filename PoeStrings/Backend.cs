@@ -249,7 +249,7 @@ namespace PoeStrings
                 if (!RecordFactory.HasRecordInfo(record.Name))
                     continue;
 
-                if (record.ContainingDirectory.Name != Settings.Strings["Path"])
+                if (record.ContainingDirectory.Name != Settings.Strings["Directory"])
                     continue;
 
                 // We'll need this .dat FileRecord later on so we're storing it in a map of fileName -> FileRecord
