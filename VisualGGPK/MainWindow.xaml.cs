@@ -126,9 +126,10 @@ namespace VisualGGPK
                         return;
                     }
 
-                    _workerThread = null;
+                    
                 }), null);
 
+                _workerThread = null;
 
                 OutputLine(Settings.Strings["ReloadGGPK_Successful"]);
             });
@@ -373,7 +374,7 @@ namespace VisualGGPK
                 var extension = Path.GetExtension(selectedRecord.Name);
 
                 // If we're dealing with .dat files then just create a human readable CSV and view that instead
-                if (!String.IsNullOrEmpty(extension) && extension.ToLower().Equals(".dat"))
+                if (!String.IsNullOrEmpty(extension) && (extension.ToLower().Equals(".dat") || extension.ToLower().Equals(".dat64")))
                 {
                     var extractedCsv = Path.GetTempFileName();
                     File.Move(extractedCsv, extractedCsv + ".csv");

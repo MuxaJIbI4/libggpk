@@ -33,7 +33,7 @@ namespace LibDat
                 try
                 {
                     inStream.BaseStream.Seek(startOffset + fi.RecordOffset, SeekOrigin.Begin);
-                    var fieldData = new FieldData(fi, inStream);
+                    var fieldData = new FieldData(fi, inStream, RecordInfo.x64);
                     _fieldsData.Add(fieldData);
                 }
                 catch (Exception e)

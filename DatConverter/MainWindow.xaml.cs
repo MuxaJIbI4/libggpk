@@ -74,7 +74,7 @@ namespace DatConverter
             var ofd = new OpenFileDialog
             {
                 CheckFileExists = true,
-                Filter = "DAT File|*.dat",
+                Filter = "DAT File|*.dat;*.dat64",
                 Multiselect = true
             };
             if (ofd.ShowDialog() != true)
@@ -95,7 +95,7 @@ namespace DatConverter
             if (!Directory.Exists(folder))
                 return;
             var list = Directory.GetFiles(folder);
-            var files = list.Where(file => file.EndsWith(".dat")).ToList();
+            var files = list.Where(file => file.EndsWith(".dat")).Concat(list.Where(file => file.EndsWith(".dat64"))).ToList();
             ConvertFiles(files);
         }
 
@@ -117,7 +117,7 @@ namespace DatConverter
                             {
                                 var dat = new DatContainer(file);
                                 var csvData = dat.GetCsvFormat();
-                                var csvName = Regex.Replace(file, "\\.dat$", @".csv");
+                                var csvName = file + ".csv";
                                 File.WriteAllText(csvName, csvData);
                                 OutputLine(String.Format("Success: {0}", file));
                                 
@@ -211,8 +211,7 @@ namespace DatConverter
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

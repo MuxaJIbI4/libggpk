@@ -46,6 +46,7 @@
     <Compile Include="Data\AbstractData.cs" />
     <Compile Include="Data\PointerData.cs" />
     <Compile Include="Data\StringData.cs" />
+    <Compile Include="Data\ValueData64.cs" />
     <Compile Include="Data\ValueData.cs" />
     <Compile Include="FieldData.cs" />
     <Compile Include="RecordData.cs" />
@@ -55,13 +56,16 @@
     <Compile Include="FieldInfo.cs" />
     <Compile Include="RecordInfo.cs" />
     <Compile Include="Types\BaseDataType.cs" />
+    <Compile Include="Types\ListDataType64.cs" />
     <Compile Include="Types\ListDataType.cs" />
     <Compile Include="Types\PointerDataType.cs" />
+    <Compile Include="Types\TypeFactory64.cs" />
     <Compile Include="Types\TypeFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DatDefinitions.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="LibDat.readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -73,7 +77,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 	   Other similar extension points exist, see Microsoft.Common.targets.

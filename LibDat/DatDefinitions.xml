@@ -404,11 +404,11 @@
 			<field id="Unknown3" type="int"/>
 			<field id="FlavourTextKey" type="ulong"/>
 			<field id="AtlasRegionsKey" type="ulong"/>
-			<field id="AtlasNodeKeys0" type="ref|list|int"/>
-			<field id="AtlasNodeKeys1" type="ref|list|int"/>
-			<field id="AtlasNodeKeys2" type="ref|list|int"/>
-			<field id="AtlasNodeKeys3" type="ref|list|int"/>
-			<field id="AtlasNodeKeys4" type="ref|list|int"/>
+			<field id="AtlasNodeKeys0" type="ref|list|ref|generic"/>
+			<field id="AtlasNodeKeys1" type="ref|list|ref|generic"/>
+			<field id="AtlasNodeKeys2" type="ref|list|ref|generic"/>
+			<field id="AtlasNodeKeys3" type="ref|list|ref|generic"/>
+			<field id="AtlasNodeKeys4" type="ref|list|ref|generic"/>
 			<field id="Tier0" type="int"/>
 			<field id="Tier1" type="int"/>
 			<field id="Tier2" type="int"/>
@@ -500,9 +500,9 @@
 			<field id="Implicit_ModsKeys" type="ref|list|ulong"/>
 			<field id="Unknown1" type="int"/>
 			<field id="SoundEffectsKey" type="ulong"/>
-			<field id="NormalPurchase_BaseItemTypesKeys" type="ref|list|uint"/>
+			<field id="NormalPurchase_BaseItemTypesKeys" type="ref|list|ref|generic"/>
 			<field id="NormalPurchase_Costs" type="ref|list|int"/>
-			<field id="MagicPurchase_BaseItemTypesKeys" type="ref|list|uint"/>
+			<field id="MagicPurchase_BaseItemTypesKeys" type="ref|list|ref|generic"/>
 			<field id="MagicPurchase_Costs" type="ref|list|int"/>
 			<field id="TagsKeys" type="ref|list|ulong"/>
 			<field id="ModDomainsKey" type="int"/>
@@ -510,9 +510,9 @@
 			<field id="ItemVisualIdentityKey" type="ulong"/>
 			<field id="UnknownUnique" type="uint"/>
 			<field id="VendorRecipe_AchievementItemsKeys" type="ref|list|ulong"/>
-			<field id="RarePurchase_BaseItemTypesKeys" type="ref|list|uint"/>
+			<field id="RarePurchase_BaseItemTypesKeys" type="ref|list|ref|generic"/>
 			<field id="RarePurchase_Costs" type="ref|list|int"/>
-			<field id="UniquePurchase_BaseItemTypesKeys" type="ref|list|uint"/>
+			<field id="UniquePurchase_BaseItemTypesKeys" type="ref|list|ref|generic"/>
 			<field id="UniquePurchase_Costs" type="ref|list|int"/>
 			<field id="Inflection" type="ref|string"/>
 			<field id="Equip_AchievementItemsKey" type="ulong"/>
@@ -520,7 +520,7 @@
 			<field id="Identify_AchievementItemsKeys" type="ref|list|ulong"/>
 			<field id="ItemThemesKey" type="ulong"/>
 			<field id="IdentifyMagic_AchievementItemsKeys" type="ref|list|ulong"/>
-			<field id="FragmentBaseItemTypesKey" type="uint"/>
+			<field id="FragmentBaseItemTypesKey" type="ref|generic"/>
 			<field id="IsBlessing" type="bool"/>
 			<field id="Unknown0" type="int"/>
 		</record>
@@ -535,7 +535,7 @@
 			<field id="Boss_MonsterVarietiesKey" type="ulong"/>
 			<field id="BestiaryGenusKey" type="ulong"/>
 			<field id="Flag1" type="bool"/>
-			<field id="BestiaryCapturableMonstersKey" type="int"/>
+			<field id="BestiaryCapturableMonstersKey" type="ref|generic"/>
 			<field id="Flag2" type="bool"/>
 			<field id="Unknown0" type="int"/>
 			<field id="Flag3" type="bool"/>
@@ -2059,7 +2059,7 @@
 			<field id="Key1" type="ulong"/>
 			<field id="Flag4" type="bool"/>
 			<field id="Keys0" type="ref|list|ulong"/>
-			<field id="GrantedEffectsKey" type="int"/>
+			<field id="GrantedEffectsKey" type="ref|generic"/>
 		</record>
 		<record file="GrantedEffectsPerLevel" length="221">
 			<field id="GrantedEffectsKey" type="ulong"/>
@@ -2237,7 +2237,7 @@
 			<field id="Name" type="ref|string" isUser="1"/>
 			<field id="Tier" type="int"/>
 			<field id="MinLevel" type="int"/>
-			<field id="RoomUpgrade_IncursionRoomsKey" type="uint"/>
+			<field id="RoomUpgrade_IncursionRoomsKey" type="ref|generic"/>
 			<field id="ModsKey" type="ulong"/>
 			<field id="PresentARMFile" type="ref|string"/>
 			<field id="IntId" type="int"/>
@@ -2250,7 +2250,7 @@
 			<field id="AchievementItemsKeys" type="ref|list|ulong"/>
 			<field id="Unknown0" type="int"/>
 			<field id="Unknown1" type="int"/>
-			<field id="RoomUpgradeFrom_IncursionRoomsKey" type="uint"/>
+			<field id="RoomUpgradeFrom_IncursionRoomsKey" type="ref|generic"/>
 		</record>
 		<record file="IncursionUniqueUpgradeComponents" length="16">
 			<field id="UniqueItemsKey" type="ulong"/>
@@ -2538,7 +2538,7 @@
 		<record file="LabyrinthSectionLayout" length="60">
 			<field id="LabyrinthSectionKey" type="ulong"/>
 			<field id="Unknown3" type="int"/>
-			<field id="LabyrinthSectionLayoutKeys" type="ref|list|int"/>
+			<field id="LabyrinthSectionLayoutKeys" type="ref|list|ref|generic"/>
 			<field id="LabyrinthSecretsKey0" type="ulong"/>
 			<field id="LabyrinthSecretsKey1" type="ulong"/>
 			<field id="LabyrinthAreasKey" type="ulong"/>
@@ -2743,7 +2743,7 @@
 			<field id="Unknown4" type="int"/>
 			<field id="Unknown5" type="int"/>
 			<field id="Unknown6" type="int"/>
-			<field id="RestrictedAreaMessage" type="ref|string"/>
+			<field id="RestrictedAreaMessage" type="ref|string" isUser="1"/>
 		</record>
 		<record file="MapCreationInformation" length="12">
 			<field id="MapsKey" type="ulong"/>
@@ -2853,11 +2853,11 @@
 			<field id="Regular_GuildCharacter" type="ref|string"/>
 			<field id="Unique_GuildCharacter" type="ref|string"/>
 			<field id="Tier" type="int"/>
-			<field id="Shaped_Base_MapsKey" type="int"/>
+			<field id="Shaped_Base_MapsKey" type="ref|generic"/>
 			<field id="Shaped_AreaLevel" type="int"/>
-			<field id="UpgradedFrom_MapsKey" type="int"/>
-			<field id="MapsKey2" type="int"/>
-			<field id="MapsKey3" type="int"/>
+			<field id="UpgradedFrom_MapsKey" type="ref|generic"/>
+			<field id="MapsKey2" type="ref|generic"/>
+			<field id="MapsKey3" type="ref|generic"/>
 			<field id="MapSeriesKey" type="int"/>
 			<field id="Flag0" type="bool"/>
 			<field id="Flag1" type="bool"/>
@@ -4183,7 +4183,7 @@
 			<field id="BackgroundImage" type="ref|string"/>
 			<field id="Unknown5" type="ref|string"/>
 			<field id="Flag1" type="bool"/>
-			<field id="Upgrade_ShopPaymentPackageKey" type="int"/>
+			<field id="Upgrade_ShopPaymentPackageKey" type="ref|generic"/>
 			<field id="PhysicalItemPoints" type="int"/>
 			<field id="Unknown6" type="int"/>
 			<field id="ShopPackagePlatformKeys" type="ref|list|int"/>
@@ -4378,8 +4378,8 @@
 			<field id="Text" type="ref|string" isUser="1"/>
 			<field id="Flag5" type="bool"/>
 			<field id="Flag6" type="bool"/>
-			<field id="MainHandAlias_StatsKey" type="int"/>
-			<field id="OffHandAlias_StatsKey" type="int"/>
+			<field id="MainHandAlias_StatsKey" type="ref|generic"/>
+			<field id="OffHandAlias_StatsKey" type="ref|generic"/>
 			<field id="Flag7" type="bool"/>
 			<field id="Unknown1" type="int"/>
 			<field id="Unknown2" type="ref|list|ref|string"/>
@@ -4750,8 +4750,8 @@
 			<field id="Unknown2" type="int"/>
 			<field id="Flag0" type="bool"/>
 			<field id="Flag1" type="bool"/>
-			<field id="UniqueStashLayoutKey" type="int"/>
-			<field id="UniqueStashLayoutKey2" type="int"/>
+			<field id="UniqueStashLayoutKey" type="ref|generic"/>
+			<field id="UniqueStashLayoutKey2" type="ref|generic"/>
 			<field id="Flag2" type="bool"/>
 		</record>
 		<record file="UniqueStashTypes" length="40">
@@ -4859,7 +4859,7 @@
 			<field id="Act" type="int"/>
 			<field id="IsTown" type="bool"/>
 			<field id="HasWaypoint" type="bool"/>
-			<field id="Connections_WorldAreasKeys" type="ref|list|uint"/>
+			<field id="Connections_WorldAreasKeys" type="ref|list|ref|generic"/>
 			<field id="AreaLevel" type="int"/>
 			<field id="Unknown6" type="int"/>
 			<field id="Unknown7" type="int"/>
@@ -4869,7 +4869,7 @@
 			<field id="Data0" type="ref|list|int"/>
 			<field id="Unknown13" type="int"/>
 			<field id="TopologiesKeys" type="ref|list|ulong"/>
-			<field id="ParentTown_WorldAreasKey" type="uint"/>
+			<field id="ParentTown_WorldAreasKey" type="ref|generic"/>
 			<field id="Unknown17" type="int"/>
 			<field id="Unknown18" type="int"/>
 			<field id="Unknown19" type="int"/>
@@ -4885,7 +4885,7 @@
 			<field id="ModsKeys" type="ref|list|ulong"/>
 			<field id="Unknown38" type="int"/>
 			<field id="Unknown39" type="int"/>
-			<field id="VaalArea_WorldAreasKeys" type="ref|list|int"/>
+			<field id="VaalArea_WorldAreasKeys" type="ref|list|ref|generic"/>
 			<field id="VaalArea_SpawnChance" type="int"/>
 			<field id="Strongbox_SpawnChance" type="int"/>
 			<field id="Strongbox_MaxCount" type="int"/>

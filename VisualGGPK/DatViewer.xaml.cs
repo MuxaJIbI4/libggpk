@@ -242,8 +242,8 @@ namespace VisualGGPK
         {
             var sfd = new SaveFileDialog
             {
-                DefaultExt = ".dat",
-                FileName = Path.GetFileNameWithoutExtension(FileName) + "_NEW.dat"
+                DefaultExt = Path.GetExtension(FileName),
+                FileName = Path.GetFileNameWithoutExtension(FileName) + "_NEW" + Path.GetExtension(FileName)
             };
 
             if (sfd.ShowDialog() == true)
@@ -255,7 +255,7 @@ namespace VisualGGPK
         private void ExportCSV()
         {
             var sfd = new SaveFileDialog();
-            sfd.FileName = Path.GetFileNameWithoutExtension(FileName) + ".csv";
+            sfd.FileName = Path.GetFileName(FileName) + ".csv";
 
             if (sfd.ShowDialog() == true)
             {

@@ -87,8 +87,8 @@ namespace VisualGGPK
 
         public DatWrapper(string fileName)
         {
-            _datName = Path.GetFileNameWithoutExtension(fileName);
-
+            if (Path.GetExtension(fileName) == ".dat64") _datName = Path.GetFileName(fileName);
+            else _datName = Path.GetFileNameWithoutExtension(fileName);
             var fileBytes = File.ReadAllBytes(fileName);
 
             using (var ms = new MemoryStream(fileBytes))
@@ -99,7 +99,8 @@ namespace VisualGGPK
 
         public DatWrapper(Stream inStream, string fileName)
         {
-            _datName = Path.GetFileNameWithoutExtension(fileName);
+            if (Path.GetExtension(fileName) == ".dat64") _datName = Path.GetFileName(fileName);
+            else _datName = Path.GetFileNameWithoutExtension(fileName);
             ParseDatFile(inStream);
         }
 
@@ -120,7 +121,7 @@ namespace VisualGGPK
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(Settings.Strings["DatWrapper_ParseDatFile_Failed"], ex.Message), ex);
+                throw new Exception(string.Format(Settings.Strings["DatWrapper_ParseDatFile_Failed"], ex.ToString()), ex);
             }
         }
 

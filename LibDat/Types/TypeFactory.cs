@@ -29,7 +29,7 @@ namespace LibDat.Types
             {typeof (float), s => s.ReadSingle()},
             {typeof (long), s => s.ReadInt64()},
             {typeof (ulong), s => s.ReadUInt64()},
-            {typeof (string), s => 
+            {typeof (string), s =>
             {
                 var sb = new StringBuilder();
                 char ch;
@@ -69,10 +69,10 @@ namespace LibDat.Types
             throw new NotImplementedException();
         }
 
-        public static void Write<T>(this BinaryWriter reader, object obj)
+        public static void Write<T>(this BinaryWriter writer, object obj)
         {
             if (WriteFuncs.ContainsKey(typeof(T)))
-                WriteFuncs[typeof(T)](reader, (T)obj);
+                WriteFuncs[typeof(T)](writer, (T)obj);
             throw new NotImplementedException();
         }
 
@@ -198,8 +198,8 @@ namespace LibDat.Types
             var listDataType = type as ListDataType;
             if (listDataType != null) // list type data
                 return new ListData(listDataType, inStream, options);
-            
-            if(type.Name == "ref|generic") //Temporary until dat64 is supported
+
+            if (type.Name == "ref|generic")
             {
                 return new Int32Data(type, inStream, options);
             }
