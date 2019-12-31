@@ -15,6 +15,11 @@ namespace LibDat
     public class DatContainer
     {
         /// <summary>
+        /// Whether the extension is .dat64
+        /// </summary>
+        public readonly bool x64;
+
+        /// <summary>
         /// Name of the dat file (without .dat extension)
         /// </summary>
         public readonly string DatName;
@@ -67,7 +72,8 @@ namespace LibDat
         /// <param name="fileName">Name of the dat file (with extension)</param>
         public DatContainer(Stream inStream, string fileName)
         {
-            DatName = Path.GetFileNameWithoutExtension(fileName);
+            x64 = Path.GetExtension(fileName) == ".dat64";
+            DatName = x64 ? Path.GetFileName(fileName) : Path.GetFileNameWithoutExtension(fileName);
             RecordInfo = RecordFactory.GetRecordInfo(DatName);
             DataEntries = new Dictionary<int, AbstractData>();
             DataPointers = new Dictionary<int, PointerData>();
@@ -84,7 +90,8 @@ namespace LibDat
         /// <param name="filePath">Path of .dat file to parse</param>
         public DatContainer(string filePath)
         {
-            DatName = Path.GetFileNameWithoutExtension(filePath);
+            x64 = Path.GetExtension(filePath) == ".dat64";
+            DatName = x64 ? Path.GetFileName(filePath) : Path.GetFileNameWithoutExtension(filePath);
             RecordInfo = RecordFactory.GetRecordInfo(DatName);
             DataEntries = new Dictionary<int, AbstractData>();
             DataPointers = new Dictionary<int, PointerData>();
@@ -101,7 +108,7 @@ namespace LibDat
         }
 
         /// <summary>
-        /// Reads the .dat frile from the specified stream
+        /// Reads the .dat file from the specified stream
         /// </summary>
         /// <param name="inStream">Stream containing contents of .dat file</param>
         private void Read(BinaryReader inStream)
@@ -117,7 +124,7 @@ namespace LibDat
 
             // find record_length;
             var actualRecordLength = FindRecordLength(inStream, Count);
-            if (actualRecordLength != RecordInfo.Length)
+            if (!x64 && actualRecordLength != RecordInfo.Length)
                 throw new Exception("Actual record length = " + actualRecordLength
                     + " not equal length defined in XML: " + RecordInfo.Length);
 
@@ -129,7 +136,6 @@ namespace LibDat
             if (inStream.ReadUInt64() != 0xBBbbBBbbBBbbBBbb)
                 throw new ApplicationException("Missing magic number after records");
 
-
             // save entire stream
             inStream.BaseStream.Seek(0, SeekOrigin.Begin);
             _originalData = inStream.ReadBytes(Length);
@@ -140,6 +146,8 @@ namespace LibDat
                 Records = new List<RecordData>();
                 return;
             }
+
+            if(x64) RecordInfo.Length = actualRecordLength;
 
             Records = new List<RecordData>(Count);
             for (var i = 0; i < Count; i++)

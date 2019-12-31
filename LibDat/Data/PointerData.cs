@@ -35,7 +35,12 @@ namespace LibDat.Data
 
             // only RefType knows how to read it's parameters
             var refParams = RefType.ReadPointer(reader);
-            RefData = TypeFactory.CreateData(RefType, reader, refParams);
+
+            var listDataType = RefType as ListDataType;
+            if (listDataType != null)
+                RefData = (Length == 8) ? TypeFactory.CreateData(listDataType, reader, refParams) : TypeFactory64.CreateData(listDataType, reader, refParams); //8 or 16
+            else
+                RefData = (Length == 4) ? TypeFactory.CreateData(RefType, reader, refParams) : TypeFactory64.CreateData(RefType, reader, refParams); //4 or 8
 
             DatContainer.DataPointers[Offset] = this;
         }
