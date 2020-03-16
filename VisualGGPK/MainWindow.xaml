@@ -5,7 +5,7 @@
         xmlns:Properties="clr-namespace:VisualGGPK.Properties"
         x:Class="VisualGGPK.MainWindow"
         Title="VisualGGPK" 
-        Height="500" Width="1000" 
+        Height="600" Width="1100" 
         Loaded="Window_Loaded" 
         AllowDrop="True" 
         Drop="Window_Drop_1" 
@@ -47,7 +47,7 @@
                 </TreeView.ContextMenu>
             </TreeView>
             <StackPanel Grid.Row="1" >
-                <Button Content="Save" Click="OnSaveClicked" Width ="50"/>
+                <Button x:Name="SaveButton" Content="Save" Click="OnSaveClicked" Width ="50"/>
             </StackPanel>
         </Grid>
 
@@ -73,6 +73,7 @@
                 <Label x:Name="LabelFileHash" Content="{x:Static Properties:Resources.MainWindow_Label_FileHash}"/>
                 <TextBox x:Name="TextBoxHash" Width="100" IsReadOnly="True"/>
                 <CheckBox x:Name="AutoScrollCheckBox" Content="AutoScroll" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0,0,0" IsChecked="True"/>
+                <Button x:Name="SerializeButton" Content="Serialize" Click="OnSerializeClicked" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10,3,0,0" Width ="65"/>
             </StackPanel>
 
             <!--different viewers for different types of files-->

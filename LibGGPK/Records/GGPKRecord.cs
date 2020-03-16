@@ -32,6 +32,13 @@ namespace LibGGPK.Records
             Read(br);
         }
 
+        public GgpkRecord(long recordBegin, uint length, long[] recordOffsets)
+        {
+            RecordBegin = recordBegin;
+            Length = length;
+            RecordOffsets = recordOffsets;
+        }
+
         /// <summary>
         /// Reads the GGPK record entry from the specified stream
         /// </summary>

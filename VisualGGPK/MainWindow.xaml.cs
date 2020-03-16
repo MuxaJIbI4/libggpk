@@ -29,6 +29,7 @@ namespace VisualGGPK
     public partial class MainWindow
     {
         private string _ggpkPath = String.Empty;
+        private string _binPath = null;
         private GrindingGearsPackageContainer _content;
         private Thread _workerThread;
 
@@ -81,6 +82,8 @@ namespace VisualGGPK
             TextBoxOutput.Visibility = Visibility.Visible;
             TextBoxOutput.Text = string.Empty;
             _content = null;
+            SaveButton.IsEnabled = false;
+            SerializeButton.IsEnabled = false;
 
             _workerThread = new Thread(() =>
             {
@@ -91,7 +94,7 @@ namespace VisualGGPK
                 }
                 catch (Exception ex)
                 {
-                    Output(string.Format(Settings.Strings["ReloadGGPK_Failed"], ex.Message));
+                    Output(string.Format(Settings.Strings["ReloadGGPK_Failed"], ex.ToString()));
                     return;
                 }
 
@@ -121,7 +124,7 @@ namespace VisualGGPK
                     }
                     catch (Exception ex)
                     {
-                        Output(string.Format(Settings.Strings["Error_Read_Directory_Tree"], ex.Message));
+                        Output(string.Format(Settings.Strings["Error_Read_Directory_Tree"], ex.ToString()));
                         Output(ex.StackTrace);
                         return;
                     }
@@ -132,6 +135,85 @@ namespace VisualGGPK
                 _workerThread = null;
 
                 OutputLine(Settings.Strings["ReloadGGPK_Successful"]);
+
+                TextBoxOutput.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    SaveButton.IsEnabled = true;
+                    SerializeButton.IsEnabled = true;
+                }));
+            });
+
+            _workerThread.Start();
+        }
+
+        /// <summary>
+        /// Load the Records.bin, rebuilds the tree
+        /// </summary>
+        private void LoadBinFile()
+        {
+            TreeView1.Items.Clear();
+            ResetViewer();
+            TextBoxOutput.Visibility = Visibility.Visible;
+            TextBoxOutput.Text = string.Empty;
+            _content = null;
+            SaveButton.IsEnabled = false;
+            SerializeButton.IsEnabled = false;
+
+            _workerThread = new Thread(() =>
+            {
+                _content = new GrindingGearsPackageContainer();
+                try
+                {
+                    _content.Read(_ggpkPath, _binPath, Output);
+                }
+                catch (Exception ex)
+                {
+                    Output(string.Format(Settings.Strings["ReloadGGPK_Failed"], ex.ToString()));
+                    return;
+                }
+
+                if (_content.IsReadOnly)
+                {
+                    Output(Settings.Strings["ReloadGGPK_ReadOnly"] + Environment.NewLine);
+                    UpdateTitle(Settings.Strings["MainWindow_Title_Readonly"]);
+                }
+
+                OutputLine(Settings.Strings["ReloadGGPK_Traversing_Tree"]);
+
+                // Collect all FileRecordPath -> FileRecord pairs for easier replacing
+                _recordsByPath = new Dictionary<string, FileRecord>(_content.RecordOffsets.Count);
+                DirectoryTreeNode.TraverseTreePostorder(
+                    _content.DirectoryRoot,
+                    null,
+                    n => _recordsByPath.Add(n.GetDirectoryPath() + n.Name, n));
+
+                TreeView1.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    try
+                    {
+                        var rootItem = CreateLazyTreeViewItem(_content.DirectoryRoot);
+                        TreeView1.Items.Add(rootItem);
+                        rootItem.IsExpanded = true;
+                        rootItem.RaiseEvent(new RoutedEventArgs(TreeViewItem.ExpandedEvent, rootItem));
+                    }
+                    catch (Exception ex)
+                    {
+                        Output(string.Format(Settings.Strings["Error_Read_Directory_Tree"], ex.ToString()));
+                        Output(ex.StackTrace);
+                        return;
+                    }
+
+                }), null);
+
+                _workerThread = null;
+
+                OutputLine(Settings.Strings["ReloadGGPK_Successful"]);
+
+                SaveButton.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    SaveButton.IsEnabled = true;
+                    SerializeButton.IsEnabled = true;
+                }));
             });
 
             _workerThread.Start();
@@ -166,13 +248,20 @@ namespace VisualGGPK
             ResetViewer();
             var selectedItem = TreeView1.SelectedItem;
             if (selectedItem == null)
+            {
+                TextBoxOutput.Visibility = Visibility.Visible;
                 return;
+            }
             var item = selectedItem as TreeViewItem;
             if (item == null)
+            {
+                TextBoxOutput.Visibility = Visibility.Visible;
                 return;
+            }
 
             if (item.Tag is DirectoryTreeNode)
             {
+                TextBoxOutput.Visibility = Visibility.Visible;
                 var selectedDirectory = item.Tag as DirectoryTreeNode;
                 if (selectedDirectory.Record == null)
                     return;
@@ -229,7 +318,7 @@ namespace VisualGGPK
                 var sb = new StringBuilder();
                 while (ex != null)
                 {
-                    sb.AppendLine(ex.Message);
+                    sb.AppendLine(ex.ToString());
                     ex = ex.InnerException;
                 }
 
@@ -353,7 +442,7 @@ namespace VisualGGPK
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    string.Format(Settings.Strings["ExportSelectedItem_Failed"], ex.Message),
+                    string.Format(Settings.Strings["ExportSelectedItem_Failed"], ex.ToString()),
                     Settings.Strings["Error_Caption"], MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
@@ -393,7 +482,7 @@ namespace VisualGGPK
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    string.Format(Settings.Strings["ViewSelectedItem_Failed"], ex.Message),
+                    string.Format(Settings.Strings["ViewSelectedItem_Failed"], ex.ToString()),
                     Settings.Strings["Error_Caption"],
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -438,7 +527,7 @@ namespace VisualGGPK
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format(Settings.Strings["ExportAllItemsInDirectory_Failed"], ex.Message), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Settings.Strings["ExportAllItemsInDirectory_Failed"], ex.ToString()), Settings.Strings["Error_Caption"], MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -476,7 +565,7 @@ namespace VisualGGPK
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    string.Format(Settings.Strings["ReplaceItem_Failed"], ex.Message),
+                    string.Format(Settings.Strings["ReplaceItem_Failed"], ex.ToString()),
                     Settings.Strings["Error_Caption"],
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -634,7 +723,10 @@ namespace VisualGGPK
         {
             var ofd = new OpenFileDialog
             {
+                AddExtension = true,
                 CheckFileExists = true,
+                DefaultExt = "ggpk",
+                FileName = "Content.ggpk",
                 Filter = Settings.Strings["Load_GGPK_Filter"]
             };
 
@@ -679,8 +771,30 @@ namespace VisualGGPK
                     Close();
                     return;
                 }
-                _ggpkPath = ofd.FileName;
-                ReloadGgpkFile();
+                if (Path.GetExtension(ofd.FileName).ToLower() == ".bin")
+                {
+                    _binPath = ofd.FileName;
+                    ofd.FileName = "Content.ggpk";
+                    if (ofd.ShowDialog() == true)
+                    {
+                        if (!File.Exists(ofd.FileName))
+                        {
+                            Close();
+                            return;
+                        }
+                        _ggpkPath = ofd.FileName;
+                        LoadBinFile();
+                    }
+                    else
+                    {
+                        Close();
+                        return;
+                    }
+                } else
+                {
+                    _ggpkPath = ofd.FileName;
+                    ReloadGgpkFile();
+                }
             }
             else
             {
@@ -989,6 +1103,25 @@ namespace VisualGGPK
             TextBoxOutput.Visibility = Visibility.Visible;
             TextBoxOutput.Text = string.Empty;
             _content.Save(openFileDialog.FileName, OutputLine);
+        }
+
+        private void OnSerializeClicked(object sender, RoutedEventArgs e)
+        {
+            // Serialize GGPK Records
+            var saveFileDialog = new SaveFileDialog
+            {
+                AddExtension = true,
+                CheckPathExists = true,
+                DefaultExt = "bin",
+                FileName = "Records.bin",
+                OverwritePrompt = true
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                TextBoxOutput.Visibility = Visibility.Visible;
+                _content.SerializeRecords(saveFileDialog.FileName, Output);
+            }
         }
     }
 }

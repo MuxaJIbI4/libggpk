@@ -29,7 +29,7 @@ namespace LibGGPK
         /// An estimation of the number of records in the Contents.GGPK file. This is only
         /// used to inform the users of the parsing progress.
         /// </summary>
-        private const int EstimatedFileCount = 175000;
+        private const int EstimatedFileCount = 700000;
 
         public bool IsReadOnly { get { return _isReadOnly; } }
         private bool _isReadOnly;
@@ -48,9 +48,6 @@ namespace LibGGPK
         }
 
         #region Read GGPK
-
-
-
         /// <summary>
         /// Parses the GGPK pack file and builds a directory tree from it.
         /// </summary>
@@ -74,6 +71,163 @@ namespace LibGGPK
             }
 
             CreateDirectoryTree(output);
+
+            if (output != null)
+            {
+                output(Environment.NewLine);
+                output("Finished!" + Environment.NewLine);
+            }
+        }
+
+        public void Read(string pathToGgpk, string pathToBin, Action<string> output)
+        {
+            _pathToGppk = pathToGgpk;
+            if (output != null)
+            {
+                output("Parsing GGPK..." + Environment.NewLine);
+                output("Reading bin file records:" + Environment.NewLine);
+            }
+
+            DeserializeRecords(pathToBin, output);
+
+            if (output != null)
+            {
+                output(Environment.NewLine);
+                output("Building directory tree..." + Environment.NewLine);
+            }
+
+            CreateDirectoryTree(output);
+
+            if (output != null)
+            {
+                output(Environment.NewLine);
+                output("Finished!" + Environment.NewLine);
+            }
+        }
+
+        public void SerializeRecords(string pathToBin, Action<string> output)
+        {
+            if (output != null)
+            {
+                output(Environment.NewLine);
+                output("Serializing...  ");
+            }
+
+            var Serialized = File.Create(pathToBin);
+            var s = new BinaryWriter(Serialized);
+            foreach (var record in RecordOffsets)
+            {
+                s.Write(record.Key);
+                var baseRecord = record.Value;
+                if (baseRecord is FileRecord)
+                {
+                    s.Write((byte)1);
+                    FileRecord fr = (FileRecord)baseRecord;
+                    s.Write(fr.RecordBegin);
+                    s.Write(fr.Length);
+                    s.Write(fr.Hash);
+                    s.Write(fr.Name);
+                    s.Write(fr.DataBegin);
+                    s.Write(fr.DataLength);
+                } 
+                else if (baseRecord is GgpkRecord)
+                {
+                    s.Write((byte)2);
+                    GgpkRecord gr = (GgpkRecord)baseRecord;
+                    s.Write(gr.RecordBegin);
+                    s.Write(gr.Length);
+                    s.Write(gr.RecordOffsets.Length);
+                    foreach (long l in gr.RecordOffsets)
+                    {
+                        s.Write(l);
+                    }
+                }
+                else if (baseRecord is FreeRecord)
+                {
+                    s.Write((byte)3);
+                    FreeRecord fr = (FreeRecord)baseRecord;
+                    s.Write(fr.RecordBegin);
+                    s.Write(fr.Length);
+                    s.Write(fr.NextFreeOffset);
+                }
+                else if (baseRecord is DirectoryRecord)
+                {
+                    s.Write((byte)4);
+                    DirectoryRecord dr = (DirectoryRecord)baseRecord;
+                    s.Write(dr.RecordBegin);
+                    s.Write(dr.Length);
+                    s.Write(dr.Hash);
+                    s.Write(dr.Name);
+                    s.Write(dr.EntriesBegin);
+                    s.Write(dr.Entries.Count);
+                    foreach (var directoryEntry in dr.Entries)
+                    {
+                        s.Write(directoryEntry.EntryNameHash);
+                        s.Write(directoryEntry.Offset);
+                    }
+                }
+            }
+            Serialized.Flush();
+            Serialized.Close();
+
+            output?.Invoke("Done!" + Environment.NewLine);
+        }
+
+        public void DeserializeRecords(string pathToBin, Action<string> output)
+        {
+            if (output != null)
+            {
+                output(Environment.NewLine);
+                output("Deserializing...  ");
+            }
+
+            var Serialized = File.OpenRead(pathToBin);
+            var s = new BinaryReader(Serialized);
+            while (Serialized.Length - Serialized.Position > 1)
+            {
+                long offset = s.ReadInt64();
+                switch (s.ReadByte())
+                {
+                    case 1:
+                        RecordOffsets.Add(offset, new FileRecord(s.ReadInt64(), s.ReadUInt32(), s.ReadBytes(32), s.ReadString(), s.ReadInt64(), s.ReadInt64()));
+                        break;
+                    case 2:
+                        long recordBegin = s.ReadInt64();
+                        uint length = s.ReadUInt32();
+                        long[] recordOffsets = new long[s.ReadInt32()];
+                        for (int i = 0; i < recordOffsets.Length; i++)
+                        {
+                            recordOffsets[i] = s.ReadInt64();
+                        }
+                        RecordOffsets.Add(offset, new GgpkRecord(recordBegin, length, recordOffsets));
+                        break;
+                    case 3:
+                        RecordOffsets.Add(offset, new FreeRecord(s.ReadUInt32(), s.ReadInt64(), s.ReadInt64()));
+                        break;
+                    case 4:
+                        long recordBegin2 = s.ReadInt64();
+                        uint length2 = s.ReadUInt32();
+                        byte[] hash = s.ReadBytes(32);
+                        string name = s.ReadString();
+                        long entriesBegin = s.ReadInt64();
+                        int entriesCount = s.ReadInt32();
+                        var entries = new List<DirectoryRecord.DirectoryEntry>(entriesCount);
+                        for (int i = 0; i < entriesCount; i++)
+                        {
+                            entries.Add(new DirectoryRecord.DirectoryEntry
+                            {
+                                EntryNameHash = s.ReadUInt32(),
+                                Offset = s.ReadInt64(),
+                            });
+                        }
+                        RecordOffsets.Add(offset, new DirectoryRecord(recordBegin2, length2, hash, name, entriesBegin, entries));
+                        break;
+                }
+            }
+            Serialized.Flush();
+            Serialized.Close();
+
+            output?.Invoke("Done!" + Environment.NewLine);
         }
 
         /// <summary>
@@ -99,8 +253,7 @@ namespace LibGGPK
                     var percentComplete = currentOffset / (float)streamLength;
                     if (percentComplete - previousPercentComplete >= 0.10f)
                     {
-                        if (output != null)
-                            output(String.Format("\t{0:00.00}%{1}", 100.0 * percentComplete, Environment.NewLine));
+                        output?.Invoke(String.Format("\t{0:00.00}%{1}", 100.0 * percentComplete, Environment.NewLine));
                         previousPercentComplete = percentComplete;
                     }
                 }
@@ -329,11 +482,11 @@ namespace LibGGPK
                         if (!(percentComplete - previousPercentComplete >= 0.05f)) return;
 
                         if (output != null)
-                            output(String.Format("  {0:00.00}%", 100.0*percentComplete));
+                            output(String.Format("  {0:00.00}%", 100.0 * percentComplete));
                         previousPercentComplete = percentComplete;
                     });
                 if (output != null) output("  100%");
-                
+
                 // write root directory
                 var rootDirectoryOffset = writer.BaseStream.Position;
                 DirectoryRoot.Record.Write(writer, changedOffsets);
@@ -349,7 +502,7 @@ namespace LibGGPK
                 ggpkRecordNew.RecordOffsets[0] = rootDirectoryOffset;
                 ggpkRecordNew.RecordOffsets[1] = firstFreeRecordOffset;
                 ggpkRecordNew.Write(writer, changedOffsets);
-                if (output != null) 
+                if (output != null)
                     output("Finished !!!");
             }
         }
