@@ -51,6 +51,16 @@ namespace LibGGPK.Records
             Read(br); 
         }
 
+        public DirectoryRecord(long recordBegin, uint length, byte[] hash, string name, long entriesBegin, List<DirectoryEntry> entries)
+        {
+            RecordBegin = recordBegin;
+            Length = length;
+            Hash = hash;
+            Name = name;
+            EntriesBegin = entriesBegin;
+            Entries = entries;
+        }
+
         /// <summary>
         /// Reads the PDIR record entry from the specified stream
         /// </summary>
