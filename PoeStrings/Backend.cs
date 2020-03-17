@@ -2,17 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using LibDat;
-using LibDat.Data;
 using LibGGPK;
 using LibGGPK.Records;
-using PoeStrings.Properties;
-using FieldInfo = System.Reflection.FieldInfo;
 
 namespace PoeStrings
 {
@@ -20,8 +15,9 @@ namespace PoeStrings
     {
         //private const string settingsPath = ".\\translation.xml";
         private readonly Action<string> outputFunc;
-        private GrindingGearsPackageContainer content = new GrindingGearsPackageContainer();
+        public GrindingGearsPackageContainer content = new GrindingGearsPackageContainer();
         private string ggpkPath;
+        private string binPath;
         private string settingsPath;
 
 
@@ -42,6 +38,17 @@ namespace PoeStrings
             this.ggpkPath = ggpkPath;
             content = new GrindingGearsPackageContainer();
             content.Read(ggpkPath, outputFunc);
+
+            CollectTranslatableStrings();
+            MergeUserTranslations();
+        }
+
+        public void ReloadAllData(string ggpkPath, string binPath)
+        {
+            this.ggpkPath = ggpkPath;
+            this.binPath = binPath;
+            content = new GrindingGearsPackageContainer();
+            content.Read(ggpkPath, binPath, outputFunc);
 
             CollectTranslatableStrings();
             MergeUserTranslations();
@@ -242,14 +249,17 @@ namespace PoeStrings
             {
                 var record = recordOffset.Value as FileRecord;
 
-                if (record == null || record.ContainingDirectory == null || record.DataLength == 12 || Path.GetExtension(record.Name) != ".dat")
+                if (record == null || record.ContainingDirectory == null || record.DataLength == 12)
+                    continue;
+
+                if (record.ContainingDirectory.Name != Settings.Strings["Directory"])
+                    continue;
+
+                if (Path.GetExtension(record.Name) != ".dat" && Path.GetExtension(record.Name) != ".dat64")
                     continue;
 
                 // Make sure parser for .dat type actually exists
                 if (!RecordFactory.HasRecordInfo(record.Name))
-                    continue;
-
-                if (record.ContainingDirectory.Name != Settings.Strings["Directory"])
                     continue;
 
                 // We'll need this .dat FileRecord later on so we're storing it in a map of fileName -> FileRecord

@@ -29,6 +29,7 @@ namespace PoeStrings
 		private bool isApplyingTranslationOnStartup = false;
 		private bool hasModifiedData = false;
 		private readonly string ggpkPath;
+		private readonly string binPath;
 		private Backend backend;
 		private string settingsPath = @".\translation.xml";
 
@@ -63,9 +64,15 @@ namespace PoeStrings
 			buttonApplyAll.Content = Settings.Strings["MainWindow_Button_ApplyAll"];
 			buttonSaveConfig.Content = Settings.Strings["MainWindow_Button_SaveConfig"];
 			buttonApplyAllToFile.Content = Settings.Strings["MainWindow_Button_ApplyAllToFile"];
+			buttonSerialize.Content = Settings.Strings["MainWindow_Button_Serialize"];
 
-			OpenFileDialog ofd = new OpenFileDialog();
-			ofd.FileName = "Content.ggpk";
+			OpenFileDialog ofd = new OpenFileDialog
+			{
+				AddExtension = true,
+				CheckFileExists = true,
+				DefaultExt = "ggpk",
+				FileName = "Content.ggpk",
+			};
 			try
 			{
 				ofd.Filter = Settings.Strings["Load_GGPK_Filter"];
@@ -77,11 +84,19 @@ namespace PoeStrings
 				this.Close();
 				return;
 			}
-			ofd.CheckFileExists = true;
 
 			if (ofd.ShowDialog() == true)
 			{
-				ggpkPath = ofd.FileName;
+				if (System.IO.Path.GetExtension(ofd.FileName).ToLower() == ".bin")
+				{
+					binPath = ofd.FileName;
+					ofd.FileName = "Content.ggpk";
+					if (ofd.ShowDialog() == true)
+						ggpkPath = ofd.FileName;
+					else
+						return;
+				} else
+					ggpkPath = ofd.FileName;
 			}
 			else
 			{
@@ -94,7 +109,10 @@ namespace PoeStrings
 			Thread driverThread = new Thread(new ThreadStart(() =>
 			{
 				backend = new Backend(Output, settingsPath);
-				backend.ReloadAllData(ggpkPath);
+				if (binPath != null)
+					backend.ReloadAllData(ggpkPath, binPath);
+				else
+					backend.ReloadAllData(ggpkPath);
 				OnBackendLoaded();
 			}));
 
@@ -177,6 +195,22 @@ namespace PoeStrings
 			backend.ApplyTranslationsToFile();
 			//backend.ReloadAllData(ggpkPath);
 			UpdateBindings();
+		}
+
+		private void buttonSerialize_Click_1(object sender, RoutedEventArgs e)
+		{
+			// Serialize GGPK Records
+			var saveFileDialog = new SaveFileDialog
+			{
+				AddExtension = true,
+				CheckPathExists = true,
+				DefaultExt = "bin",
+				FileName = "Records.bin",
+				OverwritePrompt = true
+			};
+
+			if (saveFileDialog.ShowDialog() == true)
+				backend.content.SerializeRecords(saveFileDialog.FileName, Output);
 		}
 
 		private void PromptToSave()

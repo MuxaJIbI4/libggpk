@@ -157,7 +157,7 @@
     <value>Delete translation?</value>
   </data>
   <data name="Load_GGPK_Filter" xml:space="preserve">
-    <value>GGPK Pack File|*.ggpk</value>
+    <value>GGPK Pack File|*.ggpk|Records Bin File|*.bin</value>
   </data>
   <data name="MainWindow_InvalidFileFilter" xml:space="preserve">
     <value>Invalid file filter for GGPK files: {0}</value>
@@ -179,5 +179,8 @@
   </data>
   <data name="Directory" xml:space="preserve">
     <value>Data</value>
+  </data>
+  <data name="MainWindow_Button_Serialize" xml:space="preserve">
+    <value>Serialize</value>
   </data>
 </root>
