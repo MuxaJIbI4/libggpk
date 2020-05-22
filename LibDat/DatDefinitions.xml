@@ -532,9 +532,11 @@
 		</record>
 		<record file="AtlasQuadrant" length="0">
 		</record>
-		<record file="AtlasRegions" length="12">
+		<record file="AtlasRegions" length="20">
 			<field id="Id" type="ref|string"/>
 			<field id="Name" type="ref|string" isUser="1"/>
+			<field id="Unknown0" type="int"/>
+			<field id="Unknown1" type="int"/>
 			<field id="Unknown2" type="int"/>
 		</record>
 		<record file="AtlasSector" length="20">
@@ -1527,7 +1529,7 @@
 			<field id="Image" type="ref|string"/>
 			<field id="AchievementItemsKeys" type="ref|list|ulong"/>
 			<field id="MinTier" type="int"/>
-			<field id="Tier" type="int"/>
+			<field id="Type" type="ref|string"/>
 			<field id="MinDepth" type="ref|list|int"/>
 			<field id="Description" type="ref|string"/>
 			<field id="Unknown0" type="int"/>
@@ -3962,21 +3964,20 @@
 		<record file="PassiveTreeExpansionJewels" length="64">
 			<field id="BaseItemTypesKey" type="ulong"/>
 			<field id="PassiveTreeExpansionJewelSizesKey" type="ulong"/>
-			<field id="Unknown0" type="int"/>
-			<field id="Unknown1" type="int"/>
-			<field id="Unknown2" type="int"/>
-			<field id="Unknown3" type="ref|string"/>
-			<field id="Unknown4" type="ref|list|int"/>
-			<field id="Unknown5" type="ref|list|int"/>
+			<field id="MinNodes" type="int"/>
+			<field id="MaxNodes" type="int"/>
+			<field id="SmallIndices" type="ref|list|int"/>
+			<field id="NotableIndices" type="ref|list|int"/>
+			<field id="SocketIndices" type="ref|list|int"/>
 			<field id="Art" type="ref|string"/>
-			<field id="Unknown7" type="int"/>
-			<field id="Key2" type="ulong"/>
+			<field id="TotalIndices" type="int"/>
+			<field id="SoundEffectsKey" type="ulong"/>
 		</record>
 		<record file="PassiveTreeExpansionSkills" length="32">
 			<field id="PassiveSkillsKey" type="ulong"/>
 			<field id="Mastery_PassiveSkillsKey" type="ulong"/>
 			<field id="TagsKey" type="ulong"/>
-			<field id="Key3" type="ulong"/>
+			<field id="PassiveTreeExpansionJewelSizesKey" type="ulong"/>
 		</record>
 		<record file="PassiveTreeExpansionSpecialSkills" length="16">
 			<field id="PassiveSkillsKey" type="ulong"/>
@@ -4201,7 +4202,7 @@
 		</record>
 		<record file="QuestVendorRewards" length="54">
 			<field id="Id" type="int"/>
-			<field id="NPCKey" type="ulong"/>
+			<field id="NPCKeys" type="ref|list|ulong"/>
 			<field id="QuestState" type="int"/>
 			<field id="CharactersKeys" type="ref|list|ulong"/>
 			<field id="BaseItemTypesKeys" type="ref|list|ulong"/>
