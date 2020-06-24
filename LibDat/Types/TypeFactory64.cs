@@ -43,6 +43,8 @@ namespace LibDat.Types
              },
              {typeof (string), s =>
                 {
+                    if (s.BaseStream.Position == s.BaseStream.Length)
+                        return "{null}";    ////Fix EOFException caused by pointing to the end of the file to express an empty string (or something not yet added?) in some dats
                      var sb = new StringBuilder();
                      char ch;
                      while ((ch = s.ReadChar()) != 0) { sb.Append(ch); }
@@ -77,6 +79,8 @@ namespace LibDat.Types
             },
             {typeof (string), (bw, o) =>
                 {
+                    if (bw.BaseStream.Position == bw.BaseStream.Length)
+                        return;
                     foreach (var ch in (string)o)
                     {
                         bw.Write(ch);
