@@ -202,10 +202,11 @@ namespace LibGGPK
                         RecordOffsets.Add(offset, new GgpkRecord(recordBegin, length, recordOffsets));
                         break;
                     case 3:
-                        RecordOffsets.Add(offset, new FreeRecord(s.ReadUInt32(), s.ReadInt64(), s.ReadInt64()));
+                        long recordBegin2 = s.ReadInt64();
+                        RecordOffsets.Add(offset, new FreeRecord(s.ReadUInt32(), recordBegin2, s.ReadInt64()));
                         break;
                     case 4:
-                        long recordBegin2 = s.ReadInt64();
+                        long recordBegin3 = s.ReadInt64();
                         uint length2 = s.ReadUInt32();
                         byte[] hash = s.ReadBytes(32);
                         string name = s.ReadString();
@@ -220,7 +221,7 @@ namespace LibGGPK
                                 Offset = s.ReadInt64(),
                             });
                         }
-                        RecordOffsets.Add(offset, new DirectoryRecord(recordBegin2, length2, hash, name, entriesBegin, entries));
+                        RecordOffsets.Add(offset, new DirectoryRecord(recordBegin3, length2, hash, name, entriesBegin, entries));
                         break;
                 }
             }
@@ -285,7 +286,7 @@ namespace LibGGPK
         {
             var length = br.ReadUInt32();
             var tag = Encoding.ASCII.GetString(br.ReadBytes(4));
-
+            
             switch (tag)
             {
                 case FileRecord.Tag:
