@@ -297,7 +297,7 @@ namespace LibGGPK.Records
             var freeRecord = new FreeRecord(Length, RecordBegin, 0);
             freeRecordRoot.AddLast(freeRecord);
             if (ggpc != null)
-                ggpc.RecordOffsets.Add(RecordBegin, freeRecord);
+                ggpc.RecordOffsets[RecordBegin] = freeRecord;
         }
 
         public void ReplaceContents(string ggpkPath, byte[] replacmentData, GrindingGearsPackageContainer ggpc)
@@ -318,6 +318,8 @@ namespace LibGGPK.Records
                 // Update and write new record data to end of GGPK file
                 RecordBegin = ggpkFileStream.Position;
                 Length = (uint)(Length - DataLength + replacmentData.Length);
+                if (ggpc != null)
+                    ggpc.RecordOffsets[RecordBegin] = this;
                 ContainingDirectory.Record.UpdateOffset(ggpkPath, GetNameHash(), RecordBegin);
             } else
             {
