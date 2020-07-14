@@ -1299,12 +1299,13 @@
 			<field id="Key2" type="ulong"/>
 			<field id="Key3" type="ulong"/>
 		</record>
-		<record file="Commands" length="17">
+		<record file="Commands" length="18">
 			<field id="Id" type="ref|string"/>
 			<field id="Command" type="ref|string" isUser="1"/>
 			<field id="Flag0" type="bool"/>
 			<field id="Command2" type="ref|string"/>
 			<field id="Description" type="ref|string" isUser="1"/>
+			<field id="Flag1" type="bool"/>
 		</record>
 		<record file="ComponentArmour" length="20">
 			<field id="BaseItemTypesKey" type="ref|string"/>
@@ -2304,7 +2305,11 @@
 		</record>
 		<record file="HarvestColours" length="0">
 		</record>
-		<record file="HarvestCraftOptions" length="49">
+		<record file="HarvestCraftOptionIcons" length="8">
+			<field id="Id" type="ref|string"/>
+			<field id="DDSFile" type="ref|string"/>
+		</record>
+		<record file="HarvestCraftOptions" length="57">
 			<field id="Id" type="ref|string"/>
 			<field id="Text" type="ref|string"/>
 			<field id="Unknown0" type="int"/>
@@ -2313,8 +2318,9 @@
 			<field id="Command" type="ref|string"/>
 			<field id="Parameters" type="ref|string"/>
 			<field id="AchievementItemsKeys" type="ref|list|ulong"/>
-			<field id="Unknown2" type="byte"/>
+			<field id="Flag0" type="bool"/>
 			<field id="Unknown1" type="int"/>
+			<field id="HarvestCraftOptionIconsKeys" type="ref|list|ulong"/>
 		</record>
 		<record file="HarvestCraftTiers" length="12">
 			<field id="Id" type="ref|string"/>
@@ -2348,9 +2354,9 @@
 		<record file="HarvestMetaCraftingOptions" length="0">
 		</record>
 		<record file="HarvestObjects" length="16">
-			<field id="Key0" type="ulong"/>
+			<field id="BaseItemTypesKey" type="ulong"/>
 			<field id="AOFile" type="ref|string"/>
-			<field id="Unknown2" type="int"/>
+			<field id="ObjectType" type="int"/>
 		</record>
 		<record file="HarvestPerLevelValues" length="52">
 			<field id="Level" type="int"/>
@@ -2367,25 +2373,36 @@
 			<field id="Unknown11" type="int"/>
 			<field id="Unknown12" type="int"/>
 		</record>
-		<record file="HarvestSeedTypes" length="100">
+		<record file="HarvestPlantBoosterFamilies" length="0">
+		</record>
+		<record file="HarvestPlantBoosters" length="36">
+			<field id="HarvestObjectsKey" type="ulong"/>
+			<field id="Unknown1" type="int"/>
 			<field id="Key0" type="ulong"/>
+			<field id="Unknown3" type="int"/>
+			<field id="Unknown4" type="int"/>
+			<field id="Unknown5" type="int"/>
+			<field id="Unknown6" type="int"/>
+		</record>
+		<record file="HarvestSeedTypes" length="100">
+			<field id="BaseItemTypesKey" type="ulong"/>
 			<field id="Key1" type="ulong"/>
-			<field id="Unknown2" type="int"/>
+			<field id="GrowthCycles" type="int"/>
 			<field id="AOFiles" type="ref|list|ref|string"/>
 			<field id="Unknown4" type="ref|list|int"/>
 			<field id="Unknown5" type="int"/>
-			<field id="Unknown6" type="int"/>
-			<field id="Unknown7" type="int"/>
-			<field id="Unknown8" type="int"/>
-			<field id="Unknown9" type="int"/>
-			<field id="Unknown10" type="int"/>
-			<field id="Unknown11" type="int"/>
+			<field id="Tier" type="int"/>
+			<field id="RequiredNearbySeed_Tier" type="int"/>
+			<field id="RequiredNearbySeed_Amount" type="int"/>
+			<field id="WildLifeforceConsumedPercentage" type="int"/>
+			<field id="VividLifeforceConsumedPercentage" type="int"/>
+			<field id="PrimalLifeforceConsumedPercentage" type="int"/>
 			<field id="Text" type="ref|string"/>
-			<field id="Keys0" type="ref|list|ulong"/>
+			<field id="HarvestCraftOptionsKeys" type="ref|list|ulong"/>
 			<field id="Unknown14" type="int"/>
 			<field id="Unknown15" type="ref|list|int"/>
 			<field id="AchievementItemsKeys" type="ref|list|ulong"/>
-			<field id="Unknown16" type="int"/>
+			<field id="OutcomeType" type="int"/>
 		</record>
 		<record file="HarvestSpecialCraftCosts" length="16">
 			<field id="Key0" type="ulong"/>
@@ -4682,7 +4699,7 @@
 			<field id="VideoURL2" type="ref|string"/>
 			<field id="CharactersKeys" type="ref|list|ulong"/>
 		</record>
-		<record file="SkillGems" length="77">
+		<record file="SkillGems" length="79">
 			<field id="BaseItemTypesKey" type="ulong"/>
 			<field id="GrantedEffectsKey" type="ulong"/>
 			<field id="Str" type="int"/>
@@ -4696,6 +4713,8 @@
 			<field id="GrantedEffectsKey2" type="ulong"/>
 			<field id="Key0" type="ulong"/>
 			<field id="Unknown0" type="ref|string"/>
+			<field id="Flag1" type="bool"/>
+			<field id="Flag2" type="bool"/>
 		</record>
 		<record file="SkillMineVariations" length="16">
 			<field id="SkillMinesKey" type="int"/>
@@ -4994,7 +5013,7 @@
 			<field id="ArtFile" type="ref|string"/>
 			<field id="AchievementItemsKey" type="ulong"/>
 		</record>
-		<record file="TableMonsterSpawners" length="102">
+		<record file="TableMonsterSpawners" length="106">
 			<field id="Metadata" type="ref|string"/>
 			<field id="Unknown1" type="int"/>
 			<field id="Unknown2" type="ref|list|ulong"/>
@@ -5023,11 +5042,13 @@
 			<field id="Flag6" type="byte"/>
 			<field id="Script2" type="ref|string"/>
 			<field id="Data0" type="ref|list|int"/>
+			<field id="Unknown19" type="int"/>
 		</record>
-		<record file="Tags" length="12">
+		<record file="Tags" length="16">
 			<field id="Id" type="ref|string"/>
 			<field id="Unknown0" type="uint"/>
 			<field id="DisplayString" type="ref|string" isUser="1"/>
+			<field id="Name" type="ref|string"/>
 		</record>
 		<record file="TalismanMonsterMods" length="16">
 			<field id="Unknown1" type="int"/>
@@ -5068,9 +5089,10 @@
 			<field id="Id" type="ref|string"/>
 			<field id="UnknownUnique" type="int"/>
 		</record>
-		<record file="Tips" length="8">
+		<record file="Tips" length="12">
 			<field id="Id" type="ref|string"/>
 			<field id="Text" type="ref|string" isUser="1"/>
+			<field id="TextBox" type="ref|string"/>
 		</record>
 		<record file="Topologies" length="20">
 			<field id="Id" type="ref|string"/>
