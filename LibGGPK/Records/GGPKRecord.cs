@@ -19,6 +19,8 @@ namespace LibGGPK.Records
         /// </summary>
         public long[] RecordOffsets;
 
+        public uint Version;
+
         public GgpkRecord(uint length)
         {
             Length = length;
@@ -45,10 +47,10 @@ namespace LibGGPK.Records
         /// <param name="br">Stream pointing at a GGPK record</param>
         public override void Read(BinaryReader br)
         {
-            var totalRecordOffsets = br.ReadInt32();
-            RecordOffsets = new long[totalRecordOffsets];
+            var Version = br.ReadUInt32();
+            RecordOffsets = new long[2];
 
-            for (var i = 0; i < totalRecordOffsets; i++)
+            for (var i = 0; i < 2; i++)
             {
                 RecordOffsets[i] = br.ReadInt64();
             }
@@ -58,7 +60,7 @@ namespace LibGGPK.Records
         {
             bw.Write(Length);                           // 28
             bw.Write(Encoding.ASCII.GetBytes(Tag));     // GGPK
-            bw.Write(RecordOffsets.Length);             // 2
+            bw.Write(Version);             // 2
 
             var offset = RecordOffsets[0];
             bw.Write(changedOffsets.ContainsKey(offset) ? changedOffsets[offset] : offset);
