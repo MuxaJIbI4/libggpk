@@ -22,7 +22,8 @@ namespace VPatchGGPK
     {
         private static GrindingGearsPackageContainer content;
         private static Dictionary<string, FileRecord> _recordsByPath;
-
+        private string patch_md5;
+        string lang;
         public Form1()
         {
             InitializeComponent();
@@ -42,6 +43,8 @@ namespace VPatchGGPK
                 buttonClose.Text = "關閉";
                 buttonApplyChinese.Text = "套用中文化";
             }
+            lang = "tw";
+            patch_md5 = "";
         }
 
         private void Output(string msg)
@@ -178,6 +181,12 @@ namespace VPatchGGPK
 
         private void HandlePatchArchive(string archivePath)
         {
+            if (content == null) { return; }
+            if (content.IsReadOnly)
+            {
+                OutputLine("Content.ggpk is readonly.");
+            }
+
             using (var zipFile = new ZipFile(archivePath))
             {
                 OutputLine(string.Format("Archive {0}", archivePath));
@@ -199,7 +208,7 @@ namespace VPatchGGPK
                                     versionCheck = true;
                                 }
                             }
-                        }
+                        }FileShare.ReadWrite
                         break;
                     }
                     else if (Path.GetExtension(item.FileName).ToLower() == ".dat" || Path.GetExtension(item.FileName).ToLower() == ".txt")
@@ -245,7 +254,7 @@ namespace VPatchGGPK
                         _recordsByPath[fixedFileName].ReplaceContents(textBoxContentGGPK.Text, replacementData, content.FreeRoot);
                     }
                 }
-                OutputLine("Content.ggpk is Fine.");
+                OutputLine("Content.ggpk is Fine."); 
             }
         }
 
@@ -407,7 +416,7 @@ namespace VPatchGGPK
                 ignoreCertificateCheckWhenSSL();
 
                 string remoteUri = "https://poedb.tw/fg/";
-                string fileName = "pin.json";
+                string fileName = "pin_"+lang+".json";
                 var json = wc.DownloadString(remoteUri + fileName);
                 dynamic patch = JObject.Parse(json);
 
@@ -427,8 +436,12 @@ namespace VPatchGGPK
             }
         }
 
-        Boolean downloadAndVerifyPatch(string patch_md5)
+        Boolean downloadAndVerifyPatch()
         {
+            if (patch_md5 == "")
+            {
+                return false;
+            }
             using (WebClient wc = new WebClient())
             {
                 string remoteUri = "https://poedb.tw/fg/";
@@ -454,37 +467,47 @@ namespace VPatchGGPK
             }
         }
 
+        Boolean getPatchAndPin()
+        {
+            if (patch_md5 == "")
+            {
+                string server_version = getServerVersion();
+                if (String.IsNullOrEmpty(server_version))
+                {
+                    return false;
+                }
+                dynamic patch = getPatchInfo();
+                string patch_version = patch.version;
+                OutputLine("Patch Version: " + patch_version);
+                if (server_version != patch_version)
+                {
+                    OutputLine("Server Version not match Patch Version");
+                    return false;
+                }
+                string promptValue = ShowDialog("https://poedb.tw/" + lang + "/chinese", "Pin Code");
+                if (promptValue != (string)patch.pin)
+                {
+                    OutputLine("pin code at https://poedb.tw/" + lang + "/chinese");
+                    return false;
+                }
+                patch_md5 = patch.md5;
+            }
+            return downloadAndVerifyPatch();
+        }
+
         private void buttonApplyChinese_Click(object objsender, EventArgs e)
         {
+            buttonApplyChinese.Enabled = false;
             if (!File.Exists(Properties.Settings.Default.ContentGGPK))
             {
                 chooseGgpk();
             }
-            string server_version = getServerVersion();
-            if (String.IsNullOrEmpty(server_version))
-            {
-                return;
-            }
-            dynamic patch = getPatchInfo();
-            string patch_version = patch.version;
-            OutputLine("Patch Version: " + patch_version);
-            if (server_version != patch_version)
-            {
-                OutputLine("Server Version not match Patch Version");
-                return;
-            }
-            string promptValue = ShowDialog("https://poedb.tw/tw/chinese", "Pin Code");
-            if (promptValue != (string)patch.pin)
-            {
-                OutputLine("pin code at https://poedb.tw/tw/chinese");
-                return;
-            }
-            string patch_md5 = patch.md5;
-            if (downloadAndVerifyPatch(patch_md5))
+            if (getPatchAndPin())
             {
                 InitGgpk();
                 HandlePatchArchive(patch_md5 + ".zip");
             }
+            buttonApplyChinese.Enabled = true;
         }
 
         public static string ShowDialog(string text, string caption)
@@ -514,7 +537,22 @@ namespace VPatchGGPK
 
         private void label2_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://poedb.tw/tw/chinese");
+            System.Diagnostics.Process.Start("https://poedb.tw/" + lang + "/chinese");
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            getPatchAndPin();
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonTW.Checked) lang = radioButtonTW.Text;
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonCN.Checked) lang = radioButtonCN.Text;
         }
     }
 }
