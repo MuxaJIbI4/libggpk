@@ -47,7 +47,7 @@ namespace LibGGPK.Records
         /// <param name="br">Stream pointing at a GGPK record</param>
         public override void Read(BinaryReader br)
         {
-            var Version = br.ReadUInt32();
+            Version = br.ReadUInt32();
             RecordOffsets = new long[2];
 
             for (var i = 0; i < 2; i++)
