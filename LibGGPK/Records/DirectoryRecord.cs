@@ -113,13 +113,13 @@ namespace LibGGPK.Records
         /// <param name="ggpkPath">Path of pack file that contains this record</param>
         /// <param name="nameHash">Previous name hash of entry</param>
         /// <param name="newEntryOffset">New offset of entry</param>
-        public void UpdateOffset(FileStream ggpkFileStream, uint nameHash, long newEntryOffset)
+        public void UpdateOffset(string ggpkPath, uint nameHash, long newEntryOffset)
         {
             var entry = Entries.FirstOrDefault(e => e.EntryNameHash == nameHash);
             if (entry.Offset == 0 )
                 throw new ApplicationException("Entry not found!");
 
-            //using (var ggpkFileStream = File.Open(ggpkPath, FileMode.Open))
+            using (var ggpkFileStream = File.Open(ggpkPath, FileMode.Open, FileAccess.Write, FileShare.ReadWrite))
             {
                 // Jump to the location of 'Entries' in the ggpk file and 
                 // change the entry for 'previousEntryOffset' to 'newEntryOffset'

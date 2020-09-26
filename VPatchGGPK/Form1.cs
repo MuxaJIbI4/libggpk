@@ -35,6 +35,7 @@ namespace VPatchGGPK
                 OutputLine(ggpkPath);
             }
 
+            lang = "tw";
             if (CultureInfo.CurrentCulture.Name.Equals("zh-TW"))
             {
                 labelContentGGPKPath.Text = "Content.ggpk 路徑";
@@ -42,8 +43,17 @@ namespace VPatchGGPK
                 buttonApplyZIP.Text = "套用 ZIP";
                 buttonClose.Text = "關閉";
                 buttonApplyChinese.Text = "套用中文化";
+                lang = "tw";
+            } else if (CultureInfo.CurrentCulture.Name.Equals("zh-CN"))
+            {
+                labelContentGGPKPath.Text = "Content.ggpk 路径";
+                buttonSelectPOE.Text = "选择 POE";
+                buttonApplyZIP.Text = "套用 ZIP";
+                buttonClose.Text = "关闭";
+                buttonApplyChinese.Text = "套用中文化";
+                lang = "cn";
+                radioButtonCN.Checked = true;
             }
-            lang = "tw";
             patch_md5 = "";
         }
 

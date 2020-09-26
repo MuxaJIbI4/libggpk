@@ -320,8 +320,7 @@ namespace LibGGPK.Records
                 Length = (uint)(Length - DataLength + replacmentData.Length);
                 if (ggpc != null)
                     ggpc.RecordOffsets[RecordBegin] = this;
-                ContainingDirectory.Record.UpdateOffset(ggpkFileStream, GetNameHash(), RecordBegin);
-                ggpkFileStream.Seek(0, SeekOrigin.End);
+                ContainingDirectory.Record.UpdateOffset(ggpkPath, GetNameHash(), RecordBegin);
             } else
             {
                 ggpkFileStream.Seek(RecordBegin, SeekOrigin.Begin);
