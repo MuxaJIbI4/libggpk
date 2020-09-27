@@ -119,7 +119,7 @@ namespace LibGGPK.Records
             if (entry.Offset == 0 )
                 throw new ApplicationException("Entry not found!");
 
-            using (var ggpkFileStream = File.Open(ggpkPath, FileMode.Open))
+            using (var ggpkFileStream = File.Open(ggpkPath, FileMode.Open, FileAccess.Write, FileShare.ReadWrite))
             {
                 // Jump to the location of 'Entries' in the ggpk file and 
                 // change the entry for 'previousEntryOffset' to 'newEntryOffset'
