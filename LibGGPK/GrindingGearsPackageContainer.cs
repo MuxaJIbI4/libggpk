@@ -29,7 +29,7 @@ namespace LibGGPK
         /// An estimation of the number of records in the Contents.GGPK file. This is only
         /// used to inform the users of the parsing progress.
         /// </summary>
-        private const int EstimatedFileCount = 700000;
+        private const int EstimatedFileCount = 40000;
 
         public bool IsReadOnly { get { return _isReadOnly; } }
         private bool _isReadOnly;
@@ -236,7 +236,7 @@ namespace LibGGPK
         /// </summary>
         /// <param name="pathToGgpk">Path to pack file to read</param>
         /// <param name="output">Output function</param>
-        private void ReadRecordOffsets(string pathToGgpk, Action<string> output)
+        public void ReadRecordOffsets(string pathToGgpk, Action<string> output)
         {
             var previousPercentComplete = 0.0f;
 
@@ -453,7 +453,7 @@ namespace LibGGPK
             FileStream readStream;
             FileStream writeStream;
             using (readStream = File.OpenRead(_pathToGppk))
-            using (writeStream = File.Open(pathToGgpkNew, FileMode.Truncate, FileAccess.ReadWrite))
+            using (writeStream = File.OpenWrite(pathToGgpkNew))
             {
                 var reader = new BinaryReader(readStream);
                 var writer = new BinaryWriter(writeStream);
@@ -463,7 +463,7 @@ namespace LibGGPK
                     throw new Exception("First record isn't GGPK record");
 
                 // Skip GGPK record for now
-                writer.Seek((int) ggpkRecord.Length, SeekOrigin.Begin);
+                writer.Seek((int)ggpkRecord.Length, SeekOrigin.Begin);
 
                 // recursively write files and folders records
                 var changedOffsets = new Dictionary<long, long>();
@@ -479,7 +479,7 @@ namespace LibGGPK
                         writer.Write(data);
 
                         fileCopied++;
-                        var percentComplete = fileCopied/_files.Count;
+                        var percentComplete = fileCopied / _files.Count;
                         if (!(percentComplete - previousPercentComplete >= 0.05f)) return;
 
                         if (output != null)

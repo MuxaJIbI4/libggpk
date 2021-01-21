@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace LibGGPK.Records
@@ -19,7 +17,7 @@ namespace LibGGPK.Records
         /// </summary>
         public long[] RecordOffsets;
 
-        public uint Version;
+        public uint Version = 3;
 
         public GgpkRecord(uint length)
         {
@@ -60,7 +58,7 @@ namespace LibGGPK.Records
         {
             bw.Write(Length);                           // 28
             bw.Write(Encoding.ASCII.GetBytes(Tag));     // GGPK
-            bw.Write(Version);             // 2
+            bw.Write(Version);
 
             var offset = RecordOffsets[0];
             bw.Write(changedOffsets.ContainsKey(offset) ? changedOffsets[offset] : offset);
